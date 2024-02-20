@@ -14,9 +14,10 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PagingResult extends BaseAudit {
-    @JsonIgnore
-    private int totalCount;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Integer rowNum;
+
+  @JsonIgnore
+  private int totalCount;
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  private Integer rowNum;
 
 }

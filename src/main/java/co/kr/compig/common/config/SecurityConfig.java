@@ -15,21 +15,22 @@ import org.springframework.web.cors.CorsUtils;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.sessionManagement(httpSecuritySessionManagementConfigurer -> {
-            httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        });
-        http.cors(withDefaults());
-        http.csrf(withDefaults());
-        http.authorizeHttpRequests((authorize) -> authorize
-                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .requestMatchers("/actuator/**", "/docs/**", "/test/**").permitAll()// external
-                .anyRequest().authenticated()// internal
-        ).oauth2ResourceServer((oauth2) -> oauth2.jwt(withDefaults()));
-        SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http.sessionManagement(httpSecuritySessionManagementConfigurer -> {
+      httpSecuritySessionManagementConfigurer.sessionCreationPolicy(
+          SessionCreationPolicy.STATELESS);
+    });
+    http.cors(withDefaults());
+    http.csrf(withDefaults());
+    http.authorizeHttpRequests((authorize) -> authorize
+        .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+        .requestMatchers("/actuator/**", "/docs/**", "/test/**").permitAll()// external
+        .anyRequest().authenticated()// internal
+    ).oauth2ResourceServer((oauth2) -> oauth2.jwt(withDefaults()));
+    SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
 
-        return http.build();
-    }
+    return http.build();
+  }
 
 }

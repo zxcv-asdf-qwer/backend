@@ -8,6 +8,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 public class PageableRequest {
-    private String keywordType; // 검색조건
-    private String keyword;
+
+  private String keywordType; // 검색조건
+  private String keyword;
 }

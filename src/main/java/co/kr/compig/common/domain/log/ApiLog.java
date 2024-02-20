@@ -1,7 +1,11 @@
 package co.kr.compig.common.domain.log;
 
 import co.kr.compig.common.dto.BaseAudit;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -15,21 +19,21 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 public class ApiLog extends BaseAudit {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "log_id")
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "log_id")
+  private Long id;
 
-    private Long siteId;
+  private Long siteId;
 
-    private String userId;
+  private String userId;
 
-    @Column(length = 10)
-    private String httpMethod;
+  @Column(length = 10)
+  private String httpMethod;
 
-    @Column(length = 500)
-    private String requestUrl;
+  @Column(length = 500)
+  private String requestUrl;
 
-    @Column(name = "ip_addr", length = 100)
-    private String remoteIp;
+  @Column(name = "ip_addr", length = 100)
+  private String remoteIp;
 }

@@ -1,7 +1,11 @@
 package co.kr.compig.common.dto;
 
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Setter
 @Getter
@@ -9,5 +13,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Response<T> {
-    private T data;
+
+  private T data;
 }

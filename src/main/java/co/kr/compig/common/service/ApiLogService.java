@@ -17,29 +17,28 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ApiLogService {
 
-    private final ApiLogRepository apiLogRepository;
+  private final ApiLogRepository apiLogRepository;
 
-    public ApiLogService(ApiLogRepository apiLogRepository) {
-        this.apiLogRepository = apiLogRepository;
-    }
+  public ApiLogService(ApiLogRepository apiLogRepository) {
+    this.apiLogRepository = apiLogRepository;
+  }
 
-    /**
-     * API log 입력
-     * LogInterceptor 에서 호출된다
-     *
-     * @param request
-     */
-    @Transactional
-    public void saveApiLog(HttpServletRequest request) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        apiLogRepository.save(
-                ApiLog.builder()
-                        .siteId(LogUtil.getSiteId(request))
-                        .httpMethod(request.getMethod())
-                        .requestUrl(request.getRequestURI())
-                        .userId(authentication.getName())
-                        .remoteIp(LogUtil.getUserIp())
-                        .build()
-        );
-    }
+  /**
+   * API log 입력 LogInterceptor 에서 호출된다
+   *
+   * @param request
+   */
+  @Transactional
+  public void saveApiLog(HttpServletRequest request) {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    apiLogRepository.save(
+        ApiLog.builder()
+            .siteId(LogUtil.getSiteId(request))
+            .httpMethod(request.getMethod())
+            .requestUrl(request.getRequestURI())
+            .userId(authentication.getName())
+            .remoteIp(LogUtil.getUserIp())
+            .build()
+    );
+  }
 }

@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/test")
 public class TestController {
 
-    @GetMapping
-    public String testController() {
-        return "ok?";
-    }
+  @GetMapping
+  public String testController() {
+    return "ok?";
+  }
 }
