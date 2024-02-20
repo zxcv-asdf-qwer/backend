@@ -4,11 +4,7 @@
   <Properties>
     <Property name="LOG_PATH">./logs</Property>
     <Property name="LOG_FILE_NAME_PATTERN">%d{yyyy-MM-dd}.%i</Property>
-    <Property name="LOG_PATTERN">%style{[%d{yyyy-MM-dd HH:mm:ss:SSS}]}{cyan}
-      %highlight{[%-5p]}{FATAL=bg_red,
-      ERROR=red, INFO=green, DEBUG=cyan} [${sys:PID}]
-      %style{%mdc{traceId}}{Red}|%style{%mdc{spanId}}{blue}|
-      [%50c{1.}] %style{[%t]}{yellow} - %m%n%wEx
+    <Property name="LOG_PATTERN">%style{[%d{yyyy-MM-dd HH:mm:ss:SSS}]}{cyan}%highlight{[%-5p]}{FATAL=bg_red, ERROR=red, INFO=green, DEBUG=cyan}[${sys:PID}] %style{%mdc{traceId}}{Red}|%style{%mdc{spanId}}{blue}| [%50c{1.}] %style{[%t]}{yellow} - %m%n%wEx
     </Property>
   </Properties>
 
