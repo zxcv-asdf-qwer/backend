@@ -3,6 +3,7 @@ package co.kr.compig.domain.member;
 import co.kr.compig.common.code.*;
 import co.kr.compig.common.code.converter.UserTypeConverter;
 import co.kr.compig.common.embedded.CreatedAndUpdated;
+import co.kr.compig.domain.post.Post;
 import co.kr.compig.domain.role.Role;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -144,7 +145,9 @@ public class Member {
   @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private Set<Role> roles = new HashSet<>();
 
-
+  @Builder.Default
+  @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  private Set<Post> boards = new HashSet<>();
   /* =================================================================
   * Relation method
   ================================================================= */
