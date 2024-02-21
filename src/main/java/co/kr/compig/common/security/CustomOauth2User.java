@@ -20,6 +20,5 @@ public class CustomOauth2User implements Serializable {
   private String userId;
   private String username;
   private String email;
-  private String custCd;
   private boolean userYn;
 }

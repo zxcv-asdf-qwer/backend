@@ -49,6 +49,7 @@ public class MemberGroup {
   /* =================================================================
    * Relation method
    ================================================================= */
+
   public void setMember(Member member) {
     this.member = member;
   }

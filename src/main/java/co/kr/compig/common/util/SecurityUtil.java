@@ -6,15 +6,25 @@ import co.kr.compig.common.security.CustomOauth2User;
 import co.kr.compig.common.security.CustomOauth2UserAuthenticatedToken;
 import co.kr.compig.common.security.converter.CustomJwtAuthenticationConverter;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import org.keycloak.KeycloakPrincipal;
+import org.keycloak.representations.AccessToken;
+import org.springframework.boot.actuate.web.exchanges.HttpExchange.Principal;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.util.Assert;
 
 public class SecurityUtil {
@@ -57,16 +67,6 @@ public class SecurityUtil {
     return user == null ? null : user.getUserId();
   }
 
-  /**
-   * See {@link CustomJwtAuthenticationConverter#getCustomOauth2User(Jwt)} 인증정보 없는 경우 null 리턴
-   *
-   * @return {@link CustomOauth2User#getCustCd()}
-   */
-  public static String getCustCd() {
-    CustomOauth2User user = getCustomOauth2User();
-
-    return user == null ? null : user.getCustCd();
-  }
 
   /**
    * 인증정보 없으면 null 리턴
@@ -140,13 +140,34 @@ public class SecurityUtil {
     try {
       Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-      if (authentication instanceof CustomOauth2UserAuthenticatedToken) {
-        return (CustomOauth2UserAuthenticatedToken) authentication;
+      if (authentication != null) {
+        JwtAuthenticationToken authentication1 = (JwtAuthenticationToken) authentication;
+        Jwt accessToken = authentication1.getToken();
+        List<String> groups = accessToken.getClaim("groups");
+        Collection<GrantedAuthority> authorities = groups
+            .stream()
+            .map(roleName -> "ROLE_" + roleName)
+            .map(SimpleGrantedAuthority::new)
+            .collect(Collectors.toSet());
+
+        CustomOauth2User customOauth2User = CustomOauth2User.builder()
+            .id(accessToken.getSubject())
+            .userId(accessToken.getClaim("preferred_username"))
+            .username(accessToken.getClaim("name"))
+            .email(accessToken.getClaim("email"))
+            .userYn(true)
+            .build();
+
+        return new CustomOauth2UserAuthenticatedToken(
+            new Jwt(accessToken.getTokenValue(), Instant.now(),
+                Instant.MAX, Map.of("header", "header"), Map.of("claim", "claim")),
+            authorities,
+            customOauth2User
+        );
       } else {
         throw new BizException("알 수 없는 인증 정보");
       }
 
-      //return (CustomOauth2UserAuthenticatedToken) SecurityContextHolder.getContext().getAuthentication();
     } catch (Exception e) {
       return null;
     }

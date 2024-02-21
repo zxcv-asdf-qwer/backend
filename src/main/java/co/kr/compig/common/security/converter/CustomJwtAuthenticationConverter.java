@@ -49,13 +49,11 @@ public class CustomJwtAuthenticationConverter implements
 
     if (jwt.getClaims().containsValue("clientId")) {
       user.setUserId(jwt.getClaim("clientId"));
-      user.setCustCd(jwt.getClaim("CUST_CD"));
       user.setUserYn(false);
     } else {
       user.setUserId(jwt.getClaim("preferred_username"));
       user.setUsername(jwt.getClaim("name"));
       user.setEmail(jwt.getClaim("email"));
-      user.setCustCd(jwt.getClaim("CUST_CD"));
       user.setUserYn(true);
     }
 

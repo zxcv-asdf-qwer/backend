@@ -36,9 +36,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Entity
 @Table(
     uniqueConstraints = {
-        @UniqueConstraint(
-            name = "uk01_member",
-            columnNames = {"userId"})
+        @UniqueConstraint(name = "uk01_member", columnNames = {"userId"})
     })
 public class Member {
 
