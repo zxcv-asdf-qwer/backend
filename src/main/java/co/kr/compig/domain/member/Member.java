@@ -1,8 +1,6 @@
 package co.kr.compig.domain.member;
 
-import co.kr.compig.common.code.MemberRegisterType;
-import co.kr.compig.common.code.UseYn;
-import co.kr.compig.common.code.UserType;
+import co.kr.compig.common.code.*;
 import co.kr.compig.common.code.converter.UserTypeConverter;
 import co.kr.compig.common.embedded.CreatedAndUpdated;
 import co.kr.compig.domain.role.Role;
@@ -111,6 +109,25 @@ public class Member {
   private LocalDate marketingSmsDate;  // 문자 수신동의 날짜
   @Column
   private LocalDate marketingKakaoDate;  // 알림톡 수신동의 날짜
+  @Column
+  private LocalDate marketingAppDate; // 앱 푸시알림 수신동의 날짜
+  @Column
+  private LocalDate marketingThirdDate; // 제 3자 정보 제공 동의 날짜
+
+  @Column
+  @ColumnDefault("'N'")
+  @Enumerated(EnumType.STRING)
+  @Builder.Default
+  private IsYn realNameYn = IsYn.N; // 실명 확인 여부
+
+  @Column
+  @Enumerated(EnumType.STRING)
+  private GenderCode gender; // 성별
+
+  @Column(length = 6)
+  private String jumin1; // 주민등록번호 앞자리
+  @Column(length = 150)
+  private String jumin2; // 주민등록번호 뒷자리
 
   /* =================================================================
   * Domain mapping
