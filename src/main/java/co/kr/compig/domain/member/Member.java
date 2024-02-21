@@ -143,9 +143,6 @@ public class Member {
   @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private Set<Role> roles = new HashSet<>();
 
-  @Builder.Default
-  @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  private Set<Post> boards = new HashSet<>();
   /* =================================================================
   * Relation method
   ================================================================= */

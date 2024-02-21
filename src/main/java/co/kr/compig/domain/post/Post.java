@@ -68,9 +68,6 @@ public class Post {
   /* =================================================================
   * Domain mapping
   ================================================================= */
-   @JoinColumn(name = "member_id")
-   @ManyToOne(fetch = FetchType.LAZY)
-   private Member member;
 
   /* =================================================================
   * Relation method

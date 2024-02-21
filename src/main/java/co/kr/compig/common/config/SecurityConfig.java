@@ -36,7 +36,7 @@ public class SecurityConfig {
   }
 
   @Bean
-  public SecurityFilterChain resourceServerFilterChain(HttpSecurity http) throws Exception {
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.authorizeHttpRequests(auth -> auth
         .requestMatchers(new AntPathRequestMatcher("/pb/*"))
         .hasAnyRole("user")
