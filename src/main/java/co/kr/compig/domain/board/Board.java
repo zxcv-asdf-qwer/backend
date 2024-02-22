@@ -1,17 +1,13 @@
-package co.kr.compig.domain.post;
+package co.kr.compig.domain.board;
 
 import co.kr.compig.common.code.IsYn;
 import co.kr.compig.common.embedded.CreatedAndUpdated;
-import co.kr.compig.domain.member.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
@@ -31,17 +27,17 @@ import org.hibernate.annotations.ColumnDefault;
     uniqueConstraints = {
         @UniqueConstraint(
             name = "uk01_board",
-            columnNames = {"postId"})
+            columnNames = {"boardId"})
     })
-public class Post {
+public class Board {
 
   @Id
-  @Column(name = "post_id")
+  @Column(name = "board_id")
   private Long id; // 게시글 id
 
   @Column(length = 10)
   @Enumerated(EnumType.STRING)
-  private PostType postType; // 게시글 유형
+  private BoardType boardType; // 게시글 유형
 
   @Column(length = 100)
   private String title; // 게시글 제목
@@ -56,7 +52,7 @@ public class Post {
 
   @Column(length = 50)
   @Enumerated(EnumType.STRING)
-  private PostStatus postStatus; // 게시글 상태
+  private BoardStatus boardStatus; // 게시글 상태
 
   @Column(length = 1)
   @ColumnDefault("'N'")
