@@ -1,4 +1,4 @@
-package co.kr.compig.domain.board;
+package co.kr.compig.common.code;
 
 
 public enum BoardType {
