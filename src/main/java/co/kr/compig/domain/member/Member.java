@@ -1,6 +1,10 @@
 package co.kr.compig.domain.member;
 
-import co.kr.compig.common.code.*;
+import co.kr.compig.common.code.GenderCode;
+import co.kr.compig.common.code.IsYn;
+import co.kr.compig.common.code.MemberRegisterType;
+import co.kr.compig.common.code.UseYn;
+import co.kr.compig.common.code.UserType;
 import co.kr.compig.common.code.converter.UserTypeConverter;
 import co.kr.compig.common.embedded.CreatedAndUpdated;
 import co.kr.compig.domain.role.Role;
