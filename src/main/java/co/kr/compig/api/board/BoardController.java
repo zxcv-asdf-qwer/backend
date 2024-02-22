@@ -1,17 +1,20 @@
 package co.kr.compig.api.board;
 
-import co.kr.compig.api.board.dto.BoardCreate;
-import co.kr.compig.api.board.dto.BoardResponseDto;
-import co.kr.compig.api.board.dto.BoardUpdate;
+import co.kr.compig.api.board.dto.BoardCreateRequest;
+import co.kr.compig.api.board.dto.BoardResponse;
+import co.kr.compig.api.board.dto.BoardSearchRequest;
+import co.kr.compig.api.board.dto.BoardUpdateRequest;
 import co.kr.compig.common.dto.Response;
-import co.kr.compig.domain.board.Board;
-import co.kr.compig.domain.member.Member;
 import co.kr.compig.service.board.BoardService;
-import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -26,28 +29,32 @@ import org.springframework.web.bind.annotation.RestController;
 public class BoardController {
   private final BoardService boardService;
 
-  @GetMapping()
-  public List<Board> getBoardList(){
-    return boardService.getBoardList();
-  }
 
-  @GetMapping("/{boardId}")
-  public BoardResponseDto getSingleBoard(@PathVariable Long boardId){
-    return boardService.getSingleList(boardId);
+  @GetMapping
+  public ResponseEntity<Response<Page<BoardResponse>>> pageListBoard(@ModelAttribute BoardSearchRequest boardSearchRequest, Pageable pageable) {
+    return ResponseEntity.ok().body(Response.<Page<BoardResponse>>builder()
+        .data(boardService.pageListQuestion(boardSearchRequest, pageable))
+        .build());
   }
 
   @PostMapping
-  public Response<?> createBoard(BoardCreate boardCreate, Member member){
-    return boardService.createBoard(boardCreate, member);
+  public ResponseEntity<Response<?>> createBoard(BoardCreateRequest boardCreateRequest){
+    return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
+        .data(Map.of("optionId", boardService.createBoard(boardCreateRequest)))
+        .build());
   }
 
   @PutMapping("/{boardId}")
-  public Response<?> updateBoard(@PathVariable Long boardId, @RequestBody BoardUpdate boardUpdate){
-    return boardService.updateBoard(boardId, boardUpdate);
+  public ResponseEntity<Response<?>> updateBoard(@PathVariable(name = "boardId") Long boardId, @RequestBody BoardUpdateRequest boardUpdateRequest){
+    return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
+        .data(Map.of("questionId", boardService.updateBoard(boardId, boardUpdateRequest)))
+        .build());
   }
 
-  @DeleteMapping("/{boardId}")
-  public Response<?> deleteBoard(@PathVariable  Long boardId){
-    return boardService.deleteBoard(boardId);
+  @DeleteMapping(path = "/{boardId}")
+  public ResponseEntity<Response<?>> deleteBoard(@PathVariable(name = "boardId") Long boardId) {
+    boardService.deleteBoard(boardId);
+    return ResponseEntity.noContent()
+        .build();
   }
 }

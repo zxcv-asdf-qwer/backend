@@ -1,13 +1,14 @@
 package co.kr.compig.domain.board;
 
-import co.kr.compig.api.board.dto.BoardCreate;
-import co.kr.compig.api.board.dto.BoardUpdate;
+import co.kr.compig.api.board.dto.BoardUpdateRequest;
 import co.kr.compig.common.code.BoardType;
+import co.kr.compig.common.code.ContentsType;
 import co.kr.compig.common.code.IsYn;
 import co.kr.compig.common.code.UseYn;
+import co.kr.compig.common.code.converter.BoardTypeConverter;
 import co.kr.compig.common.embedded.CreatedAndUpdated;
-import co.kr.compig.domain.member.Member;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -17,7 +18,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -45,14 +45,18 @@ public class Board {
   private Long id; // 게시글 id
 
   @Column(length = 10)
-  @Enumerated(EnumType.STRING)
+  @Convert(converter = BoardTypeConverter.class)
   private BoardType boardType; // 게시글 유형
+
+  @Column(length = 10)
+  @Convert(converter = BoardTypeConverter.class)
+  private ContentsType contentsType; // 컨텐츠 유형
 
   @Column(length = 100)
   private String title; // 게시글 제목
 
   @Column
-  private String content; // 게시글 내용
+  private String contents; // 게시글 내용
 
   @Column
   @ColumnDefault("0")
@@ -71,14 +75,6 @@ public class Board {
   @Builder.Default
   private IsYn pinYn = IsYn.N; // 상단 고정 여부
 
-  public Board(BoardCreate boardCreate, Member member) {
-    this.title = boardCreate.getTitle();
-    this.content = boardCreate.getContent();
-    this.boardType = boardCreate.getBoardType();
-    this.pinYn = boardCreate.getPinYn();
-    this.createdAndModified = new CreatedAndUpdated(member.getId(), LocalDateTime.now(), null, null);
-  }
-
 
   /* =================================================================
   * Domain mapping
@@ -91,12 +87,12 @@ public class Board {
     this.views++;
   }
 
-  public void update(BoardUpdate boardUpdate) {
-    this.title = boardUpdate.getTitle();
-    this.content = boardUpdate.getContent();
-    this.pinYn = boardUpdate.getPinYn();
-    this.boardType = boardUpdate.getBoardType();
-    this.useYn = boardUpdate.getUseYn();
+  public void update(BoardUpdateRequest boardUpdateRequest) {
+    this.title = boardUpdateRequest.getTitle();
+    this.contents = boardUpdateRequest.getContents();
+    this.pinYn = boardUpdateRequest.getPinYn();
+    this.boardType = boardUpdateRequest.getBoardType();
+    this.useYn = boardUpdateRequest.getUseYn();
   }
 
    /* =================================================================
