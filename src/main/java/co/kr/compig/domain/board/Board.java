@@ -1,7 +1,12 @@
 package co.kr.compig.domain.board;
 
+import co.kr.compig.api.board.dto.BoardCreate;
+import co.kr.compig.api.board.dto.BoardUpdate;
+import co.kr.compig.common.code.BoardType;
 import co.kr.compig.common.code.IsYn;
+import co.kr.compig.common.code.UseYn;
 import co.kr.compig.common.embedded.CreatedAndUpdated;
+import co.kr.compig.domain.member.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -10,6 +15,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -50,15 +56,25 @@ public class Board {
   @Builder.Default
   private Integer views = 0; // 조회수
 
-  @Column(length = 50)
+  @Column(length = 1)
+  @ColumnDefault("'Y'")
   @Enumerated(EnumType.STRING)
-  private BoardStatus boardStatus; // 게시글 상태
+  @Builder.Default
+  private UseYn useYn = UseYn.Y; // 게시글 상태
 
   @Column(length = 1)
   @ColumnDefault("'N'")
   @Enumerated(EnumType.STRING)
   @Builder.Default
   private IsYn pinYn = IsYn.N; // 상단 고정 여부
+
+  public Board(BoardCreate boardCreate, Member member) {
+    this.title = boardCreate.getTitle();
+    this.content = boardCreate.getContent();
+    this.boardType = boardCreate.getBoardType();
+    this.pinYn = boardCreate.getPinYn();
+    this.createdAndModified = new CreatedAndUpdated(member.getId(), LocalDateTime.now(), null, null);
+  }
 
 
   /* =================================================================
@@ -70,6 +86,14 @@ public class Board {
   ================================================================= */
   public void increaseViews(){
     this.views++;
+  }
+
+  public void update(BoardUpdate boardUpdate) {
+    this.title = boardUpdate.getTitle();
+    this.content = boardUpdate.getContent();
+    this.pinYn = boardUpdate.getPinYn();
+    this.boardType = boardUpdate.getBoardType();
+    this.useYn = boardUpdate.getUseYn();
   }
 
    /* =================================================================
