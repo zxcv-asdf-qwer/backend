@@ -33,6 +33,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
         .select(Projections.constructor(BoardResponse.class,
                 board.id,
                 board.title,
+                board.smallTitle,
                 board.contents,
                 board.boardType,
                 board.viewCount
@@ -64,8 +65,14 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
     if (request.getTitle() != null) {
       predicate = predicate.and(board.title.containsIgnoreCase(request.getTitle()));
     }
+    if (request.getSmallTitle() != null){
+      predicate = predicate.and(board.smallTitle.containsIgnoreCase(request.getSmallTitle()));
+    }
     if (request.getContents() != null) {
       predicate = predicate.and(board.contents.containsIgnoreCase(request.getContents()));
+    }
+    if (request.getCreatedBy() != null){
+      predicate = predicate.and(board.createdAndModified.createdBy.containsIgnoreCase(request.getCreatedBy()));
     }
     return predicate;
   }

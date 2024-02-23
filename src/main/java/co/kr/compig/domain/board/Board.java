@@ -57,6 +57,9 @@ public class Board {
   private String title; // 게시글 제목
 
   @Column
+  private String smallTitle; // 소제목
+
+  @Column
   private String contents; // 게시글 내용
 
   @Column

@@ -17,6 +17,7 @@ public class BoardResponse extends BaseAudit {
 
   private Long boardId; // 게시글 id
   private String title; // 게시글 제목
+  private String smallTitle; // 게시글 소제목
   private String contents; // 게시글 내용
   private BoardType boardType; // 게시글 유형
   private Integer viewCount; // 조회수
@@ -24,6 +25,7 @@ public class BoardResponse extends BaseAudit {
   public BoardResponse(Board board){
     this.boardId = board.getId();
     this.title = board.getTitle();
+    this.smallTitle = board.getSmallTitle();
     this.contents = board.getContents();
     this.boardType = board.getBoardType();
     this.viewCount = board.getViewCount();
