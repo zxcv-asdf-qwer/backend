@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BoardUpdateRequest {
+
   @NotNull
   private Long boardId;
   private String title;

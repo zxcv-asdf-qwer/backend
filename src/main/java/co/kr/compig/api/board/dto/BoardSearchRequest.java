@@ -10,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class BoardSearchRequest  extends PageableRequest {
+public class BoardSearchRequest extends PageableRequest {
 
   private String title;
   private String contents;

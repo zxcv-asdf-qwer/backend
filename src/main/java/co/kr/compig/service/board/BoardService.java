@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 public class BoardService {
+
   private final BoardRepository boardRepository;
   private final BoardRepositoryCustom boardRepositoryCustom;
 
@@ -31,7 +32,8 @@ public class BoardService {
     return boardRepository.save(board).getId();
   }
 
-  public Page<BoardResponse> pageListQuestion(BoardSearchRequest boardSearchRequest, Pageable pageable) {
+  public Page<BoardResponse> pageListQuestion(BoardSearchRequest boardSearchRequest,
+      Pageable pageable) {
     return boardRepositoryCustom.findPage(boardSearchRequest, pageable);
   }
 

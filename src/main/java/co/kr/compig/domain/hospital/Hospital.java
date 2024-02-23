@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table
 public class Hospital {
+
   @Id
   @Column(name = "hospital_id")
   private Long id;

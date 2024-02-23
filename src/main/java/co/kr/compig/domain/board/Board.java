@@ -6,6 +6,7 @@ import co.kr.compig.common.code.ContentsType;
 import co.kr.compig.common.code.IsYn;
 import co.kr.compig.common.code.UseYn;
 import co.kr.compig.common.code.converter.BoardTypeConverter;
+import co.kr.compig.common.code.converter.ContentsTypeConverter;
 import co.kr.compig.common.embedded.CreatedAndUpdated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -49,7 +50,7 @@ public class Board {
   private BoardType boardType; // 게시글 유형
 
   @Column(length = 10)
-  @Convert(converter = BoardTypeConverter.class)
+  @Convert(converter = ContentsTypeConverter.class)
   private ContentsType contentsType; // 컨텐츠 유형
 
   @Column(length = 100)
@@ -81,7 +82,7 @@ public class Board {
   /* =================================================================
   * Relation method
   ================================================================= */
-  public void increaseViews(){
+  public void increaseViews() {
     this.views++;
   }
 
@@ -93,9 +94,9 @@ public class Board {
     this.useYn = boardUpdateRequest.getUseYn();
   }
 
-   /* =================================================================
-  * Default columns
-  ================================================================= */
+  /* =================================================================
+ * Default columns
+ ================================================================= */
   @Embedded
   @Builder.Default
   private CreatedAndUpdated createdAndModified = new CreatedAndUpdated();

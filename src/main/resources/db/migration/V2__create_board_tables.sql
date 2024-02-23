@@ -5,22 +5,31 @@ create table board
     contents      VARCHAR(255),
     board_type    VARCHAR(10),
     contents_type VARCHAR(10),
-    views         INTEGER    DEFAULT 0,
-    pin_yn        CHAR(1) DEFAULT 'N',
-    use_yn        CHAR(1) DEFAULT 'Y',
+    views         INTEGER   DEFAULT 0,
+    pin_yn        CHAR(1)   DEFAULT 'N',
+    use_yn        CHAR(1)   DEFAULT 'Y',
     created_by    VARCHAR(50),
-    created_on    TIMESTAMP  DEFAULT CURRENT_TIMESTAMP,
+    created_on    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_by    VARCHAR(50),
-    updated_on    TIMESTAMP  DEFAULT CURRENT_TIMESTAMP,
+    updated_on    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT pk_board PRIMARY KEY (board_id)
 );
 
-comment on table board is '게시판';
-comment on column board.board_id is 'ID';
-comment on column board.title is '제목';
-comment on column board.contents is '노출 우선순위';
-comment on column board.board_type is '게시판 종류';
-comment on column board.contents_type is '게시물 종류';
-comment on column board.views is '조회수';
-comment on column board.pin_yn is '팝업공지 기간';
-comment on column board.use_yn is '사용 여부';
+comment
+on table board is '게시판';
+comment
+on column board.board_id is 'ID';
+comment
+on column board.title is '제목';
+comment
+on column board.contents is '노출 우선순위';
+comment
+on column board.board_type is '게시판 종류';
+comment
+on column board.contents_type is '게시물 종류';
+comment
+on column board.views is '조회수';
+comment
+on column board.pin_yn is '팝업공지 기간';
+comment
+on column board.use_yn is '사용 여부';

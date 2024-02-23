@@ -17,6 +17,7 @@ import org.hibernate.validator.constraints.Length;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BoardCreateRequest {
+
   @NotBlank
   @Length(min = 2, max = 100)
   private String title; // 게시글 제목
