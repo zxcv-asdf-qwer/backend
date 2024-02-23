@@ -27,12 +27,10 @@ public class BoardService {
 
   public Long createBoard(BoardCreateRequest boardCreateRequest) {
     Board board = boardCreateRequest.converterEntity();
-    boardRepository.save(board);
-
     return boardRepository.save(board).getId();
   }
 
-  public Page<BoardResponse> pageListQuestion(BoardSearchRequest boardSearchRequest,
+  public Page<BoardResponse> pageListBoard(BoardSearchRequest boardSearchRequest,
       Pageable pageable) {
     return boardRepositoryCustom.findPage(boardSearchRequest, pageable);
   }
@@ -47,5 +45,11 @@ public class BoardService {
   public void deleteBoard(Long boardId) {
     Board board = boardRepository.findById(boardId).orElseThrow(NotExistDataException::new);
     boardRepository.delete(board);
+  }
+
+  public BoardResponse getBoard(Long boardId) {
+    Board board = boardRepository.findById(boardId).orElseThrow(NotExistDataException::new);
+    board.increaseViewCount();
+    return new BoardResponse(board);
   }
 }

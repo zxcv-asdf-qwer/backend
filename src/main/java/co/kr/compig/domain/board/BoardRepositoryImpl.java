@@ -34,7 +34,8 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                 board.id,
                 board.title,
                 board.contents,
-                board.boardType
+                board.boardType,
+                board.viewCount
             )
         );
 
