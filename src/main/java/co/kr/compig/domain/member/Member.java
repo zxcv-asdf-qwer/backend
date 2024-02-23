@@ -122,7 +122,7 @@ public class Member {
   @Builder.Default
   private IsYn realNameYn = IsYn.N; // 실명 확인 여부
 
-  @Column
+  @Column(length = 6)
   @Enumerated(EnumType.STRING)
   private GenderCode gender; // 성별
 

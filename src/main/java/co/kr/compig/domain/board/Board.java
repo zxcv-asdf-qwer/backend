@@ -64,13 +64,11 @@ public class Board {
   private Integer views = 0; // 조회수
 
   @Column(length = 1)
-  @ColumnDefault("'Y'")
   @Enumerated(EnumType.STRING)
   @Builder.Default
   private UseYn useYn = UseYn.Y; // 게시글 상태
 
   @Column(length = 1)
-  @ColumnDefault("'N'")
   @Enumerated(EnumType.STRING)
   @Builder.Default
   private IsYn pinYn = IsYn.N; // 상단 고정 여부

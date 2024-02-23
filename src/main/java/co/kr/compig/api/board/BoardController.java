@@ -40,14 +40,14 @@ public class BoardController {
   @PostMapping
   public ResponseEntity<Response<?>> createBoard(BoardCreateRequest boardCreateRequest){
     return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-        .data(Map.of("optionId", boardService.createBoard(boardCreateRequest)))
+        .data(Map.of("boardId", boardService.createBoard(boardCreateRequest)))
         .build());
   }
 
   @PutMapping("/{boardId}")
   public ResponseEntity<Response<?>> updateBoard(@PathVariable(name = "boardId") Long boardId, @RequestBody BoardUpdateRequest boardUpdateRequest){
     return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-        .data(Map.of("questionId", boardService.updateBoard(boardId, boardUpdateRequest)))
+        .data(Map.of("boardId", boardService.updateBoard(boardId, boardUpdateRequest)))
         .build());
   }
 

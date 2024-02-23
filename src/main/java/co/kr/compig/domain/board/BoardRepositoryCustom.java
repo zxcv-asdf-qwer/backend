@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+@Repository
 public interface BoardRepositoryCustom {
 
   Page<BoardResponse> findPage(BoardSearchRequest boardSearchRequest, Pageable pageable);
