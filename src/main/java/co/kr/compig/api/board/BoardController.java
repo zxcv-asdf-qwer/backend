@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -27,34 +28,41 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = "/board", produces = "application/json")
 public class BoardController {
-
   private final BoardService boardService;
 
 
   @GetMapping
-  public ResponseEntity<Response<Page<BoardResponse>>> pageListBoard(
-      @ModelAttribute BoardSearchRequest boardSearchRequest, Pageable pageable) {
+  public ResponseEntity<Response<Page<BoardResponse>>> pageListBoard(@ModelAttribute BoardSearchRequest boardSearchRequest, Pageable pageable) {
     return ResponseEntity.ok().body(Response.<Page<BoardResponse>>builder()
-        .data(boardService.pageListQuestion(boardSearchRequest, pageable))
+        .data(boardService.pageListBoard(boardSearchRequest, pageable))
+        .build());
+  }
+
+  @GetMapping("/{boardId}")
+  public ResponseEntity<Response<BoardResponse>> getBoard(@PathVariable(name = "boardId") Long boardId){
+    return ResponseEntity.ok(Response.<BoardResponse>builder()
+        .data(boardService.getBoard(boardId))
         .build());
   }
 
   @PostMapping
-  public ResponseEntity<Response<?>> createBoard(BoardCreateRequest boardCreateRequest) {
+  @PreAuthorize("hasAuthority('ROLE_admin')")
+  public ResponseEntity<Response<?>> createBoard(BoardCreateRequest boardCreateRequest){
     return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
         .data(Map.of("boardId", boardService.createBoard(boardCreateRequest)))
         .build());
   }
 
   @PutMapping("/{boardId}")
-  public ResponseEntity<Response<?>> updateBoard(@PathVariable(name = "boardId") Long boardId,
-      @RequestBody BoardUpdateRequest boardUpdateRequest) {
+  @PreAuthorize("hasAuthority('ROLE_admin')")
+  public ResponseEntity<Response<?>> updateBoard(@PathVariable(name = "boardId") Long boardId, @RequestBody BoardUpdateRequest boardUpdateRequest){
     return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
         .data(Map.of("boardId", boardService.updateBoard(boardId, boardUpdateRequest)))
         .build());
   }
 
   @DeleteMapping(path = "/{boardId}")
+  @PreAuthorize("hasAuthority('ROLE_admin')")
   public ResponseEntity<Response<?>> deleteBoard(@PathVariable(name = "boardId") Long boardId) {
     boardService.deleteBoard(boardId);
     return ResponseEntity.noContent()

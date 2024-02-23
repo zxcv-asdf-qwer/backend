@@ -5,7 +5,7 @@ create table board
     contents      VARCHAR(255),
     board_type    VARCHAR(10),
     contents_type VARCHAR(10),
-    views         INTEGER   DEFAULT 0,
+    view_count         INTEGER   DEFAULT 0,
     pin_yn        CHAR(1)   DEFAULT 'N',
     use_yn        CHAR(1)   DEFAULT 'Y',
     created_by    VARCHAR(50),
@@ -28,7 +28,7 @@ on column board.board_type is '게시판 종류';
 comment
 on column board.contents_type is '게시물 종류';
 comment
-on column board.views is '조회수';
+on column board.view_count is '조회수';
 comment
 on column board.pin_yn is '팝업공지 기간';
 comment

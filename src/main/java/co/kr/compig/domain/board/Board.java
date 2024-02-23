@@ -62,7 +62,7 @@ public class Board {
   @Column
   @ColumnDefault("0")
   @Builder.Default
-  private Integer views = 0; // 조회수
+  private Integer viewCount = 0; // 조회수
 
   @Column(length = 1)
   @Enumerated(EnumType.STRING)
@@ -82,8 +82,8 @@ public class Board {
   /* =================================================================
   * Relation method
   ================================================================= */
-  public void increaseViews() {
-    this.views++;
+  public void increaseViewCount() {
+    this.viewCount++;
   }
 
   public void update(BoardUpdateRequest boardUpdateRequest) {
