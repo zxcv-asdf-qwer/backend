@@ -1,9 +1,13 @@
 package co.kr.compig.api.member.dto;
 
+import co.kr.compig.common.code.MemberRegisterType;
 import co.kr.compig.common.code.UseYn;
 import co.kr.compig.domain.member.Member;
+import co.kr.compig.domain.member.MemberGroup;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -34,14 +38,28 @@ public class AdminMemberCreate {
 
   private String telNo; // 휴대폰번호
 
+  private MemberRegisterType memberRegisterType;
+  private String providerId;
+  private String providerUsername;
+  @NotNull
+  private List<String> groupKeys;
+
   public Member convertEntity() {
 
-    return Member.builder()
+    Member member = Member.builder()
         .userNm(this.userNm)
         .userId(this.userId)
         .userPw(this.userPw)
         .telNo(this.telNo)
         .useYn(this.useYn)
+        .memberRegisterType(this.memberRegisterType)
         .build();
+
+    groupKeys.forEach(groupKey ->
+            member.addGroups(
+                MemberGroup.builder().groupKey(groupKey).build()
+            )
+        );
+    return member;
   }
 }
