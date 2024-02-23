@@ -14,8 +14,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class BoardUpdateRequest {
 
-  @NotNull
-  private Long boardId;
   private String title;
   private String contents;
   private IsYn pinYn;
