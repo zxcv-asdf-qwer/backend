@@ -16,6 +16,7 @@ public class TestControllerTest {
   private JwtDecoder jwtDecoder;
   @MockBean
   private ClientRegistrationRepository clientRegistrationRepository;
+
   @Test
   public void test() {
 

@@ -6,14 +6,13 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum RoleCode {
-    SYS_ADMIN("SYS_ADMIN"),
-    INT_SYSTEM("INT_SYSTEM"),
-    PARTNER("PARTNER")
-    ;
+  SYS_ADMIN("SYS_ADMIN"),
+  INT_SYSTEM("INT_SYSTEM"),
+  PARTNER("PARTNER");
 
-    private String code;
+  private String code;
 
-    public boolean hasRole(String role) {
-        return role.endsWith(this.code);
-    }
+  public boolean hasRole(String role) {
+    return role.endsWith(this.code);
+  }
 }

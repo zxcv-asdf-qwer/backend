@@ -31,9 +31,9 @@ public class Audit {
 
   @PrePersist
   public void prePersist() {
-      if (createdAt == null) {
-          createdAt = LocalDateTime.now();
-      }
+    if (createdAt == null) {
+      createdAt = LocalDateTime.now();
+    }
     this.preUpdate();
   }
 

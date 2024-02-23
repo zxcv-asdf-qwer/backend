@@ -27,27 +27,30 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = "/board", produces = "application/json")
 public class BoardController {
+
   private final BoardService boardService;
 
 
   @GetMapping
-  public ResponseEntity<Response<Page<BoardResponse>>> pageListBoard(@ModelAttribute BoardSearchRequest boardSearchRequest, Pageable pageable) {
+  public ResponseEntity<Response<Page<BoardResponse>>> pageListBoard(
+      @ModelAttribute BoardSearchRequest boardSearchRequest, Pageable pageable) {
     return ResponseEntity.ok().body(Response.<Page<BoardResponse>>builder()
         .data(boardService.pageListQuestion(boardSearchRequest, pageable))
         .build());
   }
 
   @PostMapping
-  public ResponseEntity<Response<?>> createBoard(BoardCreateRequest boardCreateRequest){
+  public ResponseEntity<Response<?>> createBoard(BoardCreateRequest boardCreateRequest) {
     return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-        .data(Map.of("optionId", boardService.createBoard(boardCreateRequest)))
+        .data(Map.of("boardId", boardService.createBoard(boardCreateRequest)))
         .build());
   }
 
   @PutMapping("/{boardId}")
-  public ResponseEntity<Response<?>> updateBoard(@PathVariable(name = "boardId") Long boardId, @RequestBody BoardUpdateRequest boardUpdateRequest){
+  public ResponseEntity<Response<?>> updateBoard(@PathVariable(name = "boardId") Long boardId,
+      @RequestBody BoardUpdateRequest boardUpdateRequest) {
     return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-        .data(Map.of("questionId", boardService.updateBoard(boardId, boardUpdateRequest)))
+        .data(Map.of("boardId", boardService.updateBoard(boardId, boardUpdateRequest)))
         .build());
   }
 
