@@ -9,15 +9,14 @@ create table member
     marketing_sms_date   date,
     marketing_third_date date,
     otp_yn               varchar(1)   default 'N',
-    use_yn               char(1)      default 'Y' check (use_yn in ('Y', 'N')),
+    use_yn               char(1)      default 'Y',
     user_type            varchar(3),
-    gender               varchar(6) check (gender in ('F', 'M')),
+    gender               varchar(6),
     jumin1               varchar(6),
     created_on           timestamp(6) default CURRENT_TIMESTAMP,
     updated_on           timestamp(6) default CURRENT_TIMESTAMP,
     zipcode              varchar(20),
-    member_register_type varchar(35) check (member_register_type in
-                                            ('GENERAL', 'KAKAO', 'NAVER', 'APPLE', 'GOOGLE')),
+    member_register_type varchar(35),
     created_by           varchar(50),
     updated_by           varchar(50),
     tel_no               varchar(100),
@@ -31,7 +30,7 @@ create table member
     address1             varchar(200),
     address2             varchar(200),
     member_id            varchar(255) not null,
-    real_name_yn         varchar(255) default 'N' check (real_name_yn in ('Y', 'N')),
+    real_name_yn         varchar(255) default 'N',
     primary key (member_id),
     constraint uk01_member unique (user_id)
 );
