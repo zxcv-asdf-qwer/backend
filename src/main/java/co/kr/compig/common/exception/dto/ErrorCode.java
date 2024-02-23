@@ -11,7 +11,11 @@ public enum ErrorCode {
   FORBIDDEN(HttpStatus.FORBIDDEN, "액세스가 거부되었습니다."),
   PATH_VARIABLE_VALUE(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
   ERROR(HttpStatus.valueOf(420), "오류가 발생하였습니다."),
-  INVALID_NOT_EXIST_DATA(HttpStatus.valueOf(422), "데이터가 없습니다.");
+  INVALID_NOT_EXIST_DATA(HttpStatus.valueOf(422), "데이터가 없습니다."),
+
+  // board
+  POST_NOT_EXIST(HttpStatus.NOT_FOUND, "존재하지 않는 게시글입니다."),
+  ;
 
   private final HttpStatus httpStatus;
   private String clientMessage;

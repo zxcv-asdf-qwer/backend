@@ -5,12 +5,11 @@ import co.kr.compig.common.config.jackson.CustomObjectMapper;
 import co.kr.compig.common.interceptor.PagingInterceptor;
 import co.kr.compig.common.util.ApplicationContextUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 
-@Import(value = {ApplicationContextUtil.class, JpaConfig.class})
+@Import(value = {ApplicationContextUtil.class})
 public class CommonConfig {
 
   @Bean
@@ -24,8 +23,4 @@ public class CommonConfig {
     return new PagingInterceptor();
   }
 
-  @Bean
-  public JPAQueryFactory commonJpaQueryFactory(JpaConfig jpaConfig) {
-    return jpaConfig.jpaQueryFactory();
-  }
 }

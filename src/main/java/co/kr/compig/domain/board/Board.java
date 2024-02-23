@@ -1,12 +1,20 @@
-package co.kr.compig.domain.post;
+package co.kr.compig.domain.board;
 
+import co.kr.compig.api.board.dto.BoardUpdateRequest;
+import co.kr.compig.common.code.BoardType;
+import co.kr.compig.common.code.ContentsType;
 import co.kr.compig.common.code.IsYn;
+import co.kr.compig.common.code.UseYn;
+import co.kr.compig.common.code.converter.BoardTypeConverter;
 import co.kr.compig.common.embedded.CreatedAndUpdated;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -27,32 +35,39 @@ import org.hibernate.annotations.ColumnDefault;
     uniqueConstraints = {
         @UniqueConstraint(
             name = "uk01_board",
-            columnNames = {"postId"})
+            columnNames = {"boardId"})
     })
-public class Post {
+public class Board {
 
   @Id
-  @Column(name = "post_id")
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "board_id")
   private Long id; // 게시글 id
 
   @Column(length = 10)
-  @Enumerated(EnumType.STRING)
-  private PostType postType; // 게시글 유형
+  @Convert(converter = BoardTypeConverter.class)
+  private BoardType boardType; // 게시글 유형
+
+  @Column(length = 10)
+  @Convert(converter = BoardTypeConverter.class)
+  private ContentsType contentsType; // 컨텐츠 유형
 
   @Column(length = 100)
   private String title; // 게시글 제목
 
   @Column
-  private String content; // 게시글 내용
+  private String contents; // 게시글 내용
 
   @Column
   @ColumnDefault("0")
   @Builder.Default
   private Integer views = 0; // 조회수
 
-  @Column(length = 50)
+  @Column(length = 1)
+  @ColumnDefault("'Y'")
   @Enumerated(EnumType.STRING)
-  private PostStatus postStatus; // 게시글 상태
+  @Builder.Default
+  private UseYn useYn = UseYn.Y; // 게시글 상태
 
   @Column(length = 1)
   @ColumnDefault("'N'")
@@ -70,6 +85,14 @@ public class Post {
   ================================================================= */
   public void increaseViews(){
     this.views++;
+  }
+
+  public void update(BoardUpdateRequest boardUpdateRequest) {
+    this.title = boardUpdateRequest.getTitle();
+    this.contents = boardUpdateRequest.getContents();
+    this.pinYn = boardUpdateRequest.getPinYn();
+    this.boardType = boardUpdateRequest.getBoardType();
+    this.useYn = boardUpdateRequest.getUseYn();
   }
 
    /* =================================================================
