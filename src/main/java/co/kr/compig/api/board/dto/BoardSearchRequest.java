@@ -12,6 +12,8 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class BoardSearchRequest extends PageableRequest {
 
-  private String title;
-  private String contents;
+  private String title; // 제목
+  private String smallTitle; // 소제목
+  private String contents; // 내용
+  private String createdBy; // 글쓴이
 }
