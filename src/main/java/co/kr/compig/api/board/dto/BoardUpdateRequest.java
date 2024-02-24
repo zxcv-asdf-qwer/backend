@@ -14,10 +14,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class BoardUpdateRequest {
 
-  private String title;
-  private String contents;
-  private IsYn pinYn;
   private BoardType boardType;
   private ContentsType contentsType;
+  private String title;
+  private String smallTitle;
+  private String contents;
   private UseYn useYn;
+  private IsYn pinYn;
+
 }

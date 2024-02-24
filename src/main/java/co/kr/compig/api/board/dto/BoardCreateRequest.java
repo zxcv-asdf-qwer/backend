@@ -22,6 +22,9 @@ public class BoardCreateRequest {
   @Length(min = 2, max = 100)
   private String title; // 게시글 제목
 
+  @Length(min = 2, max = 100)
+  private String smallTitle; // 소제목
+
   @NotBlank
   @Length(min = 2)
   private String contents; // 게시글 내용
@@ -38,6 +41,7 @@ public class BoardCreateRequest {
   public Board converterEntity() {
     return Board.builder()
         .title(this.title)
+        .smallTitle(this.smallTitle)
         .contents(this.contents)
         .boardType(this.boardType)
         .contentsType(this.contentsType)

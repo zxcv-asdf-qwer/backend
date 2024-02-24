@@ -57,6 +57,9 @@ public class Board {
   private String title; // 게시글 제목
 
   @Column
+  private String smallTitle; // 소제목
+
+  @Column
   private String contents; // 게시글 내용
 
   @Column
@@ -87,11 +90,13 @@ public class Board {
   }
 
   public void update(BoardUpdateRequest boardUpdateRequest) {
-    this.title = boardUpdateRequest.getTitle();
-    this.contents = boardUpdateRequest.getContents();
-    this.pinYn = boardUpdateRequest.getPinYn();
     this.boardType = boardUpdateRequest.getBoardType();
+    this.contentsType = boardUpdateRequest.getContentsType();
+    this.title = boardUpdateRequest.getTitle();
+    this.smallTitle = boardUpdateRequest.getSmallTitle();
+    this.contents = boardUpdateRequest.getContents();
     this.useYn = boardUpdateRequest.getUseYn();
+    this.pinYn = boardUpdateRequest.getPinYn();
   }
 
   /* =================================================================
