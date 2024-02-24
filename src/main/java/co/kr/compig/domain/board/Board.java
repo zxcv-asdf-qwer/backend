@@ -90,11 +90,13 @@ public class Board {
   }
 
   public void update(BoardUpdateRequest boardUpdateRequest) {
-    this.title = boardUpdateRequest.getTitle();
-    this.contents = boardUpdateRequest.getContents();
-    this.pinYn = boardUpdateRequest.getPinYn();
     this.boardType = boardUpdateRequest.getBoardType();
+    this.contentsType = boardUpdateRequest.getContentsType();
+    this.title = boardUpdateRequest.getTitle();
+    this.smallTitle = boardUpdateRequest.getSmallTitle();
+    this.contents = boardUpdateRequest.getContents();
     this.useYn = boardUpdateRequest.getUseYn();
+    this.pinYn = boardUpdateRequest.getPinYn();
   }
 
   /* =================================================================
