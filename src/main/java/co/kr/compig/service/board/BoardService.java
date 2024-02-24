@@ -42,9 +42,10 @@ public class BoardService {
     return board.getId();
   }
 
-  public void deleteBoard(Long boardId) {
+  public Long deleteBoard(Long boardId) {
     Board board = boardRepository.findById(boardId).orElseThrow(NotExistDataException::new);
     boardRepository.delete(board);
+    return board.getId();
   }
 
   public BoardResponse getBoard(Long boardId) {

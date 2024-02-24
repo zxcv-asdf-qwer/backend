@@ -60,8 +60,8 @@ public class AdminBoardController {
 
   @DeleteMapping(path = "/{boardId}")
   public ResponseEntity<Response<?>> deleteBoard(@PathVariable(name = "boardId") Long boardId) {
-    boardService.deleteBoard(boardId);
-    return ResponseEntity.noContent()
-        .build();
+    return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
+            .data(Map.of("boardId", boardService.deleteBoard(boardId)))
+            .build());
   }
 }
