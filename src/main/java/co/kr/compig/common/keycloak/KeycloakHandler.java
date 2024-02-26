@@ -4,6 +4,8 @@ import co.kr.compig.common.exception.BizException;
 import co.kr.compig.common.exception.KeyCloakRequestException;
 import co.kr.compig.domain.member.MemberGroup;
 import jakarta.annotation.PostConstruct;
+import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
 import java.util.Optional;
@@ -11,15 +13,17 @@ import java.util.Set;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.internal.ClientResponse;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
+import org.keycloak.admin.client.resource.GroupsResource;
 import org.keycloak.admin.client.resource.RealmResource;
+import org.keycloak.admin.client.resource.RolesResource;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.GroupRepresentation;
-import org.keycloak.representations.idm.RealmRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -44,41 +48,44 @@ public class KeycloakHandler {
     log.info("### Initializing Keycloak");
     keycloak = KeycloakBuilder.builder()
         .serverUrl(keycloakProperties.getServerUrl())
-        .grantType(OAuth2Constants.PASSWORD)
+        .grantType(OAuth2Constants.CLIENT_CREDENTIALS)
         .realm(keycloakProperties.getRealm())
         .clientId(keycloakProperties.getClientId())
-        .username(keycloakProperties.getUsername())
-        .password(keycloakProperties.getPassword())
-//        .resteasyClient(
-//            new ResteasyClientBuilder()
-//                .connectionPoolSize(keycloakProperties.getPoolSize()).build()
-//        )
+        .clientSecret(keycloakProperties.getClientSecret())
+//        .username(keycloakProperties.getUsername())
+//        .password(keycloakProperties.getPassword())
+        .resteasyClient(
+            ((ResteasyClientBuilder) ClientBuilder.newBuilder()).connectionPoolSize(
+                keycloakProperties.getPoolSize()).build()
+        )
         .build();
 
+//    keycloak.tokenManager().getAccessToken();
     KeycloakHolder.set(this);
 
-  }
-
-  private RealmResource getRealmResource(Keycloak keycloak) {
-    List<RealmRepresentation> realms = keycloak.realms().findAll();
-    for (RealmRepresentation realm : realms) {
-      if (realm.getRealm().equals(keycloakProperties.getRealm())) {
-        return keycloak.realm(keycloakProperties.getRealm());
-      }
-    }
-    return null;
   }
 
   public RealmResource getRealmResource() {
     return this.getRealmResource(this.keycloak);
   }
 
-  /**
-   *
-   */
+  private RealmResource getRealmResource(Keycloak keycloak) {
+    return keycloak.realm("compig");
+  }
+
   public UsersResource getUsers() {
     log.debug("### Get users");
     return getRealmResource().users();
+  }
+
+  public GroupsResource getGroups() {
+    log.debug("### Get groups");
+    return getRealmResource().groups();
+  }
+
+  public RolesResource getRoles() {
+    log.debug("### Get roles");
+    return getRealmResource().roles();
   }
 
   public Optional<UserRepresentation> getUser(String username) {
@@ -115,8 +122,13 @@ public class KeycloakHandler {
 
   public void usersJoinGroups(String id, Set<MemberGroup> groups) {
     UserResource userResource = getUsers().get(id);
-    groups.forEach(group -> userResource.joinGroup(group.getGroupKey()));
-
+    groups.forEach(group -> {
+      try {
+        userResource.joinGroup(group.getGroupKey());
+      } catch (NotFoundException e) {
+        throw new BizException("그룹이 없습니다.");
+      }
+    });
     List<GroupRepresentation> groupRepresentations = userResource.groups();
     for (MemberGroup memberGroup : groups) {
       Optional<GroupRepresentation> optionalGroupRepresentation = groupRepresentations.stream()

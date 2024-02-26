@@ -10,7 +10,7 @@ import co.kr.compig.common.embedded.CreatedAndUpdated;
 import co.kr.compig.common.exception.KeyCloakRequestException;
 import co.kr.compig.common.keycloak.KeycloakHandler;
 import co.kr.compig.common.keycloak.KeycloakHolder;
-import co.kr.compig.domain.role.Role;
+import co.kr.compig.domain.permission.MenuPermission;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -154,7 +154,7 @@ public class Member {
 
   @Builder.Default
   @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  private Set<Role> roles = new HashSet<>();
+  private Set<MenuPermission> menuPermissions = new HashSet<>();
 
   /* =================================================================
   * Relation method
@@ -186,9 +186,13 @@ public class Member {
     this.groups.removeAll(this.groups);
   }
 
-  public void addRoles(final Role role) {
-    this.roles.add(role);
-    role.setMember(this);
+  public void addRoles(final MenuPermission menuPermission) {
+    this.menuPermissions.add(menuPermission);
+    menuPermission.setMember(this);
+  }
+
+  public void setMemberRegisterType(MemberRegisterType memberRegisterType) {
+    this.memberRegisterType = memberRegisterType;
   }
 
 

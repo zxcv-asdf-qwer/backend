@@ -1,8 +1,8 @@
-package co.kr.compig.domain.role;
+package co.kr.compig.domain.permission;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface RoleRepository extends JpaRepository<Role, Long> {
+public interface MenuPermissionRepository extends JpaRepository<MenuPermission, Long> {
 
 //    void deleteAllByGroupKey(String groupKey);
 
