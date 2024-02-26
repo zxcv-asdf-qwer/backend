@@ -33,7 +33,6 @@ public class BoardCreateRequest {
   @NotNull
   private BoardType boardType; // 게시글 유형
 
-  @NotNull
   private ContentsType contentsType; // 콘텐츠 유형
 
   private IsYn pinYn; // 상단 고정 여부
