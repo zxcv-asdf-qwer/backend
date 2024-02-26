@@ -33,9 +33,14 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
         .select(Projections.constructor(BoardResponse.class,
                 board.id,
                 board.title,
+                board.smallTitle,
                 board.contents,
                 board.boardType,
-                board.viewCount
+                board.contentsType,
+                board.viewCount,
+                board.createdAndModified.createdBy,
+                board.startDate,
+                board.endDate
             )
         );
 
@@ -61,11 +66,23 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
 
   private BooleanExpression createPredicate(BoardSearchRequest request) {
     BooleanExpression predicate = Expressions.asBoolean(true).isTrue();
+    if (request.getBoardType() != null){
+      predicate = predicate.and(board.boardType.eq(request.getBoardType()));
+    }
+    if (request.getContentsType() != null){
+      predicate = predicate.and(board.contentsType.eq(request.getContentsType()));
+    }
     if (request.getTitle() != null) {
       predicate = predicate.and(board.title.containsIgnoreCase(request.getTitle()));
     }
+    if (request.getSmallTitle() != null){
+      predicate = predicate.and(board.smallTitle.containsIgnoreCase(request.getSmallTitle()));
+    }
     if (request.getContents() != null) {
       predicate = predicate.and(board.contents.containsIgnoreCase(request.getContents()));
+    }
+    if (request.getCreatedBy() != null){
+      predicate = predicate.and(board.createdAndModified.createdBy.containsIgnoreCase(request.getCreatedBy()));
     }
     return predicate;
   }

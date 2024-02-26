@@ -19,6 +19,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -57,6 +58,9 @@ public class Board {
   private String title; // 게시글 제목
 
   @Column
+  private String smallTitle; // 소제목
+
+  @Column
   private String contents; // 게시글 내용
 
   @Column
@@ -74,6 +78,11 @@ public class Board {
   @Builder.Default
   private IsYn pinYn = IsYn.N; // 상단 고정 여부
 
+  @Column
+  private LocalDateTime startDate; // 시작일
+
+  @Column
+  private LocalDateTime endDate; // 종료일
 
   /* =================================================================
   * Domain mapping
@@ -87,11 +96,15 @@ public class Board {
   }
 
   public void update(BoardUpdateRequest boardUpdateRequest) {
-    this.title = boardUpdateRequest.getTitle();
-    this.contents = boardUpdateRequest.getContents();
-    this.pinYn = boardUpdateRequest.getPinYn();
     this.boardType = boardUpdateRequest.getBoardType();
+    this.contentsType = boardUpdateRequest.getContentsType();
+    this.title = boardUpdateRequest.getTitle();
+    this.smallTitle = boardUpdateRequest.getSmallTitle();
+    this.contents = boardUpdateRequest.getContents();
     this.useYn = boardUpdateRequest.getUseYn();
+    this.pinYn = boardUpdateRequest.getPinYn();
+    this.startDate = boardUpdateRequest.getStartDate();
+    this.endDate = boardUpdateRequest.getEndDate();
   }
 
   /* =================================================================
