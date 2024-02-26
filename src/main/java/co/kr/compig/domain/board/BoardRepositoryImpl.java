@@ -36,7 +36,11 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                 board.smallTitle,
                 board.contents,
                 board.boardType,
-                board.viewCount
+                board.contentsType,
+                board.viewCount,
+                board.createdAndModified.createdBy,
+                board.startDate,
+                board.endDate
             )
         );
 
@@ -62,6 +66,12 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
 
   private BooleanExpression createPredicate(BoardSearchRequest request) {
     BooleanExpression predicate = Expressions.asBoolean(true).isTrue();
+    if (request.getBoardType() != null){
+      predicate = predicate.and(board.boardType.eq(request.getBoardType()));
+    }
+    if (request.getContentsType() != null){
+      predicate = predicate.and(board.contentsType.eq(request.getContentsType()));
+    }
     if (request.getTitle() != null) {
       predicate = predicate.and(board.title.containsIgnoreCase(request.getTitle()));
     }
