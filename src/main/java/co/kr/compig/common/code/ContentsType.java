@@ -23,6 +23,10 @@ public enum ContentsType implements BaseEnumCode<String> {
   PRIMARY_EDUCATION("PED", "간병인 필수 교육", UseYn.Y), // 간병인 필수 교육
   CERTIFICATE_EDUCATION("CED", "간병인 자격증 교육", UseYn.Y), // 간병인 자격증 교육
   DEEP_EDUCATION("DED", "간병 심화 교육", UseYn.Y), // 간병 심화 교육
+
+  // 이벤트
+  PROGRESS_EVENT("PRO", "진행중인 이벤트", UseYn.Y),
+  END_EVENT("END", "종료된 이벤트", UseYn.Y)
   ;
 
 
