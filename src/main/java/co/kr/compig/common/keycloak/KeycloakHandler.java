@@ -52,8 +52,6 @@ public class KeycloakHandler {
         .realm(keycloakProperties.getRealm())
         .clientId(keycloakProperties.getClientId())
         .clientSecret(keycloakProperties.getClientSecret())
-//        .username(keycloakProperties.getUsername())
-//        .password(keycloakProperties.getPassword())
         .resteasyClient(
             ((ResteasyClientBuilder) ClientBuilder.newBuilder()).connectionPoolSize(
                 keycloakProperties.getPoolSize()).build()
