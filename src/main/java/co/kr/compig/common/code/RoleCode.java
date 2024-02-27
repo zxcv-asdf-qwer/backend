@@ -6,9 +6,10 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum RoleCode {
-  SYS_ADMIN("SYS_ADMIN"),
-  INT_SYSTEM("INT_SYSTEM"),
-  PARTNER("PARTNER");
+  SYS_ADMIN("SYS_ADMIN"), // 시스템사용자 (System)
+  SYS_USER("SYS_USER"), // 내부사용자 (Internal)
+  GUARDIAN("GUARDIAN"), // 보호자
+  PARTNER("PARTNER");  // 간병인
 
   private String code;
 

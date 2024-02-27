@@ -1,5 +1,7 @@
 package co.kr.compig.common.config;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Collection;
 import java.util.List;
@@ -10,7 +12,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -60,7 +61,7 @@ public class SecurityConfig {
     http.oauth2ResourceServer((oauth2) -> oauth2.jwt(jwt ->
         jwt.jwtAuthenticationConverter(customJwtAuthenticationConverter())
     ));
-    http.oauth2Login(Customizer.withDefaults())
+    http.oauth2Login(withDefaults())
         .logout(logout -> logout.addLogoutHandler(keycloakLogoutHandler).logoutSuccessUrl("/"));
     SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
     return http.build();

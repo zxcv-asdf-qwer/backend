@@ -6,7 +6,7 @@ import co.kr.compig.common.code.UseYn;
 import co.kr.compig.common.code.converter.MenuDivCodeConverter;
 import co.kr.compig.common.code.converter.MenuTypeCodeConverter;
 import co.kr.compig.common.embedded.CreatedAndUpdated;
-import co.kr.compig.domain.role.Role;
+import co.kr.compig.domain.permission.MenuPermission;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -21,6 +21,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -36,6 +37,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Entity
+@Table(name = "menu_test")
 public class Menu {
 
   // 메뉴코드
@@ -44,30 +46,18 @@ public class Menu {
   @Column(name = "menu_id")
   private Long id;
 
-  // 메뉴명
-  @Column(nullable = false, length = 100)
-  private String menuNm;
-
-  // 영문 메뉴명
-  @Column(length = 100)
-  private String menuNmEn;
-
-  // 중문 메뉴명
-  @Column(length = 100)
-  private String menuNmCn;
-
-  // 메뉴 URL
-  @Column(length = 150)
-  private String menuUrl;
-
   // 메뉴 구분
   @Column(nullable = false, length = 10)
   @Convert(converter = MenuDivCodeConverter.class)
   private MenuDivCode menuDiv;
 
-  // 메뉴 레벨
-  @Column(length = 1)
-  private Integer menuLvl;
+  // 메뉴명
+  @Column(nullable = false, length = 100)
+  private String menuNm;
+
+  // 메뉴 URL
+  @Column(length = 150)
+  private String menuUrl;
 
   // 메뉴 순서
   @Column(length = 3)
@@ -84,17 +74,6 @@ public class Menu {
   @Builder.Default
   private UseYn useYn = UseYn.Y;
 
-  // 대메뉴 아이콘 css class
-  @Column(length = 150)
-  private String iconCls;
-
-  //사용자메뉴얼 국문
-  @Column(length = 500)
-  private String manualKoAttachUrl;
-
-  //사용자메뉴얼 영문
-  @Column(length = 500)
-  private String manualEnAttachUrl;
   /* =================================================================
    * Domain mapping
    ================================================================= */
@@ -108,7 +87,7 @@ public class Menu {
 
   @Builder.Default
   @OneToMany(mappedBy = "menu", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  private Set<Role> roles = new HashSet<>();
+  private Set<MenuPermission> menuPermissions = new HashSet<>();
 
   /* =================================================================
    * Relation method

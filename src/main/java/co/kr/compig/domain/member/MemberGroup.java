@@ -54,4 +54,12 @@ public class MemberGroup {
     this.member = member;
   }
 
+
+  /* =================================================================
+   * Business login
+   ================================================================= */
+  public void updateGroupInfo(String groupNm, String groupPath) {
+    this.groupNm = groupNm;
+    this.groupPath = groupPath;
+  }
 }

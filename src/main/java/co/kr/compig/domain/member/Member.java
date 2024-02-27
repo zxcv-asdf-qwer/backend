@@ -7,7 +7,10 @@ import co.kr.compig.common.code.UseYn;
 import co.kr.compig.common.code.UserType;
 import co.kr.compig.common.code.converter.UserTypeConverter;
 import co.kr.compig.common.embedded.CreatedAndUpdated;
-import co.kr.compig.domain.role.Role;
+import co.kr.compig.common.exception.KeyCloakRequestException;
+import co.kr.compig.common.keycloak.KeycloakHandler;
+import co.kr.compig.common.keycloak.KeycloakHolder;
+import co.kr.compig.domain.permission.MenuPermission;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -22,13 +25,20 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.ColumnDefault;
+import org.keycloak.representations.idm.CredentialRepresentation;
+import org.keycloak.representations.idm.FederatedIdentityRepresentation;
+import org.keycloak.representations.idm.UserRepresentation;
 
 @Slf4j
 @Getter
@@ -122,7 +132,7 @@ public class Member {
   @Builder.Default
   private IsYn realNameYn = IsYn.N; // 실명 확인 여부
 
-  @Column(length = 6)
+  @Column
   @Enumerated(EnumType.STRING)
   private GenderCode gender; // 성별
 
@@ -144,7 +154,7 @@ public class Member {
 
   @Builder.Default
   @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  private Set<Role> roles = new HashSet<>();
+  private Set<MenuPermission> menuPermissions = new HashSet<>();
 
   /* =================================================================
   * Relation method
@@ -176,9 +186,13 @@ public class Member {
     this.groups.removeAll(this.groups);
   }
 
-  public void addRoles(final Role role) {
-    this.roles.add(role);
-    role.setMember(this);
+  public void addRoles(final MenuPermission menuPermission) {
+    this.menuPermissions.add(menuPermission);
+    menuPermission.setMember(this);
+  }
+
+  public void setMemberRegisterType(MemberRegisterType memberRegisterType) {
+    this.memberRegisterType = memberRegisterType;
   }
 
 
@@ -193,4 +207,78 @@ public class Member {
   * Business login
   ================================================================= */
 
+  private boolean isExistGroups() {
+    return CollectionUtils.isNotEmpty(this.groups);
+  }
+
+  /**
+   * Keycloak 사용자 생성
+   */
+  public void createUserKeyCloak(String providerId, String providerUsername)
+      throws KeyCloakRequestException {
+    KeycloakHandler keycloakHandler = KeycloakHolder.get();
+    UserRepresentation userRepresentation =
+        keycloakHandler.createUser(this.getUserRepresentation(providerId, providerUsername));
+    this.id = userRepresentation.getId();
+    if (isExistGroups()) {
+      keycloakHandler.usersJoinGroups(this.id, this.getGroups());
+    }
+  }
+
+
+  /**
+   * Keycloak UserRepresentation
+   * @return UserRepresentation
+   */
+  public UserRepresentation getUserRepresentation(String providerId, String providerUsername) {
+    UserRepresentation userRepresentation = new UserRepresentation();
+    String userNm = StringUtils.isNotEmpty(this.userNmEn) ? this.userNmEn : this.userNm;
+
+    String[] userNmSplit = userNm.split(" ");
+    String firstName = userNmSplit[0];
+    String lastName = userNmSplit.length > 1 ? userNmSplit[1] : userNmSplit[0];
+
+    userRepresentation.setId(this.id);
+    userRepresentation.setUsername(Optional.ofNullable(this.userId).orElseGet(() -> this.email));
+    userRepresentation.setFirstName(firstName);
+    userRepresentation.setLastName(lastName);
+    userRepresentation.setEmail(this.email);
+    // 탈퇴 회원일 경우 keycloak 도 비 활성화 처리
+    if (this.useYn.equals(UseYn.N) && this.deletedDate != null) {
+      userRepresentation.setEnabled(false);
+    } else {
+      userRepresentation.setEnabled(true);
+    }
+
+    if (!MemberRegisterType.GENERAL.equals(this.memberRegisterType) && StringUtils.isNotBlank(
+        providerUsername)) {
+      String socialProvider = this.memberRegisterType.getCode().toLowerCase();
+
+      FederatedIdentityRepresentation federatedIdentityRepresentation = new FederatedIdentityRepresentation();
+      federatedIdentityRepresentation.setUserId(providerId);
+      federatedIdentityRepresentation.setUserName(providerUsername);
+      federatedIdentityRepresentation.setIdentityProvider(socialProvider);
+      userRepresentation.setFederatedIdentities(List.of(federatedIdentityRepresentation));
+    }
+
+    if (!isPasswordEncoded()) {
+      CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
+      credentialRepresentation.setType("password");
+      credentialRepresentation.setValue(this.userPw);
+      userRepresentation.setCredentials(List.of(credentialRepresentation));
+    }
+
+    return userRepresentation;
+  }
+
+
+  public boolean isPasswordEncoded() {
+    return StringUtils.defaultString(this.userPw).startsWith("{bcrypt}");
+  }
+
+  public void passwordEncode() {
+    if (!isPasswordEncoded()) {
+      this.userPw = KeycloakHolder.get().getPasswordEncoder().encode(this.userPw);
+    }
+  }
 }

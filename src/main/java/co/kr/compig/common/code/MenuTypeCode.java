@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public enum MenuTypeCode implements BaseEnumCode<String> {
-  MENU("MENU", "menu.type.menu"),
-  DETAIL("DETAIL", "menu.type.detail"),
-  POPUP("POPUP", "menu.type.popup");
+  MENU("MENU", "메뉴"),
+  DETAIL("DETAIL", "상세 페이지"),
+  POPUP("POPUP", "팝업");
 
 
   private final String code;

@@ -1,4 +1,4 @@
-package co.kr.compig.domain.role;
+package co.kr.compig.domain.permission;
 
 import co.kr.compig.common.embedded.CreatedAndUpdated;
 import co.kr.compig.domain.member.Member;
@@ -24,9 +24,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 @Table
-public class Role {
+public class MenuPermission {
 
-  // Role id
+  // MenuPermission id
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "role_id")

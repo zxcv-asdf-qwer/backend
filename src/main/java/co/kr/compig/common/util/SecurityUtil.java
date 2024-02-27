@@ -116,10 +116,10 @@ public class SecurityUtil {
   }
 
   /**
-   * @return {@link RoleCode#INT_SYSTEM} 권한 여부
+   * @return {@link RoleCode#SYS_USER} 권한 여부
    */
   public static boolean hasRoleSystem() {
-    return getRole().stream().anyMatch(a -> RoleCode.INT_SYSTEM.hasRole(a.getAuthority()));
+    return getRole().stream().anyMatch(a -> RoleCode.SYS_USER.hasRole(a.getAuthority()));
   }
 
   /**
