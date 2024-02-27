@@ -10,21 +10,26 @@ import co.kr.compig.common.code.converter.ContentsTypeConverter;
 import co.kr.compig.common.embedded.CreatedAndUpdated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.ColumnDefault;
 
 @Slf4j
@@ -84,6 +89,12 @@ public class Board {
   @Column
   private LocalDateTime endDate; // 종료일
 
+  @ElementCollection(fetch = FetchType.LAZY)
+  @BatchSize(size = 5)
+  @Column
+  private List<String> imageUrlList = new ArrayList<>(); // 이미지 URL 리스트
+
+  private String thumbnailImageUrl;
   /* =================================================================
   * Domain mapping
   ================================================================= */

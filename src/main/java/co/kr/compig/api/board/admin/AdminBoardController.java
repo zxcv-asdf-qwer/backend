@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -31,9 +33,10 @@ public class AdminBoardController {
 
   @PostMapping
   public ResponseEntity<Response<?>> createBoard(
-      @RequestBody @Valid BoardCreateRequest boardCreateRequest) {
+      @RequestPart(value = "data") @Valid BoardCreateRequest boardCreateRequest,
+      MultipartHttpServletRequest multipartRequest) {
     return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-        .data(Map.of("boardId", boardService.createBoard(boardCreateRequest)))
+        .data(Map.of("boardId", boardService.createBoard(boardCreateRequest, multipartRequest)))
         .build());
   }
 

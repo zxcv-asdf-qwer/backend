@@ -13,8 +13,9 @@ public enum ErrorCode {
   ERROR(HttpStatus.valueOf(420), "오류가 발생하였습니다."),
   INVALID_NOT_EXIST_DATA(HttpStatus.valueOf(422), "데이터가 없습니다."),
 
-  // board
-  POST_NOT_EXIST(HttpStatus.NOT_FOUND, "존재하지 않는 게시글입니다."),
+  // file
+  EXTRACT_INVALID(HttpStatus.BAD_REQUEST, "확장자를 추출할 수 없습니다."),
+  FILE_DECODE_FAIL(HttpStatus.BAD_REQUEST, "파일 이름 디코딩에 실패했습니다."),
   ;
 
   private final HttpStatus httpStatus;
