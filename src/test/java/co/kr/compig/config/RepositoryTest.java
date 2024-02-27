@@ -6,15 +6,16 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@ActiveProfiles("test")
 @DataJpaTest
 @TestPropertySource(
     properties = {
+        "spring.datasource.url=jdbc:h2:mem:test",
+        "spring.datasource.username=root",
+        "spring.datasource.driver-class-name=org.h2.Driver",
         "spring.flyway.enabled=false",
         "spring.jpa.hibernate.ddl-auto=create-drop",
         "spring.jpa.properties.hibernate.show_sql=true",

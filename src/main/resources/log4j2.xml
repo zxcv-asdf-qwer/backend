@@ -35,6 +35,7 @@
     <Logger name="jdbc.audit" level="OFF"/>
     <Logger name="jdbc.resultset" level="OFF"/>
     <Logger name="jdbc.connection" level="OFF"/>
+    <logger name="org.springframework" level="INFO"/>
     <Logger name="co.kr" level="DEBUG" additivity="false">
       <AppenderRef ref="STDOUT"/>
     </Logger>

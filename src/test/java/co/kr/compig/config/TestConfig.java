@@ -17,5 +17,4 @@ public class TestConfig {
     return new JPAQueryFactory(entityManager);
   }
 
-
 }
