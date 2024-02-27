@@ -13,7 +13,7 @@ import org.springframework.test.context.TestPropertySource;
 @DataJpaTest
 @TestPropertySource(
     properties = {
-        "spring.datasource.url=jdbc:h2:mem:test",
+        "spring.datasource.url=jdbc:h2:mem:test;DB_CLOSE_DELAY=-1",
         "spring.datasource.username=root",
         "spring.datasource.driver-class-name=org.h2.Driver",
         "spring.flyway.enabled=false",
@@ -21,7 +21,6 @@ import org.springframework.test.context.TestPropertySource;
         "spring.jpa.properties.hibernate.show_sql=true",
         "spring.jpa.properties.hibernate.format_sql=true",
         "spring.jpa.properties.hibernate.use_sql_comments=true",
-        "app.scheduling.enable=false"
     })
 @Import(TestConfig.class)
 public @interface RepositoryTest {
