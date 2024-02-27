@@ -6,6 +6,7 @@ import co.kr.compig.common.code.IsYn;
 import co.kr.compig.domain.board.Board;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -41,6 +42,10 @@ public class BoardCreateRequest {
 
   private LocalDateTime endDate; // 종료 날짜
 
+  private List<String> imageUrlList;
+
+  private String thumbnailImageUrl;
+
   public Board converterEntity() {
     return Board.builder()
         .title(this.title)
@@ -51,8 +56,16 @@ public class BoardCreateRequest {
         .pinYn(this.pinYn)
         .startDate(this.startDate)
         .endDate(this.endDate)
+        .thumbnailImageUrl(thumbnailImageUrl)
+        .imageUrlList(imageUrlList)
         .build();
 
   }
 
+  public void setImageUrlListAndThumbnail(List<String> imageUrlList, int thumbnailIndex) {
+    this.imageUrlList = imageUrlList;
+    if (thumbnailIndex >= 0 && thumbnailIndex < imageUrlList.size()) {
+      this.thumbnailImageUrl = imageUrlList.get(thumbnailIndex);
+    }
+  }
 }
