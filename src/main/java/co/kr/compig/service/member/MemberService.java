@@ -86,4 +86,5 @@ public class MemberService {
 
     return memberRepository.save(member).getId();
   }
+
 }
