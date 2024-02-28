@@ -33,7 +33,6 @@ public class ApiLogService {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     apiLogRepository.save(
         ApiLog.builder()
-            .siteId(LogUtil.getSiteId(request))
             .httpMethod(request.getMethod())
             .requestUrl(request.getRequestURI())
             .userId(authentication.getName())

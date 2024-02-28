@@ -52,20 +52,6 @@ public class LogUtil {
     return ip;
   }
 
-  /**
-   * 접속 사이트 정보를 넘긴다.
-   *
-   * @param request
-   * @return
-   */
-  public static Long getSiteId(HttpServletRequest request) {
-    String header = request.getHeader("X-Site-Id");
-    if (!StringUtils.hasLength(header)) {
-      return null;
-    }
-    return Long.valueOf(header);
-  }
-
   public static AgentCode getAgentCode(HttpServletRequest request) {
     if (request == null) {
       ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();

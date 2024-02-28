@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
@@ -25,10 +26,16 @@ import lombok.NoArgsConstructor;
         @UniqueConstraint(name = "uk01_member_group", columnNames = {"groupKey", "member_id"})
     }
 )
+@SequenceGenerator(
+    name = "member_group_seq_gen", //시퀀스 제너레이터 이름
+    sequenceName = "member_group_seq", //시퀀스 이름
+    initialValue = 1, //시작값
+    allocationSize = 1 //메모리를 통해 할당 할 범위 사이즈
+)
 public class MemberGroup {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "member_group_seq_gen")
   @Column(name = "member_group_id")
   private Long id;
 
@@ -41,6 +48,9 @@ public class MemberGroup {
   @Column(length = 250, nullable = false)
   private String groupPath;
 
+  /* =================================================================
+   * Domain mapping
+     ================================================================= */
   @Builder.Default
   @JoinColumn(name = "member_id", nullable = false)
   @ManyToOne(fetch = FetchType.LAZY)
@@ -48,16 +58,14 @@ public class MemberGroup {
 
   /* =================================================================
    * Relation method
-   ================================================================= */
-
+     ================================================================= */
   public void setMember(Member member) {
     this.member = member;
   }
 
-
   /* =================================================================
    * Business login
-   ================================================================= */
+     ================================================================= */
   public void updateGroupInfo(String groupNm, String groupPath) {
     this.groupNm = groupNm;
     this.groupPath = groupPath;

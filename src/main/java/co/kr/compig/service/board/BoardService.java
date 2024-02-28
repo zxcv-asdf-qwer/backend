@@ -98,7 +98,7 @@ public class BoardService {
     Board board = boardRepository.findById(boardId).orElseThrow(NotExistDataException::new);
     for(FileResponse fileResponse : fileResponses){
       SystemFile systemFile = SystemFile.builder()
-          .s3Path(fileResponse.getS3Path())
+          .filePath(fileResponse.getFilePath())
           .fileNm(fileResponse.getFileNm())
           .fileExtension(fileResponse.getFileExtension())
           .board(board)

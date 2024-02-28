@@ -21,6 +21,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -31,48 +32,46 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@SuppressWarnings("ALL")
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "menu_test")
+@Table
+@SequenceGenerator(
+    name = "menu_seq_gen", //시퀀스 제너레이터 이름
+    sequenceName = "menu_seq", //시퀀스 이름
+    initialValue = 1, //시작값
+    allocationSize = 1 //메모리를 통해 할당 할 범위 사이즈
+)
 public class Menu {
 
-  // 메뉴코드
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "menu_seq_gen")
   @Column(name = "menu_id")
-  private Long id;
+  private Long id; // 메뉴코드
 
-  // 메뉴 구분
   @Column(nullable = false, length = 10)
   @Convert(converter = MenuDivCodeConverter.class)
-  private MenuDivCode menuDiv;
+  private MenuDivCode menuDiv; // 메뉴 구분
 
-  // 메뉴명
   @Column(nullable = false, length = 100)
-  private String menuNm;
+  private String menuNm; // 메뉴명
 
-  // 메뉴 URL
   @Column(length = 150)
-  private String menuUrl;
+  private String menuUrl; // 메뉴 URL
 
-  // 메뉴 순서
   @Column(length = 3)
-  private Integer seq;
+  private Integer seq; // 메뉴 순서
 
-  // 메뉴 타입
   @Column(nullable = false, length = 6)
   @Convert(converter = MenuTypeCodeConverter.class)
-  private MenuTypeCode menuType;
+  private MenuTypeCode menuType; // 메뉴 타입
 
-  // 사용유무
   @Column(length = 1)
   @Enumerated(EnumType.STRING)
   @Builder.Default
-  private UseYn useYn = UseYn.Y;
+  private UseYn useYn = UseYn.Y; // 사용유무
 
   /* =================================================================
    * Domain mapping
@@ -91,7 +90,7 @@ public class Menu {
 
   /* =================================================================
    * Relation method
-   ================================================================= */
+     ================================================================= */
   public void addChildMenu(final Menu menu) {
     this.child.add(menu);
     menu.setParent(this);
@@ -108,13 +107,13 @@ public class Menu {
 
   /* =================================================================
    * Default columns
-   ================================================================= */
+     ================================================================= */
   @Embedded
   @Builder.Default
   private CreatedAndUpdated createdAndModified = new CreatedAndUpdated();
 
-    /* =================================================================
-     * Business login
+  /* =================================================================
+   * Business login
      ================================================================= */
 
 }

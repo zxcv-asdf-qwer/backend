@@ -9,9 +9,9 @@ import co.kr.compig.common.code.converter.BoardTypeConverter;
 import co.kr.compig.common.code.converter.ContentsTypeConverter;
 import co.kr.compig.common.embedded.CreatedAndUpdated;
 import co.kr.compig.domain.file.SystemFile;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -21,17 +21,16 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.ColumnDefault;
 
 @Slf4j
@@ -40,16 +39,17 @@ import org.hibernate.annotations.ColumnDefault;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(
-    uniqueConstraints = {
-        @UniqueConstraint(
-            name = "uk01_board",
-            columnNames = {"boardId"})
-    })
+@Table
+@SequenceGenerator(
+    name = "board_seq_gen", //시퀀스 제너레이터 이름
+    sequenceName = "board_seq", //시퀀스 이름
+    initialValue = 1, //시작값
+    allocationSize = 1 //메모리를 통해 할당 할 범위 사이즈
+)
 public class Board {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "board_seq_gen")
   @Column(name = "board_id")
   private Long id; // 게시글 id
 
@@ -91,20 +91,19 @@ public class Board {
   @Column
   private LocalDateTime endDate; // 종료일
 
-  @ElementCollection(fetch = FetchType.LAZY)
-  @BatchSize(size = 5)
   @Column
-  private List<String> imageUrlList = new ArrayList<>(); // 이미지 URL 리스트
+  private String thumbnailImageUrl; //썸네일 이미지 url
+  /* =================================================================
+   * Domain mapping
+     ================================================================= */
+  @OneToMany(mappedBy = "board", fetch = FetchType.LAZY,
+      cascade = CascadeType.ALL,
+      orphanRemoval = true)
+  private Set<SystemFile> systemFiles = new HashSet<>();
 
-  private String thumbnailImageUrl;
   /* =================================================================
-  * Domain mapping
-  ================================================================= */
-  @OneToMany(mappedBy = "board")
-  private List<SystemFile> systemFiles;
-  /* =================================================================
-  * Relation method
-  ================================================================= */
+   * Relation method
+     ================================================================= */
   public void increaseViewCount() {
     this.viewCount++;
   }
@@ -122,8 +121,8 @@ public class Board {
   }
 
   /* =================================================================
- * Default columns
- ================================================================= */
+   * Default columns
+     ================================================================= */
   @Embedded
   @Builder.Default
   private CreatedAndUpdated createdAndModified = new CreatedAndUpdated();

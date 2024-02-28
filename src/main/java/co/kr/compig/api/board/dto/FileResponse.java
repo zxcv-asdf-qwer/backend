@@ -14,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 public class FileResponse extends BaseAudit {
-  private String s3Path; // 파일 경로
+  private String filePath; // 파일 경로
   private String fileNm; // 파일 이름
   private FileType fileType; // 파일 타입
   private String fileExtension; // 파일 확장자명

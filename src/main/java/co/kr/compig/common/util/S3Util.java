@@ -178,7 +178,7 @@ public class S3Util {
         putS3(fileBytes, fileName, contentType);
         String imageUrl = generateUnsignedUrl(fileName);
         FileResponse fileResponse = FileResponse.builder()
-            .s3Path(imageUrl)
+            .filePath(imageUrl)
             .fileNm(fileName)
             .fileExtension(contentType)
             .build();

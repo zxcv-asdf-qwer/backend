@@ -3,20 +3,23 @@ package co.kr.compig.domain.file;
 import co.kr.compig.common.code.FileType;
 import co.kr.compig.common.code.IsYn;
 import co.kr.compig.common.code.UseYn;
+import co.kr.compig.common.code.converter.FileTypeConverter;
 import co.kr.compig.common.embedded.CreatedAndUpdated;
 import co.kr.compig.domain.board.Board;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,28 +32,28 @@ import lombok.extern.slf4j.Slf4j;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(
-    uniqueConstraints = {
-        @UniqueConstraint(
-            name = "uk01_systemFile",
-            columnNames = {"systemFileId"}
-        )
-    }
+@Table
+@SequenceGenerator(
+    name = "system_file_seq_gen", //시퀀스 제너레이터 이름
+    sequenceName = "system_file_seq", //시퀀스 이름
+    initialValue = 1, //시작값
+    allocationSize = 1 //메모리를 통해 할당 할 범위 사이즈
 )
 public class SystemFile {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "system_file_seq_gen")
   @Column(name = "system_file_id")
   private Long id; // 파일 id
 
   @Column
-  private String s3Path; // 파일 경로
+  private String filePath; // 파일 경로
 
   @Column
   private String fileNm; // 파일 이름
 
-  @Column
+  @Column(length = 10)
+  @Convert(converter = FileTypeConverter.class)
   private FileType fileType; // 파일 타입
 
   @Column
@@ -65,16 +68,18 @@ public class SystemFile {
   @Enumerated(EnumType.STRING)
   @Builder.Default
   private UseYn useYn = UseYn.Y; // 사용 여부
-/* =================================================================
-  * Domain mapping
-  ================================================================= */
-  @JoinColumn(name = "board_id")
-  @ManyToOne
-  private Board board;
 
   /* =================================================================
- * Default columns
- ================================================================= */
+   * Domain mapping
+     ================================================================= */
+  @Builder.Default
+  @JoinColumn(name = "board_id")
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Board board = new Board();
+
+  /* =================================================================
+   * Default columns
+     ================================================================= */
   @Embedded
   @Builder.Default
   private CreatedAndUpdated createdAndModified = new CreatedAndUpdated();
