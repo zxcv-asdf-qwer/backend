@@ -8,6 +8,7 @@ import co.kr.compig.common.code.UseYn;
 import co.kr.compig.common.code.converter.BoardTypeConverter;
 import co.kr.compig.common.code.converter.ContentsTypeConverter;
 import co.kr.compig.common.embedded.CreatedAndUpdated;
+import co.kr.compig.domain.file.SystemFile;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.ElementCollection;
@@ -19,6 +20,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDateTime;
@@ -98,7 +100,8 @@ public class Board {
   /* =================================================================
   * Domain mapping
   ================================================================= */
-
+  @OneToMany(mappedBy = "board")
+  private List<SystemFile> systemFiles;
   /* =================================================================
   * Relation method
   ================================================================= */

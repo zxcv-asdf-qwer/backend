@@ -79,7 +79,7 @@ public class AdminBoardController {
       @RequestPart(value = "file") Map<String, String> file
   ){
     return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-        .data(Map.of("boardId", boardService.createBoardBase(boardCreateRequest, file)))
+        .data(Map.of("boardId", boardService.createBoardBaseFile(boardCreateRequest, file)))
         .build());
   }
 

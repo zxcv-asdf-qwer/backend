@@ -4,11 +4,14 @@ import co.kr.compig.api.board.dto.BoardCreateRequest;
 import co.kr.compig.api.board.dto.BoardResponse;
 import co.kr.compig.api.board.dto.BoardSearchRequest;
 import co.kr.compig.api.board.dto.BoardUpdateRequest;
+import co.kr.compig.api.board.dto.FileResponse;
 import co.kr.compig.common.exception.NotExistDataException;
 import co.kr.compig.common.util.S3Util;
 import co.kr.compig.domain.board.Board;
 import co.kr.compig.domain.board.BoardRepository;
 import co.kr.compig.domain.board.BoardRepositoryCustom;
+import co.kr.compig.domain.file.SystemFile;
+import co.kr.compig.domain.file.SystemFileRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +34,7 @@ public class BoardService {
 
   private final BoardRepository boardRepository;
   private final BoardRepositoryCustom boardRepositoryCustom;
+  private final SystemFileRepository systemFileRepository;
   private final S3Util s3Util;
 
   public Long createBoard(BoardCreateRequest boardCreateRequest, MultipartHttpServletRequest multipartRequest) {
@@ -82,4 +86,24 @@ public class BoardService {
     return boardRepository.save(board).getId();
   }
 
+  public Long createBoardBaseFile(BoardCreateRequest boardCreateRequest,  Map<String, String> file) {
+    List<FileResponse> imageUrlList = s3Util.uploadBase64ToFile(file);
+    Board board = boardCreateRequest.converterEntity();
+    boardRepository.save(board);
+    saveSystemFile(imageUrlList, board.getId());
+    return board.getId();
+  }
+
+  private void saveSystemFile(List<FileResponse> fileResponses, Long boardId){
+    Board board = boardRepository.findById(boardId).orElseThrow(NotExistDataException::new);
+    for(FileResponse fileResponse : fileResponses){
+      SystemFile systemFile = SystemFile.builder()
+          .s3Path(fileResponse.getS3Path())
+          .fileNm(fileResponse.getFileNm())
+          .fileExtension(fileResponse.getFileExtension())
+          .board(board)
+          .build();
+      systemFileRepository.save(systemFile);
+    }
+  }
 }

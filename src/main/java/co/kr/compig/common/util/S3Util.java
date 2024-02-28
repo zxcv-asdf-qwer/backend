@@ -1,5 +1,6 @@
 package co.kr.compig.common.util;
 
+import co.kr.compig.api.board.dto.FileResponse;
 import co.kr.compig.common.exception.UploadException;
 import co.kr.compig.common.exception.dto.ErrorCode;
 import com.amazonaws.services.s3.AmazonS3;
@@ -163,5 +164,41 @@ public class S3Util {
     } catch (IOException e) {
     }
     return null;
+  }
+  /////////////
+  // file 테이블 생성 후 uploads
+  public List<FileResponse> uploadsToFile(List<MultipartFile> multipartFiles){
+    List<FileResponse> imageUrlList = new ArrayList<>();
+
+    for(MultipartFile multipartFile : multipartFiles){
+      try{
+        byte[] fileBytes = multipartFile.getBytes();
+        String fileName = generateFileName(multipartFile.getOriginalFilename());
+        String contentType = multipartFile.getContentType();
+        putS3(fileBytes, fileName, contentType);
+        String imageUrl = generateUnsignedUrl(fileName);
+        FileResponse fileResponse = FileResponse.builder()
+            .s3Path(imageUrl)
+            .fileNm(fileName)
+            .fileExtension(contentType)
+            .build();
+        imageUrlList.add(fileResponse);
+      }catch (IOException e){
+        throw  new UploadException(ErrorCode.PATH_VARIABLE_VALUE, e);
+      }
+    }
+    return imageUrlList;
+  }
+
+  public List<FileResponse> uploadBase64ToFile(Map<String, String> img){
+    List<MultipartFile> multipartFiles = new ArrayList<>();
+    for(String key : img.keySet()){
+      String contentType = img.get(key).substring(5).split(";")[0];
+      String fileName = key;
+      MultipartFile multipartFile = createMultipartFile(img.get(key), contentType, key);
+      multipartFiles.add(multipartFile);
+    }
+    List<FileResponse> imageUrlList = uploadsToFile(multipartFiles);
+    return imageUrlList;
   }
 }
