@@ -40,7 +40,8 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                 board.viewCount,
                 board.createdAndModified.createdBy,
                 board.startDate,
-                board.endDate
+                board.endDate,
+                board.thumbnailImageUrl
             )
         );
 

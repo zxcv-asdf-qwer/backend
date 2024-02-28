@@ -1,6 +1,7 @@
 package co.kr.compig.api.board.admin;
 
 import co.kr.compig.api.board.dto.BoardCreateRequest;
+import co.kr.compig.api.board.dto.BoardDetailResponse;
 import co.kr.compig.api.board.dto.BoardResponse;
 import co.kr.compig.api.board.dto.BoardSearchRequest;
 import co.kr.compig.api.board.dto.BoardUpdateRequest;
@@ -30,6 +31,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 @RestController
 @RequestMapping(path = "/pv/board", produces = "application/json")
 public class AdminBoardController {
+
   private final BoardService boardService;
 
   @PostMapping
@@ -50,9 +52,9 @@ public class AdminBoardController {
   }
 
   @GetMapping("/{boardId}")
-  public ResponseEntity<Response<BoardResponse>> getBoard(
+  public ResponseEntity<Response<BoardDetailResponse>> getBoard(
       @PathVariable(name = "boardId") Long boardId) {
-    return ResponseEntity.ok(Response.<BoardResponse>builder()
+    return ResponseEntity.ok(Response.<BoardDetailResponse>builder()
         .data(boardService.getBoard(boardId))
         .build());
   }
@@ -74,13 +76,22 @@ public class AdminBoardController {
 
   //////////////////////////////////////////////////
   // base64
-  @PostMapping(path = "/base")
+  @PostMapping(path = "/base64")
   public ResponseEntity<Response<?>> createBoardBase64(
       @ModelAttribute @Valid BoardCreateRequest boardCreateRequest,
-      @RequestPart(value = "file") Map<String, String> file
-  ){
+      @RequestPart(value = "file") Map<String, String> files
+
+  ) {
     return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-        .data(Map.of("boardId", boardService.createBoardBaseFile(boardCreateRequest, file)))
+        .data(Map.of("boardId", boardService.createBoardBaseFile(boardCreateRequest, files)))
+        .build());
+  }
+
+  @GetMapping("/base64/{boardId}")
+  public ResponseEntity<Response<BoardDetailResponse>> getBoardBase(
+      @PathVariable(name = "boardId") Long boardId) {
+    return ResponseEntity.ok(Response.<BoardDetailResponse>builder()
+        .data(boardService.getBoard(boardId))
         .build());
   }
 

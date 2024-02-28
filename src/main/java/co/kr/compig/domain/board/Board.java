@@ -1,5 +1,7 @@
 package co.kr.compig.domain.board;
 
+import co.kr.compig.api.board.dto.BoardDetailResponse;
+import co.kr.compig.api.board.dto.BoardResponse;
 import co.kr.compig.api.board.dto.BoardUpdateRequest;
 import co.kr.compig.common.code.BoardType;
 import co.kr.compig.common.code.ContentsType;
@@ -9,9 +11,9 @@ import co.kr.compig.common.code.converter.BoardTypeConverter;
 import co.kr.compig.common.code.converter.ContentsTypeConverter;
 import co.kr.compig.common.embedded.CreatedAndUpdated;
 import co.kr.compig.domain.file.SystemFile;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -24,14 +26,13 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.ColumnDefault;
 
 @Slf4j
@@ -46,6 +47,7 @@ import org.hibernate.annotations.ColumnDefault;
             name = "uk01_board",
             columnNames = {"boardId"})
     })
+
 public class Board {
 
   @Id
@@ -91,17 +93,16 @@ public class Board {
   @Column
   private LocalDateTime endDate; // 종료일
 
-  @ElementCollection(fetch = FetchType.LAZY)
-  @BatchSize(size = 5)
-  @Column
-  private List<String> imageUrlList = new ArrayList<>(); // 이미지 URL 리스트
 
   private String thumbnailImageUrl;
   /* =================================================================
   * Domain mapping
   ================================================================= */
-  @OneToMany(mappedBy = "board")
-  private List<SystemFile> systemFiles;
+  @OneToMany(mappedBy = "board", fetch = FetchType.LAZY,
+      cascade = CascadeType.ALL,
+      orphanRemoval = true)
+  private Set<SystemFile> systemFiles = new HashSet<>();
+
   /* =================================================================
   * Relation method
   ================================================================= */
@@ -120,7 +121,38 @@ public class Board {
     this.startDate = boardUpdateRequest.getStartDate();
     this.endDate = boardUpdateRequest.getEndDate();
   }
+  public BoardResponse toBoardResponse() {
+    return BoardResponse.builder()
+        .boardId(this.id)
+        .title(this.title)
+        .smallTitle(this.smallTitle)
+        .contents(this.contents)
+        .boardType(this.boardType)
+        .contentsType(this.contentsType)
+        .viewCount(this.viewCount)
+        .createdBy(this.createdAndModified.getCreatedBy())
+        .startDate(this.startDate)
+        .endDate(this.endDate)
+        .thumbNail(!this.systemFiles.isEmpty()? this.systemFiles.stream().map(SystemFile::getS3Path).toList().get(0) : null)
+        .build();
 
+  }
+
+  public BoardDetailResponse toBoardDetailResponse() {
+    return BoardDetailResponse.builder()
+        .boardId(this.id)
+        .title(this.title)
+        .smallTitle(this.smallTitle)
+        .contents(this.contents)
+        .boardType(this.boardType)
+        .contentsType(this.contentsType)
+        .viewCount(this.viewCount)
+        .createdBy(this.createdAndModified.getCreatedBy())
+        .startDate(this.startDate)
+        .endDate(this.endDate)
+        .thumbNail(!this.systemFiles.isEmpty()? this.systemFiles.stream().map(SystemFile::getS3Path).toList().get(0) : null)
+        .systemFiles(this.systemFiles.stream().map(SystemFile::getS3Path).toList()).build();
+  }
   /* =================================================================
  * Default columns
  ================================================================= */

@@ -10,6 +10,7 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -65,12 +66,12 @@ public class SystemFile {
   @Enumerated(EnumType.STRING)
   @Builder.Default
   private UseYn useYn = UseYn.Y; // 사용 여부
-/* =================================================================
-  * Domain mapping
-  ================================================================= */
+  /* =================================================================
+    * Domain mapping
+    ================================================================= */
   @JoinColumn(name = "board_id")
-  @ManyToOne
-  private Board board;
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Board board = new Board();
 
   /* =================================================================
  * Default columns

@@ -1,10 +1,11 @@
 package co.kr.compig.service.board;
 
 import co.kr.compig.api.board.dto.BoardCreateRequest;
+import co.kr.compig.api.board.dto.BoardDetailResponse;
 import co.kr.compig.api.board.dto.BoardResponse;
 import co.kr.compig.api.board.dto.BoardSearchRequest;
 import co.kr.compig.api.board.dto.BoardUpdateRequest;
-import co.kr.compig.api.board.dto.FileResponse;
+import co.kr.compig.api.board.dto.SystemFileResponse;
 import co.kr.compig.common.exception.NotExistDataException;
 import co.kr.compig.common.util.S3Util;
 import co.kr.compig.domain.board.Board;
@@ -37,12 +38,13 @@ public class BoardService {
   private final SystemFileRepository systemFileRepository;
   private final S3Util s3Util;
 
-  public Long createBoard(BoardCreateRequest boardCreateRequest, MultipartHttpServletRequest multipartRequest) {
+  public Long createBoard(BoardCreateRequest boardCreateRequest,
+      MultipartHttpServletRequest multipartRequest) {
     MultiValueMap<String, MultipartFile> mvm = multipartRequest.getMultiFileMap();
     Set<String> multiFileKeys = mvm.keySet();
     List<MultipartFile> multipartFiles = new ArrayList<>();
     for (String multiFileKey : multiFileKeys) {//파일 객체 갯수 for문
-      for(MultipartFile multipartFile : mvm.get(multiFileKey)){
+      for (MultipartFile multipartFile : mvm.get(multiFileKey)) {
         multipartFiles.add(multipartFile);
       }
     }
@@ -72,35 +74,28 @@ public class BoardService {
     return board.getId();
   }
 
-  public BoardResponse getBoard(Long boardId) {
+  public BoardDetailResponse getBoard(Long boardId) {
     Board board = boardRepository.findById(boardId).orElseThrow(NotExistDataException::new);
     board.increaseViewCount();
-    return new BoardResponse(board);
+    return board.toBoardDetailResponse();
   }
 
-  public Long createBoardBase(BoardCreateRequest boardCreateRequest,  Map<String, String> file) {
-    List<String> imageUrlList = s3Util.uploadBase64(file);
-    boardCreateRequest.setImageUrlListAndThumbnail(imageUrlList, 0);
-    boardCreateRequest.setImageUrlList(imageUrlList);
-    Board board = boardCreateRequest.converterEntity();
-    return boardRepository.save(board).getId();
-  }
-
-  public Long createBoardBaseFile(BoardCreateRequest boardCreateRequest,  Map<String, String> file) {
-    List<FileResponse> imageUrlList = s3Util.uploadBase64ToFile(file);
+  public Long createBoardBaseFile(BoardCreateRequest boardCreateRequest,
+      Map<String, String> files) {
+    List<SystemFileResponse> imageUrlList = s3Util.uploadBase64ToFile(files);
     Board board = boardCreateRequest.converterEntity();
     boardRepository.save(board);
     saveSystemFile(imageUrlList, board.getId());
     return board.getId();
   }
 
-  private void saveSystemFile(List<FileResponse> fileResponses, Long boardId){
+  private void saveSystemFile(List<SystemFileResponse> systemFileRespons, Long boardId) {
     Board board = boardRepository.findById(boardId).orElseThrow(NotExistDataException::new);
-    for(FileResponse fileResponse : fileResponses){
+    for (SystemFileResponse systemFileResponse : systemFileRespons) {
       SystemFile systemFile = SystemFile.builder()
-          .s3Path(fileResponse.getS3Path())
-          .fileNm(fileResponse.getFileNm())
-          .fileExtension(fileResponse.getFileExtension())
+          .s3Path(systemFileResponse.getS3Path())
+          .fileNm(systemFileResponse.getFileNm())
+          .fileExtension(systemFileResponse.getFileExtension())
           .board(board)
           .build();
       systemFileRepository.save(systemFile);
