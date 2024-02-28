@@ -5,6 +5,7 @@ import co.kr.compig.api.member.dto.GuardianMemberCreate;
 import co.kr.compig.api.member.dto.PartnerMemberCreate;
 import co.kr.compig.common.code.UserType;
 import co.kr.compig.common.keycloak.KeycloakHandler;
+import co.kr.compig.common.util.S3Util;
 import co.kr.compig.domain.member.Member;
 import co.kr.compig.domain.member.MemberGroup;
 import co.kr.compig.domain.member.MemberGroupRepository;
@@ -27,6 +28,7 @@ public class MemberService {
   private final MemberRepository memberRepository;
   private final MemberGroupRepository memberGroupRepository;
   private final KeycloakHandler keycloakHandler;
+  private final S3Util s3Util;
 
   public String adminCreate(AdminMemberCreate adminMemberCreate) {
     Member member = adminMemberCreate.convertEntity();
@@ -78,6 +80,9 @@ public class MemberService {
     setReferenceDomain(partnerMemberCreate.getUserType(), member);
     member.createUserKeyCloak(null, null);
     member.passwordEncode();
+    Optional.ofNullable(partnerMemberCreate.getPicture()).ifPresent(file -> {
+      member.setPicture(s3Util.uploads(List.of(file)).stream().findFirst().orElse(null));
+    });
 
     return memberRepository.save(member).getId();
   }

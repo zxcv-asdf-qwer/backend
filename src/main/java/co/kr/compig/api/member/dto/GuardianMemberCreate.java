@@ -6,6 +6,7 @@ import co.kr.compig.common.code.MemberRegisterType;
 import co.kr.compig.common.code.UseYn;
 import co.kr.compig.common.code.UserType;
 import co.kr.compig.domain.member.Member;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -28,18 +29,14 @@ public class GuardianMemberCreate {
   private String userNm; // 사용자 명
 
   @NotBlank
-  @Length(min = 3, max = 15)
-  @Pattern(regexp = "^[A-Za-z0-9_]{3,15}$")
-  private String userId; // 사용자 아이디
+  @Email
+  private String email; // 이메일
 
   @NotBlank
   private String userPw; // 사용자 비밀번호
 
   @NotBlank
   private String telNo; // 연락처
-
-  @NotBlank
-  private String email; // 이메일
 
   @NotNull
   private GenderCode gender; // 성별
@@ -53,17 +50,16 @@ public class GuardianMemberCreate {
   @Builder.Default
   private MemberRegisterType memberRegisterType = MemberRegisterType.GENERAL; // 회원가입 유형
 
-  private LocalDate marketingEmailDate;  // 이메일 수신동의 날짜
-  private LocalDate marketingAppPushDate; // 앱 푸시알림 수신동의 날짜
-  private LocalDate marketingKakaoDate;  // 알림톡 수신동의 날짜
-  private LocalDate marketingSmsDate;  // 문자 수신동의 날짜
+  private boolean marketingEmail; // 이메일 수신동의
+  private boolean marketingAppPush; // 앱 푸시알림 수신동의
+  private boolean marketingKakao; // 알림톡 수신동의
+  private boolean marketingSms; // 문자 수신동의
 
   private IsYn realNameYn; // 실명 확인 여부
 
   public Member convertEntity() {
     return Member.builder()
         .userNm(this.userNm)
-        .userId(this.userId)
         .userPw(this.userPw)
         .telNo(this.telNo)
         .email(this.email)
@@ -71,10 +67,10 @@ public class GuardianMemberCreate {
         .useYn(this.useYn)
         .userType(this.userType)
         .memberRegisterType(this.memberRegisterType)
-        .marketingEmailDate(this.marketingEmailDate)
-        .marketingAppPushDate(this.marketingAppPushDate)
-        .marketingKakaoDate(this.marketingKakaoDate)
-        .marketingSmsDate(this.marketingSmsDate)
+        .marketingEmailDate(this.marketingEmail ? LocalDate.now() : null)
+        .marketingAppPushDate(this.marketingAppPush ? LocalDate.now() : null)
+        .marketingKakaoDate(this.marketingKakao ? LocalDate.now() : null)
+        .marketingSmsDate(this.marketingSms ? LocalDate.now() : null)
         .realNameYn(this.realNameYn)
         .build();
   }

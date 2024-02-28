@@ -187,6 +187,9 @@ public class Member {
     menuPermission.setMember(this);
   }
 
+  public void setPicture(String picture) {
+    this.picture = picture;
+  }
   /* =================================================================
   * Default columns
   ================================================================= */
