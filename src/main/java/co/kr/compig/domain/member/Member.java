@@ -1,5 +1,7 @@
 package co.kr.compig.domain.member;
 
+import co.kr.compig.common.code.CareerCode;
+import co.kr.compig.common.code.DomesticForeignCode;
 import co.kr.compig.common.code.GenderCode;
 import co.kr.compig.common.code.IsYn;
 import co.kr.compig.common.code.MemberRegisterType;
@@ -65,43 +67,15 @@ public class Member {
   @Column(length = 100)
   private String userNm; // 사용자 명
 
-  @Column(length = 100)
-  private String userNmEn; // 사용자 영문명
-
   @Column(length = 150)
   private String email; // 이메일
-
-  @Column(length = 1)
-  @ColumnDefault("0")
-  @Builder.Default
-  private Integer loginFailCnt = 0; // 로그인 실패 횟수
-
-  @Column(length = 150)
-  private String otpNo; // OTP No
-
-  @Column(length = 1)
-  @ColumnDefault("'N'")
-  @Builder.Default
-  private String otpYn = "N"; // OTP 사용유무
 
   @Column(length = 100)
   private String telNo; // 전화번호
 
-  @Column(length = 2)
-  private String deptCd; // 부서코드
-
-  @Column(length = 3)
-  @Convert(converter = UserTypeConverter.class)
-  private UserType userType; // 사용자 구분
-
-  @Column(length = 20)
-  private String zipcode;
-
-  @Column(length = 200)
-  private String address1;
-
-  @Column(length = 200)
-  private String address2;
+  @Column
+  @Enumerated(EnumType.STRING)
+  private GenderCode gender; // 성별
 
   @Column(length = 1)
   @ColumnDefault("'Y'")
@@ -109,37 +83,59 @@ public class Member {
   @Builder.Default
   private UseYn useYn = UseYn.Y; // 사용유무
 
+  @Column(length = 10)
+  @Convert(converter = UserTypeConverter.class)
+  private UserType userType; // 사용자 구분
+
   @Column(length = 35)
   @Enumerated(EnumType.STRING)
   private MemberRegisterType memberRegisterType;  // 회원가입 유형
 
+  @Column(length = 6)
+  private String jumin1; // 주민등록번호 앞자리
+  @Column(length = 150)
+  private String jumin2; // 주민등록번호 뒷자리
+
+  @Column(length = 200)
+  private String address1;
+
+  @Column(length = 200)
+  private String address2;
+
   @Column
-  private LocalDate deletedDate; // 회원 탈퇴 날짜
+  private String picture; //프로필사진 s3 저장소 Path
+
+  @Column(length = 1)
+  @Enumerated(EnumType.STRING)
+  private DomesticForeignCode domesticForeignCode; //외국인 내국인
+
+  @Column(length = 1)
+  @Enumerated(EnumType.STRING)
+  private CareerCode careerCode; //신입 경력
+
+  @Column
+  private Integer careStartYear; //근무 시작 연도
+
+  @Column(columnDefinition = "TEXT")
+  private String introduce; //자기소개
+
   @Column
   private LocalDate marketingEmailDate;  // 이메일 수신동의 날짜
   @Column
-  private LocalDate marketingSmsDate;  // 문자 수신동의 날짜
+  private LocalDate marketingAppPushDate; // 앱 푸시알림 수신동의 날짜
   @Column
   private LocalDate marketingKakaoDate;  // 알림톡 수신동의 날짜
   @Column
-  private LocalDate marketingAppDate; // 앱 푸시알림 수신동의 날짜
+  private LocalDate marketingSmsDate;  // 문자 수신동의 날짜
+
   @Column
-  private LocalDate marketingThirdDate; // 제 3자 정보 제공 동의 날짜
+  private LocalDate deletedDate; // 회원 탈퇴 날짜
 
   @Column
   @ColumnDefault("'N'")
   @Enumerated(EnumType.STRING)
   @Builder.Default
   private IsYn realNameYn = IsYn.N; // 실명 확인 여부
-
-  @Column
-  @Enumerated(EnumType.STRING)
-  private GenderCode gender; // 성별
-
-  @Column(length = 6)
-  private String jumin1; // 주민등록번호 앞자리
-  @Column(length = 150)
-  private String jumin2; // 주민등록번호 뒷자리
 
   /* =================================================================
   * Domain mapping
@@ -191,11 +187,6 @@ public class Member {
     menuPermission.setMember(this);
   }
 
-  public void setMemberRegisterType(MemberRegisterType memberRegisterType) {
-    this.memberRegisterType = memberRegisterType;
-  }
-
-
   /* =================================================================
   * Default columns
   ================================================================= */
@@ -228,11 +219,12 @@ public class Member {
 
   /**
    * Keycloak UserRepresentation
+   *
    * @return UserRepresentation
    */
   public UserRepresentation getUserRepresentation(String providerId, String providerUsername) {
     UserRepresentation userRepresentation = new UserRepresentation();
-    String userNm = StringUtils.isNotEmpty(this.userNmEn) ? this.userNmEn : this.userNm;
+    String userNm = this.userNm;
 
     String[] userNmSplit = userNm.split(" ");
     String firstName = userNmSplit[0];
