@@ -1,10 +1,8 @@
 package co.kr.compig.common.util;
 
-import co.kr.compig.common.code.RoleCode;
 import co.kr.compig.common.exception.BizException;
 import co.kr.compig.common.security.CustomOauth2User;
 import co.kr.compig.common.security.CustomOauth2UserAuthenticatedToken;
-import co.kr.compig.common.security.converter.CustomJwtAuthenticationConverter;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Collections;
@@ -50,8 +48,7 @@ public class SecurityUtil {
   }
 
   /**
-   * See {@link CustomJwtAuthenticationConverter#getCustomOauth2User(Jwt)} 인증정보 없는 경우 null 리턴
-   *
+   * 인증정보 없는 경우 null 리턴
    * @return {@link CustomOauth2User#getUserId()}
    */
   public static String getUserId() {
@@ -106,27 +103,6 @@ public class SecurityUtil {
 
     return authenticatedToken == null ? Collections.emptyList()
         : authenticatedToken.getAuthorities();
-  }
-
-  /**
-   * @return {@link RoleCode#SYS_ADMIN} 권한 여부
-   */
-  public static boolean hasRoleAdmin() {
-    return getRole().stream().anyMatch(a -> RoleCode.SYS_ADMIN.hasRole(a.getAuthority()));
-  }
-
-  /**
-   * @return {@link RoleCode#SYS_USER} 권한 여부
-   */
-  public static boolean hasRoleSystem() {
-    return getRole().stream().anyMatch(a -> RoleCode.SYS_USER.hasRole(a.getAuthority()));
-  }
-
-  /**
-   * @return {@link RoleCode#PARTNER} 권한 여부
-   */
-  public static boolean hasRolePartner() {
-    return getRole().stream().anyMatch(a -> RoleCode.PARTNER.hasRole(a.getAuthority()));
   }
 
   private static CustomOauth2UserAuthenticatedToken getAuthentication() {
