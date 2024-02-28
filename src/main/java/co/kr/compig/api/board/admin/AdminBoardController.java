@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -33,7 +34,7 @@ public class AdminBoardController {
 
   @PostMapping
   public ResponseEntity<Response<?>> createBoard(
-      @RequestPart(value = "data") @Valid BoardCreateRequest boardCreateRequest,
+      @ModelAttribute @Valid BoardCreateRequest boardCreateRequest,
       MultipartHttpServletRequest multipartRequest) {
     return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
         .data(Map.of("boardId", boardService.createBoard(boardCreateRequest, multipartRequest)))
@@ -75,7 +76,7 @@ public class AdminBoardController {
   // base64
   @PostMapping(path = "/base")
   public ResponseEntity<Response<?>> createBoardBase64(
-      @RequestPart(value = "data") @Valid BoardCreateRequest boardCreateRequest,
+      @ModelAttribute @Valid BoardCreateRequest boardCreateRequest,
       @RequestPart(value = "file") Map<String, String> file
   ){
     return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
