@@ -1,23 +1,28 @@
 package co.kr.compig.common.util;
 
+import co.kr.compig.api.board.dto.FileResponse;
 import co.kr.compig.common.exception.UploadException;
 import co.kr.compig.common.exception.dto.ErrorCode;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.flywaydb.core.internal.util.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
@@ -96,7 +101,7 @@ public class S3Util {
     }
   }
   public String generateFileName(String originalFilename){
-    if (org.springframework.util.StringUtils.hasText(originalFilename)) {
+    if (StringUtils.hasText(originalFilename)) {
       String extension = extractExtension(originalFilename);
       String uniqueId = UUID.randomUUID().toString();
       return uniqueId + "." + extension;
@@ -115,7 +120,85 @@ public class S3Util {
   }
 
   public String generateUnsignedUrl(String objectKey){
-    String baseUrl = "https://" + bucket + ".s3.amazons.com/";
+    String baseUrl = "https://" + bucket + ".s3.ap-northeast-2.amazonaws.com/";
     return baseUrl + objectKey;
+  }
+
+  ////////////////////////////////////////
+  // base64
+  public List<String> uploadBase64(Map<String, String> img){
+    List<MultipartFile> multipartFiles = new ArrayList<>();
+    for(String key : img.keySet()){
+      String contentType = img.get(key).substring(5).split(";")[0];
+      String fileName = key;
+      MultipartFile multipartFile = createMultipartFile(img.get(key), contentType, key);
+      multipartFiles.add(multipartFile);
+    }
+    List<String> imageUrlList = uploads(multipartFiles);
+    return imageUrlList;
+  }
+
+
+  private MultipartFile createMultipartFile(String base64String, String contentsType, String originName) {
+    byte[] image = Base64.getDecoder().decode((base64String.substring(base64String.indexOf(",") + 1)).getBytes());
+    int totalCnt = 1024;
+    try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(totalCnt)) {
+      int offset = 0;
+      while (offset < image.length) {
+        int chunkSize = Math.min(totalCnt, image.length - offset);
+
+        byte[] byteArray = new byte[chunkSize];
+        System.arraycopy(image, offset, byteArray, 0, chunkSize);
+
+        byteArrayOutputStream.write(byteArray);
+        byteArrayOutputStream.flush();
+
+        offset += chunkSize;
+      }
+
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+
+      MultipartFile multipartFile = new MockMultipartFile(originName, generateFileName(originName), contentsType, byteArrayInputStream.readAllBytes());
+
+      return multipartFile;
+    } catch (IOException e) {
+    }
+    return null;
+  }
+  /////////////
+  // file 테이블 생성 후 uploads
+  public List<FileResponse> uploadsToFile(List<MultipartFile> multipartFiles){
+    List<FileResponse> imageUrlList = new ArrayList<>();
+
+    for(MultipartFile multipartFile : multipartFiles){
+      try{
+        byte[] fileBytes = multipartFile.getBytes();
+        String fileName = generateFileName(multipartFile.getOriginalFilename());
+        String contentType = multipartFile.getContentType();
+        putS3(fileBytes, fileName, contentType);
+        String imageUrl = generateUnsignedUrl(fileName);
+        FileResponse fileResponse = FileResponse.builder()
+            .s3Path(imageUrl)
+            .fileNm(fileName)
+            .fileExtension(contentType)
+            .build();
+        imageUrlList.add(fileResponse);
+      }catch (IOException e){
+        throw  new UploadException(ErrorCode.PATH_VARIABLE_VALUE, e);
+      }
+    }
+    return imageUrlList;
+  }
+
+  public List<FileResponse> uploadBase64ToFile(Map<String, String> img){
+    List<MultipartFile> multipartFiles = new ArrayList<>();
+    for(String key : img.keySet()){
+      String contentType = img.get(key).substring(5).split(";")[0];
+      String fileName = key;
+      MultipartFile multipartFile = createMultipartFile(img.get(key), contentType, key);
+      multipartFiles.add(multipartFile);
+    }
+    List<FileResponse> imageUrlList = uploadsToFile(multipartFiles);
+    return imageUrlList;
   }
 }
