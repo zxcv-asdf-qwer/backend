@@ -13,6 +13,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.logging.log4j.core.config.plugins.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Data
 @Builder
@@ -38,8 +39,10 @@ public class BoardCreateRequest {
 
   private IsYn pinYn; // 상단 고정 여부
 
+  @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   private LocalDateTime startDate; // 시작 날짜
 
+  @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   private LocalDateTime endDate; // 종료 날짜
 
   private List<String> imageUrlList;
@@ -57,7 +60,6 @@ public class BoardCreateRequest {
         .startDate(this.startDate)
         .endDate(this.endDate)
         .thumbnailImageUrl(thumbnailImageUrl)
-        .imageUrlList(imageUrlList)
         .build();
 
   }
