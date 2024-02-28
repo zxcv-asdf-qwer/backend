@@ -50,8 +50,11 @@ public class SecurityConfig {
         .hasRole("user")
         .requestMatchers(new AntPathRequestMatcher("/pv/**"))
         .hasRole("admin")
-        .requestMatchers(new AntPathRequestMatcher("/actuator/**"),
-            new AntPathRequestMatcher("/docs/**"))
+        .requestMatchers(
+            new AntPathRequestMatcher("/actuator/**"),
+            new AntPathRequestMatcher("/docs/**"),
+            new AntPathRequestMatcher("/login/**")
+        )
         .permitAll()
         .anyRequest()
         .authenticated());

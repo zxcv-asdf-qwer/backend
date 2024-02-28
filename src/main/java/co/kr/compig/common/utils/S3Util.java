@@ -1,4 +1,4 @@
-package co.kr.compig.common.util;
+package co.kr.compig.common.utils;
 
 import co.kr.compig.api.board.dto.FileResponse;
 import co.kr.compig.common.exception.UploadException;

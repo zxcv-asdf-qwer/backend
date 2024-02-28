@@ -6,7 +6,7 @@ import co.kr.compig.api.board.dto.BoardSearchRequest;
 import co.kr.compig.api.board.dto.BoardUpdateRequest;
 import co.kr.compig.api.board.dto.FileResponse;
 import co.kr.compig.common.exception.NotExistDataException;
-import co.kr.compig.common.util.S3Util;
+import co.kr.compig.common.utils.S3Util;
 import co.kr.compig.domain.board.Board;
 import co.kr.compig.domain.board.BoardRepository;
 import co.kr.compig.domain.board.BoardRepositoryCustom;

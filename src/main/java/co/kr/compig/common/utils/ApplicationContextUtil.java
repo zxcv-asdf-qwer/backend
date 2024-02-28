@@ -1,4 +1,4 @@
-package co.kr.compig.common.util;
+package co.kr.compig.common.utils;
 
 import java.util.Optional;
 import org.springframework.beans.BeansException;

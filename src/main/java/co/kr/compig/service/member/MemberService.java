@@ -5,7 +5,7 @@ import co.kr.compig.api.member.dto.GuardianMemberCreate;
 import co.kr.compig.api.member.dto.PartnerMemberCreate;
 import co.kr.compig.common.code.UserType;
 import co.kr.compig.common.keycloak.KeycloakHandler;
-import co.kr.compig.common.util.S3Util;
+import co.kr.compig.common.utils.S3Util;
 import co.kr.compig.domain.member.Member;
 import co.kr.compig.domain.member.MemberGroup;
 import co.kr.compig.domain.member.MemberGroupRepository;

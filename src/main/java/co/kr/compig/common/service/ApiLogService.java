@@ -2,7 +2,7 @@ package co.kr.compig.common.service;
 
 import co.kr.compig.common.domain.log.ApiLog;
 import co.kr.compig.common.domain.log.ApiLogRepository;
-import co.kr.compig.common.util.LogUtil;
+import co.kr.compig.common.utils.LogUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;

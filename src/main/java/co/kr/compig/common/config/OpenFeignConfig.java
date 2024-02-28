@@ -1,11 +1,9 @@
 package co.kr.compig.common.config;
 
-import static feign.Logger.Level.BASIC;
 import static feign.Logger.Level.HEADERS;
 
 import feign.Logger;
 import feign.Request;
-import feign.RequestTemplate;
 import feign.Response;
 import feign.Retryer;
 import java.io.IOException;
@@ -22,16 +20,16 @@ import org.springframework.util.StreamUtils;
 @Configuration
 public class OpenFeignConfig {
 
+//
+//  private boolean isGetOrDelete(RequestTemplate requestTemplate) {
+//    return Request.HttpMethod.GET.name().equals(requestTemplate.method())
+//        || Request.HttpMethod.DELETE.name().equals(requestTemplate.method());
+//  }
 
-  private boolean isGetOrDelete(RequestTemplate requestTemplate) {
-    return Request.HttpMethod.GET.name().equals(requestTemplate.method())
-        || Request.HttpMethod.DELETE.name().equals(requestTemplate.method());
-  }
-
-  @Bean
-  Logger.Level feignLoggerLevel() {
-    return BASIC;
-  }
+//  @Bean
+//  Logger.Level feignLoggerLevel() {
+//    return BASIC;
+//  }
 
   @Bean
   public FeignFormatterRegistrar dateTimeFormatterRegistrar() {
