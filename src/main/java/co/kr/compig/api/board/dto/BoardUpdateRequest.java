@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Getter
 @NoArgsConstructor
@@ -21,7 +22,9 @@ public class BoardUpdateRequest {
   private String contents;
   private UseYn useYn;
   private IsYn pinYn;
+  @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   private LocalDateTime startDate;
+  @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   private LocalDateTime endDate;
 
 }

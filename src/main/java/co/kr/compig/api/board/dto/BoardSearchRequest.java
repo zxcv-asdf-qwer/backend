@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Getter
 @AllArgsConstructor
@@ -21,6 +22,8 @@ public class BoardSearchRequest extends PageableRequest {
   private String smallTitle; // 소제목
   private String contents; // 내용
   private String createdBy; // 글쓴이
+  @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   private LocalDate startDate; // 시작 날짜
+  @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   private LocalDate endDate; // 종료 날짜
 }
