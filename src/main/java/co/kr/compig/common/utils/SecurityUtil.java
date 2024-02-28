@@ -1,4 +1,4 @@
-package co.kr.compig.common.util;
+package co.kr.compig.common.utils;
 
 import co.kr.compig.common.exception.BizException;
 import co.kr.compig.common.security.CustomOauth2User;

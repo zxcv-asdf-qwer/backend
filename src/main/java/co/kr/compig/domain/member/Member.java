@@ -87,20 +87,21 @@ public class Member {
   @Convert(converter = UserTypeConverter.class)
   private UserType userType; // 사용자 구분
 
-  @Column(length = 35)
+  @Column(length = 10)
   @Enumerated(EnumType.STRING)
   private MemberRegisterType memberRegisterType;  // 회원가입 유형
 
   @Column(length = 6)
   private String jumin1; // 주민등록번호 앞자리
-  @Column(length = 150)
+
+  @Column(length = 7)
   private String jumin2; // 주민등록번호 뒷자리
 
   @Column(length = 200)
-  private String address1;
+  private String address1; // 주소1
 
   @Column(length = 200)
-  private String address2;
+  private String address2; // 주소2
 
   @Column
   private String picture; //프로필사진 s3 저장소 Path
@@ -138,8 +139,8 @@ public class Member {
   private IsYn realNameYn = IsYn.N; // 실명 확인 여부
 
   /* =================================================================
-  * Domain mapping
-  ================================================================= */
+   * Domain mapping
+     ================================================================= */
   @Builder.Default
   @OneToMany(
       mappedBy = "member",
@@ -153,8 +154,8 @@ public class Member {
   private Set<MenuPermission> menuPermissions = new HashSet<>();
 
   /* =================================================================
-  * Relation method
-  ================================================================= */
+   * Relation method
+     ================================================================= */
   public void addGroups(final MemberGroup group) {
     this.groups.add(group);
     group.setMember(this);
@@ -187,16 +188,19 @@ public class Member {
     menuPermission.setMember(this);
   }
 
+  public void setPicture(String picture) {
+    this.picture = picture;
+  }
   /* =================================================================
-  * Default columns
-  ================================================================= */
+   * Default columns
+     ================================================================= */
   @Embedded
   @Builder.Default
   private CreatedAndUpdated createdAndModified = new CreatedAndUpdated();
 
   /* =================================================================
-  * Business login
-  ================================================================= */
+   * Business login
+     ================================================================= */
 
   private boolean isExistGroups() {
     return CollectionUtils.isNotEmpty(this.groups);
@@ -216,11 +220,8 @@ public class Member {
     }
   }
 
-
   /**
    * Keycloak UserRepresentation
-   *
-   * @return UserRepresentation
    */
   public UserRepresentation getUserRepresentation(String providerId, String providerUsername) {
     UserRepresentation userRepresentation = new UserRepresentation();
@@ -262,7 +263,6 @@ public class Member {
 
     return userRepresentation;
   }
-
 
   public boolean isPasswordEncoded() {
     return StringUtils.defaultString(this.userPw).startsWith("{bcrypt}");

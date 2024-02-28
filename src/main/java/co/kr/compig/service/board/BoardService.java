@@ -7,7 +7,7 @@ import co.kr.compig.api.board.dto.BoardSearchRequest;
 import co.kr.compig.api.board.dto.BoardUpdateRequest;
 import co.kr.compig.api.board.dto.SystemFileResponse;
 import co.kr.compig.common.exception.NotExistDataException;
-import co.kr.compig.common.util.S3Util;
+import co.kr.compig.common.utils.S3Util;
 import co.kr.compig.domain.board.Board;
 import co.kr.compig.domain.board.BoardRepository;
 import co.kr.compig.domain.board.BoardRepositoryCustom;
@@ -93,9 +93,9 @@ public class BoardService {
     Board board = boardRepository.findById(boardId).orElseThrow(NotExistDataException::new);
     for (SystemFileResponse systemFileResponse : systemFileRespons) {
       SystemFile systemFile = SystemFile.builder()
-          .s3Path(systemFileResponse.getS3Path())
-          .fileNm(systemFileResponse.getFileNm())
-          .fileExtension(systemFileResponse.getFileExtension())
+          .filePath(fileResponse.getFilePath())
+          .fileNm(fileResponse.getFileNm())
+          .fileExtension(fileResponse.getFileExtension())
           .board(board)
           .build();
       systemFileRepository.save(systemFile);

@@ -1,6 +1,6 @@
 package co.kr.compig.common.embedded;
 
-import co.kr.compig.common.util.SecurityUtil;
+import co.kr.compig.common.utils.SecurityUtil;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.PrePersist;

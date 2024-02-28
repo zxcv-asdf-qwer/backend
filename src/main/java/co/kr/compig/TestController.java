@@ -1,6 +1,6 @@
 package co.kr.compig;
 
-import static co.kr.compig.common.util.SecurityUtil.getCustomOauth2User;
+import static co.kr.compig.common.utils.SecurityUtil.getCustomOauth2User;
 
 import co.kr.compig.common.security.CustomOauth2User;
 import org.springframework.web.bind.annotation.GetMapping;

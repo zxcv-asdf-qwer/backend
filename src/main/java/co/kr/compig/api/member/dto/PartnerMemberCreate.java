@@ -8,6 +8,7 @@ import co.kr.compig.common.code.MemberRegisterType;
 import co.kr.compig.common.code.UseYn;
 import co.kr.compig.common.code.UserType;
 import co.kr.compig.domain.member.Member;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -17,6 +18,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @Builder
@@ -30,18 +32,14 @@ public class PartnerMemberCreate {
   private String userNm; // 사용자 명
 
   @NotBlank
-  @Length(min = 3, max = 15)
-  @Pattern(regexp = "^[A-Za-z0-9_]{3,15}$")
-  private String userId; // 사용자 아이디
+  @Email
+  private String email; // 이메일
 
   @NotBlank
   private String userPw; // 사용자 비밀번호
 
   @NotBlank
   private String telNo; // 연락처
-
-  @NotBlank
-  private String email; // 이메일
 
   @NotNull
   private GenderCode gender; // 성별
@@ -61,7 +59,7 @@ public class PartnerMemberCreate {
   @NotBlank
   private String address2; //주소
 
-  private String picture; //프로필사진 s3 저장소 Path
+  private MultipartFile picture; //프로필사진
 
   @NotNull
   private DomesticForeignCode domesticForeignCode; //외국인 내국인
@@ -75,17 +73,16 @@ public class PartnerMemberCreate {
 
   //TODO CREATE 계좌번호 관리 테이블
 
-  private LocalDate marketingEmailDate;  // 이메일 수신동의 날짜
-  private LocalDate marketingAppPushDate; // 앱 푸시알림 수신동의 날짜
-  private LocalDate marketingKakaoDate;  // 알림톡 수신동의 날짜
-  private LocalDate marketingSmsDate;  // 문자 수신동의 날짜
+  private boolean marketingEmail; // 이메일 수신동의
+  private boolean marketingAppPush; // 앱 푸시알림 수신동의
+  private boolean marketingKakao; // 알림톡 수신동의
+  private boolean marketingSms; // 문자 수신동의
 
   private IsYn realNameYn; // 실명 확인 여부
 
   public Member convertEntity() {
     return Member.builder()
         .userNm(this.userNm)
-        .userId(this.userId)
         .userPw(this.userPw)
         .telNo(this.telNo)
         .email(this.email)
@@ -95,15 +92,14 @@ public class PartnerMemberCreate {
         .memberRegisterType(this.memberRegisterType)
         .address1(this.address1)
         .address2(this.address2)
-        .picture(this.picture)
         .domesticForeignCode(this.domesticForeignCode)
         .careerCode(this.careerCode)
         .careStartYear(this.careStartYear)
         .introduce(this.introduce)
-        .marketingEmailDate(this.marketingEmailDate)
-        .marketingAppPushDate(this.marketingAppPushDate)
-        .marketingKakaoDate(this.marketingKakaoDate)
-        .marketingSmsDate(this.marketingSmsDate)
+        .marketingEmailDate(this.marketingEmail ? LocalDate.now() : null)
+        .marketingAppPushDate(this.marketingAppPush ? LocalDate.now() : null)
+        .marketingKakaoDate(this.marketingKakao ? LocalDate.now() : null)
+        .marketingSmsDate(this.marketingSms ? LocalDate.now() : null)
         .realNameYn(this.realNameYn)
         .build();
   }
