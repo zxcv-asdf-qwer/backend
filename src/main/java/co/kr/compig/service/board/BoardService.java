@@ -11,6 +11,7 @@ import co.kr.compig.domain.board.BoardRepository;
 import co.kr.compig.domain.board.BoardRepositoryCustom;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -72,4 +73,13 @@ public class BoardService {
     board.increaseViewCount();
     return new BoardResponse(board);
   }
+
+  public Long createBoardBase(BoardCreateRequest boardCreateRequest,  Map<String, String> file) {
+    List<String> imageUrlList = s3Util.uploadBase64(file);
+    boardCreateRequest.setImageUrlListAndThumbnail(imageUrlList, 0);
+    boardCreateRequest.setImageUrlList(imageUrlList);
+    Board board = boardCreateRequest.converterEntity();
+    return boardRepository.save(board).getId();
+  }
+
 }

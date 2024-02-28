@@ -70,4 +70,17 @@ public class AdminBoardController {
         .data(Map.of("boardId", boardService.deleteBoard(boardId)))
         .build());
   }
+
+  //////////////////////////////////////////////////
+  // base64
+  @PostMapping(path = "/base")
+  public ResponseEntity<Response<?>> createBoardBase64(
+      @RequestPart(value = "data") @Valid BoardCreateRequest boardCreateRequest,
+      @RequestPart(value = "file") Map<String, String> file
+  ){
+    return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
+        .data(Map.of("boardId", boardService.createBoardBase(boardCreateRequest, file)))
+        .build());
+  }
+
 }
