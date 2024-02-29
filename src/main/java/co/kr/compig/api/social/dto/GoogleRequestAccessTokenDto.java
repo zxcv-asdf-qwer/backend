@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class GoogleRequestAccessTokenDto {
+
   private String code;
   private String client_id;
   private String clientSecret;

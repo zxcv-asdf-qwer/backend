@@ -7,7 +7,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface SocialLoginService {
-    MemberRegisterType getServiceName();
-    SocialAuthResponse getAccessToken(String authorizationCode);
-    SocialUserResponse getUserInfo(String accessToken);
+
+  MemberRegisterType getServiceName();
+
+  SocialAuthResponse getAccessToken(String authorizationCode);
+
+  SocialUserResponse idTokenToResponse(String authorizationCode);
+
+  SocialUserResponse getUserInfo(String accessToken);
 }

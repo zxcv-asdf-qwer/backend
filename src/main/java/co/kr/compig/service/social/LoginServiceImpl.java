@@ -13,18 +13,24 @@ import org.springframework.stereotype.Service;
 @Component
 @Qualifier("defaultLoginService")
 public class LoginServiceImpl implements SocialLoginService {
-    @Override
-    public MemberRegisterType getServiceName() {
-        return MemberRegisterType.GENERAL;
-    }
 
-    @Override
-    public SocialAuthResponse getAccessToken(String authorizationCode) {
-        return null;
-    }
+  @Override
+  public MemberRegisterType getServiceName() {
+    return MemberRegisterType.GENERAL;
+  }
 
-    @Override
-    public SocialUserResponse getUserInfo(String accessToken) {
-        return null;
-    }
+  @Override
+  public SocialAuthResponse getAccessToken(String authorizationCode) {
+    return null;
+  }
+
+  @Override
+  public SocialUserResponse idTokenToResponse(String authorizationCode) {
+    return null;
+  }
+
+  @Override
+  public SocialUserResponse getUserInfo(String accessToken) {
+    return null;
+  }
 }

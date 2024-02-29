@@ -20,8 +20,11 @@ public interface GoogleAuthApi {
    */
   @PostMapping("/token")
   ResponseEntity<String> getAccessToken(@RequestBody GoogleRequestAccessTokenDto requestDto);
+
   @PostMapping("/tokeninfo")
-  ResponseEntity<String> getTokenInfo(@RequestParam("access_token") String access_token);
+  ResponseEntity<String> getAccessTokenToTokenInfo(
+      @RequestParam("access_token") String access_token);
+
   @PostMapping("/revoke")
   ResponseEntity<String> revokeAccessToken(@RequestBody String token);
 }

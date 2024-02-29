@@ -87,4 +87,15 @@ public class MemberService {
     return memberRepository.save(member).getId();
   }
 
+  public String basicCreate(String email) {
+    Member member = Member.builder()
+        .email(email)
+        .build();
+    setReferenceDomain(UserType.USER, member);
+    member.createUserKeyCloak(member.getEmail(), null);
+    member.passwordEncode();
+
+    return memberRepository.save(member).getId();
+  }
+
 }
