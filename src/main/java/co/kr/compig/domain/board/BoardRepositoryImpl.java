@@ -126,7 +126,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
 
     List<BoardResponse> boards = query
         .offset(pageable.getOffset())
-        .limit(pageable.getPageSize() + 1) //페이징
+        .limit(pageable.getPageSize()) //페이징
         .fetch();
 
     boolean hasNext = false;

@@ -5,6 +5,7 @@ import co.kr.compig.api.board.dto.BoardDetailResponse;
 import co.kr.compig.api.board.dto.BoardResponse;
 import co.kr.compig.api.board.dto.BoardSearchRequest;
 import co.kr.compig.api.board.dto.BoardUpdateRequest;
+import co.kr.compig.common.dto.PageCustom;
 import co.kr.compig.common.dto.Response;
 import co.kr.compig.service.board.BoardService;
 import jakarta.validation.Valid;
@@ -44,11 +45,11 @@ public class AdminBoardController {
   }
 
   @GetMapping
-  public ResponseEntity<Response<Slice<BoardResponse>>> pageListBoard(
+  public ResponseEntity<Response<PageCustom<BoardResponse>>> pageListBoard(
        @RequestBody @Valid BoardSearchRequest boardSearchRequest, Pageable pageable) {
-    return ResponseEntity.ok().body(Response.<Slice<BoardResponse>>builder()
-        .data(boardService.pageListBoardCursor(boardSearchRequest.getCursorId(), boardSearchRequest, pageable))
-        .build());
+    Slice<BoardResponse> map = boardService.pageListBoardCursor(boardSearchRequest.getCursorId(), boardSearchRequest, pageable);
+    return ResponseEntity.ok(Response.<PageCustom<BoardResponse>>builder()
+        .data(new PageCustom<>(map.getContent(), map.getPageable(), false)).build());
   }
 
   @GetMapping("/{boardId}")
