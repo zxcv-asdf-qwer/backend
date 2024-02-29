@@ -1,6 +1,6 @@
 package co.kr.compig.common.utils;
 
-import co.kr.compig.api.board.dto.FileResponse;
+import co.kr.compig.api.board.dto.SystemFileResponse;
 import co.kr.compig.common.exception.UploadException;
 import co.kr.compig.common.exception.dto.ErrorCode;
 import com.amazonaws.services.s3.AmazonS3;
@@ -176,7 +176,7 @@ public class S3Util {
         String contentType = multipartFile.getContentType();
         putS3(fileBytes, fileName, contentType);
         String imageUrl = generateUnsignedUrl(fileName);
-        FileResponse fileResponse = FileResponse.builder()
+        SystemFileResponse systemFileResponse = SystemFileResponse.builder()
             .filePath(imageUrl)
             .fileNm(fileName)
             .fileExtension(contentType)
@@ -193,6 +193,7 @@ public class S3Util {
     List<MultipartFile> multipartFiles = new ArrayList<>();
     for(String key : img.keySet()){
       String contentType = img.get(key).substring(5).split(";")[0];
+      String fileName = key;
       MultipartFile multipartFile = createMultipartFile(img.get(key), contentType, key);
       multipartFiles.add(multipartFile);
     }

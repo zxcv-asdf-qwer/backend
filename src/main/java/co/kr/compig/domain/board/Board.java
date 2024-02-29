@@ -1,5 +1,6 @@
 package co.kr.compig.domain.board;
 
+import co.kr.compig.api.board.dto.BoardDetailResponse;
 import co.kr.compig.api.board.dto.BoardUpdateRequest;
 import co.kr.compig.common.code.BoardType;
 import co.kr.compig.common.code.ContentsType;
@@ -9,9 +10,9 @@ import co.kr.compig.common.code.converter.BoardTypeConverter;
 import co.kr.compig.common.code.converter.ContentsTypeConverter;
 import co.kr.compig.common.embedded.CreatedAndUpdated;
 import co.kr.compig.domain.file.SystemFile;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -24,14 +25,13 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.ColumnDefault;
 
 @Slf4j
@@ -40,17 +40,16 @@ import org.hibernate.annotations.ColumnDefault;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table
-@SequenceGenerator(
-    name = "board_seq_gen", //시퀀스 제너레이터 이름
-    sequenceName = "board_seq", //시퀀스 이름
-    initialValue = 1, //시작값
-    allocationSize = 1 //메모리를 통해 할당 할 범위 사이즈
-)
+@Table(
+    uniqueConstraints = {
+        @UniqueConstraint(
+            name = "uk01_board",
+            columnNames = {"boardId"})
+    })
 public class Board {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "board_seq_gen")
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "board_id")
   private Long id; // 게시글 id
 
@@ -92,19 +91,18 @@ public class Board {
   @Column
   private LocalDateTime endDate; // 종료일
 
-  @Column
-  private String thumbnailImageUrl; //썸네일 이미지 url
+  private String thumbnailImageUrl;
   /* =================================================================
-   * Domain mapping
-     ================================================================= */
+  * Domain mapping
+  ================================================================= */
   @OneToMany(mappedBy = "board", fetch = FetchType.LAZY,
       cascade = CascadeType.ALL,
       orphanRemoval = true)
   private Set<SystemFile> systemFiles = new HashSet<>();
 
   /* =================================================================
-   * Relation method
-     ================================================================= */
+  * Relation method
+  ================================================================= */
   public void increaseViewCount() {
     this.viewCount++;
   }
@@ -122,9 +120,26 @@ public class Board {
   }
 
   /* =================================================================
-   * Default columns
-     ================================================================= */
+ * Default columns
+ ================================================================= */
   @Embedded
   @Builder.Default
   private CreatedAndUpdated createdAndModified = new CreatedAndUpdated();
+
+  public BoardDetailResponse toBoardDetailResponse() {
+    return BoardDetailResponse.builder()
+        .boardId(this.id)
+        .title(this.title)
+        .smallTitle(this.smallTitle)
+        .contents(this.contents)
+        .boardType(this.boardType)
+        .contentsType(this.contentsType)
+        .viewCount(this.viewCount)
+        .createdBy(this.createdAndModified.getCreatedBy())
+        .startDate(this.startDate)
+        .endDate(this.endDate)
+        .thumbNail(this.thumbnailImageUrl)
+        .systemFiles(this.systemFiles.stream().map(SystemFile::getFilePath).toList())
+        .build();
+  }
 }

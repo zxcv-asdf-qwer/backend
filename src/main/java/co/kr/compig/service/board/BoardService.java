@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
@@ -93,12 +94,17 @@ public class BoardService {
     Board board = boardRepository.findById(boardId).orElseThrow(NotExistDataException::new);
     for (SystemFileResponse systemFileResponse : systemFileRespons) {
       SystemFile systemFile = SystemFile.builder()
-          .filePath(fileResponse.getFilePath())
-          .fileNm(fileResponse.getFileNm())
-          .fileExtension(fileResponse.getFileExtension())
+          .filePath(systemFileResponse.getFilePath())
+          .fileNm(systemFileResponse.getFileNm())
+          .fileExtension(systemFileResponse.getFileExtension())
           .board(board)
           .build();
       systemFileRepository.save(systemFile);
     }
+  }
+
+  public Slice<BoardResponse> pageListBoardCursor(Long cursorId, BoardSearchRequest boardSearchRequest,
+      Pageable pageable) {
+    return boardRepositoryCustom.findAllByCondition(cursorId, boardSearchRequest, pageable);
   }
 }

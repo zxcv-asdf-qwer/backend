@@ -11,8 +11,8 @@ import jakarta.validation.Valid;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,10 +44,10 @@ public class AdminBoardController {
   }
 
   @GetMapping
-  public ResponseEntity<Response<Page<BoardResponse>>> pageListBoard(
-      @RequestBody @Valid BoardSearchRequest boardSearchRequest, Pageable pageable) {
-    return ResponseEntity.ok().body(Response.<Page<BoardResponse>>builder()
-        .data(boardService.pageListBoard(boardSearchRequest, pageable))
+  public ResponseEntity<Response<Slice<BoardResponse>>> pageListBoard(
+       @RequestBody @Valid BoardSearchRequest boardSearchRequest, Pageable pageable) {
+    return ResponseEntity.ok().body(Response.<Slice<BoardResponse>>builder()
+        .data(boardService.pageListBoardCursor(boardSearchRequest.getCursorId(), boardSearchRequest, pageable))
         .build());
   }
 
