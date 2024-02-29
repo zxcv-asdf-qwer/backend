@@ -1,5 +1,6 @@
 package co.kr.compig.service.social;
 
+import co.kr.compig.api.social.dto.LoginResponse;
 import co.kr.compig.api.social.dto.SocialAuthResponse;
 import co.kr.compig.api.social.dto.SocialUserResponse;
 import co.kr.compig.common.code.MemberRegisterType;
@@ -31,6 +32,11 @@ public class LoginServiceImpl implements SocialLoginService {
 
   @Override
   public SocialUserResponse getUserInfo(String accessToken) {
+    return null;
+  }
+
+  @Override
+  public LoginResponse getKeycloakAccessToken(String authorizationCode, String userPw) {
     return null;
   }
 }

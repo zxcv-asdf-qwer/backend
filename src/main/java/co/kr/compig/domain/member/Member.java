@@ -252,6 +252,7 @@ public class Member {
       federatedIdentityRepresentation.setUserName(providerUsername);
       federatedIdentityRepresentation.setIdentityProvider(socialProvider);
       userRepresentation.setFederatedIdentities(List.of(federatedIdentityRepresentation));
+      userRepresentation.setEmailVerified(true);
     }
 
     if (!isPasswordEncoded()) {

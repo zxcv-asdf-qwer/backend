@@ -2,10 +2,14 @@ package co.kr.compig.service.social;
 
 import co.kr.compig.api.social.dto.GoogleLoginResponse;
 import co.kr.compig.api.social.dto.GoogleRequestAccessTokenDto;
+import co.kr.compig.api.social.dto.KeycloakRequestAccessTokenDto;
+import co.kr.compig.api.social.dto.LoginResponse;
 import co.kr.compig.api.social.dto.SocialAuthResponse;
 import co.kr.compig.api.social.dto.SocialUserResponse;
 import co.kr.compig.api.social.google.GoogleAuthApi;
+import co.kr.compig.api.social.keycloak.KeycloakAuthApi;
 import co.kr.compig.common.code.MemberRegisterType;
+import co.kr.compig.common.keycloak.KeycloakProperties;
 import co.kr.compig.common.utils.GsonLocalDateTimeAdapter;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
@@ -33,6 +37,8 @@ import org.springframework.stereotype.Service;
 public class GoogleLoginServiceImpl implements SocialLoginService {
 
   private final GoogleAuthApi googleAuthApi;
+  private final KeycloakAuthApi keycloakAuthApi;
+  private final KeycloakProperties keycloakProperties;
   private GoogleIdTokenVerifier googleIdTokenVerifier;
 
   @Value("${social.client.google.rest-api-key}")
@@ -102,8 +108,32 @@ public class GoogleLoginServiceImpl implements SocialLoginService {
     GoogleLoginResponse googleLoginResponse = gson.fromJson(jsonString, GoogleLoginResponse.class);
 
     return SocialUserResponse.builder()
+        .memberRegisterType(MemberRegisterType.GOOGLE)
         .email(googleLoginResponse.getEmail())
         .build();
+  }
+
+  @Override
+  public LoginResponse getKeycloakAccessToken(String userId, String userPw) {
+    ResponseEntity<?> response = keycloakAuthApi.getAccessToken(
+        KeycloakRequestAccessTokenDto.builder()
+            .client_id(keycloakProperties.getClientId())
+            .client_secret(keycloakProperties.getClientSecret())
+            .username(userId)
+            .password(userPw)
+            .build()
+    );
+    log.info("keycloak user response");
+    log.info(response.toString());
+
+    LoginResponse loginResponse = new Gson()
+        .fromJson(
+            response.getBody().toString(),
+            LoginResponse.class
+        );
+    loginResponse.setEmail(userId);
+
+    return loginResponse;
   }
 
   @Override

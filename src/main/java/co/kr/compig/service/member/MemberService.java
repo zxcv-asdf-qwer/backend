@@ -3,6 +3,7 @@ package co.kr.compig.service.member;
 import co.kr.compig.api.member.dto.AdminMemberCreate;
 import co.kr.compig.api.member.dto.GuardianMemberCreate;
 import co.kr.compig.api.member.dto.PartnerMemberCreate;
+import co.kr.compig.api.social.dto.SocialUserResponse;
 import co.kr.compig.common.code.UserType;
 import co.kr.compig.common.keycloak.KeycloakHandler;
 import co.kr.compig.common.utils.S3Util;
@@ -87,12 +88,16 @@ public class MemberService {
     return memberRepository.save(member).getId();
   }
 
-  public String basicCreate(String email) {
+  public String socialCreate(SocialUserResponse socialUserResponse) {
     Member member = Member.builder()
-        .email(email)
+        .userNm("socialName")
+        .email(socialUserResponse.getEmail())
+        .userPw(socialUserResponse.getEmail() + socialUserResponse.getMemberRegisterType())
+        .memberRegisterType(socialUserResponse.getMemberRegisterType())
         .build();
+
     setReferenceDomain(UserType.USER, member);
-    member.createUserKeyCloak(member.getEmail(), null);
+    member.createUserKeyCloak(member.getEmail(), member.getUserNm());
     member.passwordEncode();
 
     return memberRepository.save(member).getId();

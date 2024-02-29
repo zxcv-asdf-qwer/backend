@@ -1,6 +1,5 @@
 package co.kr.compig.service.social;
 
-
 import co.kr.compig.api.social.dto.LoginResponse;
 import co.kr.compig.api.social.dto.SocialAuthResponse;
 import co.kr.compig.api.social.dto.SocialUserResponse;
@@ -32,19 +31,18 @@ public class SocialUserService {
     SocialAuthResponse socialAuthResponse = loginService.getAccessToken(authorizationCode);
     SocialUserResponse socialUserResponse = loginService.idTokenToResponse(
         socialAuthResponse.getId_token());
-    //소셜로그인 성공 후
-    //사용자 아이디 중복 조회
-    Optional<Member> byEmail = memberRepository.findByEmail(socialUserResponse.getEmail());
-    if (byEmail.isEmpty()) {
-      memberService.basicCreate(socialUserResponse.getEmail());
+    Optional<Member> optionalMember = memberRepository.findByEmail(socialUserResponse.getEmail());
+    Member member = optionalMember.orElseGet(() -> {
+      // 중복되지 않는 경우 새 회원 생성 후 반환
+      String newMemberId = memberService.socialCreate(socialUserResponse);
+      return memberRepository.findById(newMemberId)
+          .orElseThrow(() -> new RuntimeException("회원 생성 후 조회 실패"));
+    });
 
-    }
-
-    //없으면 회원가입 실행
-    //키클락 로그인 실행
-    return LoginResponse.builder()
-//        .email(socialUserResponse.getEmail())
-        .build();
+    // 공통 로직 처리: 키클락 로그인 실행
+    return loginService.getKeycloakAccessToken(member.getEmail(),
+        member.getEmail() + member.getMemberRegisterType());
+    // 키클락 로그인 실행
   }
 
   private SocialLoginService getLoginService(MemberRegisterType memberRegisterType) {
