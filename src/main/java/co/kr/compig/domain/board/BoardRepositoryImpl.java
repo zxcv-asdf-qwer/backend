@@ -17,6 +17,8 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
 
@@ -40,7 +42,8 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                 board.viewCount,
                 board.createdAndModified.createdBy,
                 board.startDate,
-                board.endDate
+                board.endDate,
+                board.thumbnailImageUrl
             )
         );
 
@@ -97,4 +100,47 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
       query.orderBy(orderSpecifier);
     }
   }
+
+  // cursor paging
+  @Override
+  public Slice<BoardResponse> findAllByCondition(Long cursorId, BoardSearchRequest boardSearchRequest, Pageable pageable){
+    BooleanExpression predicate = createPredicate(boardSearchRequest);
+    JPAQuery<BoardResponse> query = createBaseQuery(predicate)
+        .select(Projections.constructor(BoardResponse.class,
+                board.id,
+                board.title,
+                board.smallTitle,
+                board.contents,
+                board.boardType,
+                board.contentsType,
+                board.viewCount,
+                board.createdAndModified.createdBy,
+                board.startDate,
+                board.endDate,
+                board.thumbnailImageUrl
+            )
+        )
+        .where(eqCursorId(cursorId));
+
+    applySorting(query, pageable);
+
+    List<BoardResponse> boards = query
+        .offset(pageable.getOffset())
+        .limit(pageable.getPageSize() + 1) //페이징
+        .fetch();
+
+    boolean hasNext = false;
+    if (boards.size() > pageable.getPageSize()){
+      boards.remove(pageable.getPageSize());
+      hasNext = true;
+    }
+    return new SliceImpl<>(boards, pageable, hasNext);
+  }
+  private BooleanExpression eqCursorId(Long cursorId){
+    if(cursorId != null){
+      return board.id.lt(cursorId);
+    }
+    return null;
+  }
+
 }

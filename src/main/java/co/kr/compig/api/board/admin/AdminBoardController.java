@@ -1,6 +1,7 @@
 package co.kr.compig.api.board.admin;
 
 import co.kr.compig.api.board.dto.BoardCreateRequest;
+import co.kr.compig.api.board.dto.BoardDetailResponse;
 import co.kr.compig.api.board.dto.BoardResponse;
 import co.kr.compig.api.board.dto.BoardSearchRequest;
 import co.kr.compig.api.board.dto.BoardUpdateRequest;
@@ -10,8 +11,8 @@ import jakarta.validation.Valid;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +31,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 @RestController
 @RequestMapping(path = "/pv/board", produces = "application/json")
 public class AdminBoardController {
+
   private final BoardService boardService;
 
   @PostMapping
@@ -42,17 +44,17 @@ public class AdminBoardController {
   }
 
   @GetMapping
-  public ResponseEntity<Response<Page<BoardResponse>>> pageListBoard(
-      @RequestBody @Valid BoardSearchRequest boardSearchRequest, Pageable pageable) {
-    return ResponseEntity.ok().body(Response.<Page<BoardResponse>>builder()
-        .data(boardService.pageListBoard(boardSearchRequest, pageable))
+  public ResponseEntity<Response<Slice<BoardResponse>>> pageListBoard(
+       @RequestBody @Valid BoardSearchRequest boardSearchRequest, Pageable pageable) {
+    return ResponseEntity.ok().body(Response.<Slice<BoardResponse>>builder()
+        .data(boardService.pageListBoardCursor(boardSearchRequest.getCursorId(), boardSearchRequest, pageable))
         .build());
   }
 
   @GetMapping("/{boardId}")
-  public ResponseEntity<Response<BoardResponse>> getBoard(
+  public ResponseEntity<Response<BoardDetailResponse>> getBoard(
       @PathVariable(name = "boardId") Long boardId) {
-    return ResponseEntity.ok(Response.<BoardResponse>builder()
+    return ResponseEntity.ok(Response.<BoardDetailResponse>builder()
         .data(boardService.getBoard(boardId))
         .build());
   }
@@ -74,13 +76,22 @@ public class AdminBoardController {
 
   //////////////////////////////////////////////////
   // base64
-  @PostMapping(path = "/base")
+  @PostMapping(path = "/base64")
   public ResponseEntity<Response<?>> createBoardBase64(
       @ModelAttribute @Valid BoardCreateRequest boardCreateRequest,
-      @RequestPart(value = "file") Map<String, String> file
-  ){
+      @RequestPart(value = "file") Map<String, String> files
+
+  ) {
     return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-        .data(Map.of("boardId", boardService.createBoardBaseFile(boardCreateRequest, file)))
+        .data(Map.of("boardId", boardService.createBoardBaseFile(boardCreateRequest, files)))
+        .build());
+  }
+
+  @GetMapping("/base64/{boardId}")
+  public ResponseEntity<Response<BoardDetailResponse>> getBoardBase(
+      @PathVariable(name = "boardId") Long boardId) {
+    return ResponseEntity.ok(Response.<BoardDetailResponse>builder()
+        .data(boardService.getBoard(boardId))
         .build());
   }
 

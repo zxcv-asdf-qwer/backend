@@ -4,6 +4,7 @@ import co.kr.compig.common.code.BoardType;
 import co.kr.compig.common.code.ContentsType;
 import co.kr.compig.common.dto.BaseAudit;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class BoardResponse extends BaseAudit {
+public class BoardDetailResponse extends BaseAudit {
 
   private Long boardId; // 게시글 id
   private String title; // 게시글 제목
@@ -28,5 +29,6 @@ public class BoardResponse extends BaseAudit {
   private LocalDateTime startDate; // 시작 날짜
   private LocalDateTime endDate; // 종료 날짜
   private String thumbNail; // 썸네일
+  private List<String> systemFiles; // 올린 파일
 
 }

@@ -1,5 +1,6 @@
 package co.kr.compig.api.board.user;
 
+import co.kr.compig.api.board.dto.BoardDetailResponse;
 import co.kr.compig.api.board.dto.BoardResponse;
 import co.kr.compig.api.board.dto.BoardSearchRequest;
 import co.kr.compig.common.dto.Response;
@@ -31,8 +32,8 @@ public class UserBoardController {
   }
 
   @GetMapping("/{boardId}")
-  public ResponseEntity<Response<BoardResponse>> getBoard(@PathVariable(name = "boardId") Long boardId){
-    return ResponseEntity.ok(Response.<BoardResponse>builder()
+  public ResponseEntity<Response<BoardDetailResponse>> getBoard(@PathVariable(name = "boardId") Long boardId){
+    return ResponseEntity.ok(Response.<BoardDetailResponse>builder()
         .data(boardService.getBoard(boardId))
         .build());
   }
