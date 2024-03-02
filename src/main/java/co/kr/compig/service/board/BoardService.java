@@ -1,11 +1,6 @@
 package co.kr.compig.service.board;
 
-import co.kr.compig.api.board.dto.BoardCreateRequest;
-import co.kr.compig.api.board.dto.BoardDetailResponse;
-import co.kr.compig.api.board.dto.BoardResponse;
-import co.kr.compig.api.board.dto.BoardSearchRequest;
-import co.kr.compig.api.board.dto.BoardUpdateRequest;
-import co.kr.compig.api.board.dto.SystemFileResponse;
+import co.kr.compig.api.board.dto.*;
 import co.kr.compig.common.exception.NotExistDataException;
 import co.kr.compig.common.utils.S3Util;
 import co.kr.compig.domain.board.Board;
@@ -13,10 +8,6 @@ import co.kr.compig.domain.board.BoardRepository;
 import co.kr.compig.domain.board.BoardRepositoryCustom;
 import co.kr.compig.domain.file.SystemFile;
 import co.kr.compig.domain.file.SystemFileRepository;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -27,6 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -82,17 +78,25 @@ public class BoardService {
   }
 
   public Long createBoardBaseFile(BoardCreateRequest boardCreateRequest,
-      Map<String, String> files) {
-    List<SystemFileResponse> imageUrlList = s3Util.uploadBase64ToFile(files);
-    Board board = boardCreateRequest.converterEntity();
-    boardRepository.save(board);
-    saveSystemFile(imageUrlList, board.getId());
+      HashMap<String, String> files) {
+    Board board = new Board();
+    if(files != null){
+      List<SystemFileResponse> imageUrlList = s3Util.uploadBase64ToFile(files);
+      boardCreateRequest.setThumbnailImageUrl(imageUrlList, 0);
+      board = boardCreateRequest.converterEntity();
+      boardRepository.save(board);
+      saveSystemFile(imageUrlList, board.getId());
+    }else{
+      board = boardCreateRequest.converterEntity();
+      boardRepository.save(board);
+    }
+
     return board.getId();
   }
 
-  private void saveSystemFile(List<SystemFileResponse> systemFileRespons, Long boardId) {
+  private void saveSystemFile(List<SystemFileResponse> systemFileResponses, Long boardId) {
     Board board = boardRepository.findById(boardId).orElseThrow(NotExistDataException::new);
-    for (SystemFileResponse systemFileResponse : systemFileRespons) {
+    for (SystemFileResponse systemFileResponse : systemFileResponses) {
       SystemFile systemFile = SystemFile.builder()
           .filePath(systemFileResponse.getFilePath())
           .fileNm(systemFileResponse.getFileNm())

@@ -1,31 +1,20 @@
 package co.kr.compig.api.board.admin;
 
-import co.kr.compig.api.board.dto.BoardCreateRequest;
-import co.kr.compig.api.board.dto.BoardDetailResponse;
-import co.kr.compig.api.board.dto.BoardResponse;
-import co.kr.compig.api.board.dto.BoardSearchRequest;
-import co.kr.compig.api.board.dto.BoardUpdateRequest;
+import co.kr.compig.api.board.dto.*;
 import co.kr.compig.common.dto.PageCustom;
 import co.kr.compig.common.dto.Response;
 import co.kr.compig.service.board.BoardService;
 import jakarta.validation.Valid;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -49,7 +38,7 @@ public class AdminBoardController {
        @RequestBody @Valid BoardSearchRequest boardSearchRequest, Pageable pageable) {
     Slice<BoardResponse> map = boardService.pageListBoardCursor(boardSearchRequest.getCursorId(), boardSearchRequest, pageable);
     return ResponseEntity.ok(Response.<PageCustom<BoardResponse>>builder()
-        .data(new PageCustom<>(map.getContent(), map.getPageable(), false)).build());
+        .data(new PageCustom<>(map.getContent(), map.getPageable(), map.hasNext())).build());
   }
 
   @GetMapping("/{boardId}")
@@ -80,7 +69,7 @@ public class AdminBoardController {
   @PostMapping(path = "/base64")
   public ResponseEntity<Response<?>> createBoardBase64(
       @ModelAttribute @Valid BoardCreateRequest boardCreateRequest,
-      @RequestPart(value = "file") Map<String, String> files
+      @RequestPart(value = "file", required = false) HashMap<String, String> files
 
   ) {
     return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()

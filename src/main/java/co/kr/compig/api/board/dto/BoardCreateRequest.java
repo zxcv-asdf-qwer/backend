@@ -5,8 +5,6 @@ import co.kr.compig.common.code.ContentsType;
 import co.kr.compig.common.code.IsYn;
 import co.kr.compig.domain.board.Board;
 import jakarta.validation.constraints.NotNull;
-import java.time.LocalDateTime;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +12,10 @@ import lombok.NoArgsConstructor;
 import org.apache.logging.log4j.core.config.plugins.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Builder
@@ -68,6 +70,17 @@ public class BoardCreateRequest {
     this.imageUrlList = imageUrlList;
     if (thumbnailIndex >= 0 && thumbnailIndex < imageUrlList.size()) {
       this.thumbnailImageUrl = imageUrlList.get(thumbnailIndex);
+    }
+  }
+
+  public void setThumbnailImageUrl(List<SystemFileResponse> imageUrlList, int thumbnailIndex) {
+    List<String> imageUrls = new ArrayList<>();
+    for(SystemFileResponse systemFileResponse : imageUrlList){
+      imageUrls.add(systemFileResponse.getFilePath());
+    }
+    this.imageUrlList = imageUrls;
+    if (thumbnailIndex >= 0 && thumbnailIndex < imageUrlList.size()) {
+      this.thumbnailImageUrl = imageUrlList.get(thumbnailIndex).getFilePath();
     }
   }
 }

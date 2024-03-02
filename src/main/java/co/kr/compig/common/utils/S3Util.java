@@ -6,17 +6,6 @@ import co.kr.compig.common.exception.dto.ErrorCode;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +13,14 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -102,9 +99,7 @@ public class S3Util {
   }
   public String generateFileName(String originalFilename){
     if (StringUtils.hasText(originalFilename)) {
-      String extension = extractExtension(originalFilename);
-      String uniqueId = UUID.randomUUID().toString();
-      return uniqueId + "." + extension;
+      return UUID.randomUUID().toString();
     }
     throw new UploadException(ErrorCode.INVALID_INPUT_VALUE);
   }
@@ -189,11 +184,10 @@ public class S3Util {
     return imageUrlList;
   }
 
-  public List<SystemFileResponse> uploadBase64ToFile(Map<String, String> img){
+  public List<SystemFileResponse> uploadBase64ToFile(HashMap<String, String> img){
     List<MultipartFile> multipartFiles = new ArrayList<>();
     for(String key : img.keySet()){
       String contentType = img.get(key).substring(5).split(";")[0];
-      String fileName = key;
       MultipartFile multipartFile = createMultipartFile(img.get(key), contentType, key);
       multipartFiles.add(multipartFile);
     }
