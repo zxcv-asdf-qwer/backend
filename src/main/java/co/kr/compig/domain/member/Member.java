@@ -1,5 +1,6 @@
 package co.kr.compig.domain.member;
 
+import co.kr.compig.api.member.dto.MemberUpdateRequest;
 import co.kr.compig.common.code.CareerCode;
 import co.kr.compig.common.code.DomesticForeignCode;
 import co.kr.compig.common.code.GenderCode;
@@ -219,6 +220,12 @@ public class Member {
       keycloakHandler.usersJoinGroups(this.id, this.getGroups());
     }
   }
+  public void updateUserKeyCloak() {
+    KeycloakHandler keycloakHandler = KeycloakHolder.get();
+    if (isExistGroups()) {
+      keycloakHandler.usersJoinGroups(this.id, this.getGroups());
+    }
+  }
 
   /**
    * Keycloak UserRepresentation
@@ -274,4 +281,26 @@ public class Member {
       this.userPw = KeycloakHolder.get().getPasswordEncoder().encode(this.userPw);
     }
   }
+
+  public void update(MemberUpdateRequest memberUpdateRequest) {
+    this.userNm = memberUpdateRequest.getUserNm();
+    this.telNo = memberUpdateRequest.getTelNo();
+    this.gender = memberUpdateRequest.getGender();
+    this.useYn = memberUpdateRequest.getUseYn();
+    this.userType = memberUpdateRequest.getUserType();
+    this.address1 = memberUpdateRequest.getAddress1();
+    this.address2 = memberUpdateRequest.getAddress2();
+    this.domesticForeignCode = memberUpdateRequest.getDomesticForeignCode();
+    this.careerCode = memberUpdateRequest.getCareerCode();
+    this.careStartYear = memberUpdateRequest.getCareStartYear();
+    this.introduce = memberUpdateRequest.getIntroduce();
+    this.marketingEmailDate = marketingDate(memberUpdateRequest.isMarketingEmail());
+    this.marketingAppPushDate = marketingDate(memberUpdateRequest.isMarketingAppPush());
+    this.marketingKakaoDate = marketingDate(memberUpdateRequest.isMarketingKakao());
+    this.marketingSmsDate = marketingDate(memberUpdateRequest.isMarketingSms());
+    this.realNameYn = memberUpdateRequest.getRealNameYn();
+  }
+    public LocalDate marketingDate(boolean isMarketing) {
+      return isMarketing ? LocalDate.now() : null;
+    }
 }

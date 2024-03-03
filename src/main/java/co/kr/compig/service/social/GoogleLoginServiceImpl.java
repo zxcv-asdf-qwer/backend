@@ -65,7 +65,7 @@ public class GoogleLoginServiceImpl implements SocialLoginService {
   }
 
   @Override
-  public SocialAuthResponse getAccessToken(String authorizationCode) {
+  public SocialAuthResponse getTokens(String authorizationCode) {
     ResponseEntity<?> response = googleAuthApi.getAccessToken(
         GoogleRequestAccessTokenDto.builder()
             .code(authorizationCode)
@@ -90,6 +90,7 @@ public class GoogleLoginServiceImpl implements SocialLoginService {
   public SocialUserResponse idTokenToResponse(String idToken) {
     String jsonString = "";
     try {
+      //토큰 검증
       GoogleIdToken verifiedIdToken = googleIdTokenVerifier.verify(idToken);
       GoogleIdToken.Payload payload = verifiedIdToken.getPayload();
       jsonString = payload.toString();
@@ -134,27 +135,6 @@ public class GoogleLoginServiceImpl implements SocialLoginService {
     loginResponse.setEmail(userId);
 
     return loginResponse;
-  }
-
-  @Override
-  public SocialUserResponse getUserInfo(String accessToken) {
-    ResponseEntity<?> response = googleAuthApi.getAccessTokenToTokenInfo(accessToken);
-
-    log.info("google user response");
-    log.info(response.toString());
-
-    String jsonString = response.getBody().toString();
-
-    Gson gson = new GsonBuilder()
-        .setPrettyPrinting()
-        .registerTypeAdapter(LocalDateTime.class, new GsonLocalDateTimeAdapter())
-        .create();
-
-    GoogleLoginResponse googleLoginResponse = gson.fromJson(jsonString, GoogleLoginResponse.class);
-    return SocialUserResponse.builder()
-        .id(googleLoginResponse.getId())
-        .email(googleLoginResponse.getEmail())
-        .build();
   }
 
 }

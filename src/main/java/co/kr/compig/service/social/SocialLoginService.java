@@ -11,11 +11,12 @@ public interface SocialLoginService {
 
   MemberRegisterType getServiceName();
 
-  SocialAuthResponse getAccessToken(String authorizationCode);
+  //access token, id token 받아오기
+  SocialAuthResponse getTokens(String authorizationCode);
 
+  //id token 검증
   SocialUserResponse idTokenToResponse(String authorizationCode);
 
+  //keycloak Login 후 access token 받아오기
   LoginResponse getKeycloakAccessToken(String authorizationCode, String userPw);
-
-  SocialUserResponse getUserInfo(String accessToken);
 }

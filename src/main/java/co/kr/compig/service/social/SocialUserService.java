@@ -27,14 +27,16 @@ public class SocialUserService {
   public LoginResponse doSocialLogin(MemberRegisterType memberRegisterType,
       String authorizationCode) {
     SocialLoginService loginService = this.getLoginService(memberRegisterType);
-
-    SocialAuthResponse socialAuthResponse = loginService.getAccessToken(authorizationCode);
+    //access token, id token 받아오기
+    SocialAuthResponse socialAuthResponse = loginService.getTokens(authorizationCode);
+    //id token 검증
     SocialUserResponse socialUserResponse = loginService.idTokenToResponse(
         socialAuthResponse.getId_token());
-    Optional<Member> optionalMember = memberRepository.findByEmail(socialUserResponse.getEmail());
+
+    Optional<Member> optionalMember = memberRepository.findById(socialUserResponse.getId());
     Member member = optionalMember.orElseGet(() -> {
       // 중복되지 않는 경우 새 회원 생성 후 반환
-      String newMemberId = memberService.socialCreate(socialUserResponse);
+      String newMemberId = memberService.socialCreate(socialUserResponse.convertEntity());
       return memberRepository.findById(newMemberId)
           .orElseThrow(() -> new RuntimeException("회원 생성 후 조회 실패"));
     });

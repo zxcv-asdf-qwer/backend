@@ -21,17 +21,12 @@ public class LoginServiceImpl implements SocialLoginService {
   }
 
   @Override
-  public SocialAuthResponse getAccessToken(String authorizationCode) {
+  public SocialAuthResponse getTokens(String authorizationCode) {
     return null;
   }
 
   @Override
   public SocialUserResponse idTokenToResponse(String authorizationCode) {
-    return null;
-  }
-
-  @Override
-  public SocialUserResponse getUserInfo(String accessToken) {
     return null;
   }
 

@@ -47,9 +47,9 @@ public class SecurityConfig {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.authorizeHttpRequests(auth -> auth
         .requestMatchers(new AntPathRequestMatcher("/pb/**"))
-        .hasRole("user")
+        .hasRole("USER")
         .requestMatchers(new AntPathRequestMatcher("/pv/**"))
-        .hasRole("admin")
+        .hasRole("ADMIN")
         .requestMatchers(
             new AntPathRequestMatcher("/actuator/**"),
             new AntPathRequestMatcher("/docs/**"),

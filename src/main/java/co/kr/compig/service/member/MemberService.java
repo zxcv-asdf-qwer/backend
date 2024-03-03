@@ -2,11 +2,13 @@ package co.kr.compig.service.member;
 
 import co.kr.compig.api.member.dto.AdminMemberCreate;
 import co.kr.compig.api.member.dto.GuardianMemberCreate;
+import co.kr.compig.api.member.dto.MemberUpdateRequest;
 import co.kr.compig.api.member.dto.PartnerMemberCreate;
-import co.kr.compig.api.social.dto.SocialUserResponse;
 import co.kr.compig.common.code.UserType;
+import co.kr.compig.common.exception.NotExistDataException;
 import co.kr.compig.common.keycloak.KeycloakHandler;
 import co.kr.compig.common.utils.S3Util;
+import co.kr.compig.common.utils.SecurityUtil;
 import co.kr.compig.domain.member.Member;
 import co.kr.compig.domain.member.MemberGroup;
 import co.kr.compig.domain.member.MemberGroupRepository;
@@ -88,14 +90,7 @@ public class MemberService {
     return memberRepository.save(member).getId();
   }
 
-  public String socialCreate(SocialUserResponse socialUserResponse) {
-    Member member = Member.builder()
-        .userNm("socialName")
-        .email(socialUserResponse.getEmail())
-        .userPw(socialUserResponse.getEmail() + socialUserResponse.getMemberRegisterType())
-        .memberRegisterType(socialUserResponse.getMemberRegisterType())
-        .build();
-
+  public String socialCreate(Member member) {
     setReferenceDomain(UserType.USER, member);
     member.createUserKeyCloak(member.getEmail(), member.getUserNm());
     member.passwordEncode();
@@ -103,4 +98,17 @@ public class MemberService {
     return memberRepository.save(member).getId();
   }
 
+  public void updateMember(MemberUpdateRequest memberUpdateRequest) {
+    Optional.ofNullable(SecurityUtil.getUserId()).ifPresentOrElse(currentUserId ->
+            memberRepository.findById(currentUserId).ifPresentOrElse(
+                member -> {
+                  setReferenceDomain(memberUpdateRequest.getUserType(), member);
+                  member.updateUserKeyCloak();
+                }, () -> {
+                  throw new NotExistDataException();
+                }), () -> {
+          throw new NotExistDataException();
+        }
+    );
+  }
 }

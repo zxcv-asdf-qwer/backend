@@ -57,6 +57,12 @@ public class SecurityUtil {
     return user == null ? null : user.getUserId();
   }
 
+  public static String getMemberId() {
+    CustomOauth2User user = getCustomOauth2User();
+
+    return user == null ? null : user.getId();
+  }
+
 
   /**
    * 인증정보 없으면 null 리턴
