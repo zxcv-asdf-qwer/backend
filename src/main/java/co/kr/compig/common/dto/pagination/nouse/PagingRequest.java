@@ -1,4 +1,4 @@
-package co.kr.compig.common.dto;
+package co.kr.compig.common.dto.pagination.nouse;
 
 import java.util.List;
 import lombok.AllArgsConstructor;

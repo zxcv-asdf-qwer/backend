@@ -15,12 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/login")
 @RequiredArgsConstructor
 public class LoginController {
+
   private final SocialUserService socialUserService;
 
-  @GetMapping("/google")
-  public ResponseEntity<LoginResponse> doSocialLogin(@RequestParam(name = "code")String code) {
+  @GetMapping("/social")
+  public ResponseEntity<LoginResponse> doSocialLogin(@RequestParam(name = "memberRegisterType") String memberRegisterType, @RequestParam(name = "code") String code) {
 
-    return ResponseEntity.created(URI.create("/google"))
-        .body(socialUserService.doSocialLogin(MemberRegisterType.GOOGLE, code));
+    return ResponseEntity.created(URI.create("/social"))
+        .body(socialUserService.doSocialLogin(MemberRegisterType.valueOf(memberRegisterType), code));
   }
 }

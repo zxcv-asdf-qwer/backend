@@ -1,4 +1,4 @@
-package co.kr.compig.common.dto;
+package co.kr.compig.common.dto.pagination;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

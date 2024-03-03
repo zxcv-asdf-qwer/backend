@@ -10,5 +10,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class LoginResponse {
-    private Long id;
+
+  private String email;
+  private String access_token;
+  private String expires_in;
+  private String refresh_expires_in;
+  private String refresh_token;
+  private String token_type;
+  private String session_state;
+  private String scope;
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
 }

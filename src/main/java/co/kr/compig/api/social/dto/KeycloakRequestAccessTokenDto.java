@@ -9,11 +9,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class GoogleRequestAccessTokenDto {
+public class KeycloakRequestAccessTokenDto {
 
-  private String code;
+  @Builder.Default
+  private String grant_type = "password";
   private String client_id;
-  private String clientSecret;
-  private String redirect_uri;
-  private String grant_type;
+  private String client_secret;
+  private String username;
+  private String password;
 }

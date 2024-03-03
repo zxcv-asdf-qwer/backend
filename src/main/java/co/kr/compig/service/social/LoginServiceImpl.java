@@ -1,5 +1,6 @@
 package co.kr.compig.service.social;
 
+import co.kr.compig.api.social.dto.LoginResponse;
 import co.kr.compig.api.social.dto.SocialAuthResponse;
 import co.kr.compig.api.social.dto.SocialUserResponse;
 import co.kr.compig.common.code.MemberRegisterType;
@@ -13,18 +14,29 @@ import org.springframework.stereotype.Service;
 @Component
 @Qualifier("defaultLoginService")
 public class LoginServiceImpl implements SocialLoginService {
-    @Override
-    public MemberRegisterType getServiceName() {
-        return MemberRegisterType.GENERAL;
-    }
 
-    @Override
-    public SocialAuthResponse getAccessToken(String authorizationCode) {
-        return null;
-    }
+  @Override
+  public MemberRegisterType getServiceName() {
+    return MemberRegisterType.GENERAL;
+  }
 
-    @Override
-    public SocialUserResponse getUserInfo(String accessToken) {
-        return null;
-    }
+  @Override
+  public SocialAuthResponse getAccessToken(String authorizationCode) {
+    return null;
+  }
+
+  @Override
+  public SocialUserResponse idTokenToResponse(String authorizationCode) {
+    return null;
+  }
+
+  @Override
+  public SocialUserResponse getUserInfo(String accessToken) {
+    return null;
+  }
+
+  @Override
+  public LoginResponse getKeycloakAccessToken(String authorizationCode, String userPw) {
+    return null;
+  }
 }

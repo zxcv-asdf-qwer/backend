@@ -1,7 +1,7 @@
 package co.kr.compig.common.interceptor;
 
-import co.kr.compig.common.dto.PagingRequest;
-import co.kr.compig.common.dto.PagingResult;
+import co.kr.compig.common.dto.pagination.nouse.PagingRequest;
+import co.kr.compig.common.dto.pagination.nouse.PagingResult;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
