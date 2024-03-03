@@ -20,8 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Slf4j
@@ -78,7 +78,7 @@ public class BoardService {
   }
 
   public Long createBoardBaseFile(BoardCreateRequest boardCreateRequest,
-      HashMap<String, String> files) {
+      Map<String, String> files) {
     Board board = new Board();
     if(files != null){
       List<SystemFileResponse> imageUrlList = s3Util.uploadBase64ToFile(files);
