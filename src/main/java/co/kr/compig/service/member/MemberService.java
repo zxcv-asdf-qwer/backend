@@ -100,7 +100,7 @@ public class MemberService {
 
   public void updateMember(MemberUpdateRequest memberUpdateRequest) {
     Optional.ofNullable(SecurityUtil.getUserId()).ifPresentOrElse(currentUserId ->
-            memberRepository.findById(currentUserId).ifPresentOrElse(
+            memberRepository.findByUserId(currentUserId).ifPresentOrElse(
                 member -> {
                   setReferenceDomain(memberUpdateRequest.getUserType(), member);
                   member.updateUserKeyCloak();
