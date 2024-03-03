@@ -30,16 +30,17 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(
-    uniqueConstraints = {
-        @UniqueConstraint(
-            name = "uk01_board",
-            columnNames = {"boardId"})
-    })
+@Table
+@SequenceGenerator(
+        name = "board_seq_gen", //시퀀스 제너레이터 이름
+        sequenceName = "board_seq", //시퀀스 이름
+        initialValue = 1, //시작값
+        allocationSize = 1 //메모리를 통해 할당 할 범위 사이즈
+)
 public class Board {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "board_seq_gen")
   @Column(name = "board_id")
   private Long id; // 게시글 id
 
