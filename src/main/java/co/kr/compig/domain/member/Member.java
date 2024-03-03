@@ -60,7 +60,7 @@ public class Member {
   @Column(name = "member_id")
   private String id; // Keycloak 의 id
 
-  @Column(length = 150, updatable = false)
+  @Column(length = 150)
   private String userId; // 사용자 아이디
 
   @Column(length = 150)
@@ -193,6 +193,7 @@ public class Member {
   public void setPicture(String picture) {
     this.picture = picture;
   }
+
   /* =================================================================
    * Default columns
      ================================================================= */
@@ -221,6 +222,7 @@ public class Member {
       keycloakHandler.usersJoinGroups(this.id, this.getGroups());
     }
   }
+
   public void updateUserKeyCloak() {
     KeycloakHandler keycloakHandler = KeycloakHolder.get();
     if (isExistGroups()) {
@@ -301,9 +303,10 @@ public class Member {
     this.marketingSmsDate = marketingDate(memberUpdateRequest.isMarketingSms());
     this.realNameYn = memberUpdateRequest.getRealNameYn();
   }
-    public LocalDate marketingDate(boolean isMarketing) {
-      return isMarketing ? LocalDate.now() : null;
-    }
+
+  public LocalDate marketingDate(boolean isMarketing) {
+    return isMarketing ? LocalDate.now() : null;
+  }
 
   public MemberResponse toResponse() {
     return MemberResponse.builder()
@@ -324,7 +327,8 @@ public class Member {
         .marketingEmail(
             this.marketingEmailDate != null && this.marketingEmailDate.isBefore(LocalDate.now()))
         .marketingAppPush(
-            this.marketingAppPushDate != null && this.marketingAppPushDate.isBefore(LocalDate.now()))
+            this.marketingAppPushDate != null && this.marketingAppPushDate.isBefore(
+                LocalDate.now()))
         .marketingKakao(
             this.marketingKakaoDate != null && this.marketingKakaoDate.isBefore(LocalDate.now()))
         .marketingSms(
@@ -332,5 +336,10 @@ public class Member {
         .realNameYn(this.realNameYn)
         .build();
 
+  }
+
+  public void setLeaveMember() {
+    this.userId = "DEL_".concat(this.userId);
+    this.email = this.email != null ? "DEL_".concat(this.email) : null;
   }
 }

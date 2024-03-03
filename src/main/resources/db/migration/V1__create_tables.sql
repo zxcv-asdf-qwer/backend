@@ -58,6 +58,10 @@ comment on column member.marketing_sms_date is '문자 수신동의 날짜';
 comment on column member.deleted_date is '회원 탈퇴 날짜';
 comment on column member.real_name_yn is '실명 확인 여부';
 
+alter table if exists system_file
+    add constraint fk01_system_file
+        foreign key (board_id)
+            references board;
 CREATE SEQUENCE public.board_seq INCREMENT BY 1 START WITH 1;
 create table board
 (
@@ -114,6 +118,10 @@ comment on column hospital.hospital_address2 is '병원 상세 주소';
 comment on column hospital.hospital_tel_no is '병원 전화번호';
 comment on column hospital.hospital_operation_hours is '병원 운영 시간';
 
+alter table if exists member_group
+    add constraint fk01_member_group
+        foreign key (member_id)
+            references member;
 CREATE SEQUENCE public.member_group_seq INCREMENT BY 1 START WITH 1;
 create table member_group
 (
@@ -129,6 +137,10 @@ comment on table member_group is '회원 그룹 테이블';
 comment on column member_group.group_key is 'Keycloak 의 group ID';
 comment on column member_group.member_id is '회원 ID';
 
+alter table if exists menu
+    add constraint fk01_menu
+        foreign key (parent_id)
+            references menu;
 CREATE SEQUENCE public.menu_seq INCREMENT BY 1 START WITH 1;
 create table menu
 (
@@ -156,6 +168,14 @@ comment on column menu.menu_type is '메뉴 타입';
 comment on column menu.use_yn is '사용유무';
 comment on column menu.parent_id is '상위 메뉴';
 
+alter table if exists menu_permission
+    add constraint fk01_menu_permission
+        foreign key (member_id)
+            references member;
+alter table if exists menu_permission
+    add constraint fk02_menu_permission
+        foreign key (menu_id)
+            references menu;
 CREATE SEQUENCE public.menu_permission_seq INCREMENT BY 1 START WITH 1;
 create table menu_permission
 (
@@ -175,6 +195,10 @@ comment on column menu_permission.menu_id is '메뉴 ID';
 comment on column menu_permission.member_id is '회원 ID';
 comment on column menu_permission.group_key is '그룹 ID';
 
+alter table if exists system_file
+    add constraint fk01_system_file
+        foreign key (board_id)
+            references board;
 CREATE SEQUENCE public.system_file_seq INCREMENT BY 1 START WITH 1;
 create table system_file
 (

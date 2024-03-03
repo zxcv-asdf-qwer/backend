@@ -145,4 +145,21 @@ public class KeycloakHandler {
       memberGroup.updateGroupInfo(groupId, groupNm, groupPath);
     }
   }
+
+  public void deleteUser(String id) {
+    Response response = getUsers().delete(id);
+    int status = response.getStatus();
+    //204
+    if (status != HttpStatus.NO_CONTENT.value()) {
+      //404
+      if (status == HttpStatus.NOT_FOUND.value()) {
+        throw new BizException("이미 탈퇴한 회원입니다.");
+      }
+      String reasonPhrase = ((ClientResponse) response).getReasonPhrase();
+      log.error("Http status : {}, reason : {}", status, reasonPhrase);
+      throw new KeyCloakRequestException("인증서버 탈퇴중 에러가 발생 하였습니다.["
+          + status + " - " + reasonPhrase + "]"
+      );
+    }
+  }
 }

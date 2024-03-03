@@ -10,6 +10,7 @@ import co.kr.compig.common.code.UserType;
 import co.kr.compig.common.exception.BizException;
 import co.kr.compig.common.exception.NotExistDataException;
 import co.kr.compig.common.keycloak.KeycloakHandler;
+import co.kr.compig.common.keycloak.KeycloakHolder;
 import co.kr.compig.common.utils.S3Util;
 import co.kr.compig.common.utils.SecurityUtil;
 import co.kr.compig.domain.member.Member;
@@ -128,24 +129,28 @@ public class MemberService {
     });
   }
 
+  @Transactional(readOnly = true)
   public MemberResponse getUser() {
     Member byUserId = memberRepository.findByUserId(SecurityUtil.getUserId()).orElseThrow(
         NotExistDataException::new);
     return byUserId.toResponse();
   }
 
+  @Transactional(readOnly = true)
   public boolean availabilityUserId(String userId) {
     Member byUserId = memberRepository.findByUserId(userId).orElseThrow(
         NotExistDataException::new);
     return byUserId != null;
   }
 
+  @Transactional(readOnly = true)
   public Boolean availabilityEmail(String email) {
     Member byUserId = memberRepository.findByEmail(email).orElseThrow(
         NotExistDataException::new);
     return byUserId != null;
   }
 
+  @Transactional(readOnly = true)
   public String findUserId(String userNm, String userEmail) {
     Member member = memberRepository.findByUserNmAndEmail(userNm, userEmail).orElseThrow(
         NotExistDataException::new);
@@ -154,5 +159,20 @@ public class MemberService {
           member.getMemberRegisterType().getDesc().concat(" 회원입니다. 소셜로그인을 선택해주세요."));
     }
     return member.getUserId();
+  }
+
+  public void userLeave() { //TODO 연결 끊기
+    String userId = SecurityUtil.getUserId();
+    Member member = memberRepository.findByUserId(userId).orElseThrow(NotExistDataException::new);
+    if (member.getMemberRegisterType() != MemberRegisterType.GENERAL) {
+      //소셜로그인 탈퇴
+    }
+    member.setLeaveMember();
+    try {
+      KeycloakHandler keycloakHandler = KeycloakHolder.get();
+      keycloakHandler.deleteUser(member.getId());
+    } catch (Exception e) {
+      log.error("LeaveMember Keycloak Error", e);
+    }
   }
 }
