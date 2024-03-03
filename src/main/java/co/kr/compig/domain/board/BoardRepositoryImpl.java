@@ -69,23 +69,24 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
 
   private BooleanExpression createPredicate(BoardSearchRequest request) {
     BooleanExpression predicate = Expressions.asBoolean(true).isTrue();
-    if (request.getBoardType() != null){
+    if (request.getBoardType() != null) {
       predicate = predicate.and(board.boardType.eq(request.getBoardType()));
     }
-    if (request.getContentsType() != null){
+    if (request.getContentsType() != null) {
       predicate = predicate.and(board.contentsType.eq(request.getContentsType()));
     }
     if (request.getTitle() != null) {
       predicate = predicate.and(board.title.containsIgnoreCase(request.getTitle()));
     }
-    if (request.getSmallTitle() != null){
+    if (request.getSmallTitle() != null) {
       predicate = predicate.and(board.smallTitle.containsIgnoreCase(request.getSmallTitle()));
     }
     if (request.getContents() != null) {
       predicate = predicate.and(board.contents.containsIgnoreCase(request.getContents()));
     }
-    if (request.getCreatedBy() != null){
-      predicate = predicate.and(board.createdAndModified.createdBy.containsIgnoreCase(request.getCreatedBy()));
+    if (request.getCreatedBy() != null) {
+      predicate = predicate.and(
+          board.createdAndModified.createdBy.containsIgnoreCase(request.getCreatedBy()));
     }
     return predicate;
   }
@@ -103,7 +104,8 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
 
   // cursor paging
   @Override
-  public Slice<BoardResponse> findAllByCondition(Long cursorId, BoardSearchRequest boardSearchRequest, Pageable pageable){
+  public Slice<BoardResponse> findAllByCondition(Long cursorId,
+      BoardSearchRequest boardSearchRequest, Pageable pageable) {
     BooleanExpression predicate = createPredicate(boardSearchRequest);
     JPAQuery<BoardResponse> query = createBaseQuery(predicate)
         .select(Projections.constructor(BoardResponse.class,
@@ -126,18 +128,19 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
 
     List<BoardResponse> boards = query
         .offset(pageable.getOffset())
-        .limit(pageable.getPageSize()) //페이징
+        .limit(pageable.getPageSize() + 1) // 페이징 + 다음 페이지 존재 여부 확인을 위해 +1
         .fetch();
 
     boolean hasNext = false;
-    if (boards.size() > pageable.getPageSize()){
+    if (boards.size() > pageable.getPageSize()) {
       boards.remove(pageable.getPageSize());
       hasNext = true;
     }
     return new SliceImpl<>(boards, pageable, hasNext);
   }
-  private BooleanExpression eqCursorId(Long cursorId){
-    if(cursorId != null){
+
+  private BooleanExpression eqCursorId(Long cursorId) {
+    if (cursorId != null) {
       return board.id.lt(cursorId);
     }
     return null;

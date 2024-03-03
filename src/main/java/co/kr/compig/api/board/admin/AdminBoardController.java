@@ -5,8 +5,8 @@ import co.kr.compig.api.board.dto.BoardDetailResponse;
 import co.kr.compig.api.board.dto.BoardResponse;
 import co.kr.compig.api.board.dto.BoardSearchRequest;
 import co.kr.compig.api.board.dto.BoardUpdateRequest;
-import co.kr.compig.common.dto.PageCustom;
 import co.kr.compig.common.dto.Response;
+import co.kr.compig.common.dto.pagination.SliceResponse;
 import co.kr.compig.service.board.BoardService;
 import jakarta.validation.Valid;
 import java.util.Map;
@@ -45,11 +45,11 @@ public class AdminBoardController {
   }
 
   @GetMapping
-  public ResponseEntity<Response<PageCustom<BoardResponse>>> pageListBoard(
-       @RequestBody @Valid BoardSearchRequest boardSearchRequest, Pageable pageable) {
-    Slice<BoardResponse> map = boardService.pageListBoardCursor(boardSearchRequest.getCursorId(), boardSearchRequest, pageable);
-    return ResponseEntity.ok(Response.<PageCustom<BoardResponse>>builder()
-        .data(new PageCustom<>(map.getContent(), map.getPageable(), false)).build());
+  public ResponseEntity<SliceResponse<BoardResponse>> pageListBoard(
+        @RequestBody @Valid BoardSearchRequest boardSearchRequest, Pageable pageable) {
+    Slice<BoardResponse> slice = boardService.pageListBoardCursor(boardSearchRequest.getCursorId(), boardSearchRequest, pageable);
+    SliceResponse<BoardResponse> sliceResponse = new SliceResponse<>(slice.getContent(), pageable, slice.hasNext());
+    return ResponseEntity.ok(sliceResponse);
   }
 
   @GetMapping("/{boardId}")

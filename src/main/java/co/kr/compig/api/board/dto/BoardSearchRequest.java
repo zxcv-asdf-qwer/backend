@@ -2,7 +2,7 @@ package co.kr.compig.api.board.dto;
 
 import co.kr.compig.common.code.BoardType;
 import co.kr.compig.common.code.ContentsType;
-import co.kr.compig.common.dto.PageableRequest;
+import co.kr.compig.common.dto.pagination.PageableRequest;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

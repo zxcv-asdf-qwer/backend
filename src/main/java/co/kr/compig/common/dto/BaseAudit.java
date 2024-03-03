@@ -33,7 +33,5 @@ public class BaseAudit {
       this.updatedOn = audit.getUpdatedAt();
     }
   }
-
-
 }
 

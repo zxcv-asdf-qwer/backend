@@ -1,5 +1,6 @@
-package co.kr.compig.common.dto;
+package co.kr.compig.common.dto.pagination.nouse;
 
+import co.kr.compig.common.dto.BaseAudit;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
