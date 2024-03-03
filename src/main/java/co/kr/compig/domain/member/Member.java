@@ -14,6 +14,8 @@ import co.kr.compig.common.embedded.CreatedAndUpdated;
 import co.kr.compig.common.exception.KeyCloakRequestException;
 import co.kr.compig.common.keycloak.KeycloakHandler;
 import co.kr.compig.common.keycloak.KeycloakHolder;
+import co.kr.compig.domain.order.CareOrder;
+import co.kr.compig.domain.account.Account;
 import co.kr.compig.domain.permission.MenuPermission;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -25,6 +27,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDate;
@@ -145,16 +148,20 @@ public class Member {
      ================================================================= */
   @Builder.Default
   @OneToMany(
-      mappedBy = "member",
-      fetch = FetchType.LAZY,
-      cascade = CascadeType.ALL,
-      orphanRemoval = true)
+      mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<MemberGroup> groups = new HashSet<>();
 
   @Builder.Default
   @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private Set<MenuPermission> menuPermissions = new HashSet<>();
 
+  @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
+  private Account account;
+
+  @Builder.Default
+  @OneToMany(
+      mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  private Set<CareOrder> careOrders = new HashSet<>();
   /* =================================================================
    * Relation method
      ================================================================= */
