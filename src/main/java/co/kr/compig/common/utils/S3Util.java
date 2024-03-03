@@ -115,7 +115,7 @@ public class S3Util {
   }
 
   public String generateUnsignedUrl(String objectKey){
-    String baseUrl = "https://" + bucket + ".s3.ap-northeast-2.amazonaws.com/";
+    String baseUrl = "https://d10dmw3w6l1et0.cloudfront.net/";
     return baseUrl + objectKey;
   }
 
@@ -184,7 +184,7 @@ public class S3Util {
     return imageUrlList;
   }
 
-  public List<SystemFileResponse> uploadBase64ToFile(HashMap<String, String> img){
+  public List<SystemFileResponse> uploadBase64ToFile(Map<String, String> img){
     List<MultipartFile> multipartFiles = new ArrayList<>();
     for(String key : img.keySet()){
       String contentType = img.get(key).substring(5).split(";")[0];
