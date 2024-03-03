@@ -11,9 +11,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -26,7 +28,8 @@ public class MemberController {
 
   @PostMapping("/admin")
   @Transactional
-  public ResponseEntity<Response<?>> adminCreate(@ModelAttribute @Valid AdminMemberCreate adminMemberCreate) {
+  public ResponseEntity<Response<?>> adminCreate(
+      @ModelAttribute @Valid AdminMemberCreate adminMemberCreate) {
     return ResponseEntity.ok().body(Response.<Map<String, String>>builder()
         .data(Map.of("memberId", memberService.adminCreate(adminMemberCreate)))
         .build());
@@ -34,7 +37,8 @@ public class MemberController {
 
   @PostMapping("/guardian")
   @Transactional
-  public ResponseEntity<Response<?>> guardianCreate(@ModelAttribute @Valid GuardianMemberCreate guardianMemberCreate) {
+  public ResponseEntity<Response<?>> guardianCreate(
+      @ModelAttribute @Valid GuardianMemberCreate guardianMemberCreate) {
     return ResponseEntity.ok().body(Response.<Map<String, String>>builder()
         .data(Map.of("memberId", memberService.guardianCreate(guardianMemberCreate)))
         .build());
@@ -42,9 +46,36 @@ public class MemberController {
 
   @PostMapping("/partner")
   @Transactional
-  public ResponseEntity<Response<?>> partnerCreate(@ModelAttribute @Valid PartnerMemberCreate partnerMemberCreate) {
+  public ResponseEntity<Response<?>> partnerCreate(
+      @ModelAttribute @Valid PartnerMemberCreate partnerMemberCreate) {
     return ResponseEntity.ok().body(Response.<Map<String, String>>builder()
         .data(Map.of("memberId", memberService.partnerCreate(partnerMemberCreate)))
+        .build());
+  }
+
+  @GetMapping("/userIds/availability")
+  @Transactional
+  public ResponseEntity<Response<?>> availabilityUserId(@RequestParam("userId") String userId) {
+    return ResponseEntity.ok(Response.<Map<String, Boolean>>builder()
+        .data(Map.of("isAvailability", memberService.availabilityUserId(userId)))
+        .build());
+  }
+
+  @GetMapping("/emails/availability")
+  @Transactional
+  public ResponseEntity<Response<?>> availabilityEmail(
+      @RequestParam("userEmail") String userEmail) {
+    return ResponseEntity.ok(Response.<Map<String, Boolean>>builder()
+        .data(Map.of("isAvailability", memberService.availabilityEmail(userEmail)))
+        .build());
+  }
+
+  @GetMapping("/find/userIds")
+  @Transactional
+  public ResponseEntity<Response<?>> findUserId(@RequestParam("userNm") String userNm,
+      @RequestParam("userEmail") String userEmail) {
+    return ResponseEntity.ok(Response.<Map<String, String>>builder()
+        .data(Map.of("userId", memberService.findUserId(userNm, userEmail)))
         .build());
   }
 }

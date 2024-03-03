@@ -1,6 +1,7 @@
 package co.kr.compig.common.config;
 
 import static org.springframework.security.config.Customizer.withDefaults;
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Collection;
@@ -11,10 +12,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -45,6 +48,9 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//    http.csrf(withDefaults());
+//    http.cors(withDefaults());
+    http.csrf(AbstractHttpConfigurer::disable);
     http.authorizeHttpRequests(auth -> auth
         .requestMatchers(new AntPathRequestMatcher("/pb/**"))
         .hasRole("USER")
@@ -53,8 +59,10 @@ public class SecurityConfig {
         .requestMatchers(
             new AntPathRequestMatcher("/actuator/**"),
             new AntPathRequestMatcher("/docs/**"),
-            new AntPathRequestMatcher("/login/**")
-        )
+            new AntPathRequestMatcher("/login/**"),
+            antMatcher(HttpMethod.GET, "/members/**"),
+            antMatcher(HttpMethod.POST, "/members/**")
+            )
         .permitAll()
         .anyRequest()
         .authenticated());

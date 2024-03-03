@@ -66,7 +66,8 @@ public class MemberGroup {
   /* =================================================================
    * Business login
      ================================================================= */
-  public void updateGroupInfo(String groupNm, String groupPath) {
+  public void updateGroupInfo(String groupKey, String groupNm, String groupPath) {
+    this.groupKey = groupKey;
     this.groupNm = groupNm;
     this.groupPath = groupPath;
   }

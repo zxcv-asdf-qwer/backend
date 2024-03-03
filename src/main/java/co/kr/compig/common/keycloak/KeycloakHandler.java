@@ -139,9 +139,10 @@ public class KeycloakHandler {
       }
 
       GroupRepresentation groupRepresentation = optionalGroupRepresentation.get();
+      String groupId = groupRepresentation.getId();
       String groupNm = groupRepresentation.getName();
       String groupPath = groupRepresentation.getPath();
-      memberGroup.updateGroupInfo(groupNm, groupPath);
+      memberGroup.updateGroupInfo(groupId, groupNm, groupPath);
     }
   }
 }

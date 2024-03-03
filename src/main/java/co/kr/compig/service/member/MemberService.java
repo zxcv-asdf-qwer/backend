@@ -2,9 +2,12 @@ package co.kr.compig.service.member;
 
 import co.kr.compig.api.member.dto.AdminMemberCreate;
 import co.kr.compig.api.member.dto.GuardianMemberCreate;
+import co.kr.compig.api.member.dto.MemberResponse;
 import co.kr.compig.api.member.dto.MemberUpdateRequest;
 import co.kr.compig.api.member.dto.PartnerMemberCreate;
+import co.kr.compig.common.code.MemberRegisterType;
 import co.kr.compig.common.code.UserType;
+import co.kr.compig.common.exception.BizException;
 import co.kr.compig.common.exception.NotExistDataException;
 import co.kr.compig.common.keycloak.KeycloakHandler;
 import co.kr.compig.common.utils.S3Util;
@@ -21,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.keycloak.representations.idm.GroupRepresentation;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Service
@@ -59,7 +63,8 @@ public class MemberService {
     Optional<MemberGroup> memberGroup = memberGroupRepository.findByMember_id(member.getId());
 
     if (memberGroup.isPresent() && handler.isPresent()) {
-      memberGroup.get().updateGroupInfo(handler.get().getName(), handler.get().getPath());
+      memberGroup.get()
+          .updateGroupInfo(handler.get().getId(), handler.get().getName(), handler.get().getPath());
     } else {
       member.addGroups(MemberGroup.builder()
           .groupKey(handler.get().getId())
@@ -100,15 +105,54 @@ public class MemberService {
 
   public void updateMember(MemberUpdateRequest memberUpdateRequest) {
     Optional.ofNullable(SecurityUtil.getUserId()).ifPresentOrElse(currentUserId ->
-            memberRepository.findByUserId(currentUserId).ifPresentOrElse(
-                member -> {
-                  setReferenceDomain(memberUpdateRequest.getUserType(), member);
-                  member.updateUserKeyCloak();
-                }, () -> {
-                  throw new NotExistDataException();
-                }), () -> {
-          throw new NotExistDataException();
-        }
-    );
+        memberRepository.findByUserId(currentUserId).ifPresentOrElse(
+            member -> {
+              setReferenceDomain(memberUpdateRequest.getUserType(), member);
+              member.updateUserKeyCloak();
+              member.update(memberUpdateRequest);
+            }, () -> {
+              throw new NotExistDataException();
+            }), () -> {
+      throw new NotExistDataException();
+    });
+  }
+
+  public void userPictureUpdate(MultipartFile picture) {
+    Optional<Member> byUserId = memberRepository.findByUserId(SecurityUtil.getUserId());
+    byUserId.ifPresentOrElse(member -> {
+      Optional.ofNullable(picture).ifPresent(file -> {
+        member.setPicture(s3Util.uploads(List.of(file)).stream().findFirst().orElse(null));
+      });
+    }, () -> {
+      throw new NotExistDataException();
+    });
+  }
+
+  public MemberResponse getUser() {
+    Member byUserId = memberRepository.findByUserId(SecurityUtil.getUserId()).orElseThrow(
+        NotExistDataException::new);
+    return byUserId.toResponse();
+  }
+
+  public boolean availabilityUserId(String userId) {
+    Member byUserId = memberRepository.findByUserId(userId).orElseThrow(
+        NotExistDataException::new);
+    return byUserId != null;
+  }
+
+  public Boolean availabilityEmail(String email) {
+    Member byUserId = memberRepository.findByEmail(email).orElseThrow(
+        NotExistDataException::new);
+    return byUserId != null;
+  }
+
+  public String findUserId(String userNm, String userEmail) {
+    Member member = memberRepository.findByUserNmAndEmail(userNm, userEmail).orElseThrow(
+        NotExistDataException::new);
+    if (member.getMemberRegisterType() != MemberRegisterType.GENERAL) {
+      throw new BizException(
+          member.getMemberRegisterType().getDesc().concat(" 회원입니다. 소셜로그인을 선택해주세요."));
+    }
+    return member.getUserId();
   }
 }

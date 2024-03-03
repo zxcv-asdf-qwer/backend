@@ -1,5 +1,6 @@
 package co.kr.compig.domain.member;
 
+import co.kr.compig.api.member.dto.MemberResponse;
 import co.kr.compig.api.member.dto.MemberUpdateRequest;
 import co.kr.compig.common.code.CareerCode;
 import co.kr.compig.common.code.DomesticForeignCode;
@@ -303,4 +304,33 @@ public class Member {
     public LocalDate marketingDate(boolean isMarketing) {
       return isMarketing ? LocalDate.now() : null;
     }
+
+  public MemberResponse toResponse() {
+    return MemberResponse.builder()
+        .userNm(this.userNm)
+        .userPw(this.userPw)
+        .telNo(this.telNo)
+        .email(this.email)
+        .gender(this.gender)
+        .useYn(this.useYn)
+        .userType(this.userType)
+        .memberRegisterType(this.memberRegisterType)
+        .address1(this.address1)
+        .address2(this.address2)
+        .domesticForeignCode(this.domesticForeignCode)
+        .careerCode(this.careerCode)
+        .careStartYear(this.careStartYear)
+        .introduce(this.introduce)
+        .marketingEmail(
+            this.marketingEmailDate != null && this.marketingEmailDate.isBefore(LocalDate.now()))
+        .marketingAppPush(
+            this.marketingAppPushDate != null && this.marketingAppPushDate.isBefore(LocalDate.now()))
+        .marketingKakao(
+            this.marketingKakaoDate != null && this.marketingKakaoDate.isBefore(LocalDate.now()))
+        .marketingSms(
+            this.marketingSmsDate != null && this.marketingSmsDate.isBefore(LocalDate.now()))
+        .realNameYn(this.realNameYn)
+        .build();
+
+  }
 }
