@@ -24,7 +24,7 @@ public class SocialUserResponse {
 
   public Member convertEntity() {
     return Member.builder()
-        .userId(this.id)
+        .userId(this.email)
         .userNm("socialName")
         .email(this.email)
         .userPw(this.email + this.memberRegisterType)
