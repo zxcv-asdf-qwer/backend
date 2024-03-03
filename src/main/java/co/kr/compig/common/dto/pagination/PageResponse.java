@@ -10,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 @Getter
 public class PageResponse<T> implements Serializable {
 
-  private List<T> items;
+  private List<T> data;
 
   private boolean hasNext;
 
@@ -28,7 +28,7 @@ public class PageResponse<T> implements Serializable {
 
   //기본 생성자 호출시 empty list
   public PageResponse() {
-    this.items = Collections.emptyList();
+    this.data = Collections.emptyList();
     this.hasNext = false;
     this.totalPages = 0;
     this.totalElements = 0L;
@@ -41,7 +41,7 @@ public class PageResponse<T> implements Serializable {
   public PageResponse(List<T> content, Pageable pageable, Long totalCount) {
     final PageImpl<T> page = new PageImpl<>(content, pageable, totalCount);
 
-    this.items = page.getContent();
+    this.data = page.getContent();
     this.hasNext = page.hasNext();
     this.totalPages = page.getTotalPages();
     this.totalElements = page.getTotalElements();
@@ -52,7 +52,7 @@ public class PageResponse<T> implements Serializable {
   }
 
   public PageResponse(PageImpl<T> page) {
-    this.items = page.getContent();
+    this.data = page.getContent();
     this.hasNext = page.hasNext();
     this.totalPages = page.getTotalPages();
     this.totalElements = page.getTotalElements();

@@ -10,25 +10,25 @@ import org.springframework.data.domain.SliceImpl;
 @Getter
 public class SliceResponse<T> implements Serializable {
 
-  private List<T> items;
+  private List<T> data;
 
   private boolean hasNext;
 
   //기본 생성자 호출시 empty list
   public SliceResponse() {
-    this.items = Collections.emptyList();
+    this.data = Collections.emptyList();
     this.hasNext = false;
   }
 
   public SliceResponse(List<T> content, Pageable pageable, boolean hasNext) {
     final SliceImpl<T> slice = new SliceImpl<>(content, pageable, hasNext);
 
-    this.items = slice.getContent();
+    this.data = slice.getContent();
     this.hasNext = slice.hasNext();
   }
 
   public SliceResponse(SliceImpl<T> slice) {
-    this.items = slice.getContent();
+    this.data = slice.getContent();
     this.hasNext = slice.hasNext();
   }
 
