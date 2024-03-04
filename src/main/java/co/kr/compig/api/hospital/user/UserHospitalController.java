@@ -21,13 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/pb/board", produces = "application/json")
+@RequestMapping(path = "/pb/hospital", produces = "application/json")
 public class UserHospitalController {
   private final HospitalService hospitalService;
   @GetMapping
-  public ResponseEntity<SliceResponse<HospitalResponse>> pageListHospital(@RequestBody @Valid
-  HospitalSearchRequest hospitalSearchRequest, Pageable pageable){
-    Slice<HospitalResponse> slice = hospitalService.pageListHospital(hospitalSearchRequest, pageable);
+  public ResponseEntity<SliceResponse<HospitalResponse>> pageListHospital(
+      @RequestBody @Valid HospitalSearchRequest hospitalSearchRequest, Pageable pageable){
+    Slice<HospitalResponse> slice = hospitalService.pageListHospitalCursor(hospitalSearchRequest, pageable);
     SliceResponse<HospitalResponse> sliceResponse = new SliceResponse<>(slice.getContent(), pageable,
         slice.hasNext());
     return ResponseEntity.ok(sliceResponse);

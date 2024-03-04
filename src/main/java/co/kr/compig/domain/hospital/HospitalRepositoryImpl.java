@@ -1,5 +1,6 @@
 package co.kr.compig.domain.hospital;
 
+import static co.kr.compig.domain.board.QBoard.board;
 import static co.kr.compig.domain.hospital.QHospital.hospital;
 
 import co.kr.compig.api.hospital.dto.HospitalResponse;
@@ -17,6 +18,8 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
 
@@ -78,5 +81,43 @@ public class HospitalRepositoryImpl implements HospitalRepositoryCustom{
       );
       query.orderBy(orderSpecifier);
     }
+  }
+
+  // cursor paging
+  @Override
+  public Slice<HospitalResponse> findAllByCondition(
+      HospitalSearchRequest hospitalSearchRequest, Pageable pageable) {
+    BooleanExpression predicate = createPredicate(hospitalSearchRequest);
+    JPAQuery<HospitalResponse>  query = createBaseQuery(predicate)
+        .select(Projections.constructor(HospitalResponse.class,
+                hospital.id,
+                hospital.hospitalNm,
+                hospital.hospitalCode,
+                hospital.hospitalAddress1,
+                hospital.hospitalAddress2,
+                hospital.hospitalTelNo,
+                hospital.hospitalOperationHours
+            )
+        );
+
+    applySorting(query, pageable);
+
+    List<HospitalResponse> hospitals = query
+        .where(cursorCursorId(hospitalSearchRequest.getCursorId()))
+        .offset(pageable.getOffset())
+        .limit(pageable.getPageSize() + 1) // 페이징 + 다음 페이지 존재 여부 확인을 위해 +1
+        .fetch();
+
+    boolean hasNext = false;
+    if (hospitals.size() > pageable.getPageSize()) {
+      hospitals.remove(pageable.getPageSize());
+      hasNext = true;
+    }
+    return new SliceImpl<>(hospitals, pageable, hasNext);
+  }
+
+  private BooleanExpression cursorCursorId(Long cursorId){
+    if(cursorId == null) return null;
+    return board.id.lt(cursorId);
   }
 }

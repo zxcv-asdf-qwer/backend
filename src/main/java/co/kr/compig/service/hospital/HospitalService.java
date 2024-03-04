@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +34,9 @@ public class HospitalService {
     return hospitalRepositoryCustom.findPage(hospitalSearchRequest, pageable);
   }
 
+  public Slice<HospitalResponse> pageListHospitalCursor(HospitalSearchRequest hospitalSearchRequest, Pageable pageable){
+    return hospitalRepositoryCustom.findAllByCondition(hospitalSearchRequest, pageable);
+  }
   public HospitalDetailResponse getHospital(Long hospitalId){
     Hospital hospital = hospitalRepository.findById(hospitalId).orElseThrow(NotExistDataException::new);
     return hospital.toHospitalDetailResponse();
