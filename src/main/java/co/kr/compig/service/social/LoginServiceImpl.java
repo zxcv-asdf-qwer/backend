@@ -1,7 +1,6 @@
 package co.kr.compig.service.social;
 
-import co.kr.compig.api.social.dto.LoginResponse;
-import co.kr.compig.api.social.dto.SocialAuthResponse;
+import co.kr.compig.api.social.dto.LoginRequest;
 import co.kr.compig.api.social.dto.SocialUserResponse;
 import co.kr.compig.common.code.MemberRegisterType;
 import lombok.extern.slf4j.Slf4j;
@@ -21,17 +20,13 @@ public class LoginServiceImpl implements SocialLoginService {
   }
 
   @Override
-  public SocialAuthResponse getTokens(String authorizationCode) {
+  public SocialUserResponse tokenToSocialUserResponse(LoginRequest loginRequest) {
     return null;
   }
 
   @Override
-  public SocialUserResponse idTokenToResponse(String authorizationCode) {
+  public SocialUserResponse revoke(LoginRequest loginRequest) {
     return null;
   }
 
-  @Override
-  public LoginResponse getKeycloakAccessToken(String authorizationCode, String userPw) {
-    return null;
-  }
 }

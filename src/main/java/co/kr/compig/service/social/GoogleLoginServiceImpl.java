@@ -1,15 +1,9 @@
 package co.kr.compig.service.social;
 
 import co.kr.compig.api.social.dto.GoogleLoginResponse;
-import co.kr.compig.api.social.dto.GoogleRequestAccessTokenDto;
-import co.kr.compig.api.social.dto.KeycloakRequestAccessTokenDto;
-import co.kr.compig.api.social.dto.LoginResponse;
-import co.kr.compig.api.social.dto.SocialAuthResponse;
+import co.kr.compig.api.social.dto.LoginRequest;
 import co.kr.compig.api.social.dto.SocialUserResponse;
-import co.kr.compig.api.social.google.GoogleAuthApi;
-import co.kr.compig.api.social.keycloak.KeycloakAuthApi;
 import co.kr.compig.common.code.MemberRegisterType;
-import co.kr.compig.common.keycloak.KeycloakProperties;
 import co.kr.compig.common.utils.GsonLocalDateTimeAdapter;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
@@ -26,10 +20,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.JwtDecoders;
 import org.springframework.stereotype.Service;
 
 
@@ -39,19 +29,10 @@ import org.springframework.stereotype.Service;
 @Qualifier("googleLogin")
 public class GoogleLoginServiceImpl implements SocialLoginService {
 
-  private final GoogleAuthApi googleAuthApi;
-  private final KeycloakAuthApi keycloakAuthApi;
-  private final KeycloakProperties keycloakProperties;
   private GoogleIdTokenVerifier googleIdTokenVerifier;
 
   @Value("${social.client.google.rest-api-key}")
   private String googleAppKey;
-  @Value("${social.client.google.secret-key}")
-  private String googleAppSecret;
-  @Value("${social.client.google.redirect-uri}")
-  private String googleRedirectUri;
-  @Value("${social.client.google.grant_type}")
-  private String googleGrantType;
 
   @PostConstruct
   public void initialize() {
@@ -68,40 +49,18 @@ public class GoogleLoginServiceImpl implements SocialLoginService {
   }
 
   @Override
-  public SocialAuthResponse getTokens(String authorizationCode) {
-    ResponseEntity<?> response = googleAuthApi.getAccessToken(
-        GoogleRequestAccessTokenDto.builder()
-            .code(authorizationCode)
-            .client_id(googleAppKey)
-            .clientSecret(googleAppSecret)
-            .redirect_uri(googleRedirectUri)
-            .grant_type(googleGrantType)
-            .build()
-    );
-
-    log.info("google auth info");
-    log.info(response.toString());
-
-    return new Gson()
-        .fromJson(
-            response.getBody().toString(),
-            SocialAuthResponse.class
-        );
-  }
-
-  @Override
-  public SocialUserResponse idTokenToResponse(String idToken) {
+  public SocialUserResponse tokenToSocialUserResponse(LoginRequest loginRequest) {
     String jsonString = "";
     try {
       //토큰 검증
-      GoogleIdToken verifiedIdToken = googleIdTokenVerifier.verify(idToken);
+      GoogleIdToken verifiedIdToken = googleIdTokenVerifier.verify(loginRequest.getIdToken());
       GoogleIdToken.Payload payload = verifiedIdToken.getPayload();
       jsonString = payload.toString();
     } catch (GeneralSecurityException | IOException e) {
       log.warn(e.getLocalizedMessage());
     }
 
-    log.info("idTokenToResponse");
+    log.info(getServiceName().getCode() + " tokenToSocialUserResponse");
     log.info(jsonString.toString());
 
     Gson gson = new GsonBuilder()
@@ -113,41 +72,14 @@ public class GoogleLoginServiceImpl implements SocialLoginService {
 
     return SocialUserResponse.builder()
         .sub(googleLoginResponse.getSub())
-        .memberRegisterType(MemberRegisterType.GOOGLE)
+        .memberRegisterType(getServiceName())
         .email(googleLoginResponse.getEmail())
         .build();
   }
 
   @Override
-  public LoginResponse getKeycloakAccessToken(String userId, String userPw) {
-    ResponseEntity<?> response = keycloakAuthApi.getAccessToken(
-        KeycloakRequestAccessTokenDto.builder()
-            .client_id(keycloakProperties.getClientId())
-            .client_secret(keycloakProperties.getClientSecret())
-            .username(userId)
-            .password(userPw)
-            .build()
-    );
-    log.info("keycloak user response");
-    log.info(response.toString());
-
-    LoginResponse loginResponse = new Gson()
-        .fromJson(
-            response.getBody().toString(),
-            LoginResponse.class
-        );
-
-    loginResponse.setEmail(userId);
-    JwtDecoder jwtDecoder = JwtDecoders.fromIssuerLocation(keycloakProperties.getServerUrl()+"/realms/compig");
-
-// LoginResponse에서 토큰 문자열 가져오기
-    String jwtToken = loginResponse.getAccess_token();
-
-// 토큰 디코딩 및 파싱하여 Jwt 객체 얻기
-    Jwt jwt = jwtDecoder.decode(jwtToken);
-    loginResponse.setRoles(jwt.getClaim("groups"));
-
-    return loginResponse;
+  public SocialUserResponse revoke(LoginRequest loginRequest) {
+    return null;
   }
 
 }

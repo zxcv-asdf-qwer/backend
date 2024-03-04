@@ -59,7 +59,7 @@ public class SecurityConfig {
         .requestMatchers(
             new AntPathRequestMatcher("/actuator/**"),
             new AntPathRequestMatcher("/docs/**"),
-            new AntPathRequestMatcher("/login/**"),
+            antMatcher(HttpMethod.GET, "/social/**"),
             antMatcher(HttpMethod.GET, "/members/**"),
             antMatcher(HttpMethod.POST, "/members/**")
             )

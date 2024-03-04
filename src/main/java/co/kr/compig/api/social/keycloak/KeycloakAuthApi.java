@@ -14,5 +14,4 @@ public interface KeycloakAuthApi {
   ResponseEntity<String> getAccessToken(
       @RequestBody KeycloakRequestAccessTokenDto keycloakRequestAccessTokenDto);
 
-
 }

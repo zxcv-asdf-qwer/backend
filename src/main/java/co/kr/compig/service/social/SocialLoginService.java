@@ -1,7 +1,6 @@
 package co.kr.compig.service.social;
 
-import co.kr.compig.api.social.dto.LoginResponse;
-import co.kr.compig.api.social.dto.SocialAuthResponse;
+import co.kr.compig.api.social.dto.LoginRequest;
 import co.kr.compig.api.social.dto.SocialUserResponse;
 import co.kr.compig.common.code.MemberRegisterType;
 import org.springframework.stereotype.Service;
@@ -11,12 +10,10 @@ public interface SocialLoginService {
 
   MemberRegisterType getServiceName();
 
-  //access token, id token 받아오기
-  SocialAuthResponse getTokens(String authorizationCode);
+  //token to userInfo
+  SocialUserResponse tokenToSocialUserResponse(LoginRequest loginRequest);
 
-  //id token 검증
-  SocialUserResponse idTokenToResponse(String authorizationCode);
+  //token to userInfo
+  SocialUserResponse revoke(LoginRequest loginRequest);
 
-  //keycloak Login 후 access token 받아오기
-  LoginResponse getKeycloakAccessToken(String authorizationCode, String userPw);
 }

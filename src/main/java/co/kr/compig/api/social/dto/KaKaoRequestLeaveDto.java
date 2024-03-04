@@ -5,16 +5,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Builder
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-public class SocialAuthResponse {
+@Builder
+public class KaKaoRequestLeaveDto {
 
-  private String access_token;
-  private String expires_in;
-  private String scope;
-  private String token_type;
-  private String id_token;
-
+  @Builder.Default
+  private String target_id_type = "user_id";
+  private String target_id;
 }

@@ -28,7 +28,7 @@ public class OpenFeignConfig {
 
 //  @Bean
 //  Logger.Level feignLoggerLevel() {
-//    return BASIC;
+//    return Logger.Level.FULL;
 //  }
 
   @Bean
