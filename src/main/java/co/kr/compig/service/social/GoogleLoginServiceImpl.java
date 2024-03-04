@@ -27,6 +27,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtDecoders;
 import org.springframework.stereotype.Service;
 
 
@@ -109,6 +112,7 @@ public class GoogleLoginServiceImpl implements SocialLoginService {
     GoogleLoginResponse googleLoginResponse = gson.fromJson(jsonString, GoogleLoginResponse.class);
 
     return SocialUserResponse.builder()
+        .sub(googleLoginResponse.getSub())
         .memberRegisterType(MemberRegisterType.GOOGLE)
         .email(googleLoginResponse.getEmail())
         .build();
@@ -132,7 +136,16 @@ public class GoogleLoginServiceImpl implements SocialLoginService {
             response.getBody().toString(),
             LoginResponse.class
         );
+
     loginResponse.setEmail(userId);
+    JwtDecoder jwtDecoder = JwtDecoders.fromIssuerLocation(keycloakProperties.getServerUrl()+"/realms/compig");
+
+// LoginResponse에서 토큰 문자열 가져오기
+    String jwtToken = loginResponse.getAccess_token();
+
+// 토큰 디코딩 및 파싱하여 Jwt 객체 얻기
+    Jwt jwt = jwtDecoder.decode(jwtToken);
+    loginResponse.setRoles(jwt.getClaim("groups"));
 
     return loginResponse;
   }

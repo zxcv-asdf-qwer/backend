@@ -33,7 +33,7 @@ public class SocialUserService {
     SocialUserResponse socialUserResponse = loginService.idTokenToResponse(
         socialAuthResponse.getId_token());
 
-    Optional<Member> optionalMember = memberRepository.findByUserId(socialUserResponse.getEmail());
+    Optional<Member> optionalMember = memberRepository.findByUserId(socialUserResponse.getSub());
     Member member = optionalMember.orElseGet(() -> {
       // 중복되지 않는 경우 새 회원 생성 후 반환
       String newMemberId = memberService.socialCreate(socialUserResponse.convertEntity());

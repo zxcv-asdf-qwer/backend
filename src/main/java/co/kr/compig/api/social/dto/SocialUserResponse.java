@@ -16,7 +16,7 @@ import lombok.ToString;
 public class SocialUserResponse {
 
   private MemberRegisterType memberRegisterType;
-  private String id;
+  private String sub;//social userId
   private String email;
   private String name;
   private String gender;
@@ -24,7 +24,7 @@ public class SocialUserResponse {
 
   public Member convertEntity() {
     return Member.builder()
-        .userId(this.email)
+        .userId(this.sub)
         .userNm("socialName")
         .email(this.email)
         .userPw(this.email + this.memberRegisterType)
