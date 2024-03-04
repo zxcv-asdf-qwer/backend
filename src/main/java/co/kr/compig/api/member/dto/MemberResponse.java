@@ -27,7 +27,7 @@ public class MemberResponse extends BaseAudit {
   private String userPw; // 사용자 비밀번호
   private String telNo; // 연락처
   private GenderCode gender; // 성별
-  private UseYn useYn = UseYn.Y; // 사용유무
+  private UseYn useYn; // 사용유무
   private UserType userType; //사용자 타입
   private MemberRegisterType memberRegisterType; // 회원가입 유형
   private String address1; //주소

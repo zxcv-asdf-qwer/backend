@@ -31,6 +31,7 @@ create table member
     updated_on              timestamp(6) default CURRENT_TIMESTAMP,
     constraint uk01_member unique (user_id)
 );
+
 comment on table member is '회원 테이블';
 comment on column member.member_id is 'Keycloak 의 id';
 comment on column member.user_id is '사용자 아이디';
@@ -217,3 +218,31 @@ create table api_log
 );
 
 comment on table api_log is '로그 테이블';
+
+alter table if exists system_file
+    add constraint fk01_system_file
+    foreign key (board_id)
+    references board;
+
+alter table if exists member_group
+    add constraint fk01_member_group
+    foreign key (member_id)
+    references member;
+alter table if exists menu
+    add constraint fk01_menu
+    foreign key (parent_id)
+    references menu;
+
+alter table if exists menu_permission
+    add constraint fk01_menu_permission
+    foreign key (member_id)
+    references member;
+alter table if exists menu_permission
+    add constraint fk02_menu_permission
+    foreign key (menu_id)
+    references menu;
+
+alter table if exists system_file
+    add constraint fk01_system_file
+    foreign key (board_id)
+    references board;

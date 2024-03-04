@@ -13,6 +13,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -73,7 +74,7 @@ public class SystemFile {
    * Domain mapping
      ================================================================= */
   @Builder.Default
-  @JoinColumn(name = "board_id")
+  @JoinColumn(name = "board_id", foreignKey = @ForeignKey(name = "fk01_system_file"))
   @ManyToOne(fetch = FetchType.LAZY)
   private Board board = new Board();
 

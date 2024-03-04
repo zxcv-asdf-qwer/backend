@@ -27,7 +27,6 @@ public class MemberController {
   private final MemberService memberService;
 
   @PostMapping("/admin")
-  @Transactional
   public ResponseEntity<Response<?>> adminCreate(
       @ModelAttribute @Valid AdminMemberCreate adminMemberCreate) {
     return ResponseEntity.ok().body(Response.<Map<String, String>>builder()
@@ -36,7 +35,6 @@ public class MemberController {
   }
 
   @PostMapping("/guardian")
-  @Transactional
   public ResponseEntity<Response<?>> guardianCreate(
       @ModelAttribute @Valid GuardianMemberCreate guardianMemberCreate) {
     return ResponseEntity.ok().body(Response.<Map<String, String>>builder()
@@ -45,7 +43,6 @@ public class MemberController {
   }
 
   @PostMapping("/partner")
-  @Transactional
   public ResponseEntity<Response<?>> partnerCreate(
       @ModelAttribute @Valid PartnerMemberCreate partnerMemberCreate) {
     return ResponseEntity.ok().body(Response.<Map<String, String>>builder()
@@ -54,7 +51,6 @@ public class MemberController {
   }
 
   @GetMapping("/userIds/availability")
-  @Transactional
   public ResponseEntity<Response<?>> availabilityUserId(@RequestParam("userId") String userId) {
     return ResponseEntity.ok(Response.<Map<String, Boolean>>builder()
         .data(Map.of("isAvailability", memberService.availabilityUserId(userId)))
@@ -62,7 +58,6 @@ public class MemberController {
   }
 
   @GetMapping("/emails/availability")
-  @Transactional
   public ResponseEntity<Response<?>> availabilityEmail(
       @RequestParam("userEmail") String userEmail) {
     return ResponseEntity.ok(Response.<Map<String, Boolean>>builder()
@@ -71,7 +66,6 @@ public class MemberController {
   }
 
   @GetMapping("/find/userIds")
-  @Transactional
   public ResponseEntity<Response<?>> findUserId(@RequestParam("userNm") String userNm,
       @RequestParam("userEmail") String userEmail) {
     return ResponseEntity.ok(Response.<Map<String, String>>builder()

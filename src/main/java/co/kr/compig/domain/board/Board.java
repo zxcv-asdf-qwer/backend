@@ -101,6 +101,7 @@ public class Board {
   @OneToMany(mappedBy = "board", fetch = FetchType.LAZY,
       cascade = CascadeType.ALL,
       orphanRemoval = true)
+  @Builder.Default
   private Set<SystemFile> systemFiles = new HashSet<>();
 
   /* =================================================================

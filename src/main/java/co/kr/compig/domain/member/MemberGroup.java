@@ -3,6 +3,7 @@ package co.kr.compig.domain.member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -52,7 +53,7 @@ public class MemberGroup {
    * Domain mapping
      ================================================================= */
   @Builder.Default
-  @JoinColumn(name = "member_id", nullable = false)
+  @JoinColumn(name = "member_id", nullable = false, foreignKey = @ForeignKey(name = "fk01_member_group"))
   @ManyToOne(fetch = FetchType.LAZY)
   private Member member = new Member();
 

@@ -14,6 +14,8 @@ import co.kr.compig.common.embedded.CreatedAndUpdated;
 import co.kr.compig.common.exception.KeyCloakRequestException;
 import co.kr.compig.common.keycloak.KeycloakHandler;
 import co.kr.compig.common.keycloak.KeycloakHolder;
+import co.kr.compig.domain.order.CareOrder;
+import co.kr.compig.domain.account.Account;
 import co.kr.compig.domain.permission.MenuPermission;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -25,6 +27,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDate;
@@ -60,7 +63,7 @@ public class Member {
   @Column(name = "member_id")
   private String id; // Keycloak 의 id
 
-  @Column(length = 150, updatable = false)
+  @Column(length = 150)
   private String userId; // 사용자 아이디
 
   @Column(length = 150)
@@ -145,16 +148,20 @@ public class Member {
      ================================================================= */
   @Builder.Default
   @OneToMany(
-      mappedBy = "member",
-      fetch = FetchType.LAZY,
-      cascade = CascadeType.ALL,
-      orphanRemoval = true)
+      mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<MemberGroup> groups = new HashSet<>();
 
   @Builder.Default
   @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private Set<MenuPermission> menuPermissions = new HashSet<>();
 
+  @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
+  private Account account;
+
+  @Builder.Default
+  @OneToMany(
+      mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  private Set<CareOrder> careOrders = new HashSet<>();
   /* =================================================================
    * Relation method
      ================================================================= */
@@ -193,6 +200,7 @@ public class Member {
   public void setPicture(String picture) {
     this.picture = picture;
   }
+
   /* =================================================================
    * Default columns
      ================================================================= */
@@ -221,6 +229,7 @@ public class Member {
       keycloakHandler.usersJoinGroups(this.id, this.getGroups());
     }
   }
+
   public void updateUserKeyCloak() {
     KeycloakHandler keycloakHandler = KeycloakHolder.get();
     if (isExistGroups()) {
@@ -301,9 +310,10 @@ public class Member {
     this.marketingSmsDate = marketingDate(memberUpdateRequest.isMarketingSms());
     this.realNameYn = memberUpdateRequest.getRealNameYn();
   }
-    public LocalDate marketingDate(boolean isMarketing) {
-      return isMarketing ? LocalDate.now() : null;
-    }
+
+  public LocalDate marketingDate(boolean isMarketing) {
+    return isMarketing ? LocalDate.now() : null;
+  }
 
   public MemberResponse toResponse() {
     return MemberResponse.builder()
@@ -324,7 +334,8 @@ public class Member {
         .marketingEmail(
             this.marketingEmailDate != null && this.marketingEmailDate.isBefore(LocalDate.now()))
         .marketingAppPush(
-            this.marketingAppPushDate != null && this.marketingAppPushDate.isBefore(LocalDate.now()))
+            this.marketingAppPushDate != null && this.marketingAppPushDate.isBefore(
+                LocalDate.now()))
         .marketingKakao(
             this.marketingKakaoDate != null && this.marketingKakaoDate.isBefore(LocalDate.now()))
         .marketingSms(
@@ -332,5 +343,10 @@ public class Member {
         .realNameYn(this.realNameYn)
         .build();
 
+  }
+
+  public void setLeaveMember() {
+    this.userId = "DEL_".concat(this.userId);
+    this.email = this.email != null ? "DEL_".concat(this.email) : null;
   }
 }

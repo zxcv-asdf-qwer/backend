@@ -7,6 +7,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -45,11 +46,11 @@ public class MenuPermission {
    * Domain mapping
    ================================================================= */
 
-  @JoinColumn(name = "member_id")
+  @JoinColumn(name = "member_id", foreignKey = @ForeignKey(name = "fk01_menu_permission"))
   @ManyToOne(fetch = FetchType.LAZY)
   private Member member; // Member id
 
-  @JoinColumn(name = "menu_id")
+  @JoinColumn(name = "menu_id", foreignKey = @ForeignKey(name = "fk02_menu_permission"))
   @ManyToOne(fetch = FetchType.LAZY)
   private Menu menu; // Member
 
