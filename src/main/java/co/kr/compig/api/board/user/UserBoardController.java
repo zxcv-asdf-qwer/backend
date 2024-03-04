@@ -4,12 +4,13 @@ import co.kr.compig.api.board.dto.BoardDetailResponse;
 import co.kr.compig.api.board.dto.BoardResponse;
 import co.kr.compig.api.board.dto.BoardSearchRequest;
 import co.kr.compig.common.dto.Response;
+import co.kr.compig.common.dto.pagination.SliceResponse;
 import co.kr.compig.service.board.BoardService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,10 +26,11 @@ public class UserBoardController {
   private final BoardService boardService;
 
   @GetMapping
-  public ResponseEntity<Response<Page<BoardResponse>>> pageListBoard(@RequestBody @Valid BoardSearchRequest boardSearchRequest, Pageable pageable) {
-    return ResponseEntity.ok().body(Response.<Page<BoardResponse>>builder()
-        .data(boardService.pageListBoard(boardSearchRequest, pageable))
-        .build());
+  public ResponseEntity<SliceResponse<BoardResponse>> pageListBoard(
+      @RequestBody @Valid BoardSearchRequest boardSearchRequest, Pageable pageable) {
+    Slice<BoardResponse> slice = boardService.pageListBoardCursor(boardSearchRequest, pageable);
+    SliceResponse<BoardResponse> sliceResponse = new SliceResponse<>(slice.getContent(), pageable, slice.hasNext());
+    return ResponseEntity.ok(sliceResponse);
   }
 
   @GetMapping("/{boardId}")

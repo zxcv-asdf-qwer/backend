@@ -1,6 +1,10 @@
 package co.kr.compig.domain.hospital;
 
+import co.kr.compig.api.hospital.dto.HospitalDetailResponse;
+import co.kr.compig.api.hospital.dto.HospitalUpdateRequest;
+import co.kr.compig.common.embedded.CreatedAndUpdated;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -48,4 +52,39 @@ public class Hospital {
 
   @Column
   private String hospitalOperationHours; // 병원 운영 시간
+
+  /* =================================================================
+  * Domain mapping
+  ================================================================= */
+
+  /* =================================================================
+  * Relation method
+  ================================================================= */
+  public void update(HospitalUpdateRequest hospitalUpdateRequest) {
+    this.hospitalNm = hospitalUpdateRequest.getHospitalNm();
+    this.hospitalCode = hospitalUpdateRequest.getHospitalCode();
+    this.hospitalAddress1 = hospitalUpdateRequest.getHospitalAddress1();
+    this.hospitalAddress2 = hospitalUpdateRequest.getHospitalAddress2();
+    this.hospitalTelNo = hospitalUpdateRequest.getHospitalTelNo();
+    this.hospitalOperationHours = hospitalUpdateRequest.getHospitalOperationHours();
+  }
+
+  public HospitalDetailResponse toHospitalDetailResponse(){
+    return HospitalDetailResponse.builder()
+        .hospitalId(this.id)
+        .hospitalNm(this.hospitalNm)
+        .hospitalCode(this.hospitalCode)
+        .hospitalAddress1(this.hospitalAddress1)
+        .hospitalAddress2(this.hospitalAddress2)
+        .hospitalTelNo(this.hospitalTelNo)
+        .hospitalOperationHours(this.hospitalOperationHours)
+        .build();
+  }
+  /* =================================================================
+  * Default columns
+  ================================================================= */
+  @Embedded
+  @Builder.Default
+  private CreatedAndUpdated createdAndModified = new CreatedAndUpdated();
+
 }

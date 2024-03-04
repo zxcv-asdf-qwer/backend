@@ -10,19 +10,31 @@ import co.kr.compig.common.code.converter.BoardTypeConverter;
 import co.kr.compig.common.code.converter.ContentsTypeConverter;
 import co.kr.compig.common.embedded.CreatedAndUpdated;
 import co.kr.compig.domain.file.SystemFile;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import java.time.LocalDateTime;
+import java.util.Base64;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.ColumnDefault;
-
-import java.time.LocalDateTime;
-import java.util.Base64;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Getter
@@ -111,13 +123,6 @@ public class Board {
     this.endDate = boardUpdateRequest.getEndDate();
   }
 
-  /* =================================================================
- * Default columns
- ================================================================= */
-  @Embedded
-  @Builder.Default
-  private CreatedAndUpdated createdAndModified = new CreatedAndUpdated();
-
   public BoardDetailResponse toBoardDetailResponse() {
     return BoardDetailResponse.builder()
         .boardId(this.id)
@@ -130,13 +135,21 @@ public class Board {
         .createdBy(this.createdAndModified.getCreatedBy())
         .startDate(this.startDate)
         .endDate(this.endDate)
-        .thumbNail(urlToBase64(this.thumbnailImageUrl))
-        .systemFiles(this.systemFiles.stream().map(path -> urlToBase64(path.getFilePath())).collect(Collectors.toList()))
+        .thumbNail(this.thumbnailImageUrl != null? urlToBase64(this.thumbnailImageUrl):null)
+        .systemFiles(this.systemFiles.stream().map(path -> urlToBase64(path.getFilePath())).collect(
+            Collectors.toList()))
         .build();
   }
 
   public String urlToBase64(String encodedString) {
     return Base64.getEncoder().encodeToString(encodedString.getBytes());
   }
+
+  /* =================================================================
+ * Default columns
+ ================================================================= */
+  @Embedded
+  @Builder.Default
+  private CreatedAndUpdated createdAndModified = new CreatedAndUpdated();
 
 }
