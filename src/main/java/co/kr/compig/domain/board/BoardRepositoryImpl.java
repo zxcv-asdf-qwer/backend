@@ -126,6 +126,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
     applySorting(query, pageable);
 
     List<BoardResponse> boards = query
+        .where(cursorCursorId(boardSearchRequest.getCursorId()))
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize() + 1) // 페이징 + 다음 페이지 존재 여부 확인을 위해 +1
         .fetch();
@@ -138,11 +139,8 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
     return new SliceImpl<>(boards, pageable, hasNext);
   }
 
-  private BooleanExpression eqCursorId(Long cursorId) {
-    if (cursorId != null) {
-      return board.id.lt(cursorId);
-    }
-    return null;
+  private BooleanExpression cursorCursorId(Long cursorId){
+    if(cursorId == null) return null;
+    return board.id.lt(cursorId);
   }
-
 }

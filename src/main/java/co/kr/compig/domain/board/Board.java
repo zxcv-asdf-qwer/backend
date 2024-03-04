@@ -123,13 +123,6 @@ public class Board {
     this.endDate = boardUpdateRequest.getEndDate();
   }
 
-  /* =================================================================
- * Default columns
- ================================================================= */
-  @Embedded
-  @Builder.Default
-  private CreatedAndUpdated createdAndModified = new CreatedAndUpdated();
-
   public BoardDetailResponse toBoardDetailResponse() {
     return BoardDetailResponse.builder()
         .boardId(this.id)
@@ -143,12 +136,20 @@ public class Board {
         .startDate(this.startDate)
         .endDate(this.endDate)
         .thumbNail(this.thumbnailImageUrl != null? urlToBase64(this.thumbnailImageUrl):null)
-        .systemFiles(this.systemFiles.stream().map(path -> urlToBase64(path.getFilePath())).collect(Collectors.toList()))
+        .systemFiles(this.systemFiles.stream().map(path -> urlToBase64(path.getFilePath())).collect(
+            Collectors.toList()))
         .build();
   }
 
   public String urlToBase64(String encodedString) {
     return Base64.getEncoder().encodeToString(encodedString.getBytes());
   }
+
+  /* =================================================================
+ * Default columns
+ ================================================================= */
+  @Embedded
+  @Builder.Default
+  private CreatedAndUpdated createdAndModified = new CreatedAndUpdated();
 
 }
