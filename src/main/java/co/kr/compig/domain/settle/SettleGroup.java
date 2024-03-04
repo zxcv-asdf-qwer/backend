@@ -42,7 +42,7 @@ public class SettleGroup {
   ================================================================= */
   @Builder.Default
   @OneToMany(mappedBy = "settleGroup", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  private Set<Settle> menuPermissions = new HashSet<>();
+  private Set<Settle> settles = new HashSet<>();
 
   /* =================================================================
    * Default columns
