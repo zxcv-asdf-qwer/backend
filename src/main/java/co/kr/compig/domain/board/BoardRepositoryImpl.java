@@ -104,7 +104,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
 
   // cursor paging
   @Override
-  public Slice<BoardResponse> findAllByCondition(Long cursorId,
+  public Slice<BoardResponse> findAllByCondition(
       BoardSearchRequest boardSearchRequest, Pageable pageable) {
     BooleanExpression predicate = createPredicate(boardSearchRequest);
     JPAQuery<BoardResponse> query = createBaseQuery(predicate)
@@ -121,8 +121,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                 board.endDate,
                 board.thumbnailImageUrl
             )
-        )
-        .where(eqCursorId(cursorId));
+        );
 
     applySorting(query, pageable);
 
