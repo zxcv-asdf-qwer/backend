@@ -15,7 +15,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 @NoArgsConstructor
 @SuperBuilder
 public class BoardSearchRequest extends PageableRequest {
-  private Long cursorId; // 커서 id
   private BoardType boardType; // 게시판 유형
   private ContentsType contentsType; // 콘텐츠 유형
   private String title; // 제목
