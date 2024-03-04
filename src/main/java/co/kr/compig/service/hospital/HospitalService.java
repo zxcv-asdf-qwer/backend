@@ -30,19 +30,22 @@ public class HospitalService {
     return hospitalRepository.save(hospital).getId();
   }
 
+  @Transactional(readOnly = true)
   public Page<HospitalResponse> pageListHospital(HospitalSearchRequest hospitalSearchRequest, Pageable pageable){
     return hospitalRepositoryCustom.findPage(hospitalSearchRequest, pageable);
   }
 
+  @Transactional(readOnly = true)
   public Slice<HospitalResponse> pageListHospitalCursor(HospitalSearchRequest hospitalSearchRequest, Pageable pageable){
     return hospitalRepositoryCustom.findAllByCondition(hospitalSearchRequest, pageable);
   }
+
+  @Transactional(readOnly = true)
   public HospitalDetailResponse getHospital(Long hospitalId){
     Hospital hospital = hospitalRepository.findById(hospitalId).orElseThrow(NotExistDataException::new);
     return hospital.toHospitalDetailResponse();
   }
 
-  @Transactional
   public Long updateHospital(Long hospitalId, HospitalUpdateRequest hospitalUpdateRequest){
     Hospital hospital = hospitalRepository.findById(hospitalId).orElseThrow(NotExistDataException::new);
     hospital.update(hospitalUpdateRequest);
