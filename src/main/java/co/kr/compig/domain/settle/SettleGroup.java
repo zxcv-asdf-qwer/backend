@@ -1,14 +1,19 @@
 package co.kr.compig.domain.settle;
 
 import co.kr.compig.common.embedded.Created;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,6 +40,9 @@ public class SettleGroup {
   /* =================================================================
    * Domain mapping
   ================================================================= */
+  @Builder.Default
+  @OneToMany(mappedBy = "settleGroup", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  private Set<Settle> menuPermissions = new HashSet<>();
 
   /* =================================================================
    * Default columns

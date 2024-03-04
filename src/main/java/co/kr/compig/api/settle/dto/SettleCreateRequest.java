@@ -1,6 +1,7 @@
 package co.kr.compig.api.settle.dto;
 
 import co.kr.compig.domain.settle.Settle;
+import co.kr.compig.domain.settle.SettleGroup;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,11 +18,11 @@ public class SettleCreateRequest {
   @NotBlank
   private Integer amount; // 금액
 
-  public Settle converterEntity(Long settleGroupId) {
+  public Settle converterEntity(SettleGroup settleGroup) {
     return Settle.builder()
         .element(this.element)
         .amount(this.amount)
-        .settleGroupId(settleGroupId)
+        .settleGroup(settleGroup)
         .build();
   }
 }

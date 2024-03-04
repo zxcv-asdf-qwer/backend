@@ -24,7 +24,7 @@ public class SettleService {
   public Long createSettle(List<SettleCreateRequest> settleCreateRequests){
     SettleGroup settleGroup = settleGroupRepository.save(new SettleGroup());
     settleCreateRequests.stream()
-        .map(settleCreateRequest -> settleCreateRequest.converterEntity(settleGroup.getId()))
+        .map(settleCreateRequest -> settleCreateRequest.converterEntity(settleGroup))
         .forEach(settleRepository::save);
     return settleGroup.getId();
   }
