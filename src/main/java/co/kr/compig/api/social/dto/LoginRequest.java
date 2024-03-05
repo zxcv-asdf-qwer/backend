@@ -13,4 +13,5 @@ public class LoginRequest {
 
   private String token; //google//apple
   private String code; //kakao//naver
+  private String memberRegisterType;
 }

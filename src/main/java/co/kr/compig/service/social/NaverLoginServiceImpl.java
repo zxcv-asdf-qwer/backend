@@ -26,7 +26,7 @@ public class NaverLoginServiceImpl implements SocialLoginService {
 
   @Override
   public MemberRegisterType getServiceName() {
-    return MemberRegisterType.KAKAO;
+    return MemberRegisterType.NAVER;
   }
 
   @Override

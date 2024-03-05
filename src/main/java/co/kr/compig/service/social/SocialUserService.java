@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -35,8 +35,7 @@ public class SocialUserService {
   private final List<SocialLoginService> loginServices;
   private final KeycloakAuthApi keycloakAuthApi;
   private final KeycloakProperties keycloakProperties;
-  @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
-  private String issueUrl;
+  private final OAuth2ResourceServerProperties oAuth2ResourceServerProperties;
 
   private SocialLoginService getLoginService(MemberRegisterType memberRegisterType) {
     for (SocialLoginService loginService : loginServices) {
@@ -86,12 +85,13 @@ public class SocialUserService {
         .create();
 
     LoginResponse loginResponse = gson.fromJson(
-            response.getBody().toString(),
-            LoginResponse.class
-        );
+        response.getBody().toString(),
+        LoginResponse.class
+    );
 
     loginResponse.setEmail(userId);
-    JwtDecoder jwtDecoder = JwtDecoders.fromIssuerLocation(issueUrl);
+    JwtDecoder jwtDecoder = JwtDecoders.fromIssuerLocation(
+        oAuth2ResourceServerProperties.getJwt().getIssuerUri());
     // LoginResponse에서 토큰 문자열 가져오기
     String jwtToken = loginResponse.getAccess_token();
     // 토큰 디코딩 및 파싱하여 Jwt 객체 얻기

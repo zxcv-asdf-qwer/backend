@@ -26,7 +26,6 @@ import org.springframework.stereotype.Service;
 public class AppleLoginServiceImpl implements SocialLoginService {
 
   private final AppleAuthApi appleAuthApi;
-
   @Override
   public MemberRegisterType getServiceName() {
     return MemberRegisterType.KAKAO;
@@ -67,5 +66,6 @@ public class AppleLoginServiceImpl implements SocialLoginService {
   public SocialUserResponse revoke(LoginRequest loginRequest) {
     return null;
   }
+
 
 }
