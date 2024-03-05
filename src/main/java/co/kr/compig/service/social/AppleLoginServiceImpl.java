@@ -36,7 +36,7 @@ public class AppleLoginServiceImpl implements SocialLoginService {
   public SocialUserResponse tokenToSocialUserResponse(LoginRequest loginRequest) {
     JSONObject jsonObject = new JSONObject();
     try {
-      SignedJWT signedJWT = SignedJWT.parse(loginRequest.getIdToken());
+      SignedJWT signedJWT = SignedJWT.parse(loginRequest.getToken());
       JWTClaimsSet jwtClaimsSet = signedJWT.getJWTClaimsSet();
       jsonObject = new JSONObject(jwtClaimsSet.toJSONObject());
     } catch (ParseException e) {

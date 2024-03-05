@@ -32,7 +32,7 @@ public class KakaoLoginServiceImpl implements SocialLoginService {
   @Override
   public SocialUserResponse tokenToSocialUserResponse(LoginRequest loginRequest) {
     ResponseEntity<?> response = kakaoUserApi.accessTokenToUserInfo(
-        "Bearer " + loginRequest.getAccessToken());
+        "Bearer " + loginRequest.getToken());
 
     log.info(getServiceName().getCode() + " tokenToSocialUserResponse");
     log.info(response.toString());

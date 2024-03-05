@@ -53,7 +53,7 @@ public class GoogleLoginServiceImpl implements SocialLoginService {
     String jsonString = "";
     try {
       //토큰 검증
-      GoogleIdToken verifiedIdToken = googleIdTokenVerifier.verify(loginRequest.getIdToken());
+      GoogleIdToken verifiedIdToken = googleIdTokenVerifier.verify(loginRequest.getToken());
       GoogleIdToken.Payload payload = verifiedIdToken.getPayload();
       jsonString = payload.toString();
     } catch (GeneralSecurityException | IOException e) {
