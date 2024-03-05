@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
-@FeignClient(value = "kakaoAuth", url = "https://kapi.kakao.com",configuration = OpenFeignConfig.class)
+@FeignClient(value = "kakaoAuth", url = "https://kapi.kakao.com", configuration = OpenFeignConfig.class)
 public interface KakaoUserApi {
 
   //OIDC: 사용자 정보 가져오기

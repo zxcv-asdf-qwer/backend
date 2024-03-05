@@ -2,6 +2,7 @@ package co.kr.compig.api.member.user;
 
 import co.kr.compig.api.member.dto.MemberResponse;
 import co.kr.compig.api.member.dto.MemberUpdateRequest;
+import co.kr.compig.api.social.dto.LeaveRequest;
 import co.kr.compig.common.dto.Response;
 import co.kr.compig.service.member.MemberService;
 import java.net.URI;
@@ -46,8 +47,8 @@ public class UserMemberController {
   }
 
   @PutMapping("/leave")
-  public ResponseEntity<Response<?>> userLeave() {
-    memberService.userLeave();
+  public ResponseEntity<Response<?>> userLeave(@RequestBody LeaveRequest leaveRequest) {
+    memberService.userLeave(leaveRequest);
     return ResponseEntity.ok().build();
   }
 

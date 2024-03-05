@@ -14,8 +14,8 @@ import co.kr.compig.common.embedded.CreatedAndUpdated;
 import co.kr.compig.common.exception.KeyCloakRequestException;
 import co.kr.compig.common.keycloak.KeycloakHandler;
 import co.kr.compig.common.keycloak.KeycloakHolder;
-import co.kr.compig.domain.order.CareOrder;
 import co.kr.compig.domain.account.Account;
+import co.kr.compig.domain.order.CareOrder;
 import co.kr.compig.domain.permission.MenuPermission;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -135,7 +135,9 @@ public class Member {
   private LocalDate marketingSmsDate;  // 문자 수신동의 날짜
 
   @Column
-  private LocalDate deletedDate; // 회원 탈퇴 날짜
+  private String leaveReason; //탈퇴 사유
+  @Column
+  private LocalDate leaveDate; // 회원 탈퇴 날짜
 
   @Column
   @ColumnDefault("'N'")
@@ -162,6 +164,7 @@ public class Member {
   @OneToMany(
       mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<CareOrder> careOrders = new HashSet<>();
+
   /* =================================================================
    * Relation method
      ================================================================= */
@@ -254,8 +257,8 @@ public class Member {
     userRepresentation.setLastName(lastName);
     userRepresentation.setEmail(this.email);
     // 탈퇴 회원일 경우 keycloak 도 비 활성화 처리
-    if (this.useYn.equals(UseYn.N) && this.deletedDate != null) {
-      userRepresentation.setEnabled(false);
+    if (this.useYn.equals(UseYn.N) && this.leaveDate != null) {
+      userRepresentation.setEnabled(false); //TODO 제거
     } else {
       userRepresentation.setEnabled(true);
     }
@@ -345,8 +348,11 @@ public class Member {
 
   }
 
-  public void setLeaveMember() {
+  public void setLeaveMember(String leaveReason) {
     this.userId = "DEL_".concat(this.userId);
     this.email = this.email != null ? "DEL_".concat(this.email) : null;
+    this.leaveReason = leaveReason;
+    this.leaveDate = LocalDate.now();
+    this.useYn = UseYn.N;
   }
 }

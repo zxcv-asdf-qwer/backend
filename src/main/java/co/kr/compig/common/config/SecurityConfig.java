@@ -59,7 +59,8 @@ public class SecurityConfig {
         .requestMatchers(
             new AntPathRequestMatcher("/actuator/**"),
             new AntPathRequestMatcher("/docs/**"),
-            antMatcher(HttpMethod.GET, "/social/**"),
+            antMatcher(HttpMethod.PUT, "/social/**"),
+            antMatcher(HttpMethod.POST, "/social/**"),
             antMatcher(HttpMethod.GET, "/members/**"),
             antMatcher(HttpMethod.POST, "/members/**")
             )

@@ -1,16 +1,19 @@
 package co.kr.compig.api.social;
 
+import co.kr.compig.api.social.dto.LeaveRequest;
 import co.kr.compig.api.social.dto.LoginRequest;
 import co.kr.compig.api.social.dto.LoginResponse;
-import co.kr.compig.common.code.MemberRegisterType;
+import co.kr.compig.common.dto.Response;
+import co.kr.compig.service.member.MemberService;
 import co.kr.compig.service.social.SocialUserService;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -19,16 +22,21 @@ import org.springframework.web.bind.annotation.RestController;
 public class SocialController {
 
   private final SocialUserService socialUserService;
+  private final MemberService memberService;
 
-  @GetMapping("/login")
+  @PostMapping("/login")
   public ResponseEntity<LoginResponse> doSocialLogin(
-      @RequestParam(name = "memberRegisterType") String memberRegisterType, @RequestBody
-  LoginRequest loginRequest) {
+      @RequestBody LoginRequest loginRequest) {
 
     return ResponseEntity.created(URI.create("/login"))
         .body(
-            socialUserService.doSocialLogin(MemberRegisterType.valueOf(memberRegisterType), loginRequest));
+            socialUserService.doSocialLogin(loginRequest));
   }
 
-
+  @PutMapping("/leave")
+  @PreAuthorize("hasRole('USER')")
+  public ResponseEntity<Response<?>> userLeave(@RequestBody LeaveRequest leaveRequest) {
+    socialUserService.doSocialRevoke(leaveRequest);
+    return ResponseEntity.ok().build();
+  }
 }

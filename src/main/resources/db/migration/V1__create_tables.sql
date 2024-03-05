@@ -23,7 +23,8 @@ create table member
     marketing_email_date    date,
     marketing_kakao_date    date,
     marketing_sms_date      date,
-    deleted_date            date,
+    leave_reason            varchar(255),
+    leave_date              date,
     real_name_yn            varchar(255) default 'N',
     created_by              varchar(50),
     created_on              timestamp(6) default CURRENT_TIMESTAMP,
@@ -56,7 +57,8 @@ comment on column member.marketing_app_push_date is '이메일 수신동의 날�
 comment on column member.marketing_email_date is '앱 푸시알림 수신동의 날짜';
 comment on column member.marketing_kakao_date is '알림톡 수신동의 날짜';
 comment on column member.marketing_sms_date is '문자 수신동의 날짜';
-comment on column member.deleted_date is '회원 탈퇴 날짜';
+comment on column member.leave_reason is '탈퇴 사유';
+comment on column member.leave_date is '회원 탈퇴 날짜';
 comment on column member.real_name_yn is '실명 확인 여부';
 
 CREATE SEQUENCE public.board_seq INCREMENT BY 1 START WITH 1;
