@@ -56,13 +56,12 @@ public class BoardService {
     return boardRepository.save(board).getId();
   }
 
-
+  @Transactional(readOnly = true)
   public Page<BoardResponse> pageListBoard(BoardSearchRequest boardSearchRequest,
       Pageable pageable) {
     return boardRepositoryCustom.findPage(boardSearchRequest, pageable);
   }
 
-  @Transactional
   public Long updateBoard(Long boardId, BoardUpdateRequest boardUpdateRequest) {
     Board board = boardRepository.findById(boardId).orElseThrow(NotExistDataException::new);
     board.update(boardUpdateRequest);
@@ -75,6 +74,7 @@ public class BoardService {
     return board.getId();
   }
 
+  @Transactional(readOnly = true)
   public BoardDetailResponse getBoard(Long boardId) {
     Board board = boardRepository.findById(boardId).orElseThrow(NotExistDataException::new);
     board.increaseViewCount();
@@ -111,6 +111,7 @@ public class BoardService {
     }
   }
 
+  @Transactional(readOnly = true)
   public Slice<BoardResponse> pageListBoardCursor(BoardSearchRequest boardSearchRequest,
       Pageable pageable) {
     return boardRepositoryCustom.findAllByCondition(boardSearchRequest, pageable);

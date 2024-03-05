@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -57,7 +58,7 @@ public class Settle {
   * Domain mapping
   ================================================================= */
   @Builder.Default
-  @JoinColumn(name = "settle_group_id", nullable = false)
+  @JoinColumn(name = "settle_group_id", nullable = false, foreignKey = @ForeignKey(name = "fk01_settle"))
   @ManyToOne(fetch = FetchType.LAZY)
   private SettleGroup settleGroup = new SettleGroup();
 

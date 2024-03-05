@@ -29,6 +29,7 @@ public class SettleService {
     return settleGroup.getId();
   }
 
+  @Transactional(readOnly = true)
   public List<SettleResponse> getSettleList(Long settleGroupId) {
     List<Settle> settles = settleRepository.findBySettleGroupId(settleGroupId);
     return settles.stream()
