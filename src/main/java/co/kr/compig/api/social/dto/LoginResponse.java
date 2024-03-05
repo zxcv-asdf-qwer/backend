@@ -1,5 +1,6 @@
 package co.kr.compig.api.social.dto;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 public class LoginResponse {
 
   private String email;
+  private List<String> roles;
   private String access_token;
   private String expires_in;
   private String refresh_expires_in;
@@ -22,5 +24,9 @@ public class LoginResponse {
 
   public void setEmail(String email) {
     this.email = email;
+  }
+
+  public void setRoles(List<String> roles) {
+    this.roles = roles;
   }
 }

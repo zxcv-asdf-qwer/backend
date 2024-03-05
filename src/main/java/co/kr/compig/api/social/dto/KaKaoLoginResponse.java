@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GoogleLoginResponse {
+public class KaKaoLoginResponse {
 
   private String sub;
   private String email;

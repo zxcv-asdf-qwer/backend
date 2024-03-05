@@ -98,7 +98,7 @@ public class MemberService {
 
   public String socialCreate(Member member) {
     setReferenceDomain(UserType.USER, member);
-    member.createUserKeyCloak(member.getEmail(), member.getUserNm());
+    member.createUserKeyCloak(member.getUserId(), member.getUserNm());
     member.passwordEncode();
 
     return memberRepository.save(member).getId();

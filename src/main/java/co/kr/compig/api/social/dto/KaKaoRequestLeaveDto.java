@@ -9,11 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class GoogleRequestAccessTokenDto {
+public class KaKaoRequestLeaveDto {
 
-  private String code;
-  private String client_id;
-  private String clientSecret;
-  private String redirect_uri;
-  private String grant_type;
+  @Builder.Default
+  private String target_id_type = "user_id";
+  private String target_id;
 }

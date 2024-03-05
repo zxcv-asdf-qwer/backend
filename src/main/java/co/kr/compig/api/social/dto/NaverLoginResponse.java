@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GoogleLoginResponse {
+public class NaverLoginResponse {
 
-  private String sub;
+  private String id;
   private String email;
   private String picture;
 }

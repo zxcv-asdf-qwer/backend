@@ -9,12 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class SocialAuthResponse {
+public class LoginRequest {
 
-  private String access_token;
-  private String expires_in;
-  private String scope;
-  private String token_type;
-  private String id_token;
-
+  private String token; //google//apple
+  private String code; //kakao//naver
 }
