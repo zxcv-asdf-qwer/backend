@@ -6,11 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(value = "googleAuth", url = "https://oauth2.googleapis.com", configuration = OpenFeignConfig.class)
-public interface GoogleAuthApi {
+@FeignClient(value = "googleUser", url = "https://accounts.google.com", configuration = OpenFeignConfig.class)
+public interface GoogleUserApi {
 
-  @GetMapping("/tokeninfo")
-  ResponseEntity<String> getAccessTokenToTokenInfo(
-      @RequestParam("access_token") String access_token);
-
+  @GetMapping("/o/oauth2/revoke")
+  ResponseEntity<String> revokeAccessToken(@RequestParam String token);
 }

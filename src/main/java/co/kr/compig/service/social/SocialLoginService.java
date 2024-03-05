@@ -1,5 +1,6 @@
 package co.kr.compig.service.social;
 
+import co.kr.compig.api.social.dto.LeaveRequest;
 import co.kr.compig.api.social.dto.LoginRequest;
 import co.kr.compig.api.social.dto.SocialUserResponse;
 import co.kr.compig.common.code.MemberRegisterType;
@@ -14,6 +15,6 @@ public interface SocialLoginService {
   SocialUserResponse tokenToSocialUserResponse(LoginRequest loginRequest);
 
   //token to userInfo
-  SocialUserResponse revoke(LoginRequest loginRequest);
+  void revoke(LeaveRequest leaveRequest);
 
 }

@@ -1,5 +1,6 @@
 package co.kr.compig.service.social;
 
+import co.kr.compig.api.social.dto.LeaveRequest;
 import co.kr.compig.api.social.dto.LoginRequest;
 import co.kr.compig.api.social.dto.NaverLoginResponse;
 import co.kr.compig.api.social.dto.SocialUserResponse;
@@ -55,8 +56,7 @@ public class NaverLoginServiceImpl implements SocialLoginService {
   }
 
   @Override
-  public SocialUserResponse revoke(LoginRequest loginRequest) {
-    return null;
+  public void revoke(LeaveRequest leaveRequest) {
   }
 
 }

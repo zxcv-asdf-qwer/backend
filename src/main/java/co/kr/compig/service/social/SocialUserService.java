@@ -1,6 +1,7 @@
 package co.kr.compig.service.social;
 
 import co.kr.compig.api.social.dto.KeycloakRequestAccessTokenDto;
+import co.kr.compig.api.social.dto.LeaveRequest;
 import co.kr.compig.api.social.dto.LoginRequest;
 import co.kr.compig.api.social.dto.LoginResponse;
 import co.kr.compig.api.social.dto.SocialUserResponse;
@@ -47,9 +48,8 @@ public class SocialUserService {
     return new LoginServiceImpl();
   }
 
-  public LoginResponse doSocialLogin(MemberRegisterType memberRegisterType,
-      LoginRequest loginRequest) {
-    SocialLoginService loginService = this.getLoginService(memberRegisterType);
+  public LoginResponse doSocialLogin(LoginRequest loginRequest) {
+    SocialLoginService loginService = this.getLoginService(loginRequest.getMemberRegisterType());
     SocialUserResponse socialUserResponse = loginService.tokenToSocialUserResponse(
         loginRequest);
 
@@ -101,4 +101,9 @@ public class SocialUserService {
     return loginResponse;
   }
 
+  public void doSocialRevoke(LeaveRequest leaveRequest) {
+    memberService.socialUserLeave(leaveRequest);
+    SocialLoginService loginService = this.getLoginService(leaveRequest.getMemberRegisterType());
+    loginService.revoke(leaveRequest);
+  }
 }

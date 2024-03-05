@@ -5,6 +5,7 @@ import co.kr.compig.api.member.dto.GuardianMemberCreate;
 import co.kr.compig.api.member.dto.MemberResponse;
 import co.kr.compig.api.member.dto.MemberUpdateRequest;
 import co.kr.compig.api.member.dto.PartnerMemberCreate;
+import co.kr.compig.api.social.dto.LeaveRequest;
 import co.kr.compig.common.code.MemberRegisterType;
 import co.kr.compig.common.code.UserType;
 import co.kr.compig.common.exception.BizException;
@@ -161,13 +162,22 @@ public class MemberService {
     return member.getUserId();
   }
 
-  public void userLeave() { //TODO 연결 끊기
+  public void userLeave(LeaveRequest leaveRequest) { //TODO 연결 끊기
     String userId = SecurityUtil.getUserId();
     Member member = memberRepository.findByUserId(userId).orElseThrow(NotExistDataException::new);
-    if (member.getMemberRegisterType() != MemberRegisterType.GENERAL) {
-      //소셜로그인 탈퇴
+    member.setLeaveMember(leaveRequest.getLeaveReason());
+    try {
+      KeycloakHandler keycloakHandler = KeycloakHolder.get();
+      keycloakHandler.deleteUser(member.getId());
+    } catch (Exception e) {
+      log.error("LeaveMember Keycloak Error", e);
     }
-    member.setLeaveMember();
+  }
+
+  public void socialUserLeave(LeaveRequest leaveRequest) { //TODO 연결 끊기
+    String userId = SecurityUtil.getUserId();
+    Member member = memberRepository.findByUserId(userId).orElseThrow(NotExistDataException::new);
+    member.setLeaveMember(leaveRequest.getLeaveReason());
     try {
       KeycloakHandler keycloakHandler = KeycloakHolder.get();
       keycloakHandler.deleteUser(member.getId());

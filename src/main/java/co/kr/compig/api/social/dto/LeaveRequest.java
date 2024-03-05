@@ -7,11 +7,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
-public class LoginRequest {
-
+public class LeaveRequest {
+  private String leaveReason; //탈퇴사유
   private String token; //google//apple
   private String code; //kakao//naver
   private MemberRegisterType memberRegisterType;

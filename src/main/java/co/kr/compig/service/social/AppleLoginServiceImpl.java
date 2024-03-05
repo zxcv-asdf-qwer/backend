@@ -2,6 +2,7 @@ package co.kr.compig.service.social;
 
 import co.kr.compig.api.social.apple.AppleAuthApi;
 import co.kr.compig.api.social.dto.AppleLoginResponse;
+import co.kr.compig.api.social.dto.LeaveRequest;
 import co.kr.compig.api.social.dto.LoginRequest;
 import co.kr.compig.api.social.dto.SocialUserResponse;
 import co.kr.compig.common.code.MemberRegisterType;
@@ -63,8 +64,7 @@ public class AppleLoginServiceImpl implements SocialLoginService {
   }
 
   @Override
-  public SocialUserResponse revoke(LoginRequest loginRequest) {
-    return null;
+  public void revoke(LeaveRequest leaveRequest) {
   }
 
 

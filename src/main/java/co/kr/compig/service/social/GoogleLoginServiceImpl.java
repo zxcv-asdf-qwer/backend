@@ -1,9 +1,11 @@
 package co.kr.compig.service.social;
 
 import co.kr.compig.api.social.dto.GoogleLoginResponse;
+import co.kr.compig.api.social.dto.LeaveRequest;
 import co.kr.compig.api.social.dto.LoginRequest;
 import co.kr.compig.api.social.dto.SocialUserResponse;
 import co.kr.compig.api.social.google.GoogleAuthApi;
+import co.kr.compig.api.social.google.GoogleUserApi;
 import co.kr.compig.common.code.MemberRegisterType;
 import co.kr.compig.common.utils.GsonLocalDateTimeAdapter;
 import com.google.gson.Gson;
@@ -25,6 +27,7 @@ import org.springframework.web.client.UnknownHttpStatusCodeException;
 public class GoogleLoginServiceImpl implements SocialLoginService {
 
   private final GoogleAuthApi googleAuthApi;
+  private final GoogleUserApi googleUserApi;
 
   @Override
   public MemberRegisterType getServiceName() {
@@ -65,8 +68,21 @@ public class GoogleLoginServiceImpl implements SocialLoginService {
   }
 
   @Override
-  public SocialUserResponse revoke(LoginRequest loginRequest) {
-    return null;
+  public void revoke(LeaveRequest leaveRequest) {
+    try {
+      ResponseEntity<String> response = googleUserApi.revokeAccessToken(
+          leaveRequest.getToken());
+
+      log.info(getServiceName().getCode() + " revoke");
+      log.info(response.toString());
+
+    } catch (HttpServerErrorException e) {
+      log.error("Google revokeAccessToken HttpServerErrorException - Status : {}, Message : {}",
+          e.getStatusCode(), e.getMessage());
+    } catch (UnknownHttpStatusCodeException e) {
+      log.error("Google revokeAccessToken UnknownHttpStatusCodeException - Status : {}, Message : {}",
+          e.getStatusCode(), e.getMessage());
+    }
   }
 
 }
