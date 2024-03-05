@@ -139,16 +139,12 @@ public class MemberService {
 
   @Transactional(readOnly = true)
   public boolean availabilityUserId(String userId) {
-    Member byUserId = memberRepository.findByUserId(userId).orElseThrow(
-        NotExistDataException::new);
-    return byUserId != null;
+    return memberRepository.findByUserId(userId).isPresent();
   }
 
   @Transactional(readOnly = true)
   public Boolean availabilityEmail(String email) {
-    Member byUserId = memberRepository.findByEmail(email).orElseThrow(
-        NotExistDataException::new);
-    return byUserId != null;
+    return memberRepository.findByEmail(email).isPresent();
   }
 
   @Transactional(readOnly = true)
