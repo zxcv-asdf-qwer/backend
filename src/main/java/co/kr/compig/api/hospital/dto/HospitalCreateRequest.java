@@ -29,7 +29,7 @@ public class HospitalCreateRequest {
     return Hospital.builder()
         .hospitalNm(this.hospitalNm)
         .hospitalCode(this.hospitalCode)
-        .hospitalAddress(this.hospitalAddress)
+        .hospitalAddress1(this.hospitalAddress)
         .hospitalTelNo(this.hospitalTelNo)
         .hospitalOperationHours(this.hospitalOperationHours)
         .build();

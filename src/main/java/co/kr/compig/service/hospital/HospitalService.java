@@ -1,36 +1,38 @@
 package co.kr.compig.service.hospital;
 
-import co.kr.compig.api.hospital.dto.HospitalCreateRequest;
-import co.kr.compig.api.hospital.dto.HospitalDetailResponse;
-import co.kr.compig.api.hospital.dto.HospitalResponse;
-import co.kr.compig.api.hospital.dto.HospitalSearchRequest;
-import co.kr.compig.api.hospital.dto.HospitalUpdateRequest;
-import co.kr.compig.api.hospital.dto.openApiDto.CmmMsgHeader;
+import co.kr.compig.api.hospital.dto.*;
 import co.kr.compig.api.hospital.dto.openApiDto.HospitalDto;
 import co.kr.compig.api.hospital.dto.openApiDto.HospitalExceptionDto;
+import co.kr.compig.api.hospital.dto.openApiDto.HospitalResponseVO;
+import co.kr.compig.common.exception.BizException;
 import co.kr.compig.common.exception.NotExistDataException;
-import co.kr.compig.common.utils.GsonLocalDateTimeAdapter;
 import co.kr.compig.domain.hospital.Hospital;
 import co.kr.compig.domain.hospital.HospitalRepository;
 import co.kr.compig.domain.hospital.HospitalRepositoryCustom;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.io.StringReader;
+import java.lang.annotation.Annotation;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -41,8 +43,8 @@ public class HospitalService {
   private final HospitalRepository hospitalRepository;
   private final HospitalRepositoryCustom hospitalRepositoryCustom;
 
+  private String OPEN_API_URL = "http://apis.data.go.kr/B552657/HsptlAsembySearchService/getHsptlMdcncFullDown";
   private final String SERVICE_KEY = "IbT4eJVladZuxTws1cU4oeEiZvvLybEDfY0Unx%2BmZXbsFD8a18SqcaB7PRX%2B88QioAwm0DyJib0MgOtZAlsvTg%3D%3D";
-
   private final int PAGE_SIZE = 100;
 
   @Transactional(readOnly = true)
@@ -78,90 +80,94 @@ public class HospitalService {
     return hospital.getId();
   }
 
-  public String createAllHospital(){
-    hospitalRepository.deleteAll();
-    Long totalPageCnt = getTotalPageCnt();
-    for(int i = 1; i <= totalPageCnt; i++){
-     List<HospitalCreateRequest> pageHospitalCreateRequests = createHospitalRequest(i, 100);
-      createHospital(pageHospitalCreateRequests);
-    }
-    return "병원정보 저장 완료";
-  }
-  public void createHospital(List<HospitalCreateRequest> hospitalCreateRequests) {
-    for(HospitalCreateRequest hospitalCreateRequest : hospitalCreateRequests){
-      Hospital hospital = hospitalCreateRequest.converterEntity();
-      hospitalRepository.save(hospital);
-    }
-  }
-
-  public List<HospitalCreateRequest> createHospitalRequest(int page, int numOfRows){
-    HospitalDto hospitalDto = makeHospitalDto(page, numOfRows);
-    List<HospitalDto.Item> items = hospitalDto.getResponse().getBody().getItems().getItem();
-    List<HospitalCreateRequest> createRequests = new ArrayList<>();
-    for(HospitalDto.Item item : items){
-      HospitalCreateRequest hospitalCreateRequest = HospitalCreateRequest.builder()
-          .hospitalNm(item.getDutyName())
-          .hospitalCode(item.getPostCdn1()+item.getPostCdn2())
-          .hospitalAddress(item.getDutyAddr())
-          .hospitalTelNo(item.getDutyTel1())
-          .hospitalOperationHours(makeOperationHours(item))
-          .build();
-      createRequests.add(hospitalCreateRequest);
-    }
-    return createRequests;
-  }
-
-  private String makeOperationHours(HospitalDto.Item item){
-    return String.format("월 %s~%s\n화 %s~%s\n수 %s~%s\n목 %s~%s\n금 %s~%s\n",
-        item.getDutyTime1s(), item.getDutyTime1c(),
-        item.getDutyTime2s(), item.getDutyTime2c(),
-        item.getDutyTime3s(), item.getDutyTime3c(),
-        item.getDutyTime4s(), item.getDutyTime4c(),
-        item.getDutyTime5s(), item.getDutyTime5c());
-  }
-
-  public Long getTotalPageCnt() {
-    HospitalDto hospitalDto = makeHospitalDto(1, 2);
-    Long totalCnt = hospitalDto.getResponse().getBody().getTotalCount();
-    return totalCnt % PAGE_SIZE == 0 ? totalCnt / PAGE_SIZE : totalCnt / PAGE_SIZE + 1;
-  }
-
-  public HospitalDto makeHospitalDto(int pageNo, int numOfRows) {
-    URI uri = makeURL(pageNo,numOfRows);
-
+  public String createAllHospital2() throws JAXBException {
     RestTemplate restTemplate = new RestTemplate();
+
+    // Accept 헤더 설정
+    HttpHeaders headers = new HttpHeaders();
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_XML));
+
+    // HttpEntity 생성
+    HttpEntity<String> entity = new HttpEntity<>(headers);
+
+    UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(OPEN_API_URL);
+    builder.queryParam("serviceKey", SERVICE_KEY);
+    builder.queryParam("pageNo", 1);
+    builder.queryParam("numOfRows", 2);
+
+    URI uri = builder.build(true).toUri();
+
     restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));
+    ResponseEntity<String> responseEntity = restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
 
-    try{
-      String jsonResponse = restTemplate.getForObject(uri, String.class);
+    String xmlResponseBody = responseEntity.getBody();
+    if(StringUtils.hasText(xmlResponseBody)){
+      String tagName = getTageName(xmlResponseBody);
 
-      Gson gson = new GsonBuilder()
-          .setPrettyPrinting()
-          .registerTypeAdapter(LocalDateTime.class, new GsonLocalDateTimeAdapter())
-          .create();
+      if(getXmlRootElementAnnoName(HospitalExceptionDto.class).equals(tagName)){
+        var hospitalErrorResponse = unmarshal(HospitalExceptionDto.class, xmlResponseBody);
+        throw new BizException(String.format("Hospital Open API 응답 %s 로 인해 실패", hospitalErrorResponse.getCmmMsgHeader().getErrMsg()));
+      }else if(getXmlRootElementAnnoName(HospitalResponseVO.class).equals(tagName)){
+        var hospitalResponse = unmarshal(HospitalResponseVO.class, xmlResponseBody);
+        if(!StringUtils.pathEquals(hospitalResponse.getHeader().getResultCode(), "00")){
+          throw new BizException(String.format("Hospital Open API 응답 %s 로 인해 실패", hospitalResponse.getHeader().getResultCode()));
+        }else{
+          List<HospitalCreateRequest> createRequests = new ArrayList<>();
+          for(HospitalDto item : hospitalResponse.getBody().getItems()){
+            HospitalCreateRequest hospitalCreateRequest = HospitalCreateRequest.builder()
+                    .hospitalNm(item.getDutyName())
+                    .hospitalCode(item.getPostCdn1()+item.getPostCdn2())
+                    .hospitalAddress(item.getDutyAddr())
+                    .hospitalTelNo(item.getDutyTel1())
+                    .hospitalOperationHours(makeOperationHours(item))
+                    .build();
+            createRequests.add(hospitalCreateRequest);
+          }
+          for(HospitalCreateRequest hospitalCreateRequest : createRequests){
+            Hospital hospital = hospitalCreateRequest.converterEntity();
+            hospitalRepository.save(hospital);
+          }
+        }
+      }
+    }
+    return "ok";
+  }
 
-      return gson.fromJson(jsonResponse, HospitalDto.class);
-    }catch (Exception e){
-      ResponseEntity<HospitalExceptionDto> response = restTemplate.getForEntity(
-          uri, HospitalExceptionDto.class);
+  private String makeOperationHours(HospitalDto item){
+    return String.format("월 %s~%s\n화 %s~%s\n수 %s~%s\n목 %s~%s\n금 %s~%s\n",
+            item.getDutyTime1s(), item.getDutyTime1c(),
+            item.getDutyTime2s(), item.getDutyTime2c(),
+            item.getDutyTime3s(), item.getDutyTime3c(),
+            item.getDutyTime4s(), item.getDutyTime4c(),
+            item.getDutyTime5s(), item.getDutyTime5c());
+  }
+  public <T> T unmarshal(Class<T> clazz, String xml) throws JAXBException {
+    JAXBContext jaxbContext = JAXBContext.newInstance(clazz);
+    Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+    return (T) unmarshaller.unmarshal(new StringReader(xml));
+  }
 
-      HospitalExceptionDto serviceResponse = response.getBody();
-      CmmMsgHeader cmmMsgHeader = serviceResponse.getCmmMsgHeader();
-
-      String errorMsg = cmmMsgHeader.getErrMsg();
-
-      throw new IllegalStateException(errorMsg);
+  private String getTageName(String xml){
+    int startTagIndex = xml.indexOf("<") + 1;
+    int endTagIndex = xml.indexOf(">");
+    String tagName = xml.substring(startTagIndex, endTagIndex);
+    if(!tagName.equals("?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?")){
+      return tagName;
+    }else{
+      String newXml = xml.substring(endTagIndex+1);
+      return newXml.substring(newXml.indexOf("<")+1, newXml.indexOf(">"));
     }
   }
 
-
-  public URI makeURL(int pageNo, int numOfRows){
-    return UriComponentsBuilder.fromHttpUrl("http://apis.data.go.kr/B552657/HsptlAsembySearchService/getHsptlMdcncFullDown")
-        .queryParam("serviceKey", SERVICE_KEY)
-        .queryParam("pageNo", pageNo)
-        .queryParam("numOfRows", numOfRows)
-        .build(true)
-        .toUri();
+  public String getXmlRootElementAnnoName(Class<?> clazz){
+    Annotation annotation = clazz.getAnnotation(XmlRootElement.class);
+    if(annotation != null && annotation instanceof XmlRootElement){
+      XmlRootElement rootElement = (XmlRootElement) annotation;
+      return rootElement.name();
+    }else{
+      return null;
+    }
   }
+
 }
 

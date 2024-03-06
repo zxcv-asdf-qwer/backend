@@ -5,7 +5,7 @@ import jakarta.xml.bind.annotation.XmlElement;
 public class CmmMsgHeader {
   private String errMsg;
   private String returnAuthMsg;
-  private int returnReasonCode;
+  private String returnReasonCode;
 
   public String getErrMsg() {
     return errMsg;
@@ -25,12 +25,12 @@ public class CmmMsgHeader {
     this.returnAuthMsg = returnAuthMsg;
   }
 
-  public int getReturnReasonCode() {
+  public String getReturnReasonCode() {
     return returnReasonCode;
   }
 
   @XmlElement(name = "returnReasonCode")
-  public void setReturnReasonCode(int returnReasonCode) {
+  public void setReturnReasonCode(String returnReasonCode) {
     this.returnReasonCode = returnReasonCode;
   }
 }
