@@ -102,7 +102,7 @@ public class HospitalService {
       HospitalCreateRequest hospitalCreateRequest = HospitalCreateRequest.builder()
           .hospitalNm(item.getDutyName())
           .hospitalCode(item.getPostCdn1()+item.getPostCdn2())
-          .hospitalAddress1(item.getDutyAddr())
+          .hospitalAddress(item.getDutyAddr())
           .hospitalTelNo(item.getDutyTel1())
           .hospitalOperationHours(makeOperationHours(item))
           .build();

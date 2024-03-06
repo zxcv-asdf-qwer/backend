@@ -38,8 +38,7 @@ public class HospitalRepositoryImpl implements HospitalRepositoryCustom{
                 hospital.id,
                 hospital.hospitalNm,
                 hospital.hospitalCode,
-                hospital.hospitalAddress1,
-                hospital.hospitalAddress2,
+                hospital.hospitalAddress,
                 hospital.hospitalTelNo,
                 hospital.hospitalOperationHours
             )
@@ -93,8 +92,7 @@ public class HospitalRepositoryImpl implements HospitalRepositoryCustom{
                 hospital.id,
                 hospital.hospitalNm,
                 hospital.hospitalCode,
-                hospital.hospitalAddress1,
-                hospital.hospitalAddress2,
+                hospital.hospitalAddress,
                 hospital.hospitalTelNo,
                 hospital.hospitalOperationHours
             )
