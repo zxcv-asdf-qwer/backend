@@ -1,6 +1,7 @@
 package co.kr.compig.domain.apply;
 
 
+import co.kr.compig.domain.member.Member;
 import co.kr.compig.domain.order.CareOrder;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -48,5 +49,9 @@ public class Apply {
   @ManyToOne(fetch = FetchType.LAZY)
   private CareOrder careOrder = new CareOrder();
 
+  @Builder.Default
+  @JoinColumn(name = "member_id", nullable = false, foreignKey = @ForeignKey(name = "fk02_apply"))
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Member member = new Member();
 }
 

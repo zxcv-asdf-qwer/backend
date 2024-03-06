@@ -29,7 +29,7 @@ public class AppleLoginServiceImpl implements SocialLoginService {
   private final AppleAuthApi appleAuthApi;
   @Override
   public MemberRegisterType getServiceName() {
-    return MemberRegisterType.KAKAO;
+    return MemberRegisterType.APPLE;
   }
 
   @Override

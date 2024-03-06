@@ -46,6 +46,7 @@ public class UserMemberController {
         .build());
   }
 
+  //google kakao naver 앱에서 탈퇴 후 -> /pb/members/leave
   @PutMapping("/leave")
   public ResponseEntity<Response<?>> userLeave(@RequestBody LeaveRequest leaveRequest) {
     memberService.userLeave(leaveRequest);

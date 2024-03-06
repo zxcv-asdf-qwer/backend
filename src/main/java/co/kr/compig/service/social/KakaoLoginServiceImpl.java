@@ -49,14 +49,15 @@ public class KakaoLoginServiceImpl implements SocialLoginService {
     );
 
     return SocialUserResponse.builder()
-        .sub(kaKaoLoginResponse.getSub())
+        .sub(kaKaoLoginResponse.getId())
         .memberRegisterType(getServiceName())
-        .email(kaKaoLoginResponse.getEmail())
+        .email(kaKaoLoginResponse.getKakao_account().getEmail())
         .build();
   }
 
   @Override
   public void revoke(LeaveRequest leaveRequest) {
+
   }
 
 }

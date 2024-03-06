@@ -3,6 +3,7 @@ package co.kr.compig.api.social.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Builder
@@ -10,8 +11,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NaverLoginResponse {
+// {"resultcode":"00","message":"success","response":{"id":"asdfsadfsadfsad","email":"asdfasdf@asdfasdf.com"}}
+  private String resultcode;
+  private String message;
+  private Response response;
 
-  private String id;
-  private String email;
-  private String picture;
+  @Getter
+  public static class Response {
+    private String id;
+    private String email;
+  }
+
 }
