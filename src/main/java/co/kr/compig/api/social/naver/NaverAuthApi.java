@@ -14,6 +14,5 @@ public interface NaverAuthApi {
   ResponseEntity<String> accessTokenToUserInfo(@RequestHeader("Authorization") String token);
 
   // https://nid.naver.com/oauth2.0/token?grant_type=delete&client_id=jyvqXeaVOVmV&client_secret=527300A0_COq1_XV33cf&access_token=c8ceMEJisO4Se7uGCEYKK1p52L93bHXLnaoETis9YzjfnorlQwEisqemfpKHUq2gY&service_provider=NAVER
-  @PostMapping("/revoke")
-  ResponseEntity<String> revokeAccessToken(@RequestBody String token);
+
 }

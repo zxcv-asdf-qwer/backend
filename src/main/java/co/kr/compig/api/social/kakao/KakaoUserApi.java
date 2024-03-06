@@ -14,10 +14,7 @@ public interface KakaoUserApi {
 
   //OIDC: 사용자 정보 가져오기
   //https://developers.kakao.com/docs/latest/ko/kakaologin/rest-api#oidc-user-info
-  @GetMapping(value = "/v1/oidc/userinfo")
+  @GetMapping(value = "/v2/user/me")
   ResponseEntity<String> accessTokenToUserInfo(@RequestHeader("Authorization") String token);
 
-  @PostMapping("/v1/user/unlink")
-  ResponseEntity<String> revokeAccessToken(@RequestHeader("Authorization") String token,
-      @RequestBody KaKaoRequestLeaveDto kaKaoRequestLeaveDto);
 }

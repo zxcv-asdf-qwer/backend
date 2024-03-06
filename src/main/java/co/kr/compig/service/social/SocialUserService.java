@@ -102,8 +102,8 @@ public class SocialUserService {
   }
 
   public void doSocialRevoke(LeaveRequest leaveRequest) {
-    memberService.socialUserLeave(leaveRequest);
     SocialLoginService loginService = this.getLoginService(leaveRequest.getMemberRegisterType());
     loginService.revoke(leaveRequest);
+    memberService.socialUserLeave(leaveRequest);
   }
 }
