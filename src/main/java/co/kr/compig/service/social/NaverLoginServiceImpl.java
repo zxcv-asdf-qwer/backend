@@ -49,9 +49,9 @@ public class NaverLoginServiceImpl implements SocialLoginService {
     );
 
     return SocialUserResponse.builder()
-        .sub(naverLoginResponse.getId())
+        .sub(naverLoginResponse.getResponse().getId())
         .memberRegisterType(getServiceName())
-        .email(naverLoginResponse.getEmail())
+        .email(naverLoginResponse.getResponse().getEmail())
         .build();
   }
 
