@@ -1,8 +1,5 @@
 package co.kr.compig.domain.hospital;
 
-import static co.kr.compig.domain.board.QBoard.board;
-import static co.kr.compig.domain.hospital.QHospital.hospital;
-
 import co.kr.compig.api.hospital.dto.HospitalResponse;
 import co.kr.compig.api.hospital.dto.HospitalSearchRequest;
 import com.google.common.base.CaseFormat;
@@ -14,14 +11,14 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.support.PageableExecutionUtils;
+
+import java.util.List;
+
+import static co.kr.compig.domain.board.QBoard.board;
+import static co.kr.compig.domain.hospital.QHospital.hospital;
 
 @RequiredArgsConstructor
 public class HospitalRepositoryImpl implements HospitalRepositoryCustom{
@@ -39,7 +36,6 @@ public class HospitalRepositoryImpl implements HospitalRepositoryCustom{
                 hospital.hospitalNm,
                 hospital.hospitalCode,
                 hospital.hospitalAddress1,
-                hospital.hospitalAddress2,
                 hospital.hospitalTelNo,
                 hospital.hospitalOperationHours
             )
@@ -94,7 +90,6 @@ public class HospitalRepositoryImpl implements HospitalRepositoryCustom{
                 hospital.hospitalNm,
                 hospital.hospitalCode,
                 hospital.hospitalAddress1,
-                hospital.hospitalAddress2,
                 hospital.hospitalTelNo,
                 hospital.hospitalOperationHours
             )

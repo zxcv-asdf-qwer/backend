@@ -3,14 +3,7 @@ package co.kr.compig.domain.hospital;
 import co.kr.compig.api.hospital.dto.HospitalDetailResponse;
 import co.kr.compig.api.hospital.dto.HospitalUpdateRequest;
 import co.kr.compig.common.embedded.CreatedAndUpdated;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -45,7 +38,7 @@ public class Hospital {
   private String hospitalAddress1; // 병원 주소
 
   @Column(length = 200)
-  private String hospitalAddress2; // 병원 상세 주소
+  private String hospitalAddress2; // 병원 주소
 
   @Column(length = 100)
   private String hospitalTelNo; // 병원 전화번호
@@ -63,8 +56,7 @@ public class Hospital {
   public void update(HospitalUpdateRequest hospitalUpdateRequest) {
     this.hospitalNm = hospitalUpdateRequest.getHospitalNm();
     this.hospitalCode = hospitalUpdateRequest.getHospitalCode();
-    this.hospitalAddress1 = hospitalUpdateRequest.getHospitalAddress1();
-    this.hospitalAddress2 = hospitalUpdateRequest.getHospitalAddress2();
+    this.hospitalAddress1 = hospitalUpdateRequest.getHospitalAddress();
     this.hospitalTelNo = hospitalUpdateRequest.getHospitalTelNo();
     this.hospitalOperationHours = hospitalUpdateRequest.getHospitalOperationHours();
   }
@@ -74,8 +66,7 @@ public class Hospital {
         .hospitalId(this.id)
         .hospitalNm(this.hospitalNm)
         .hospitalCode(this.hospitalCode)
-        .hospitalAddress1(this.hospitalAddress1)
-        .hospitalAddress2(this.hospitalAddress2)
+        .hospitalAddress(this.hospitalAddress1)
         .hospitalTelNo(this.hospitalTelNo)
         .hospitalOperationHours(this.hospitalOperationHours)
         .build();
