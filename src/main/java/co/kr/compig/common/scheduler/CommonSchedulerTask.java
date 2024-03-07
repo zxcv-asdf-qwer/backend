@@ -1,6 +1,6 @@
 package co.kr.compig.common.scheduler;
 
-import co.kr.compig.service.hospital.HospitalService;
+import co.kr.compig.service.hospital.HospitalSchService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
@@ -14,11 +14,11 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class CommonSchedulerTask {
-  private final HospitalService hospitalService;
+  private final HospitalSchService hospitalSchService;
 
   @Scheduled(cron = "0 3 * * 1#1")
   @SchedulerLock(name = "HospitalService_insertHospitalInfo", lockAtLeastFor = "PT5M", lockAtMostFor = "PT10M")
   public void insertHospitalInfo() throws Exception{
-    hospitalService.insertAllHospital();
+    hospitalSchService.insertAllHospital();
   }
 }
