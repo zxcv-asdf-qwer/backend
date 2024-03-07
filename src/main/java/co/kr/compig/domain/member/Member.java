@@ -15,7 +15,6 @@ import co.kr.compig.common.exception.KeyCloakRequestException;
 import co.kr.compig.common.keycloak.KeycloakHandler;
 import co.kr.compig.common.keycloak.KeycloakHolder;
 import co.kr.compig.domain.account.Account;
-import co.kr.compig.domain.order.CareOrder;
 import co.kr.compig.domain.permission.MenuPermission;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -159,11 +158,6 @@ public class Member {
 
   @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
   private Account account;
-
-  @Builder.Default
-  @OneToMany(
-      mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-  private Set<CareOrder> careOrders = new HashSet<>();
 
   /* =================================================================
    * Relation method
