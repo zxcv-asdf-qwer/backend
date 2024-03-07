@@ -1,5 +1,7 @@
 package co.kr.compig.domain.account;
 
+import co.kr.compig.api.account.dto.AccountDetailResponse;
+import co.kr.compig.api.account.dto.AccountUpdateRequest;
 import co.kr.compig.domain.member.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -55,4 +57,18 @@ public class Account {
   @OneToOne(fetch = FetchType.LAZY)
   private Member member = new Member();
 
+  public AccountDetailResponse toAccountDetailResponse() {
+    return AccountDetailResponse.builder()
+        .id(this.id)
+        .accountNumber(this.accountNumber)
+        .accountName(this.accountName)
+        .bankName(this.bankName)
+        .build();
+  }
+
+  public void update(AccountUpdateRequest accountUpdateRequest) {
+    this.accountNumber = accountUpdateRequest.getAccountNumber();
+    this.accountName = accountUpdateRequest.getAccountName();
+    this.bankName = accountUpdateRequest.getBankName();
+  }
 }
