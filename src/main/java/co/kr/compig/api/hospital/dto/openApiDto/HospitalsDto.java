@@ -9,6 +9,7 @@ import java.util.List;
 @XmlRootElement(name = "body")
 public class HospitalsDto {
     private List<HospitalDto> items;
+    private Long totalCount;
 
     @XmlElementWrapper(name = "items")
     @XmlElement(name = "item")
@@ -18,5 +19,14 @@ public class HospitalsDto {
 
     public void setItems(List<HospitalDto> items) {
         this.items = items;
+    }
+
+    @XmlElement(name = "totalCount")
+    public Long getTotalCount() {
+        return totalCount;
+    }
+
+    public void setTotalCount(Long totalCount) {
+        this.totalCount = totalCount;
     }
 }

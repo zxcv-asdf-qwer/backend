@@ -1,5 +1,6 @@
 package co.kr.compig.api.hospital.admin;
 
+import co.kr.compig.api.hospital.dto.HospitalCreateRequest;
 import co.kr.compig.api.hospital.dto.HospitalDetailResponse;
 import co.kr.compig.api.hospital.dto.HospitalResponse;
 import co.kr.compig.api.hospital.dto.HospitalSearchRequest;
@@ -7,9 +8,9 @@ import co.kr.compig.api.hospital.dto.HospitalUpdateRequest;
 import co.kr.compig.common.dto.Response;
 import co.kr.compig.common.dto.pagination.PageResponse;
 import co.kr.compig.service.hospital.HospitalService;
-import co.kr.compig.service.hospital.HospitalService2;
 import jakarta.validation.Valid;
 import jakarta.xml.bind.JAXBException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -25,12 +26,12 @@ import java.util.Map;
 @RequestMapping(path = "/pv/hospital", produces = "application/json")
 public class AdminHospitalController {
   private final HospitalService hospitalService;
-  private final HospitalService2 hospitalService2;
 
-  @GetMapping("/createAll")
-  public ResponseEntity<Response<String>> createHospital() throws JAXBException {
-    return ResponseEntity.ok(Response.<String>builder()
-        .data(hospitalService.createAllHospital2())
+  @PostMapping
+  public ResponseEntity<Response<?>> createHospital(
+      @ModelAttribute @Valid HospitalCreateRequest hospitalCreateRequest){
+    return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
+        .data(Map.of("hospitalId", hospitalService.createHospital(hospitalCreateRequest)))
         .build());
   }
 
