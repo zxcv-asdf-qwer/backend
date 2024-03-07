@@ -15,7 +15,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import java.util.HashSet;
@@ -66,6 +65,6 @@ public class Packing {
   private Set<Payment> payments = new HashSet<>();
 
   @JoinColumn(name = "hospital_id", nullable = false, foreignKey = @ForeignKey(name = "fk02_care_order"))
-  @OneToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY)
   private Hospital hospital;
 }
