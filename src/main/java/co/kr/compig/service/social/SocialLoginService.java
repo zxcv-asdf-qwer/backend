@@ -14,7 +14,7 @@ public interface SocialLoginService {
   //token to userInfo
   SocialUserResponse tokenToSocialUserResponse(LoginRequest loginRequest);
 
-  //token to userInfo
+  //apple만
   void revoke(LeaveRequest leaveRequest);
 
 }

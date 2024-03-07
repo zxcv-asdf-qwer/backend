@@ -4,13 +4,13 @@ import co.kr.compig.api.member.dto.AdminMemberCreate;
 import co.kr.compig.api.member.dto.GuardianMemberCreate;
 import co.kr.compig.api.member.dto.PartnerMemberCreate;
 import co.kr.compig.common.dto.Response;
+import co.kr.compig.common.exception.BizException;
 import co.kr.compig.service.member.MemberService;
 import jakarta.validation.Valid;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,6 +29,9 @@ public class MemberController {
   @PostMapping("/admin")
   public ResponseEntity<Response<?>> adminCreate(
       @ModelAttribute @Valid AdminMemberCreate adminMemberCreate) {
+    if("asdf" != null) {
+      throw new BizException("asdf");
+    }
     return ResponseEntity.ok().body(Response.<Map<String, String>>builder()
         .data(Map.of("memberId", memberService.adminCreate(adminMemberCreate)))
         .build());

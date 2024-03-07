@@ -2,7 +2,9 @@ package co.kr.compig.common.exception;
 
 import co.kr.compig.common.exception.dto.ErrorCode;
 import co.kr.compig.common.exception.dto.ErrorResponse;
+import co.kr.compig.common.exception.dto.ErrorResponse.FieldError;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.TypeMismatchException;
@@ -21,13 +23,15 @@ public class CommonExceptionHandler {
   protected ResponseEntity<ErrorResponse> handleGlobalException(final Exception e,
       final WebRequest er) {
     log.error(e.getMessage(), e);
+    getSimpleExceptionMsg(e);
     return new ResponseEntity<>(ErrorResponse.of(e, er), HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
   @ExceptionHandler(BizException.class)
-  protected ResponseEntity<ErrorResponse> handleBrewException(final BizException e,
+  protected ResponseEntity<ErrorResponse> handleBizException(final BizException e,
       final WebRequest er) {
     log.error(e.getMessage(), e);
+    getSimpleExceptionMsg(e);
     return new ResponseEntity<>(ErrorResponse.of(e, er), e.getErrorCode().getHttpStatus());
   }
 
@@ -36,12 +40,15 @@ public class CommonExceptionHandler {
       MethodArgumentNotValidException ex, WebRequest request) {
     ErrorCode invalidInputValue = ErrorCode.INVALID_INPUT_VALUE;
     ErrorResponse errorResponse = ErrorResponse.of(invalidInputValue, request);
-    List<ErrorResponse.FieldError> fieldErrors = ex.getBindingResult().getGlobalErrors()
+    List<ErrorResponse.FieldError> fieldErrors = ex.getBindingResult().getFieldErrors()
         .stream()
-        .map(objectError -> new ErrorResponse.FieldError(objectError.getObjectName(),
-            objectError.getDefaultMessage())).toList();
+        .map(objectError -> {
+          FieldError fieldError = new FieldError(objectError.getField(),
+              objectError.getDefaultMessage());
+          fieldErrorLog(objectError);
+          return fieldError;
+        }).toList();
     errorResponse.addFieldError(fieldErrors);
-
     return new ResponseEntity<>(errorResponse, invalidInputValue.getHttpStatus());
   }
 
@@ -58,5 +65,19 @@ public class CommonExceptionHandler {
     }
     errorResponse.addFieldError(fieldErrors);
     return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+  }
+
+  private void fieldErrorLog(org.springframework.validation.FieldError fieldErrors) {
+    log.error(String.format("objectName -> %s\nmessage -> %s", fieldErrors.getObjectName(),
+        fieldErrors.getDefaultMessage()));
+  }
+
+  private void getSimpleExceptionMsg(Exception e) {
+    Arrays.stream(e.getStackTrace())
+        .filter(ex -> ex.getClassName().contains("compig"))
+        .findFirst()
+        .ifPresent(err -> log.error((e.getMessage().equals("null") ? "" : e.getMessage() + "\n")
+            + err.getClassName() + "." + err.getMethodName() + " - " + err.getFileName() + " : "
+            + err.getLineNumber() + " line"));
   }
 }
