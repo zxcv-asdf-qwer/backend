@@ -50,37 +50,31 @@ public class HospitalSchService {
   private String SERVICE_KEY;
   private final int PAGE_SIZE = 100;
 
-  public Long countHospitals() {
+  public Long countHospitals() throws Exception {
     Long totalCount = 0L;
-    try {
-      RestTemplate restTemplate = new RestTemplate();
 
-      // Accept 헤더 설정
-      HttpHeaders headers = new HttpHeaders();
-      headers.setAccept(Collections.singletonList(MediaType.APPLICATION_XML));
+    URI uri = createUri(1, 2);
+    ResponseEntity<String> responseEntity = createResponseEntity(uri);
 
-      // HttpEntity 생성
-      HttpEntity<String> entity = new HttpEntity<>(headers);
+    String xmlResponseBody = responseEntity.getBody();
+    if (StringUtils.hasText(xmlResponseBody)) {
+      var hospitalResponse = unmarshal(HospitalResponseVO.class, xmlResponseBody);
+      totalCount = hospitalResponse.getBody().getTotalCount();
+      totalCount =
+          totalCount % PAGE_SIZE != 0 ? totalCount / PAGE_SIZE + 1 : totalCount / PAGE_SIZE;
+    }
 
-      UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(OPEN_API_URL);
-      builder.queryParam("serviceKey", SERVICE_KEY);
-      builder.queryParam("pageNo", 1);
-      builder.queryParam("numOfRows", 2);
+    return totalCount;
+  }
 
-      URI uri = builder.build(true).toUri();
+  public List<HospitalCreateRequest> getCreateHospitalList() throws Exception {
+    List<HospitalCreateRequest> createRequests = new ArrayList<>();
+    Long totalCount = countHospitals();
+    hospitalRepository.deleteAll();
 
-      restTemplate.getMessageConverters()
-          .add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));
-      ResponseEntity<String> responseEntity = restTemplate.exchange(uri, HttpMethod.GET, entity,
-          String.class);
-
-      if (!responseEntity.getStatusCode().equals(HttpStatus.OK)) {
-        throw new Exception(
-            String.format("%s - 병원 정보 가져오기 실패 : %s",
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
-                String.format("invalid.response " + responseEntity.getStatusCode()))
-        );
-      }
+    for (int pageNo = 1; pageNo <= totalCount; pageNo++) {
+      URI uri = createUri(pageNo, PAGE_SIZE);
+      ResponseEntity<String> responseEntity = createResponseEntity(uri);
 
       String xmlResponseBody = responseEntity.getBody();
       if (StringUtils.hasText(xmlResponseBody)) {
@@ -95,101 +89,78 @@ public class HospitalSchService {
           if (!StringUtils.pathEquals(hospitalResponse.getHeader().getResultCode(), "00")) {
             throw new BizException(String.format("Hospital Open API 응답 %s 로 인해 실패",
                 hospitalResponse.getHeader().getResultCode()));
-          } else {
-            totalCount = hospitalResponse.getBody().getTotalCount();
           }
+          createRequests = createHospitalCreateRequests(hospitalResponse);
+
         } else {
           throw new BizException(
               String.format("Hospital - XmlResponseBody: %s 병원정보 가져오기 실패.", xmlResponseBody)
           );
         }
       }
-    } catch (Exception e) {
-      log.error("{}", e.getMessage());
     }
-    totalCount = totalCount % PAGE_SIZE != 0 ? totalCount / PAGE_SIZE + 1 : totalCount / PAGE_SIZE;
-    return totalCount;
+
+    return createRequests;
   }
 
-  public List<HospitalCreateRequest> getCreateHospitalList() {
+  private List<HospitalCreateRequest> createHospitalCreateRequests(
+      HospitalResponseVO hospitalResponse) {
     List<HospitalCreateRequest> createRequests = new ArrayList<>();
-    Long totalCount = countHospitals();
-    try {
-      RestTemplate restTemplate = new RestTemplate();
-
-      // Accept 헤더 설정
-      HttpHeaders headers = new HttpHeaders();
-      headers.setAccept(Collections.singletonList(MediaType.APPLICATION_XML));
-
-      // HttpEntity 생성
-      HttpEntity<String> entity = new HttpEntity<>(headers);
-
-      for (int pageNo = 1; pageNo <= totalCount; pageNo++) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(OPEN_API_URL);
-        builder.queryParam("serviceKey", SERVICE_KEY);
-        builder.queryParam("pageNo", pageNo);
-        builder.queryParam("numOfRows", PAGE_SIZE);
-
-        URI uri = builder.build(true).toUri();
-
-        restTemplate.getMessageConverters()
-            .add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));
-        ResponseEntity<String> responseEntity = restTemplate.exchange(uri, HttpMethod.GET, entity,
-            String.class);
-
-        if (!responseEntity.getStatusCode().equals(HttpStatus.OK)) {
-          throw new Exception(
-              String.format("%s - 병원 정보 가져오기 실패 : %s",
-                  LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
-                  String.format("invalid.response " + responseEntity.getStatusCode()))
-          );
-        }
-
-        String xmlResponseBody = responseEntity.getBody();
-        if (StringUtils.hasText(xmlResponseBody)) {
-          String tagName = getTagName(xmlResponseBody);
-
-          if (getXmlRootElementAnnoName(HospitalExceptionDto.class).equals(tagName)) {
-            var hospitalErrorResponse = unmarshal(HospitalExceptionDto.class, xmlResponseBody);
-            throw new BizException(String.format("Hospital Open API 응답 %s 로 인해 실패",
-                hospitalErrorResponse.getCmmMsgHeader().getErrMsg()));
-          } else if (getXmlRootElementAnnoName(HospitalResponseVO.class).equals(tagName)) {
-            var hospitalResponse = unmarshal(HospitalResponseVO.class, xmlResponseBody);
-            if (!StringUtils.pathEquals(hospitalResponse.getHeader().getResultCode(), "00")) {
-              throw new BizException(String.format("Hospital Open API 응답 %s 로 인해 실패",
-                  hospitalResponse.getHeader().getResultCode()));
-            } else {
-              for (HospitalDto item : hospitalResponse.getBody().getItems()) {
-                HospitalCreateRequest hospitalCreateRequest = HospitalCreateRequest.builder()
-                    .hospitalNm(item.getDutyName())
-                    .hospitalCode(item.getPostCdn1() + item.getPostCdn2())
-                    .hospitalAddress(item.getDutyAddr())
-                    .hospitalTelNo(item.getDutyTel1())
-                    .hospitalOperationHours(makeOperationHours(item))
-                    .build();
-                createRequests.add(hospitalCreateRequest);
-              }
-            }
-          } else {
-            throw new BizException(
-                String.format("Hospital - XmlResponseBody: %s 병원정보 가져오기 실패.", xmlResponseBody)
-            );
-          }
-        }
-      }
-    } catch (Exception e) {
-      log.error("{}", e.getMessage());
+    for (HospitalDto item : hospitalResponse.getBody().getItems()) {
+      HospitalCreateRequest hospitalCreateRequest = HospitalCreateRequest.builder()
+          .hospitalNm(item.getDutyName())
+          .hospitalCode(item.getPostCdn1() + item.getPostCdn2())
+          .hospitalAddress(item.getDutyAddr())
+          .hospitalTelNo(item.getDutyTel1())
+          .hospitalOperationHours(makeOperationHours(item))
+          .build();
+      createRequests.add(hospitalCreateRequest);
     }
     return createRequests;
   }
 
-  public String insertAllHospital() {
+  private URI createUri(int pageNo, int numOfRows) {
+    UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(OPEN_API_URL);
+    builder.queryParam("serviceKey", SERVICE_KEY);
+    builder.queryParam("pageNo", pageNo);
+    builder.queryParam("numOfRows", numOfRows);
+
+    return builder.build(true).toUri();
+  }
+
+  private ResponseEntity<String> createResponseEntity(URI uri) throws Exception {
+    RestTemplate restTemplate = new RestTemplate();
+
+    // Accept 헤더 설정
+    HttpHeaders headers = new HttpHeaders();
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_XML));
+
+    // HttpEntity 생성
+    HttpEntity<String> entity = new HttpEntity<>(headers);
+
+    restTemplate.getMessageConverters()
+        .add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));
+    ResponseEntity<String> responseEntity = restTemplate.exchange(uri, HttpMethod.GET, entity,
+        String.class);
+
+    if (!responseEntity.getStatusCode().equals(HttpStatus.OK)) {
+      throw new Exception(
+          String.format("%s - 병원 정보 가져오기 실패 : %s",
+              LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+              String.format("invalid.response " + responseEntity.getStatusCode()))
+      );
+    }
+
+    return responseEntity;
+  }
+
+  public void insertAllHospital() throws Exception {
     List<HospitalCreateRequest> createRequests = getCreateHospitalList();
     for (HospitalCreateRequest hospitalCreateRequest : createRequests) {
       Hospital hospital = hospitalCreateRequest.converterEntity();
       hospitalRepository.save(hospital);
     }
-    return "병원 데이터 저장 완료";
+    log.info("############################ 병원 데이터 저장 완료 ############################");
   }
 
   private String makeOperationHours(HospitalDto item) {
@@ -228,6 +199,5 @@ public class HospitalSchService {
       return null;
     }
   }
-
 }
 
