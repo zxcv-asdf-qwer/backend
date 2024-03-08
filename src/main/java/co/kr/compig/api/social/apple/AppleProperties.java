@@ -11,10 +11,10 @@ import org.springframework.stereotype.Component;
 @Setter
 public class AppleProperties {
 
-    private String grantType;
-    private String clientId;
-    private String keyId;
-    private String teamId;
-    private String audience;
-    private String privateKey;
+  private String grantType;
+  private String clientId;
+  private String keyId;
+  private String teamId;
+  private String audience;
+  private String privateKey;
 }

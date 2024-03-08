@@ -29,6 +29,7 @@ public class KaKaoLoginResponse {
 
   @Getter
   public static class KakaoAccount {
+
     private String has_email;
     private String email_needs_agreement;
     private String is_email_valid;

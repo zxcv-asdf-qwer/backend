@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class AppleIdTokenPayload {
 
-    private String sub;
+  private String sub;
 
-    private String email;
+  private String email;
 }

@@ -114,7 +114,7 @@ public class Menu {
   private CreatedAndUpdated createdAndModified = new CreatedAndUpdated();
 
   /* =================================================================
-   * Business login
+   * Business
      ================================================================= */
 
 }

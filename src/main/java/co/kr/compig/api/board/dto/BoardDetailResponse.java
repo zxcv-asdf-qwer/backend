@@ -15,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 public class BoardDetailResponse extends BaseAudit {
 
   private Long boardId; // 게시글 id

@@ -2,6 +2,7 @@ package co.kr.compig.common.exception.dto;
 
 import org.springframework.http.HttpStatus;
 
+//TODO clientMessage Spring-Cloud-Bus로 변경
 public enum ErrorCode {
   //common
   INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "잘못된 정보로 요청하였습니다."),

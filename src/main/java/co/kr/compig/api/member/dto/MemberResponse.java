@@ -19,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 public class MemberResponse extends BaseAudit {
 
   private String userNm; // 사용자 명

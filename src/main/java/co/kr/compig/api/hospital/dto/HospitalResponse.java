@@ -11,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 public class HospitalResponse extends BaseAudit {
   private Long hospitalId; // 병원 id
   private String hospitalNm; // 병원 명

@@ -17,8 +17,8 @@ import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.StreamUtils;
 
-@Configuration
-public class OpenFeignConfig {
+@Configuration //공통 설정
+public class CommonFeignConfig {
 
 //
 //  private boolean isGetOrDelete(RequestTemplate requestTemplate) {
@@ -26,10 +26,10 @@ public class OpenFeignConfig {
 //        || Request.HttpMethod.DELETE.name().equals(requestTemplate.method());
 //  }
 
-//  @Bean
-//  Logger.Level feignLoggerLevel() {
-//    return Logger.Level.FULL;
-//  }
+  @Bean
+  Logger.Level feignLoggerLevel() {
+    return Logger.Level.FULL;
+  }
 
   @Bean
   public FeignFormatterRegistrar dateTimeFormatterRegistrar() {

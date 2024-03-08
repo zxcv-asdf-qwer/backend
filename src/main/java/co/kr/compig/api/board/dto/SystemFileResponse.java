@@ -12,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 public class SystemFileResponse extends BaseAudit {
   private String filePath; // 파일 경로
   private String fileNm; // 파일 이름
