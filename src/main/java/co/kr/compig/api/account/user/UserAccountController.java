@@ -41,7 +41,15 @@ public class UserAccountController {
   public ResponseEntity<Response<AccountDetailResponse>> getAccount(
       @PathVariable(name = "accountId") Long accountId) {
     return ResponseEntity.ok(Response.<AccountDetailResponse>builder()
-        .data(accountService.getAccount(accountId))
+        .data(accountService.getAccountByAccountId(accountId))
+        .build());
+  }
+
+  @GetMapping("/member/{memberId}")
+  public ResponseEntity<Response<AccountDetailResponse>> getAccountByMember(
+      @PathVariable(name = "memberId") String memberId) {
+    return ResponseEntity.ok(Response.<AccountDetailResponse>builder()
+        .data(accountService.getAccountByMemberId(memberId))
         .build());
   }
 

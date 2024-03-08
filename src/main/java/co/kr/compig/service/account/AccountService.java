@@ -30,9 +30,15 @@ public class AccountService {
     return account.getId();
   }
 
-
-  public AccountDetailResponse getAccount(Long accountId) {
+  public AccountDetailResponse getAccountByAccountId(Long accountId) {
     Account account = accountRepository.findById(accountId).orElseThrow(NotExistDataException::new);
+    return account.toAccountDetailResponse();
+  }
+
+  public AccountDetailResponse getAccountByMemberId(String memberId) {
+    Member member = memberRepository.findById(memberId).orElseThrow(NotExistDataException::new);
+    Account account = accountRepository.findByMember(member)
+        .orElseThrow(NotExistDataException::new);
     return account.toAccountDetailResponse();
   }
 
