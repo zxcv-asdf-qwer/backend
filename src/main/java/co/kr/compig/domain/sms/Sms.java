@@ -1,4 +1,4 @@
-package co.kr.compig.domain.Sms;
+package co.kr.compig.domain.sms;
 
 import co.kr.compig.common.embedded.CreatedAndUpdated;
 import jakarta.persistence.Column;

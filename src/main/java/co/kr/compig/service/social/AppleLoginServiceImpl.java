@@ -1,7 +1,7 @@
 package co.kr.compig.service.social;
 
 import co.kr.compig.api.social.apple.AppleAuthApi;
-import co.kr.compig.api.social.dto.AppleLoginResponse;
+import co.kr.compig.api.social.dto.AppleIdTokenPayload;
 import co.kr.compig.api.social.dto.LeaveRequest;
 import co.kr.compig.api.social.dto.LoginRequest;
 import co.kr.compig.api.social.dto.SocialUserResponse;
@@ -11,12 +11,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
@@ -26,7 +28,7 @@ import org.springframework.stereotype.Service;
 @Qualifier("appleLogin")
 public class AppleLoginServiceImpl implements SocialLoginService {
 
-  private final AppleAuthApi appleAuthApi;
+  private final AppleGetMemberInfoService appleGetMemberInfoService;
   @Override
   public MemberRegisterType getServiceName() {
     return MemberRegisterType.APPLE;
@@ -34,26 +36,25 @@ public class AppleLoginServiceImpl implements SocialLoginService {
 
   @Override
   public SocialUserResponse tokenToSocialUserResponse(LoginRequest loginRequest) {
-    JSONObject jsonObject = new JSONObject();
+    String jsonObject = "";
     try {
-      SignedJWT signedJWT = SignedJWT.parse(loginRequest.getToken());
-      JWTClaimsSet jwtClaimsSet = signedJWT.getJWTClaimsSet();
-      jsonObject = new JSONObject(jwtClaimsSet.toJSONObject());
-    } catch (ParseException e) {
-      log.error(getServiceName().getCode() + " tokenToSocialUserResponse\n", e);
+      AppleIdTokenPayload response = appleGetMemberInfoService.getTokens(loginRequest.getCode());
+      jsonObject = response.toString();
+    } catch (NoSuchAlgorithmException e) {
+      throw new RuntimeException(e);
     }
 
     log.info(getServiceName().getCode() + " tokenToSocialUserResponse");
-    log.info(jsonObject.toString());
+    log.info(jsonObject);
 
     Gson gson = new GsonBuilder()
         .setPrettyPrinting()
         .registerTypeAdapter(LocalDateTime.class, new GsonLocalDateTimeAdapter())
         .create();
 
-    AppleLoginResponse appleLoginResponse = gson.fromJson(
-        jsonObject.toString(),
-        AppleLoginResponse.class
+    AppleIdTokenPayload appleLoginResponse = gson.fromJson(
+        jsonObject,
+        AppleIdTokenPayload.class
     );
 
     return SocialUserResponse.builder()
