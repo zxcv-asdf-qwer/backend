@@ -1,9 +1,11 @@
 package co.kr.compig.api.account.admin;
 
+import co.kr.compig.api.account.dto.AccountCheckRequest;
 import co.kr.compig.api.account.dto.AccountCreateRequest;
 import co.kr.compig.api.account.dto.AccountDetailResponse;
 import co.kr.compig.api.account.dto.AccountUpdateRequest;
 import co.kr.compig.common.dto.Response;
+import co.kr.compig.service.account.AccountCheckService;
 import co.kr.compig.service.account.AccountService;
 import jakarta.validation.Valid;
 import java.util.Map;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminAccountController {
 
   private final AccountService accountService;
+  private final AccountCheckService accountCheckService;
 
   @PostMapping
   public ResponseEntity<Response<?>> createAccount(
@@ -66,6 +69,14 @@ public class AdminAccountController {
       @PathVariable(name = "accountId") Long accountId) {
     return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
         .data(Map.of("accountId", accountService.deleteAccount(accountId)))
+        .build());
+  }
+
+  @GetMapping("/test")
+  public ResponseEntity<Response<String>> getAccountCheck(@ModelAttribute
+  AccountCheckRequest accountCheckRequest){
+    return ResponseEntity.ok(Response.<String>builder()
+        .data(accountCheckService.getAccountCheck(accountCheckRequest))
         .build());
   }
 }
