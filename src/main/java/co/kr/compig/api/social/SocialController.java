@@ -32,9 +32,9 @@ public class SocialController {
             socialUserService.doSocialLogin(loginRequest));
   }
 
-  //TODO apple 만 따로 탈퇴
+  //apple 만 따로 탈퇴
   //google kakao naver 앱에서 탈퇴 후 -> /pb/members/leave
-  @PutMapping("/leave")
+  @PostMapping("/leave")
   public ResponseEntity<Response<?>> userLeave(@RequestBody LeaveRequest leaveRequest) {
     socialUserService.doSocialRevoke(leaveRequest);
     return ResponseEntity.ok().build();

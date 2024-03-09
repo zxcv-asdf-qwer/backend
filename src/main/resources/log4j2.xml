@@ -2,8 +2,6 @@
 
 <Configuration status="INFO">
   <Properties>
-    <Property name="LOG_PATH">./logs</Property>
-    <Property name="LOG_FILE_NAME_PATTERN">%d{yyyy-MM-dd}.%i</Property>
     <Property name="LOG_PATTERN">%style{[%d{yyyy-MM-dd HH:mm:ss:SSS}]}{cyan}%highlight{[%-5p]}{FATAL=bg_red, ERROR=red, INFO=green, DEBUG=cyan}[${sys:PID}] %style{%mdc{traceId}}{Red}|%style{%mdc{spanId}}{blue}| [%50c{1.}] %style{[%t]}{yellow} - %m%n%wEx
     </Property>
   </Properties>
@@ -13,22 +11,14 @@
     <Console name="STDOUT" target="SYSTEM_OUT">
       <PatternLayout pattern="${LOG_PATTERN}"/>
     </Console>
-    <!-- rollingfile -->
-    <RollingFile name="ROLLING" fileName="${LOG_PATH}/logs.log"
-      filePattern="${LOG_PATH}/log.${LOG_FILE_NAME_PATTERN}.log.gz">
-      <ThresholdFilter level="DEBUG"/>
-      <PatternLayout pattern="${LOG_PATTERN}"/>
-      <Policies>
-        <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
-        <SizeBasedTriggeringPolicy size="50MB"/>
-      </Policies>
-      <DefaultRolloverStrategy max="5" fileIndex="max">
-        <Delete basePath="/${LOG_PATH}" maxDepth="3">
-          <IfLastModified age="10d"/>
-        </Delete>
-      </DefaultRolloverStrategy>
-    </RollingFile>
+
+    <CloudWatchAppender name="CLOUDWATCH">
+      <logGroup>AppenderExample</logGroup>
+      <logStream>Log4J2-Webapp-{date}-{hostname}-${awslogs:pid}</logStream>
+      <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5p [%t] %c - %X{requestUUID} - %m%n"/>
+    </CloudWatchAppender>
   </Appenders>
+
   <Loggers>
     <Logger name="jdbc" level="OFF"/>
     <Logger name="jdbc.sqlonly" level="OFF"/>
@@ -48,7 +38,9 @@
 
     <Root level="INFO">
       <AppenderRef ref="STDOUT"/>
-      <AppenderRef ref="ROLLING"/>
     </Root>
+    <Logger name="co.kr.compig" level="debug">
+      <AppenderRef ref="CLOUDWATCH"/>
+    </Logger>
   </Loggers>
 </Configuration>

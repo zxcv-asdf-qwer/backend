@@ -2,9 +2,11 @@ package co.kr.compig.service.social;
 
 import co.kr.compig.api.social.apple.AppleAuthApi;
 import co.kr.compig.api.social.apple.AppleProperties;
-import co.kr.compig.api.social.dto.AppleIdTokenPayload;
 import co.kr.compig.api.social.dto.ApplePublicKeyResponse;
 import co.kr.compig.api.social.dto.ApplePublicKeyResponse.Key;
+import co.kr.compig.api.social.dto.AppleRefreshTokenResponse;
+import co.kr.compig.api.social.dto.AppleSocialTokenResponse;
+import co.kr.compig.common.utils.SecurityUtil;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.JOSEException;
@@ -18,8 +20,9 @@ import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
@@ -39,9 +42,9 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemReader;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -51,35 +54,114 @@ public class AppleGetMemberInfoService {
 
   private final AppleAuthApi appleAuthClient;
   private final AppleProperties appleProperties;
-  @Value("${}")
-  private String ISS;
-  @Value("${}")
-  private String AUD;
-  @Value("${}")
-  private String SUB;
-  @Value("${}")
-  private String KEY_PATH;
 
-  public AppleIdTokenPayload getTokens(String authorizationCode) throws NoSuchAlgorithmException {
-    String idToken = appleAuthClient.getTokens(
+  public AppleSocialTokenResponse getTokens(String authorizationCode)
+      throws NoSuchAlgorithmException {
+    return appleAuthClient.getTokens(
         appleProperties.getClientId(),
         generateClientSecret(),
-        appleProperties.getGrantType(),
+        appleProperties.getAuthorizationGrantType(),
         authorizationCode
-    ).getIdToken();
-
-    return decodePayload(idToken, AppleIdTokenPayload.class);
+    );
   }
 
-  public AppleIdTokenPayload getRefreshToken(String refreshToken) throws NoSuchAlgorithmException {
-    String idToken = appleAuthClient.getRefreshToken(
+  /*
+   client secret 발급
+   */
+  private String generateClientSecret() throws NoSuchAlgorithmException {
+    LocalDateTime expiration = LocalDateTime.now().plusMinutes(5);
+    Date now = new Date();
+    PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(readPrivateKey());
+    KeyFactory kf = KeyFactory.getInstance("EC");
+    JWSHeader header = new JWSHeader.Builder(JWSAlgorithm.ES256).keyID(appleProperties.getKeyId())
+        .build();
+    JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+        .issuer(appleProperties.getTeamId()) //잘못 적은거 아님 주의
+        .issueTime(now)
+        .expirationTime(Date.from(expiration.atZone(ZoneId.systemDefault()).toInstant()))
+        .audience(appleProperties.getIssueUrl()) //잘못 적은거 아님 주의
+        .subject(appleProperties.getAudience()) //잘못 적은거 아님 주의
+        .build();
+    SignedJWT jwt = new SignedJWT(header, claimsSet);
+    try {
+      ECPrivateKey ecPrivateKey = (ECPrivateKey) kf.generatePrivate(spec);
+      JWSSigner jwsSigner = new ECDSASigner(ecPrivateKey);
+      jwt.sign(jwsSigner);
+    } catch (JOSEException e) {
+      e.printStackTrace();
+    } catch (InvalidKeySpecException e) {
+      throw new RuntimeException(e);
+    }
+    return jwt.serialize();
+  }
+
+  /**
+   * 파일에서 private key 획득
+   * @return Private Key
+   */
+  private byte[] readPrivateKey() {
+    Resource resource = new ClassPathResource(appleProperties.getKeyPath());
+    byte[] content = null;
+
+    try (Reader keyReader = new InputStreamReader(resource.getInputStream());
+        PemReader pemReader = new PemReader(keyReader)) {
+      {
+        PemObject pemObject = pemReader.readPemObject();
+        content = pemObject.getContent();
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    return content;
+  }
+
+  public AppleRefreshTokenResponse getRefreshTokenToAccessToken(String refreshToken)
+      throws NoSuchAlgorithmException {
+    return appleAuthClient.getRefreshTokenToAccessToken(
         appleProperties.getClientId(),
         generateClientSecret(),
-        appleProperties.getGrantType(),
+        appleProperties.getAuthorizationGrantType(),
         refreshToken
-    ).getIdToken();
+    );
+  }
 
-    return decodePayload(idToken, AppleIdTokenPayload.class);
+  private ResponseEntity<?> revokeToken(String token, String tokenType)
+      throws NoSuchAlgorithmException {
+    return appleAuthClient.revokeToken(
+        appleProperties.getClientId(),
+        generateClientSecret(),
+        token,
+        tokenType
+    );
+  }
+
+  public void revokeTokens(AppleSocialTokenResponse token) throws NoSuchAlgorithmException {
+    try {
+      ResponseEntity<?> responseEntity = this.revokeToken(token.getAccessToken(), "access_token");
+    } catch (Exception e) {
+      log.error(String.format("탈퇴 처리 access_token 오류 회원 아이디 : %s", SecurityUtil.getMemberId()));
+    }
+    try {
+      ResponseEntity<?> responseEntity1 = this.revokeToken(token.getRefreshToken(),
+          "refresh_token");
+    } catch (Exception e) {
+      log.error(String.format("탈퇴 처리 refresh_token 오류 회원 아이디 : %s", SecurityUtil.getMemberId()));
+    }
+  }
+
+  private PrivateKey getPrivateKey() {
+    Security.addProvider(new BouncyCastleProvider());
+    JcaPEMKeyConverter converter = new JcaPEMKeyConverter().setProvider("BC");
+
+    try {
+      byte[] privateKeyBytes = Base64.getDecoder().decode(appleProperties.getKeyPath());
+
+      PrivateKeyInfo privateKeyInfo = PrivateKeyInfo.getInstance(privateKeyBytes);
+      return converter.getPrivateKey(privateKeyInfo);
+    } catch (Exception e) {
+      throw new RuntimeException("Error converting private key from String", e);
+    }
   }
 
   public boolean verifyPublicKey(SignedJWT signedJWT) {
@@ -101,77 +183,10 @@ public class AppleGetMemberInfoService {
     return false;
   }
 
-  private String generateClientSecret() throws NoSuchAlgorithmException {
-    LocalDateTime expiration = LocalDateTime.now().plusMinutes(5);
-    Date now = new Date();
-    PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(readPrivateKey());
-    KeyFactory kf = KeyFactory.getInstance("EC");
-    JWSHeader header = new JWSHeader.Builder(JWSAlgorithm.ES256).keyID("KEY_ID").build();
-    JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-        .issuer(ISS)
-        .issueTime(now)
-        .expirationTime(Date.from(expiration.atZone(ZoneId.systemDefault()).toInstant()))
-        .audience(AUD)
-        .subject(SUB)
-        .build();
-    SignedJWT jwt = new SignedJWT(header, claimsSet);
-    try {
-
-      ECPrivateKey ecPrivateKey = (ECPrivateKey) kf.generatePrivate(spec);
-      JWSSigner jwsSigner = new ECDSASigner((ECPrivateKey) ecPrivateKey.getS());
-
-      jwt.sign(jwsSigner);
-    } catch (JOSEException e) {
-      e.printStackTrace();
-    } catch (InvalidKeySpecException e) {
-      throw new RuntimeException(e);
-    }
-    return jwt.serialize();
-  }
-
-  /**
-   * 파일에서 private key 획득
-   *
-   * @return Private Key
-   */
-  private byte[] readPrivateKey() {
-
-    Resource resource = new ClassPathResource(KEY_PATH);
-    byte[] content = null;
-
-    try (FileReader keyReader = new FileReader(resource.getURI().getPath());
-        PemReader pemReader = new PemReader(keyReader)) {
-      {
-        PemObject pemObject = pemReader.readPemObject();
-        content = pemObject.getContent();
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
-    return content;
-  }
-
-  private PrivateKey getPrivateKey() {
-
-    Security.addProvider(new BouncyCastleProvider());
-    JcaPEMKeyConverter converter = new JcaPEMKeyConverter().setProvider("BC");
-
-    try {
-      byte[] privateKeyBytes = Base64.getDecoder().decode(appleProperties.getPrivateKey());
-
-      PrivateKeyInfo privateKeyInfo = PrivateKeyInfo.getInstance(privateKeyBytes);
-      return converter.getPrivateKey(privateKeyInfo);
-    } catch (Exception e) {
-      throw new RuntimeException("Error converting private key from String", e);
-    }
-  }
-
   /**
    * id_token을 decode해서 payload 값 가져오기
    */
   public <T> T decodePayload(String token, Class<T> targetClass) {
-
     String[] tokenParts = token.split("\\.");
     String payloadJWT = tokenParts[1];
     Base64.Decoder decoder = Base64.getUrlDecoder();

@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 @Table
 @SequenceGenerator(
     name = "sms_seq_gen", //시퀀스 제너레이터 이름
-    sequenceName = "push_seq", //시퀀스 이름
+    sequenceName = "sms_seq", //시퀀스 이름
     initialValue = 1, //시작값
     allocationSize = 1 //메모리를 통해 할당 할 범위 사이즈
 )

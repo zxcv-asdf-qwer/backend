@@ -5,6 +5,7 @@ import co.kr.compig.api.social.dto.AppleRefreshTokenResponse;
 import co.kr.compig.api.social.dto.AppleSocialTokenResponse;
 import jakarta.ws.rs.core.MediaType;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,6 +22,7 @@ public interface AppleAuthApi {
       @RequestParam("client_secret") String clientSecret,
       @RequestParam("grant_type") String grantType,
       @RequestParam("code") String code
+
   );
 
   /**
@@ -28,11 +30,37 @@ public interface AppleAuthApi {
    * Apple Document URL ‣ https://developer.apple.com/documentation/sign_in_with_apple/generate_and_validate_tokens
    */
   @PostMapping(value = "/auth/token", consumes = MediaType.APPLICATION_FORM_URLENCODED)
-  AppleRefreshTokenResponse getRefreshToken( //refreshToken
+  AppleRefreshTokenResponse getRefreshTokenToAccessToken( //refreshToken
       @RequestParam("client_id") String clientId,
       @RequestParam("client_secret") String clientSecret,
       @RequestParam("grant_type") String grantType,
       @RequestParam("refresh_token") String refreshToken
+  );
+
+  /*
+  invalidate a user’s refresh token
+  curl -v POST "https://appleid.apple.com/auth/revoke" \
+  -H 'content-type: application/x-www-form-urlencoded' \
+  -d 'client_id=CLIENT_ID' \
+  -d 'client_secret=CLIENT_SECRET' \
+  -d 'token=REFRESH_TOKEN' \
+  -d 'token_type_hint=refresh_token'
+   */
+  /*
+  invalidate a user’s access token
+  curl -v POST "https://appleid.apple.com/auth/revoke" \
+  -H 'content-type: application/x-www-form-urlencoded' \
+  -d 'client_id=CLIENT_ID' \
+  -d 'client_secret=CLIENT_SECRET' \
+  -d 'token=ACCESS_TOKEN' \
+  -d 'token_type_hint=access_token'
+   */
+  @PostMapping(value = "/auth/revoke", consumes = MediaType.APPLICATION_FORM_URLENCODED)
+  ResponseEntity<?> revokeToken(
+      @RequestParam("client_id") String clientId,
+      @RequestParam("client_secret") String clientSecret,
+      @RequestParam("token") String token,
+      @RequestParam("token_type_hint") String tokenTypeHint
   );
 
   /**
