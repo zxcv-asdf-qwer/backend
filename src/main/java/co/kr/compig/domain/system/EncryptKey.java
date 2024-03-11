@@ -1,7 +1,9 @@
 package co.kr.compig.domain.system;
 
-import co.kr.compig.common.code.SystemServiceType;
-import co.kr.compig.common.code.converter.SystemServiceTypeConverter;
+import co.kr.compig.common.code.EncryptTarget;
+import co.kr.compig.common.code.EncryptType;
+import co.kr.compig.common.code.converter.EncryptTargetConverter;
+import co.kr.compig.common.code.converter.EncryptTypeConverter;
 import co.kr.compig.common.embedded.CreatedAndUpdated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -26,30 +28,28 @@ import lombok.extern.slf4j.Slf4j;
 @Entity
 @Table
 @SequenceGenerator(
-    name = "access_key_seq_gen", //시퀀스 제너레이터 이름
-    sequenceName = "access_key_seq", //시퀀스 이름
+    name = "encrypt_seq_gen", //시퀀스 제너레이터 이름
+    sequenceName = "encrypt_seq", //시퀀스 이름
     initialValue = 1, //시작값
     allocationSize = 1 //메모리를 통해 할당 할 범위 사이즈
 )
-public class AccessKey {
+public class EncryptKey {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "access_key_seq_gen")
-  @Column(name = "access_key_id")
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "encrypt_seq_gen")
+  @Column(name = "encrypt_id")
   private Long id;
 
   @Column(nullable = false)
-  @Convert(converter = SystemServiceTypeConverter.class)
-  private SystemServiceType systemServiceType; //서비스 타입
+  @Convert(converter = EncryptTypeConverter.class)
+  private EncryptType encryptType; //암호화 종류
 
   @Column(nullable = false)
-  private String serviceName; //서비스 업체 명
+  private String encryptKey; //암호화 키
 
   @Column(nullable = false)
-  private String serviceId; //서비스 업체 아이디
-
-  @Column(nullable = false)
-  private String accessKey; //서비스 업체 키
+  @Convert(converter = EncryptTargetConverter.class)
+  private EncryptTarget encryptTarget; //암호화 대상
 
   /* =================================================================
    * Default columns
