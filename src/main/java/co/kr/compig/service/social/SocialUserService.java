@@ -1,6 +1,6 @@
 package co.kr.compig.service.social;
 
-import co.kr.compig.api.social.dto.KeycloakRequestAccessTokenDto;
+import co.kr.compig.api.social.dto.KeycloakAccessTokenRequest;
 import co.kr.compig.api.social.dto.LeaveRequest;
 import co.kr.compig.api.social.dto.LoginRequest;
 import co.kr.compig.api.social.dto.LoginResponse;
@@ -69,7 +69,7 @@ public class SocialUserService {
 
   private LoginResponse getKeycloakAccessToken(String userId, String userPw) {
     ResponseEntity<?> response = keycloakAuthApi.getAccessToken(
-        KeycloakRequestAccessTokenDto.builder()
+        KeycloakAccessTokenRequest.builder()
             .client_id(keycloakProperties.getClientId())
             .client_secret(keycloakProperties.getClientSecret())
             .username(userId)

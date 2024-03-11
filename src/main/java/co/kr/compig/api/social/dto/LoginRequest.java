@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @Getter
 public class LoginRequest {
 
-  private String token; //google//apple
-  private String code; //kakao//naver
+  private String token;
   private MemberRegisterType memberRegisterType;
 }

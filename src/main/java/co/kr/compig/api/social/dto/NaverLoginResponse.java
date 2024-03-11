@@ -11,13 +11,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NaverLoginResponse {
-// {"resultcode":"00","message":"success","response":{"id":"asdfsadfsadfsad","email":"asdfasdf@asdfasdf.com"}}
+
+  // {"resultcode":"00","message":"success","response":{"id":"asdfsadfsadfsad","email":"asdfasdf@asdfasdf.com"}}
   private String resultcode;
   private String message;
   private Response response;
 
   @Getter
   public static class Response {
+
     private String id;
     private String email;
   }

@@ -12,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 public class SettleResponse extends BaseAudit {
   private Long settleId; // 간병금액정책 id
   private String element; // 요소명

@@ -9,7 +9,6 @@ import co.kr.compig.service.social.SocialUserService;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,9 +32,9 @@ public class SocialController {
             socialUserService.doSocialLogin(loginRequest));
   }
 
-  //TODO apple 만 따로 탈퇴
+  //apple 만 따로 탈퇴
   //google kakao naver 앱에서 탈퇴 후 -> /pb/members/leave
-  @PutMapping("/leave")
+  @PostMapping("/leave")
   public ResponseEntity<Response<?>> userLeave(@RequestBody LeaveRequest leaveRequest) {
     socialUserService.doSocialRevoke(leaveRequest);
     return ResponseEntity.ok().build();

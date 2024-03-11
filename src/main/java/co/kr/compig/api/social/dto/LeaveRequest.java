@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 public class LeaveRequest {
+
   private String leaveReason; //탈퇴사유
-  private String token; //google//apple
-  private String code; //kakao//naver
+  private String code;
   private MemberRegisterType memberRegisterType;
 }

@@ -158,7 +158,7 @@ public class MemberService {
     return member.getUserId();
   }
 
-  public void userLeave(LeaveRequest leaveRequest) { //TODO 연결 끊기
+  public void userLeave(LeaveRequest leaveRequest) {
     String userId = SecurityUtil.getUserId();
     Member member = memberRepository.findByUserId(userId).orElseThrow(NotExistDataException::new);
     member.setLeaveMember(leaveRequest.getLeaveReason());
@@ -170,7 +170,7 @@ public class MemberService {
     }
   }
 
-  public void socialUserLeave(LeaveRequest leaveRequest) { //TODO 연결 끊기
+  public void socialUserLeave(LeaveRequest leaveRequest) {
     String userId = SecurityUtil.getUserId();
     Member member = memberRepository.findByUserId(userId).orElseThrow(NotExistDataException::new);
     member.setLeaveMember(leaveRequest.getLeaveReason());

@@ -206,7 +206,7 @@ public class Member {
   private CreatedAndUpdated createdAndModified = new CreatedAndUpdated();
 
   /* =================================================================
-   * Business login
+   * Business
      ================================================================= */
 
   private boolean isExistGroups() {

@@ -9,7 +9,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 public class HospitalSearchRequest extends PageableRequest {
   private String hospitalNm; // 병원명
 }

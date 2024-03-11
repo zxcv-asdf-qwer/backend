@@ -9,12 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class KeycloakRequestAccessTokenDto {
+public class KaKaoLeaveRequest {
 
   @Builder.Default
-  private String grant_type = "password";
-  private String client_id;
-  private String client_secret;
-  private String username;
-  private String password;
+  private String target_id_type = "user_id";
+  private String target_id;
 }

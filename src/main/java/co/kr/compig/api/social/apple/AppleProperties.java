@@ -5,16 +5,16 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-@Component
-@ConfigurationProperties(prefix = "social-login.provider.apple")
 @Getter
 @Setter
+@ConfigurationProperties(prefix = "auth.apple")
 public class AppleProperties {
 
-    private String grantType;
-    private String clientId;
-    private String keyId;
-    private String teamId;
-    private String audience;
-    private String privateKey;
+  private String authorizationGrantType;
+  private String clientId;
+  private String keyId;
+  private String teamId;
+  private String issueUrl;
+  private String audience;
+  private String keyPath;
 }
