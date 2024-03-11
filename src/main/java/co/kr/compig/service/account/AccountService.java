@@ -52,29 +52,21 @@ public class AccountService {
   }
 
   public AccountDetailResponse getAccountByAccountId(Long accountId) {
-    EncryptKey encryptKey = encryptKeyRepository.findByEncryptTarget(EncryptTarget.ACCOUNT)
-        .orElseThrow(NotExistDataException::new);
-    AES256 aes256 = new AES256(encryptKey.getEncryptKey());
     Account account = accountRepository.findById(accountId).orElseThrow(NotExistDataException::new);
-    try {
-      return AccountDetailResponse.builder()
-          .id(account.getId())
-          .accountNumber(aes256.decrypt(account.getAccountNumber(), account.getIv()))
-          .accountName(aes256.decrypt(account.getAccountName(), account.getIv()))
-          .bankName(account.getBankName().getCode())
-          .build();
-    } catch (Exception e) {
-      throw new RuntimeException("AES256 복호화 중 예외발생");
-    }
+    return accountToAccountDetailResponse(account);
   }
 
   public AccountDetailResponse getAccountByMemberId(String memberId) {
-    EncryptKey encryptKey = encryptKeyRepository.findByEncryptTarget(EncryptTarget.ACCOUNT)
-        .orElseThrow(NotExistDataException::new);
-    AES256 aes256 = new AES256(encryptKey.getEncryptKey());
     Member member = memberRepository.findById(memberId).orElseThrow(NotExistDataException::new);
     Account account = accountRepository.findByMember(member)
         .orElseThrow(NotExistDataException::new);
+    return accountToAccountDetailResponse(account);
+  }
+
+  public AccountDetailResponse accountToAccountDetailResponse(Account account) {
+    EncryptKey encryptKey = encryptKeyRepository.findByEncryptTarget(EncryptTarget.ACCOUNT)
+        .orElseThrow(NotExistDataException::new);
+    AES256 aes256 = new AES256(encryptKey.getEncryptKey());
     try {
       return AccountDetailResponse.builder()
           .id(account.getId())
@@ -86,7 +78,6 @@ public class AccountService {
       throw new RuntimeException("AES256 복호화 중 예외발생");
     }
   }
-
   public Long updateAccount(Long accountId, AccountUpdateRequest accountUpdateRequest) {
     EncryptKey encryptKey = encryptKeyRepository.findByEncryptTarget(EncryptTarget.ACCOUNT)
         .orElseThrow(NotExistDataException::new);

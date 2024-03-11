@@ -20,6 +20,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import java.util.Base64;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -81,6 +82,7 @@ public class Account {
     this.accountNumber = aes256.encrypt(accountUpdateRequest.getAccountNumber(),iv);
     this.accountName = aes256.encrypt(accountUpdateRequest.getAccountName(), iv);
     this.bankName = BankCode.of(accountUpdateRequest.getBankName());
+    this.iv = Base64.getUrlEncoder().encodeToString(iv);
   }
 
   /* =================================================================
