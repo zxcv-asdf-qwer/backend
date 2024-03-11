@@ -53,4 +53,9 @@ public class AccountService {
     accountRepository.delete(account);
     return account.getId();
   }
+
+  public Boolean getAccountCheck(String memberId) {
+    Member member = memberRepository.findById(memberId).orElseThrow(NotExistDataException::new);
+    return accountRepository.existsByMember(member);
+  }
 }

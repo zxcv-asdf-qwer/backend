@@ -1,6 +1,5 @@
 package co.kr.compig.api.account.dto;
 
-import co.kr.compig.common.code.BankResponseCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,5 +12,8 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 public class AccountCheckResponse {
-  private BankResponseCode bankResponseCode;
+
+  private String orderNumber;
+  private String responseCode;
+  private String contents;
 }

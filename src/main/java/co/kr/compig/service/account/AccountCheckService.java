@@ -1,9 +1,12 @@
 package co.kr.compig.service.account;
 
 import co.kr.compig.api.account.dto.AccountCheckRequest;
+import co.kr.compig.api.account.dto.AccountCheckResponse;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +25,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequiredArgsConstructor
 @Transactional
 public class AccountCheckService {
+
   @Value("${api.account.url}")
   private String NICE_ACCOUNT_URL;
   @Value("${api.account.site-code}")
@@ -29,28 +33,36 @@ public class AccountCheckService {
   @Value("${api.account.password}")
   private String NICE_ACCOUNT_PASSWORD;
 
-  public String getAccountCheck(AccountCheckRequest accountCheckRequest) {
+  public AccountCheckResponse getAccountCheck(AccountCheckRequest accountCheckRequest) {
     URI uri = createUri(accountCheckRequest);
     log.info(uri.toString());
 
     RestTemplate restTemplate = new RestTemplate();
 
-    // HTTP 요청 헤더 설정
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
     headers.setConnection("Keep-Alive");
 
-    // HTTP 요청 엔티티 생성
     HttpEntity<String> requestEntity = new HttpEntity<>(headers);
 
-    // HTTP POST 요청 보내기
-    ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.POST, requestEntity, String.class);
+    ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.POST, requestEntity,
+        String.class);
 
+    String[] responseList = response.getBody().split("\\|");
 
-//    ResponseEntity<AccountCheckResponse> result = restTemplate.getForEntity(uri, AccountCheckResponse.class);
+    AccountCheckResponse responseDto = AccountCheckResponse.builder()
+        .orderNumber(responseList[0])
+        .responseCode(responseList[1])
+        .contents(responseList[2])
+        .build();
 
-    return response.getBody();
+    if (!responseDto.getResponseCode().equals("0000")) {
+      throw new IllegalArgumentException(responseDto.getContents());
+    }
+
+    return responseDto;
   }
+
   private URI createUri(AccountCheckRequest accountCheckRequest) {
     UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(NICE_ACCOUNT_URL);
     builder.queryParam("niceUid", NICE_ACCOUNT_SITE_CODE);
@@ -63,9 +75,16 @@ public class AccountCheckService {
     builder.queryParam("strNm", URLEncoder.encode(accountCheckRequest.getStrNm(),
         StandardCharsets.UTF_8));
     builder.queryParam("strResId", accountCheckRequest.getStrResId());
-    builder.queryParam("strOrderNo", accountCheckRequest.getStrOrderNo());
+    builder.queryParam("strOrderNo", getDateTime());
     builder.queryParam("inq_rsn", accountCheckRequest.getInq_rsn());
 
     return builder.build(true).toUri();
+  }
+
+
+  private String getDateTime() {
+    LocalDateTime now = LocalDateTime.now();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+    return now.format(formatter);
   }
 }

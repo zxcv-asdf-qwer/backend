@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AccountCheckRequest {
+
   private String service; // 서비스 구분
   private String svcGbn;  // 업무 구분
   private String strGbn;  // 계좌 구분
@@ -18,6 +19,5 @@ public class AccountCheckRequest {
   private String strAccountNo;  // 계좌번호
   private String strNm; // 예금주명
   private String strResId;  // 생년월일/사업자번호
-  private String strOrderNo;  // 주문번호
   private String inq_rsn; // 조회사유
 }

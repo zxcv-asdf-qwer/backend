@@ -1,6 +1,7 @@
 package co.kr.compig.api.account.admin;
 
 import co.kr.compig.api.account.dto.AccountCheckRequest;
+import co.kr.compig.api.account.dto.AccountCheckResponse;
 import co.kr.compig.api.account.dto.AccountCreateRequest;
 import co.kr.compig.api.account.dto.AccountDetailResponse;
 import co.kr.compig.api.account.dto.AccountUpdateRequest;
@@ -72,11 +73,18 @@ public class AdminAccountController {
         .build());
   }
 
-  @GetMapping("/test")
-  public ResponseEntity<Response<String>> getAccountCheck(@ModelAttribute
-  AccountCheckRequest accountCheckRequest){
-    return ResponseEntity.ok(Response.<String>builder()
+  @GetMapping("/checkAccount")
+  public ResponseEntity<Response<AccountCheckResponse>> checkAccount(@ModelAttribute
+  AccountCheckRequest accountCheckRequest) {
+    return ResponseEntity.ok(Response.<AccountCheckResponse>builder()
         .data(accountCheckService.getAccountCheck(accountCheckRequest))
+        .build());
+  }
+
+  @GetMapping("/getAccountCheck")
+  public ResponseEntity<Response<Boolean>> getAccountCheck(@RequestBody String memberId) {
+    return ResponseEntity.ok(Response.<Boolean>builder()
+        .data(accountService.getAccountCheck(memberId))
         .build());
   }
 }
