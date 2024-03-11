@@ -4,7 +4,8 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public enum EncryptTarget implements BaseEnumCode<String> {
-  ACCOUNT("ACCOUNT", "계좌번호");
+  ACCOUNT("ACCOUNT", "계좌번호"),
+  ;
 
 
   private final String code;
@@ -12,11 +13,11 @@ public enum EncryptTarget implements BaseEnumCode<String> {
 
   @Override
   public String getCode() {
-    return null;
+    return this.code;
   }
 
   @Override
   public String getDesc() {
-    return null;
+    return this.desc;
   }
 }

@@ -1,7 +1,9 @@
 package co.kr.compig.api.account.dto;
 
+import co.kr.compig.common.code.BankCode;
 import co.kr.compig.domain.account.Account;
 import co.kr.compig.domain.member.Member;
+import java.util.Base64;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,12 +28,14 @@ public class AccountCreateRequest {
   @NotBlank
   private String memberId; // 멤버 id
 
-  public Account converterEntity(Member member) {
+
+  public Account converterEntity(Member member, byte[] iv) {
     return Account.builder()
         .accountNumber(this.accountNumber)
         .accountName(this.accountName)
-        .bankName(this.bankName)
+        .bankName(BankCode.of(this.bankName))
         .member(member)
+        .iv(Base64.getUrlEncoder().encodeToString(iv))
         .build();
   }
 

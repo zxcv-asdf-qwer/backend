@@ -2,6 +2,7 @@ package co.kr.compig.service.account;
 
 import co.kr.compig.api.account.dto.AccountCheckRequest;
 import co.kr.compig.api.account.dto.AccountCheckResponse;
+import co.kr.compig.common.code.BankCode;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -70,11 +71,10 @@ public class AccountCheckService {
     builder.queryParam("service", accountCheckRequest.getService());
     builder.queryParam("svcGbn", accountCheckRequest.getSvcGbn());
     builder.queryParam("strGbn", accountCheckRequest.getStrGbn());
-    builder.queryParam("strBankCode", accountCheckRequest.getStrBankCode().getCode());
+    builder.queryParam("strBankCode", BankCode.of(accountCheckRequest.getStrBankCode()).getCode());
     builder.queryParam("strAccountNo", accountCheckRequest.getStrAccountNo());
     builder.queryParam("strNm", URLEncoder.encode(accountCheckRequest.getStrNm(),
         StandardCharsets.UTF_8));
-    builder.queryParam("strResId", accountCheckRequest.getStrResId());
     builder.queryParam("strOrderNo", getDateTime());
     builder.queryParam("inq_rsn", accountCheckRequest.getInq_rsn());
 

@@ -52,4 +52,16 @@ public enum BankCode implements BaseEnumCode<String>{
   private final String code;
   private final String desc;
   private final UseYn useYn;
+
+  public static BankCode of(String bankName) {
+    if(bankName == null){
+      throw new IllegalArgumentException();
+    }
+    for(BankCode bc : BankCode.values()){
+      if(bc.code.equals(bankName)){
+        return bc;
+      }
+    }
+    throw new IllegalArgumentException("일치하는 은행 코드가 없습니다.");
+  }
 }
