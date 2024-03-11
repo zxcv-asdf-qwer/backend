@@ -9,4 +9,6 @@ public interface AccessKeyRepository extends JpaRepository<AccessKey, String>,
     QuerydslPredicateExecutor<AccessKey> {
 
   List<AccessKey> findBySystemServiceTypeOrderByIdDesc(SystemServiceType systemServiceType);
+
+
 }

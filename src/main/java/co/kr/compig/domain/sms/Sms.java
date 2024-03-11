@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,12 +30,24 @@ import lombok.extern.slf4j.Slf4j;
     allocationSize = 1 //메모리를 통해 할당 할 범위 사이즈
 )
 public class Sms {
+
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sms_seq_gen")
   @Column(name = "sms_id")
   private Long id;
 
+  @Column
   private String memberId;
+  @Column
+  private String senderPhoneNumber;  //보내는 전화번호 from
+  @Column
+  private String receiverPhoneNumber; //받는 전화번호 to
+  @Column
+  private String contents; //내용
+  @Column
+  private String refkey; //비즈뿌리오에 보내는 unique 값
+  @Column
+  private LocalDateTime sendtime; //발송시간 미입력 즉시발송
 
   /* =================================================================
  * Default columns
@@ -42,4 +55,6 @@ public class Sms {
   @Embedded
   @Builder.Default
   private CreatedAndUpdated createdAndModified = new CreatedAndUpdated();
+
+
 }

@@ -69,7 +69,7 @@ public class SmsPayload { //sms만 발송
   @Builder
   public static class Resend {
 
-    private String first;
+    private String first;// 1치 대체 발송 메세지 유형 *sms, mms, Ims, at, ai, res
   }
 
   @Getter

@@ -12,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table
+@Table(name = "access_key2")
 @SequenceGenerator(
     name = "access_key_seq_gen", //시퀀스 제너레이터 이름
     sequenceName = "access_key_seq", //시퀀스 이름
@@ -45,11 +46,11 @@ public class AccessKey {
   @Column(nullable = false)
   private String serviceName; //서비스 업체 명
 
-  @Column(nullable = false)
-  private String serviceId; //서비스 업체 아이디
-
-  @Column(nullable = false)
+  @Column
   private String accessKey; //서비스 업체 키
+
+  @Column
+  private LocalDateTime expired; //토큰 만료 시점
 
   /* =================================================================
    * Default columns

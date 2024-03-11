@@ -1,5 +1,7 @@
 package co.kr.compig.api.sms.dto;
 
+import co.kr.compig.common.utils.SecurityUtil;
+import co.kr.compig.domain.sms.Sms;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -22,6 +24,7 @@ public class SmsSend {
   private String contents; //내용
   @Builder.Default
   private String refkey = getNow(); //비즈뿌리오에 보내는 unique 값
+  private LocalDateTime sendtime; //발송시간 미입력 즉시발송
 
   private static String getNow() {
     // 현재 날짜와 시간을 구합니다.
@@ -39,5 +42,16 @@ public class SmsSend {
 
     // 포맷된 날짜와 시간 문자열과 난수를 결합하여 반환합니다.
     return formattedDateTime + serialCode; //'202403080731385069491909524'
+  }
+
+  public Sms toEntity() {
+    return Sms.builder()
+        .memberId(SecurityUtil.getMemberId() != null ? SecurityUtil.getMemberId() : "SYSTEM")
+        .senderPhoneNumber(this.senderPhoneNumber)
+        .receiverPhoneNumber(this.receiverPhoneNumber)
+        .contents(this.contents)
+        .refkey(this.refkey)
+        .sendtime(this.sendtime)
+        .build();
   }
 }

@@ -1,8 +1,15 @@
 package co.kr.compig.service.sms;
 
-import co.kr.compig.api.sms.dto.BizPpurioApi;
+import co.kr.compig.api.sms.BizPpurioApi;
+import co.kr.compig.api.sms.SmsApiProperties;
 import co.kr.compig.api.sms.dto.SmsPayload;
+import co.kr.compig.api.sms.dto.SmsPayload.Content;
+import co.kr.compig.api.sms.dto.SmsPayload.Recontent;
+import co.kr.compig.api.sms.dto.SmsPayload.Resend;
+import co.kr.compig.api.sms.dto.SmsPayload.Sms;
 import co.kr.compig.api.sms.dto.SmsSend;
+import co.kr.compig.common.code.SystemServiceType;
+import co.kr.compig.service.system.AccessKeyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,32 +20,39 @@ import org.springframework.stereotype.Service;
 public class SmsCoreService {
 
   private final BizPpurioApi bizPpurioApi;
+  private final AccessKeyService accessKeyService;
+  private final SmsApiProperties smsApiProperties;
 
   public void doSendSms(SmsSend smsSend) {
-    SmsPayload.builder()
-        .account("hychung")
-        .type("sms")
-        .from("0234305001")
-        .to("01080011434")
+    String accessToken = accessKeyService.getSecretKey(SystemServiceType.SMS);
+
+    SmsPayload smsPayload = SmsPayload.builder()
+        .account(smsApiProperties.getServiceId())
+        .type("at") //알림톡
+        .from(smsSend.getSenderPhoneNumber()) //보내는 사람
+        .to(smsSend.getReceiverPhoneNumber()) //받는 사람
         .country("")
         .refkey(smsSend.getRefkey())
-        .userinfo("your_userinfo")
-        .resllercode("your_resellercode")
-        .sendtime("your_sendtime")
-        .content(SmsPayload.Content.builder()
-            .sms(SmsPayload.Sms.builder()
-                .message("Your message here")
+        .userinfo("")
+        .resllercode("")
+        .sendtime("") //String.valueOf(smsSend.getSendtime().toEpochSecond(ZoneOffset.ofHours(9)))
+        .content(Content.builder()
+            .sms(Sms.builder()
+                .message(smsSend.getContents())
                 .build())
             .build())
-        .resend(SmsPayload.Resend.builder()
+        .resend(Resend.builder()
             .first("sms")
             .build())
-        .recontent(SmsPayload.Recontent.builder()
-            .sms(SmsPayload.Sms.builder()
-                .message("SMS 대체 발송 메시지")
+        .recontent(Recontent.builder()
+            .sms(Sms.builder()
+                .message(smsSend.getContents())
                 .build())
             .build())
         .build();
+
+    bizPpurioApi.sendSms("Bearer " + accessToken,
+        smsPayload);
   }
 
 }

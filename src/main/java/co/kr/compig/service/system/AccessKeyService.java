@@ -1,12 +1,14 @@
 package co.kr.compig.service.system;
 
+import static co.kr.compig.common.utils.BasicTokenGenerator.generateBasicToken;
+
+import co.kr.compig.api.sms.BizPpurioApi;
+import co.kr.compig.api.sms.SmsApiProperties;
+import co.kr.compig.api.sms.dto.BizPpurioTokenResponse;
 import co.kr.compig.common.code.SystemServiceType;
-import co.kr.compig.common.exception.NotExistDataException;
 import co.kr.compig.domain.system.AccessKey;
 import co.kr.compig.domain.system.AccessKeyRepository;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,19 +19,32 @@ import org.springframework.stereotype.Service;
 public class AccessKeyService {
 
   private final AccessKeyRepository accessKeyRepository;
+  private final BizPpurioApi
+      bizPpurioApi;
+  private final SmsApiProperties smsApiProperties;
 
   public String getSecretKey(SystemServiceType systemServiceType) {
-    List<AccessKey> bySystemServiceType = accessKeyRepository.findBySystemServiceTypeOrderByIdDesc(
-        systemServiceType);
-    Optional<AccessKey> first = bySystemServiceType.stream().findFirst();
-    AtomicReference<String> returnAccessKey = new AtomicReference<>();
-    first.ifPresentOrElse(accessKey -> {
-      returnAccessKey.set(accessKey.getAccessKey());
-    }, () -> {
-      throw new NotExistDataException();
-    });
+    if (systemServiceType == null) {
+      throw new IllegalArgumentException("System service type cannot be null");
+    }
+    return accessKeyRepository.findBySystemServiceTypeOrderByIdDesc(systemServiceType)
+        .stream()
+        .findFirst()
+        .map(accessKey -> {
+          if (accessKey.getExpired().isBefore(LocalDateTime.now())) { // 만료시간이 현재 시간보다 과거일 경우
+            return generateSmsAccessKey(); // 토큰 재발급
+          }
+          return accessKey.getAccessKey();
+        })
+        .orElseGet(this::generateSmsAccessKey); // 없어도 토큰 재발급
+  }
 
-    return returnAccessKey.get();
+  private String generateSmsAccessKey() {
+    String basicToken = generateBasicToken(smsApiProperties.getServiceId(),
+        smsApiProperties.getServiceKey());
+    BizPpurioTokenResponse accessToken = bizPpurioApi.getAccessToken("Basic " + basicToken);
+    AccessKey save = accessKeyRepository.save(accessToken.of());
+    return save.getAccessKey();
   }
 
 }
