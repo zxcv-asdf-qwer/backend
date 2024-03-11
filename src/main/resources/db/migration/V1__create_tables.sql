@@ -326,10 +326,6 @@ alter table if exists menu_permission
         foreign key (menu_id)
             references menu;
 
-alter table if exists system_file
-    add constraint fk01_system_file
-        foreign key (board_id)
-            references board;
 alter table if exists account
     add constraint fk01_account
         foreign key (member_id)
