@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "access_key2")
+@Table(name = "access_key")
 @SequenceGenerator(
     name = "access_key_seq_gen", //시퀀스 제너레이터 이름
     sequenceName = "access_key_seq", //시퀀스 이름

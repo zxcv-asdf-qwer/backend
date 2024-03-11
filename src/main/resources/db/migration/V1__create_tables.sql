@@ -1,4 +1,4 @@
-create table member
+create table if not exists member
 (
     member_id               varchar(255) not null primary key,
     user_id                 varchar(150),
@@ -61,8 +61,8 @@ comment on column member.leave_reason is '탈퇴 사유';
 comment on column member.leave_date is '회원 탈퇴 날짜';
 comment on column member.real_name_yn is '실명 확인 여부';
 
-CREATE SEQUENCE public.board_seq INCREMENT BY 1 START WITH 1;
-create table board
+create sequence if not exists public.board_seq INCREMENT BY 1 START WITH 1;
+create table if not exists board
 (
     board_id            bigint not null primary key,
     board_type          varchar(10),
@@ -96,8 +96,8 @@ comment on column board.start_date is '시작일';
 comment on column board.end_date is '종료일';
 comment on column board.thumbnail_image_url is '썸네일 이미지 url';
 
-CREATE SEQUENCE public.hospital_seq INCREMENT BY 1 START WITH 1;
-create table hospital
+create sequence if not exists public.hospital_seq INCREMENT BY 1 START WITH 1;
+create table if not exists hospital
 (
     hospital_id              bigint not null primary key,
     hospital_nm              varchar(100),
@@ -117,8 +117,8 @@ comment on column hospital.hospital_address2 is '병원 상세 주소';
 comment on column hospital.hospital_tel_no is '병원 전화번호';
 comment on column hospital.hospital_operation_hours is '병원 운영 시간';
 
-CREATE SEQUENCE public.member_group_seq INCREMENT BY 1 START WITH 1;
-create table member_group
+create sequence if not exists public.member_group_seq INCREMENT BY 1 START WITH 1;
+create table if not exists member_group
 (
     member_group_id bigint       not null primary key,
     group_key       varchar(50)  not null,
@@ -132,8 +132,8 @@ comment on table member_group is '회원 그룹 테이블';
 comment on column member_group.group_key is 'Keycloak 의 group ID';
 comment on column member_group.member_id is '회원 ID';
 
-CREATE SEQUENCE public.menu_seq INCREMENT BY 1 START WITH 1;
-create table menu
+create sequence if not exists public.menu_seq INCREMENT BY 1 START WITH 1;
+create table if not exists menu
 (
     menu_id    bigint       not null primary key,
     menu_div   varchar(10)  not null,
@@ -159,8 +159,8 @@ comment on column menu.menu_type is '메뉴 타입';
 comment on column menu.use_yn is '사용유무';
 comment on column menu.parent_id is '상위 메뉴';
 
-CREATE SEQUENCE public.menu_permission_seq INCREMENT BY 1 START WITH 1;
-create table menu_permission
+create sequence if not exists public.menu_permission_seq INCREMENT BY 1 START WITH 1;
+create table if not exists menu_permission
 (
     menu_permission_id bigint not null primary key,
     menu_id            bigint,
@@ -178,8 +178,8 @@ comment on column menu_permission.menu_id is '메뉴 ID';
 comment on column menu_permission.member_id is '회원 ID';
 comment on column menu_permission.group_key is '그룹 ID';
 
-CREATE SEQUENCE public.system_file_seq INCREMENT BY 1 START WITH 1;
-create table system_file
+create sequence if not exists public.system_file_seq INCREMENT BY 1 START WITH 1;
+create table if not exists system_file
 (
     system_file_id bigint not null primary key,
     file_path      varchar(255),
@@ -205,46 +205,132 @@ comment on column system_file.latest_yn is '최신 여부';
 comment on column system_file.use_yn is '사용 여부';
 comment on column system_file.board_id is '게시판 ID';
 
-CREATE SEQUENCE public.api_log_seq INCREMENT BY 1 START WITH 1;
-create table api_log
+create sequence if not exists account_seq start with 1 increment by 1;
+create table if not exists account
 (
-    log_id bigint not null primary key,
-    user_id varchar(255),
+    account_id     bigint       not null primary key,
+    member_id      varchar(255) not null unique,
+    account_name   varchar(255) not null,
+    account_number varchar(255) not null,
+    bank_name      varchar(255) not null,
+    created_by     varchar(50),
+    created_on     timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by     varchar(50),
+    updated_on     timestamp(6) default CURRENT_TIMESTAMP
+);
+comment on table account is '메뉴 권한 테이블';
+comment on column account.account_id is 'ID';
+comment on column account.member_id is 'keycloak ID';
+comment on column account.account_name is '계좌 번호';
+comment on column account.account_number is '예금주';
+comment on column account.bank_name is '은행 이름';
+
+create sequence if not exists encrypt_seq start with 1 increment by 1;
+create table if not exists encrypt_key
+(
+    encrypt_id     bigint       not null primary key,
+    encrypt_type   varchar(20)  not null,
+    encrypt_key    varchar(255) not null,
+    encrypt_target varchar(20)  not null,
+    created_by     varchar(50),
+    created_on     timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by     varchar(50),
+    updated_on     timestamp(6) default CURRENT_TIMESTAMP
+);
+comment on table encrypt_key is '암호화 키 테이블';
+comment on column encrypt_key.encrypt_id is 'ID';
+comment on column encrypt_key.encrypt_type is 'encrypt key type';
+comment on column encrypt_key.encrypt_key is 'encrypt key';
+comment on column encrypt_key.encrypt_target is 'encrypt target';
+
+create sequence if not exists access_key_seq start with 1 increment by 1;
+create table if not exists access_key
+(
+    access_key_id       bigint       not null primary key,
+    system_service_type varchar(255) not null,
+    service_name        varchar(255) not null,
+    access_key          varchar(255),
+    expired             timestamp(6),
+    created_by          varchar(50),
+    created_on          timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by          varchar(50),
+    updated_on          timestamp(6) default CURRENT_TIMESTAMP
+);
+comment on table access_key is 'api access key 테이블';
+comment on column access_key.access_key_id is 'ID';
+comment on column access_key.system_service_type is '서비스 타입';
+comment on column access_key.service_name is '서비스 업체 명';
+comment on column access_key.access_key is '서비스 업체 키';
+comment on column access_key.expired is '토큰 만료 시점';
+
+create sequence if not exists sms_seq start with 1 increment by 1;
+create table if not exists sms
+(
+    sms_id                bigint not null primary key,
+    member_id             varchar(255),
+    receiver_phone_number varchar(100),
+    sender_phone_number   varchar(100),
+    contents              text,
+    refkey                varchar(255),
+    sendtime              timestamp(6),
+    created_by            varchar(50),
+    created_on            timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by            varchar(50),
+    updated_on            timestamp(6) default CURRENT_TIMESTAMP
+);
+comment on table sms is 'api access key 테이블';
+comment on column sms.sms_id is 'ID';
+comment on column sms.member_id is '회원 ID';
+comment on column sms.sender_phone_number is '보내는 전화번호';
+comment on column sms.receiver_phone_number is '받는 전화번호';
+comment on column sms.contents is '내용';
+comment on column sms.refkey is '비즈뿌리오에 보내는 unique 값';
+comment on column sms.sendtime is '발송시간';
+
+create sequence if not exists public.api_log_seq INCREMENT BY 1 START WITH 1;
+create table if not exists api_log
+(
+    log_id      bigint not null primary key,
+    user_id     varchar(255),
     http_method varchar(10),
     request_url varchar(500),
-    ip_addr varchar(100),
-    created_by         varchar(50),
-    created_on         timestamp(6) default CURRENT_TIMESTAMP,
-    updated_by         varchar(50),
-    updated_on         timestamp(6) default CURRENT_TIMESTAMP
+    ip_addr     varchar(100),
+    created_by  varchar(50),
+    created_on  timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by  varchar(50),
+    updated_on  timestamp(6) default CURRENT_TIMESTAMP
 );
 
 comment on table api_log is '로그 테이블';
 
 alter table if exists system_file
     add constraint fk01_system_file
-    foreign key (board_id)
-    references board;
+        foreign key (board_id)
+            references board;
 
 alter table if exists member_group
     add constraint fk01_member_group
-    foreign key (member_id)
-    references member;
+        foreign key (member_id)
+            references member;
 alter table if exists menu
     add constraint fk01_menu
-    foreign key (parent_id)
-    references menu;
+        foreign key (parent_id)
+            references menu;
 
 alter table if exists menu_permission
     add constraint fk01_menu_permission
-    foreign key (member_id)
-    references member;
+        foreign key (member_id)
+            references member;
 alter table if exists menu_permission
     add constraint fk02_menu_permission
-    foreign key (menu_id)
-    references menu;
+        foreign key (menu_id)
+            references menu;
 
 alter table if exists system_file
     add constraint fk01_system_file
-    foreign key (board_id)
-    references board;
+        foreign key (board_id)
+            references board;
+alter table if exists account
+    add constraint fk01_account
+        foreign key (member_id)
+            references member;

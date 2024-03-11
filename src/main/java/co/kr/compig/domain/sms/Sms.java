@@ -38,11 +38,11 @@ public class Sms {
 
   @Column
   private String memberId;
-  @Column
+  @Column(length = 100)
   private String senderPhoneNumber;  //보내는 전화번호 from
-  @Column
+  @Column(length = 100)
   private String receiverPhoneNumber; //받는 전화번호 to
-  @Column
+  @Column(columnDefinition = "TEXT")
   private String contents; //내용
   @Column
   private String refkey; //비즈뿌리오에 보내는 unique 값
