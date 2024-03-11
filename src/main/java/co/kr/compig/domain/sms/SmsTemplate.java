@@ -1,9 +1,9 @@
 package co.kr.compig.domain.sms;
 
 
-import co.kr.compig.common.code.SmsTemplateCode;
+import co.kr.compig.common.code.SmsTemplateType;
 import co.kr.compig.common.code.SmsType;
-import co.kr.compig.common.code.converter.SmsTemplateCodeConverter;
+import co.kr.compig.common.code.converter.SmsTemplateTypeConverter;
 import co.kr.compig.common.code.converter.SmsTypeConverter;
 import co.kr.compig.common.embedded.CreatedAndUpdated;
 import jakarta.persistence.CascadeType;
@@ -48,8 +48,11 @@ public class SmsTemplate {
   private SmsType smsType; //SMS 종류
 
   @Column(length = 3, nullable = false)
-  @Convert(converter = SmsTemplateCodeConverter.class)
-  private SmsTemplateCode smsTemplateCode; //SMS 템플릿 코드
+  @Convert(converter = SmsTemplateTypeConverter.class)
+  private SmsTemplateType smsTemplateType; //SMS 템플릿 코드
+
+  @Column(length = 25)
+  private String atTemplateCode; //알림톡 템플릿 코드
 
   @Column(columnDefinition = "TEXT")
   private String contents; //내용

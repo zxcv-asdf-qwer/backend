@@ -17,10 +17,13 @@ public class SmsService {
   private final SmsCoreService smsCoreService;
   private final SmsRepository smsRepository;
 
-  public void sendSmsAuthentication(SmsSend smsSend) {
+  public void sendSmsAuthentication(String receiverPhoneNumber) {
     String authenticationNumber = String.valueOf(
         ThreadLocalRandom.current().nextInt(100000, 1000000));
+
     String contents = "인증번호 : " + authenticationNumber;
+    //TODO 수정
+    SmsSend smsSend = new SmsSend();
     smsSend.toBuilder()
         .contents(contents)
         .build();

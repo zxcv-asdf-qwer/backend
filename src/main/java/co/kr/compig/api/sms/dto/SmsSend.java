@@ -9,10 +9,12 @@ import java.util.Random;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Getter
 @SuperBuilder(toBuilder = true)
+@NoArgsConstructor
 @AllArgsConstructor
 public class SmsSend {
 

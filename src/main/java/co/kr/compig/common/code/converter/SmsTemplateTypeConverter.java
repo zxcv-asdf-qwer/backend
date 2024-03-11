@@ -1,15 +1,15 @@
 package co.kr.compig.common.code.converter;
 
-import co.kr.compig.common.code.SmsTemplateCode;
+import co.kr.compig.common.code.SmsTemplateType;
 import jakarta.persistence.Converter;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.MappedJdbcTypes;
 import org.apache.ibatis.type.MappedTypes;
 
 @Converter(autoApply = true)
-@MappedTypes(SmsTemplateCode.class)
+@MappedTypes(SmsTemplateType.class)
 @MappedJdbcTypes(value = JdbcType.VARCHAR)
-public class SmsTemplateCodeConverter extends AbstractBaseEnumConverter<SmsTemplateCode, String> {
+public class SmsTemplateTypeConverter extends AbstractBaseEnumConverter<SmsTemplateType, String> {
 
   @Override
   protected String getEnumName() {
@@ -17,7 +17,7 @@ public class SmsTemplateCodeConverter extends AbstractBaseEnumConverter<SmsTempl
   }
 
   @Override
-  protected SmsTemplateCode[] getValueList() {
-    return SmsTemplateCode.values();
+  protected SmsTemplateType[] getValueList() {
+    return SmsTemplateType.values();
   }
 }

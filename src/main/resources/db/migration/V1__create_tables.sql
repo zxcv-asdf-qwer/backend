@@ -293,8 +293,9 @@ create sequence if not exists sms_template_seq start with 1 increment by 1;
 create table if not exists sms_template
 (
     sms_template_id bigint        not null primary key,
-    sms_type        varchar(1)    not null,
-    sms_template_code   varchar(3)    not null,
+    sms_type        varchar(3)    not null,
+    sms_template_type   varchar(3)    not null,
+    at_template_code   varchar(25)    not null,
     contents        varchar(2000) not null,
     created_by            varchar(50),
     created_on            timestamp(6) default CURRENT_TIMESTAMP,
@@ -305,7 +306,8 @@ create table if not exists sms_template
 comment on table sms_template is 'sms 템플릿 테이블';
 comment on column sms_template.sms_template_id is 'ID';
 comment on column sms_template.sms_type is 'SMS 종류';
-comment on column sms_template.sms_template_code is 'SMS 템플릿 코드';
+comment on column sms_template.sms_template_type is 'SMS 템플릿 종류';
+comment on column sms_template.at_template_code is '알림톡 템플릿 코드';
 comment on column sms_template.contents is '내용';
 
 create sequence if not exists public.api_log_seq INCREMENT BY 1 START WITH 1;

@@ -10,6 +10,7 @@ import co.kr.compig.api.sms.dto.SmsPayload.Sms;
 import co.kr.compig.api.sms.dto.SmsSend;
 import co.kr.compig.common.code.SystemServiceType;
 import co.kr.compig.service.system.AccessKeyService;
+import java.time.ZoneOffset;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
@@ -37,7 +38,7 @@ public class SmsCoreService {
         .refkey(smsSend.getRefkey())
         .userinfo("")
         .resllercode("")
-        .sendtime("") //String.valueOf(smsSend.getSendtime().toEpochSecond(ZoneOffset.ofHours(9)))
+        .sendtime(String.valueOf(smsSend.getSendtime().toEpochSecond(ZoneOffset.ofHours(9))))
         .content(Content.builder()
             .sms(Sms.builder()
                 .message(smsSend.getContents())

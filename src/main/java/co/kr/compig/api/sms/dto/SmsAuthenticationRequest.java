@@ -5,7 +5,7 @@ import lombok.experimental.SuperBuilder;
 
 @Getter
 @SuperBuilder(toBuilder = true)
-public class SmsAuthenticationRequest extends SmsSend {
+public class SmsAuthenticationRequest {
 
   private String authenticationNumber; //인증번호
 
