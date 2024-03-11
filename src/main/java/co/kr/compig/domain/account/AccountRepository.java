@@ -9,4 +9,6 @@ public interface AccountRepository extends JpaRepository<Account, Long>,
     QuerydslPredicateExecutor<Account> {
 
   Optional<Account> findByMember(Member member);
+
+  Boolean existsByMember(Member member);
 }

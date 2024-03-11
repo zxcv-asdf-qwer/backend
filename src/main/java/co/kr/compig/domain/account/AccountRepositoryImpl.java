@@ -4,7 +4,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class AccountRepositoryImpl{
+public class AccountRepositoryImpl {
+
   private final JPAQueryFactory jpaQueryFactory;
 
 }

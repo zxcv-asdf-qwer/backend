@@ -4,7 +4,8 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public enum EncryptType implements BaseEnumCode<String> {
-  AES256("AES256", "AES256");
+  AES256("AES256", "AES256"),
+  ;
 
 
   private final String code;
@@ -12,11 +13,11 @@ public enum EncryptType implements BaseEnumCode<String> {
 
   @Override
   public String getCode() {
-    return null;
+    return this.code;
   }
 
   @Override
   public String getDesc() {
-    return null;
+    return this.desc;
   }
 }

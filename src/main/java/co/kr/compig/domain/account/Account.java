@@ -2,9 +2,13 @@ package co.kr.compig.domain.account;
 
 import co.kr.compig.api.account.dto.AccountDetailResponse;
 import co.kr.compig.api.account.dto.AccountUpdateRequest;
+import co.kr.compig.common.code.BankCode;
+import co.kr.compig.common.code.converter.BankCodeConverter;
+import co.kr.compig.common.crypt.AES256;
 import co.kr.compig.common.embedded.CreatedAndUpdated;
 import co.kr.compig.domain.member.Member;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -49,7 +53,11 @@ public class Account {
   private String accountName; // 예금주
 
   @Column(nullable = false)
-  private String bankName; // 은행 이름
+  @Convert(converter = BankCodeConverter.class)
+  private BankCode bankName; // 은행 이름
+
+  @Column(nullable = false)
+  private String iv; // 이니셜 벡터
 
   /* =================================================================
    * Domain mapping
@@ -64,14 +72,15 @@ public class Account {
         .id(this.id)
         .accountNumber(this.accountNumber)
         .accountName(this.accountName)
-        .bankName(this.bankName)
+        .bankName(this.bankName.getCode())
         .build();
   }
 
-  public void update(AccountUpdateRequest accountUpdateRequest) {
-    this.accountNumber = accountUpdateRequest.getAccountNumber();
-    this.accountName = accountUpdateRequest.getAccountName();
-    this.bankName = accountUpdateRequest.getBankName();
+  public void update(AccountUpdateRequest accountUpdateRequest, AES256 aes256, byte[] iv)
+      throws Exception {
+    this.accountNumber = aes256.encrypt(accountUpdateRequest.getAccountNumber(),iv);
+    this.accountName = aes256.encrypt(accountUpdateRequest.getAccountName(), iv);
+    this.bankName = BankCode.of(accountUpdateRequest.getBankName());
   }
 
   /* =================================================================
