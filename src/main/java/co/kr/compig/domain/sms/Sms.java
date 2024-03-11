@@ -4,9 +4,12 @@ import co.kr.compig.common.embedded.CreatedAndUpdated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
@@ -56,5 +59,14 @@ public class Sms {
   @Builder.Default
   private CreatedAndUpdated createdAndModified = new CreatedAndUpdated();
 
+  /* =================================================================
+   * Domain mapping
+   ================================================================= */
+  @ManyToOne
+  @JoinColumn(name = "sms_template_id", foreignKey = @ForeignKey(name = "fk01_sms"))
+  private SmsTemplate smsTemplate;
 
+  /* =================================================================
+   * Relation method
+   ================================================================= */
 }

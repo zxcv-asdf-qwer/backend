@@ -12,6 +12,7 @@ import co.kr.compig.common.code.SystemServiceType;
 import co.kr.compig.service.system.AccessKeyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -23,6 +24,7 @@ public class SmsCoreService {
   private final AccessKeyService accessKeyService;
   private final SmsApiProperties smsApiProperties;
 
+  @Async("asyncThreadPoolTaskExecutor")
   public void doSendSms(SmsSend smsSend) {
     String accessToken = accessKeyService.getSecretKey(SystemServiceType.SMS);
 

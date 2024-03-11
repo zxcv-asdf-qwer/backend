@@ -273,6 +273,7 @@ create table if not exists sms
     contents              text,
     refkey                varchar(255),
     sendtime              timestamp(6),
+    sms_template_id       bigint,
     created_by            varchar(50),
     created_on            timestamp(6) default CURRENT_TIMESTAMP,
     updated_by            varchar(50),
@@ -286,6 +287,26 @@ comment on column sms.receiver_phone_number is '받는 전화번호';
 comment on column sms.contents is '내용';
 comment on column sms.refkey is '비즈뿌리오에 보내는 unique 값';
 comment on column sms.sendtime is '발송시간';
+comment on column sms.sms_template_id is 'sms 템플릿 ID';
+
+create sequence if not exists sms_template_seq start with 1 increment by 1;
+create table if not exists sms_template
+(
+    sms_template_id bigint        not null primary key,
+    sms_type        varchar(1)    not null,
+    sms_template_code   varchar(3)    not null,
+    contents        varchar(2000) not null,
+    created_by            varchar(50),
+    created_on            timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by            varchar(50),
+    updated_on            timestamp(6) default CURRENT_TIMESTAMP
+);
+
+comment on table sms_template is 'sms 템플릿 테이블';
+comment on column sms_template.sms_template_id is 'ID';
+comment on column sms_template.sms_type is 'SMS 종류';
+comment on column sms_template.sms_template_code is 'SMS 템플릿 코드';
+comment on column sms_template.contents is '내용';
 
 create sequence if not exists public.api_log_seq INCREMENT BY 1 START WITH 1;
 create table if not exists api_log
@@ -330,3 +351,8 @@ alter table if exists account
     add constraint fk01_account
         foreign key (member_id)
             references member;
+
+alter table if exists sms
+    add constraint fk01_sms
+        foreign key (sms_template_id)
+            references sms_template;
