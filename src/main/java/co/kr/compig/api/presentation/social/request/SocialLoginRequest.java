@@ -1,4 +1,4 @@
-package co.kr.compig.api.infrastructure.auth.social.common.model;
+package co.kr.compig.api.presentation.social.request;
 
 import co.kr.compig.common.code.MemberRegisterType;
 import lombok.AllArgsConstructor;

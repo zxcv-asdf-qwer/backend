@@ -1,4 +1,4 @@
-package co.kr.compig.api.infrastructure.auth.social.common.model;
+package co.kr.compig.api.presentation.social.response;
 
 import co.kr.compig.common.code.MemberRegisterType;
 import co.kr.compig.domain.member.Member;

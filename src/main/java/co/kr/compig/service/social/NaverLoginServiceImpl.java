@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import co.kr.compig.api.presentation.member.request.LeaveRequest;
-import co.kr.compig.api.infrastructure.auth.social.common.model.SocialLoginRequest;
-import co.kr.compig.api.infrastructure.auth.social.naver.model.NaverLoginResponse;
-import co.kr.compig.api.infrastructure.auth.social.common.model.SocialUserResponse;
 import co.kr.compig.api.infrastructure.auth.social.naver.NaverAuthApi;
+import co.kr.compig.api.infrastructure.auth.social.naver.model.NaverLoginResponse;
+import co.kr.compig.api.presentation.member.request.LeaveRequest;
+import co.kr.compig.api.presentation.social.request.SocialLoginRequest;
+import co.kr.compig.api.presentation.social.response.SocialUserResponse;
 import co.kr.compig.common.code.MemberRegisterType;
 import co.kr.compig.common.utils.GsonLocalDateTimeAdapter;
 import lombok.RequiredArgsConstructor;

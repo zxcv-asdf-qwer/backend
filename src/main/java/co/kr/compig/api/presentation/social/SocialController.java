@@ -1,4 +1,4 @@
-package co.kr.compig.api.infrastructure.auth.social.common;
+package co.kr.compig.api.presentation.social;
 
 import java.net.URI;
 
@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.presentation.member.request.LeaveRequest;
-import co.kr.compig.api.infrastructure.auth.social.common.model.SocialLoginRequest;
-import co.kr.compig.api.infrastructure.auth.social.common.model.SocialLoginResponse;
+import co.kr.compig.api.presentation.social.request.SocialLoginRequest;
+import co.kr.compig.api.presentation.social.response.SocialLoginResponse;
 import co.kr.compig.common.dto.Response;
 import co.kr.compig.service.member.MemberService;
 import co.kr.compig.service.social.SocialUserService;

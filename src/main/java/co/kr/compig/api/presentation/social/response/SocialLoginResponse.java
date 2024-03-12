@@ -1,4 +1,4 @@
-package co.kr.compig.api.infrastructure.auth.social.common.model;
+package co.kr.compig.api.presentation.social.response;
 
 import java.util.List;
 
