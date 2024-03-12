@@ -1,8 +1,9 @@
 package co.kr.compig.common.dto.pagination.nouse;
 
-import co.kr.compig.common.dto.BaseAudit;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+
+import co.kr.compig.common.dto.BaseAudit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,9 +17,9 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 public class PagingResult extends BaseAudit {
 
-  @JsonIgnore
-  private int totalCount;
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  private Integer rowNum;
+	@JsonIgnore
+	private int totalCount;
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private Integer rowNum;
 
 }

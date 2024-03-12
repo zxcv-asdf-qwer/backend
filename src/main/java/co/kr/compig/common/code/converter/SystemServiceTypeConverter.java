@@ -5,15 +5,15 @@ import jakarta.persistence.Converter;
 
 @Converter(autoApply = true)
 public class SystemServiceTypeConverter extends
-    AbstractBaseEnumConverter<SystemServiceType, String> {
+	AbstractBaseEnumConverter<SystemServiceType, String> {
 
-  @Override
-  protected String getEnumName() {
-    return "SystemServiceType";
-  }
+	@Override
+	protected String getEnumName() {
+		return "SystemServiceType";
+	}
 
-  @Override
-  protected SystemServiceType[] getValueList() {
-    return SystemServiceType.values();
-  }
+	@Override
+	protected SystemServiceType[] getValueList() {
+		return SystemServiceType.values();
+	}
 }

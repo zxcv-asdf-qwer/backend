@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class AccountCheckResponse {
 
-  private String orderNumber;
-  private String responseCode;
-  private String contents;
+	private String orderNumber;
+	private String responseCode;
+	private String contents;
 }

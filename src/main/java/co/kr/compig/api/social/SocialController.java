@@ -1,42 +1,43 @@
 package co.kr.compig.api.social;
 
+import java.net.URI;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import co.kr.compig.api.social.dto.LeaveRequest;
 import co.kr.compig.api.social.dto.LoginRequest;
 import co.kr.compig.api.social.dto.LoginResponse;
 import co.kr.compig.common.dto.Response;
 import co.kr.compig.service.member.MemberService;
 import co.kr.compig.service.social.SocialUserService;
-import java.net.URI;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/social")
 @RequiredArgsConstructor
 public class SocialController {
 
-  private final SocialUserService socialUserService;
-  private final MemberService memberService;
+	private final SocialUserService socialUserService;
+	private final MemberService memberService;
 
-  @PostMapping("/login")
-  public ResponseEntity<LoginResponse> doSocialLogin(
-      @RequestBody LoginRequest loginRequest) {
+	@PostMapping("/login")
+	public ResponseEntity<LoginResponse> doSocialLogin(
+		@RequestBody LoginRequest loginRequest) {
 
-    return ResponseEntity.created(URI.create("/login"))
-        .body(
-            socialUserService.doSocialLogin(loginRequest));
-  }
+		return ResponseEntity.created(URI.create("/login"))
+			.body(
+				socialUserService.doSocialLogin(loginRequest));
+	}
 
-  //apple 만 따로 탈퇴
-  //google kakao naver 앱에서 탈퇴 후 -> /pb/members/leave
-  @PostMapping("/leave")
-  public ResponseEntity<Response<?>> userLeave(@RequestBody LeaveRequest leaveRequest) {
-    socialUserService.doSocialRevoke(leaveRequest);
-    return ResponseEntity.ok().build();
-  }
+	//apple 만 따로 탈퇴
+	//google kakao naver 앱에서 탈퇴 후 -> /pb/members/leave
+	@PostMapping("/leave")
+	public ResponseEntity<Response<?>> userLeave(@RequestBody LeaveRequest leaveRequest) {
+		socialUserService.doSocialRevoke(leaveRequest);
+		return ResponseEntity.ok().build();
+	}
 }

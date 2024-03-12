@@ -1,20 +1,21 @@
 package co.kr.compig.api.social.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 
 @Getter
 public class AppleRefreshTokenResponse {
 
-  @JsonProperty("access_token")
-  private String accessToken;
+	@JsonProperty("access_token")
+	private String accessToken;
 
-  @JsonProperty("token_type")
-  private String tokenType;
+	@JsonProperty("token_type")
+	private String tokenType;
 
-  @JsonProperty("expires_in")
-  private Long expiresIn;
+	@JsonProperty("expires_in")
+	private Long expiresIn;
 
-  @JsonProperty("id_token")
-  private String idToken;
+	@JsonProperty("id_token")
+	private String idToken;
 }

@@ -15,20 +15,20 @@ import lombok.ToString;
 @ToString
 public class SocialUserResponse {
 
-  private MemberRegisterType memberRegisterType;
-  private String sub;//social userId
-  private String email;
-  private String name;
-  private String gender;
-  private String birthday;
+	private MemberRegisterType memberRegisterType;
+	private String sub;//social userId
+	private String email;
+	private String name;
+	private String gender;
+	private String birthday;
 
-  public Member convertEntity() {
-    return Member.builder()
-        .userId(this.sub)
-        .userNm("socialName")
-        .email(this.email)
-        .userPw(this.email + this.memberRegisterType)
-        .memberRegisterType(this.memberRegisterType)
-        .build();
-  }
+	public Member convertEntity() {
+		return Member.builder()
+			.userId(this.sub)
+			.userNm("socialName")
+			.email(this.email)
+			.userPw(this.email + this.memberRegisterType)
+			.memberRegisterType(this.memberRegisterType)
+			.build();
+	}
 }

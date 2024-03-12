@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MenuPermissionRepository extends JpaRepository<MenuPermission, Long> {
 
-//    void deleteAllByGroupKey(String groupKey);
+	//    void deleteAllByGroupKey(String groupKey);
 
-//    void deleteAllByMember(Member member);
+	//    void deleteAllByMember(Member member);
 }

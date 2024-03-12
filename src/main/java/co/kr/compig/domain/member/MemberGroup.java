@@ -23,53 +23,53 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 @Table(
-    uniqueConstraints = {
-        @UniqueConstraint(name = "uk01_member_group", columnNames = {"groupKey", "member_id"})
-    }
+	uniqueConstraints = {
+		@UniqueConstraint(name = "uk01_member_group", columnNames = {"groupKey", "member_id"})
+	}
 )
 @SequenceGenerator(
-    name = "member_group_seq_gen", //시퀀스 제너레이터 이름
-    sequenceName = "member_group_seq", //시퀀스 이름
-    initialValue = 1, //시작값
-    allocationSize = 1 //메모리를 통해 할당 할 범위 사이즈
+	name = "member_group_seq_gen", //시퀀스 제너레이터 이름
+	sequenceName = "member_group_seq", //시퀀스 이름
+	initialValue = 1, //시작값
+	allocationSize = 1 //메모리를 통해 할당 할 범위 사이즈
 )
 public class MemberGroup {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "member_group_seq_gen")
-  @Column(name = "member_group_id")
-  private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "member_group_seq_gen")
+	@Column(name = "member_group_id")
+	private Long id;
 
-  @Column(length = 50, nullable = false)
-  private String groupKey;
+	@Column(length = 50, nullable = false)
+	private String groupKey;
 
-  @Column(length = 150, nullable = false)
-  private String groupNm;
+	@Column(length = 150, nullable = false)
+	private String groupNm;
 
-  @Column(length = 250, nullable = false)
-  private String groupPath;
+	@Column(length = 250, nullable = false)
+	private String groupPath;
 
-  /* =================================================================
-   * Domain mapping
-     ================================================================= */
-  @Builder.Default
-  @JoinColumn(name = "member_id", nullable = false, foreignKey = @ForeignKey(name = "fk01_member_group"))
-  @ManyToOne(fetch = FetchType.LAZY)
-  private Member member = new Member();
+	/* =================================================================
+	 * Domain mapping
+	   ================================================================= */
+	@Builder.Default
+	@JoinColumn(name = "member_id", nullable = false, foreignKey = @ForeignKey(name = "fk01_member_group"))
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Member member = new Member();
 
-  /* =================================================================
-   * Relation method
-     ================================================================= */
-  public void setMember(Member member) {
-    this.member = member;
-  }
+	/* =================================================================
+	 * Relation method
+	   ================================================================= */
+	public void setMember(Member member) {
+		this.member = member;
+	}
 
-  /* =================================================================
-   * Business
-     ================================================================= */
-  public void updateGroupInfo(String groupKey, String groupNm, String groupPath) {
-    this.groupKey = groupKey;
-    this.groupNm = groupNm;
-    this.groupPath = groupPath;
-  }
+	/* =================================================================
+	 * Business
+	   ================================================================= */
+	public void updateGroupInfo(String groupKey, String groupNm, String groupPath) {
+		this.groupKey = groupKey;
+		this.groupNm = groupNm;
+		this.groupPath = groupPath;
+	}
 }

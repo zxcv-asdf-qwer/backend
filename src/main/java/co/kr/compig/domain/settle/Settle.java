@@ -31,58 +31,58 @@ import lombok.extern.slf4j.Slf4j;
 @Entity
 @Table
 @SequenceGenerator(
-    name = "settle_seq_gen", //시퀀스 제너레이터 이름
-    sequenceName = "settle_seq", //시퀀스 이름
-    initialValue = 1, //시작값
-    allocationSize = 1 //메모리를 통해 할당 할 범위 사이즈
+	name = "settle_seq_gen", //시퀀스 제너레이터 이름
+	sequenceName = "settle_seq", //시퀀스 이름
+	initialValue = 1, //시작값
+	allocationSize = 1 //메모리를 통해 할당 할 범위 사이즈
 )
 public class Settle {
-  
-  @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "settle_seq_gen")
-  @Column(name = "settle_id")
-  private Long id;
 
-  @Column
-  private String element; // 요소명
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "settle_seq_gen")
+	@Column(name = "settle_id")
+	private Long id;
 
-  @Column
-  private Integer amount; // 금액
+	@Column
+	private String element; // 요소명
 
-  @Column
-  @Enumerated(EnumType.STRING)
-  @Builder.Default
-  private UseYn useYn = UseYn.Y;
+	@Column
+	private Integer amount; // 금액
 
-  /* =================================================================
-  * Domain mapping
-  ================================================================= */
-  @Builder.Default
-  @JoinColumn(name = "settle_group_id", nullable = false, foreignKey = @ForeignKey(name = "fk01_settle"))
-  @ManyToOne(fetch = FetchType.LAZY)
-  private SettleGroup settleGroup = new SettleGroup();
+	@Column
+	@Enumerated(EnumType.STRING)
+	@Builder.Default
+	private UseYn useYn = UseYn.Y;
 
-  /* =================================================================
-  * Relation method
-  ================================================================= */
-  public SettleResponse toSettleResponse(){
-    return SettleResponse.builder()
-        .settleId(this.id)
-        .element(this.element)
-        .amount(this.amount)
-        .settleGroupId(this.settleGroup.getId())
-        .useYn(this.useYn)
-        .build();
-  }
+	/* =================================================================
+	* Domain mapping
+	================================================================= */
+	@Builder.Default
+	@JoinColumn(name = "settle_group_id", nullable = false, foreignKey = @ForeignKey(name = "fk01_settle"))
+	@ManyToOne(fetch = FetchType.LAZY)
+	private SettleGroup settleGroup = new SettleGroup();
 
-  /* =================================================================
-  * Default columns
-  ================================================================= */
-  @Embedded
-  @Builder.Default
-  private Created createdAndModified = new Created();
+	/* =================================================================
+	* Relation method
+	================================================================= */
+	public SettleResponse toSettleResponse() {
+		return SettleResponse.builder()
+			.settleId(this.id)
+			.element(this.element)
+			.amount(this.amount)
+			.settleGroupId(this.settleGroup.getId())
+			.useYn(this.useYn)
+			.build();
+	}
 
-  public void setUseYn() {
-    this.useYn = UseYn.N;
-  }
+	/* =================================================================
+	* Default columns
+	================================================================= */
+	@Embedded
+	@Builder.Default
+	private Created createdAndModified = new Created();
+
+	public void setUseYn() {
+		this.useYn = UseYn.N;
+	}
 }

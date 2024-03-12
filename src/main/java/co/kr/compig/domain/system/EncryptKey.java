@@ -28,35 +28,35 @@ import lombok.extern.slf4j.Slf4j;
 @Entity
 @Table
 @SequenceGenerator(
-    name = "encrypt_seq_gen", //시퀀스 제너레이터 이름
-    sequenceName = "encrypt_seq", //시퀀스 이름
-    initialValue = 1, //시작값
-    allocationSize = 1 //메모리를 통해 할당 할 범위 사이즈
+	name = "encrypt_seq_gen", //시퀀스 제너레이터 이름
+	sequenceName = "encrypt_seq", //시퀀스 이름
+	initialValue = 1, //시작값
+	allocationSize = 1 //메모리를 통해 할당 할 범위 사이즈
 )
 public class EncryptKey {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "encrypt_seq_gen")
-  @Column(name = "encrypt_id")
-  private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "encrypt_seq_gen")
+	@Column(name = "encrypt_id")
+	private Long id;
 
-  @Column(nullable = false)
-  @Convert(converter = EncryptTypeConverter.class)
-  private EncryptType encryptType; //암호화 종류
+	@Column(nullable = false)
+	@Convert(converter = EncryptTypeConverter.class)
+	private EncryptType encryptType; //암호화 종류
 
-  @Column(nullable = false)
-  private String encryptKey; //암호화 키
+	@Column(nullable = false)
+	private String encryptKey; //암호화 키
 
-  @Column(nullable = false)
-  @Convert(converter = EncryptTargetConverter.class)
-  private EncryptTarget encryptTarget; //암호화 대상
+	@Column(nullable = false)
+	@Convert(converter = EncryptTargetConverter.class)
+	private EncryptTarget encryptTarget; //암호화 대상
 
-  /* =================================================================
-   * Default columns
-   ================================================================= */
-  @Embedded
-  @Builder.Default
-  private CreatedAndUpdated createdAndModified = new CreatedAndUpdated();
+	/* =================================================================
+	 * Default columns
+	 ================================================================= */
+	@Embedded
+	@Builder.Default
+	private CreatedAndUpdated createdAndModified = new CreatedAndUpdated();
 
   /* =================================================================
    * Business

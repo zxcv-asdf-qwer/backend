@@ -14,8 +14,8 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class AccountDetailResponse extends BaseAudit {
 
-  private Long id; // 계좌 id
-  private String accountNumber; // 계좌번호
-  private String accountName; // 예금주
-  private String bankName; // 은행 이름
+	private Long id; // 계좌 id
+	private String accountNumber; // 계좌번호
+	private String accountName; // 예금주
+	private String bankName; // 은행 이름
 }

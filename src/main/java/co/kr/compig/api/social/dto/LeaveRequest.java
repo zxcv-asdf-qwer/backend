@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class LeaveRequest {
 
-  private String leaveReason; //탈퇴사유
-  private String code;
-  private MemberRegisterType memberRegisterType;
+	private String leaveReason; //탈퇴사유
+	private String code;
+	private MemberRegisterType memberRegisterType;
 }

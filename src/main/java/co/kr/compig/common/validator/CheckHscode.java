@@ -1,46 +1,47 @@
 package co.kr.compig.common.validator;
 
+import org.apache.commons.lang3.RegExUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import co.kr.compig.common.utils.MessageUtil;
 import co.kr.compig.common.validator.annotaion.ValidPhoneNum;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.RegExUtils;
-import org.apache.commons.lang3.StringUtils;
 
 @RequiredArgsConstructor
 public class CheckHscode implements ConstraintValidator<ValidPhoneNum, String> {
 
-  private ValidPhoneNum validPhoneNum;
+	private ValidPhoneNum validPhoneNum;
 
-  private final MessageUtil messageUtil;
+	private final MessageUtil messageUtil;
 
-  @Override
-  public void initialize(ValidPhoneNum validHscode) {
-    this.validPhoneNum = validHscode;
-  }
+	@Override
+	public void initialize(ValidPhoneNum validHscode) {
+		this.validPhoneNum = validHscode;
+	}
 
-  @Override //true 값이 유효, false 요효성 검사 실패
-  public boolean isValid(String value, ConstraintValidatorContext context) {
-    if (StringUtils.isEmpty(value)) {
-      return false;
-    }
-    if(isValidPhoneNumber(value)) {
-      return false;
-    }
+	@Override //true 값이 유효, false 요효성 검사 실패
+	public boolean isValid(String value, ConstraintValidatorContext context) {
+		if (StringUtils.isEmpty(value)) {
+			return false;
+		}
+		if (isValidPhoneNumber(value)) {
+			return false;
+		}
 
-    context.buildConstraintViolationWithTemplate(messageUtil.getMessage(validPhoneNum.message()))
-        .addConstraintViolation().disableDefaultConstraintViolation();
-    return false;
-  }
+		context.buildConstraintViolationWithTemplate(messageUtil.getMessage(validPhoneNum.message()))
+			.addConstraintViolation().disableDefaultConstraintViolation();
+		return false;
+	}
 
-  private boolean isValidPhoneNumber(String phoneNumber) {
-    String data = RegExUtils.replaceAll(phoneNumber, "[^0-9]", "");
+	private boolean isValidPhoneNumber(String phoneNumber) {
+		String data = RegExUtils.replaceAll(phoneNumber, "[^0-9]", "");
 
-    if (data.length() < 6 || data.length() > 10) {
-      return false;
-    }
+		if (data.length() < 6 || data.length() > 10) {
+			return false;
+		}
 
-    return true;
-  }
+		return true;
+	}
 }

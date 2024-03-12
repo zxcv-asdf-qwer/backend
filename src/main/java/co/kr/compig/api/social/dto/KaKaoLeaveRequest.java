@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class KaKaoLeaveRequest {
 
-  @Builder.Default
-  private String target_id_type = "user_id";
-  private String target_id;
+	@Builder.Default
+	private String target_id_type = "user_id";
+	private String target_id;
 }

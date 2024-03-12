@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 @RepositoryTest
 class ProcessLockRepositoryTest {
 
-  @Test
-  void test() {
-  }
+	@Test
+	void test() {
+	}
 }

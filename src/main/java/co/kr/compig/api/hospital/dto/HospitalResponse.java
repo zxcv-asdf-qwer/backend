@@ -13,10 +13,10 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
 public class HospitalResponse extends BaseAudit {
-  private Long hospitalId; // 병원 id
-  private String hospitalNm; // 병원 명
-  private String hospitalCode; // 병원 우편번호
-  private String hospitalAddress; // 병원 주소
-  private String hospitalTelNo; // 병원 전화번호
-  private String hospitalOperationHours; // 병원 운영 시간
+	private Long hospitalId; // 병원 id
+	private String hospitalNm; // 병원 명
+	private String hospitalCode; // 병원 우편번호
+	private String hospitalAddress; // 병원 주소
+	private String hospitalTelNo; // 병원 전화번호
+	private String hospitalOperationHours; // 병원 운영 시간
 }

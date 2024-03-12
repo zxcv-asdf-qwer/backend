@@ -12,8 +12,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication
 public class CompigBackApplication {
 
-  public static void main(String[] args) {
-    SpringApplication.run(CompigBackApplication.class, args);
-  }
+	public static void main(String[] args) {
+		SpringApplication.run(CompigBackApplication.class, args);
+	}
 
 }

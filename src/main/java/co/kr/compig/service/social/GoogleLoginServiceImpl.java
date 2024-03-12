@@ -1,5 +1,16 @@
 package co.kr.compig.service.social;
 
+import java.time.LocalDateTime;
+
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.UnknownHttpStatusCodeException;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import co.kr.compig.api.social.dto.GoogleLoginResponse;
 import co.kr.compig.api.social.dto.LeaveRequest;
 import co.kr.compig.api.social.dto.LoginRequest;
@@ -7,17 +18,8 @@ import co.kr.compig.api.social.dto.SocialUserResponse;
 import co.kr.compig.api.social.google.GoogleAuthApi;
 import co.kr.compig.common.code.MemberRegisterType;
 import co.kr.compig.common.utils.GsonLocalDateTimeAdapter;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.client.UnknownHttpStatusCodeException;
-
 
 @Slf4j
 @Service
@@ -25,48 +27,48 @@ import org.springframework.web.client.UnknownHttpStatusCodeException;
 @Qualifier("googleLogin")
 public class GoogleLoginServiceImpl implements SocialLoginService {
 
-  private final GoogleAuthApi googleAuthApi;
+	private final GoogleAuthApi googleAuthApi;
 
-  @Override
-  public MemberRegisterType getServiceName() {
-    return MemberRegisterType.GOOGLE;
-  }
+	@Override
+	public MemberRegisterType getServiceName() {
+		return MemberRegisterType.GOOGLE;
+	}
 
-  @Override
-  public SocialUserResponse tokenToSocialUserResponse(LoginRequest loginRequest) {
-    try {
-      ResponseEntity<?> response = googleAuthApi.getAccessTokenToTokenInfo(
-          loginRequest.getToken());
+	@Override
+	public SocialUserResponse tokenToSocialUserResponse(LoginRequest loginRequest) {
+		try {
+			ResponseEntity<?> response = googleAuthApi.getAccessTokenToTokenInfo(
+				loginRequest.getToken());
 
-      log.info(getServiceName().getCode() + " tokenToSocialUserResponse");
-      log.info(response.toString());
+			log.info(getServiceName().getCode() + " tokenToSocialUserResponse");
+			log.info(response.toString());
 
-      Gson gson = new GsonBuilder()
-          .setPrettyPrinting()
-          .registerTypeAdapter(LocalDateTime.class, new GsonLocalDateTimeAdapter())
-          .create();
+			Gson gson = new GsonBuilder()
+				.setPrettyPrinting()
+				.registerTypeAdapter(LocalDateTime.class, new GsonLocalDateTimeAdapter())
+				.create();
 
-      GoogleLoginResponse googleLoginResponse = gson.fromJson(response.getBody().toString(),
-          GoogleLoginResponse.class);
+			GoogleLoginResponse googleLoginResponse = gson.fromJson(response.getBody().toString(),
+				GoogleLoginResponse.class);
 
-      return SocialUserResponse.builder()
-          .sub(googleLoginResponse.getSub())
-          .memberRegisterType(getServiceName())
-          .email(googleLoginResponse.getEmail())
-          .build();
-    } catch (HttpServerErrorException e) {
-      log.error("Google getUserInfo HttpServerErrorException - Status : {}, Message : {}",
-          e.getStatusCode(), e.getMessage());
-    } catch (UnknownHttpStatusCodeException e) {
-      log.error("Google getUserInfo UnknownHttpStatusCodeException - Status : {}, Message : {}",
-          e.getStatusCode(), e.getMessage());
-    }
+			return SocialUserResponse.builder()
+				.sub(googleLoginResponse.getSub())
+				.memberRegisterType(getServiceName())
+				.email(googleLoginResponse.getEmail())
+				.build();
+		} catch (HttpServerErrorException e) {
+			log.error("Google getUserInfo HttpServerErrorException - Status : {}, Message : {}",
+				e.getStatusCode(), e.getMessage());
+		} catch (UnknownHttpStatusCodeException e) {
+			log.error("Google getUserInfo UnknownHttpStatusCodeException - Status : {}, Message : {}",
+				e.getStatusCode(), e.getMessage());
+		}
 
-    return null;
-  }
+		return null;
+	}
 
-  @Override
-  public void revoke(LeaveRequest leaveRequest) {
-  }
+	@Override
+	public void revoke(LeaveRequest leaveRequest) {
+	}
 
 }

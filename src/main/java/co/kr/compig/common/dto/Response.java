@@ -1,6 +1,5 @@
 package co.kr.compig.common.dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,5 +13,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Response<T> {
 
-  private T data;
+	private T data;
 }

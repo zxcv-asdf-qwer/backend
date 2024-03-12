@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class GoogleLoginResponse {
 
-  private String sub;
-  private String email;
-  private String picture;
+	private String sub;
+	private String email;
+	private String picture;
 }

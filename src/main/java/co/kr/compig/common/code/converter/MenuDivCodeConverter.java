@@ -6,13 +6,13 @@ import jakarta.persistence.Converter;
 @Converter(autoApply = true)
 public class MenuDivCodeConverter extends AbstractBaseEnumConverter<MenuDivCode, String> {
 
-  @Override
-  protected String getEnumName() {
-    return "MenuDivCode";
-  }
+	@Override
+	protected String getEnumName() {
+		return "MenuDivCode";
+	}
 
-  @Override
-  protected MenuDivCode[] getValueList() {
-    return MenuDivCode.values();
-  }
+	@Override
+	protected MenuDivCode[] getValueList() {
+		return MenuDivCode.values();
+	}
 }

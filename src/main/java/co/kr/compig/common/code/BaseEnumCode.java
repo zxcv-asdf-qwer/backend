@@ -2,19 +2,19 @@ package co.kr.compig.common.code;
 
 public interface BaseEnumCode<T> {
 
-  T getCode();
+	T getCode();
 
-  String getDesc();
+	String getDesc();
 
-  /**
-   * Enum 데이터를 desc(code) 형태의 스트링으로 리턴
-   */
-  default String convertString() {
-    String builder = getDesc()
-        + "("
-        + getCode()
-        + ")";
+	/**
+	 * Enum 데이터를 desc(code) 형태의 스트링으로 리턴
+	 */
+	default String convertString() {
+		String builder = getDesc()
+			+ "("
+			+ getCode()
+			+ ")";
 
-    return builder;
-  }
+		return builder;
+	}
 }

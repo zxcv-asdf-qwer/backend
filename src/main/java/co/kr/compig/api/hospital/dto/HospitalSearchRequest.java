@@ -11,5 +11,5 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
 public class HospitalSearchRequest extends PageableRequest {
-  private String hospitalNm; // 병원명
+	private String hospitalNm; // 병원명
 }

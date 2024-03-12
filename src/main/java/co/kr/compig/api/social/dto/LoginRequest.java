@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 @Getter
 public class LoginRequest {
 
-  private String token;
-  private MemberRegisterType memberRegisterType;
+	private String token;
+	private MemberRegisterType memberRegisterType;
 }
