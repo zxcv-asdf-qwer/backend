@@ -3,9 +3,9 @@ package co.kr.compig.service.account;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import co.kr.compig.api.presentation.account.dto.request.AccountCreateRequest;
-import co.kr.compig.api.presentation.account.dto.response.AccountDetailResponse;
-import co.kr.compig.api.presentation.account.dto.request.AccountUpdateRequest;
+import co.kr.compig.api.presentation.account.request.AccountCreateRequest;
+import co.kr.compig.api.presentation.account.request.AccountUpdateRequest;
+import co.kr.compig.api.presentation.account.response.AccountDetailResponse;
 import co.kr.compig.common.code.EncryptTarget;
 import co.kr.compig.common.crypt.AES256;
 import co.kr.compig.common.exception.NotExistDataException;

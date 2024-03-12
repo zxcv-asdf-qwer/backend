@@ -1,4 +1,4 @@
-package co.kr.compig.api.presentation.account.dto.request;
+package co.kr.compig.api.presentation.account.request;
 
 import java.util.Base64;
 

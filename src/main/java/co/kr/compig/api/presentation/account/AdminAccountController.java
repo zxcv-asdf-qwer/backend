@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import co.kr.compig.api.presentation.account.dto.request.AccountCheckRequest;
-import co.kr.compig.api.presentation.account.dto.response.AccountCheckResponse;
-import co.kr.compig.api.presentation.account.dto.request.AccountCreateRequest;
-import co.kr.compig.api.presentation.account.dto.response.AccountDetailResponse;
-import co.kr.compig.api.presentation.account.dto.request.AccountUpdateRequest;
+import co.kr.compig.api.presentation.account.request.AccountCheckRequest;
+import co.kr.compig.api.presentation.account.request.AccountCreateRequest;
+import co.kr.compig.api.presentation.account.request.AccountUpdateRequest;
+import co.kr.compig.api.presentation.account.response.AccountCheckResponse;
+import co.kr.compig.api.presentation.account.response.AccountDetailResponse;
 import co.kr.compig.common.dto.Response;
 import co.kr.compig.service.account.AccountCheckService;
 import co.kr.compig.service.account.AccountService;

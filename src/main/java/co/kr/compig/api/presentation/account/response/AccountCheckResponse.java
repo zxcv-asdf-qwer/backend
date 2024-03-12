@@ -1,4 +1,4 @@
-package co.kr.compig.api.presentation.account.dto.response;
+package co.kr.compig.api.presentation.account.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

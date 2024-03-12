@@ -1,4 +1,4 @@
-package co.kr.compig.api.presentation.account.dto.response;
+package co.kr.compig.api.presentation.account.response;
 
 import co.kr.compig.common.dto.BaseAudit;
 import lombok.AllArgsConstructor;
