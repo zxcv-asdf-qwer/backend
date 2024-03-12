@@ -38,10 +38,6 @@ public class CheckHscode implements ConstraintValidator<ValidPhoneNum, String> {
 	private boolean isValidPhoneNumber(String phoneNumber) {
 		String data = RegExUtils.replaceAll(phoneNumber, "[^0-9]", "");
 
-		if (data.length() < 6 || data.length() > 10) {
-			return false;
-		}
-
-		return true;
+		return data.length() >= 6 && data.length() <= 10;
 	}
 }

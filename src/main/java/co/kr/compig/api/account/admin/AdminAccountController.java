@@ -35,49 +35,47 @@ public class AdminAccountController {
 	private final AccountCheckService accountCheckService;
 
 	@PostMapping
-	public ResponseEntity<Response<?>> createAccount(
-		@ModelAttribute @Valid AccountCreateRequest accountCreateRequest
-	) {
-		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-			.data(Map.of("accountId", accountService.createAccount(accountCreateRequest)))
-			.build());
+	public ResponseEntity<Response<?>> createAccount(@ModelAttribute @Valid AccountCreateRequest accountCreateRequest) {
+		return ResponseEntity.ok()
+			.body(Response.<Map<String, Long>>builder()
+				.data(Map.of("accountId", accountService.createAccount(accountCreateRequest)))
+				.build());
 	}
 
 	@GetMapping("/{accountId}")
 	public ResponseEntity<Response<AccountDetailResponse>> getAccount(
 		@PathVariable(name = "accountId") Long accountId) {
-		return ResponseEntity.ok(Response.<AccountDetailResponse>builder()
-			.data(accountService.getAccountByAccountId(accountId))
-			.build());
+		return ResponseEntity.ok(
+			Response.<AccountDetailResponse>builder().data(accountService.getAccountByAccountId(accountId)).build());
 	}
 
 	@GetMapping("/member/{memberId}")
 	public ResponseEntity<Response<AccountDetailResponse>> getAccountByMember(
 		@PathVariable(name = "memberId") String memberId) {
-		return ResponseEntity.ok(Response.<AccountDetailResponse>builder()
-			.data(accountService.getAccountByMemberId(memberId))
-			.build());
+		return ResponseEntity.ok(
+			Response.<AccountDetailResponse>builder().data(accountService.getAccountByMemberId(memberId)).build());
 	}
 
 	@PutMapping("/{accountId}")
 	public ResponseEntity<Response<?>> updateAccount(@PathVariable(name = "accountId") Long accountId,
 		@RequestBody @Valid AccountUpdateRequest accountUpdateRequest) {
-		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-			.data(Map.of("accountId", accountService.updateAccount(accountId, accountUpdateRequest)))
-			.build());
+		return ResponseEntity.ok()
+			.body(Response.<Map<String, Long>>builder()
+				.data(Map.of("accountId", accountService.updateAccount(accountId, accountUpdateRequest)))
+				.build());
 	}
 
 	@DeleteMapping(path = "/{accountId}")
-	public ResponseEntity<Response<?>> deleteAccount(
-		@PathVariable(name = "accountId") Long accountId) {
-		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-			.data(Map.of("accountId", accountService.deleteAccount(accountId)))
-			.build());
+	public ResponseEntity<Response<?>> deleteAccount(@PathVariable(name = "accountId") Long accountId) {
+		return ResponseEntity.ok()
+			.body(Response.<Map<String, Long>>builder()
+				.data(Map.of("accountId", accountService.deleteAccount(accountId)))
+				.build());
 	}
 
 	@GetMapping("/checkAccount")
-	public ResponseEntity<Response<AccountCheckResponse>> checkAccount(@ModelAttribute
-	AccountCheckRequest accountCheckRequest) {
+	public ResponseEntity<Response<AccountCheckResponse>> checkAccount(
+		@ModelAttribute AccountCheckRequest accountCheckRequest) {
 		return ResponseEntity.ok(Response.<AccountCheckResponse>builder()
 			.data(accountCheckService.getAccountCheck(accountCheckRequest))
 			.build());
@@ -85,8 +83,6 @@ public class AdminAccountController {
 
 	@GetMapping("/getAccountCheck")
 	public ResponseEntity<Response<Boolean>> getAccountCheck(@RequestBody String memberId) {
-		return ResponseEntity.ok(Response.<Boolean>builder()
-			.data(accountService.getAccountCheck(memberId))
-			.build());
+		return ResponseEntity.ok(Response.<Boolean>builder().data(accountService.getAccountCheck(memberId)).build());
 	}
 }

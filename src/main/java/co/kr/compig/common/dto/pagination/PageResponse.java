@@ -12,9 +12,9 @@ import lombok.Getter;
 @Getter
 public class PageResponse<T> implements Serializable {
 
-	private List<T> data;
+	private final List<T> data;
 
-	private boolean hasNext;
+	private final boolean hasNext;
 
 	//기본 생성자 호출시 empty list
 	public PageResponse() {

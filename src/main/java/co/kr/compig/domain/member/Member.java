@@ -253,11 +253,7 @@ public class Member {
 		userRepresentation.setLastName(lastName);
 		userRepresentation.setEmail(this.email);
 		// 탈퇴 회원일 경우 keycloak 도 비 활성화 처리
-		if (this.useYn.equals(UseYn.N) && this.leaveDate != null) {
-			userRepresentation.setEnabled(false); //TODO 제거
-		} else {
-			userRepresentation.setEnabled(true);
-		}
+		userRepresentation.setEnabled(!this.useYn.equals(UseYn.N) || this.leaveDate == null); //TODO 제거
 
 		if (!MemberRegisterType.GENERAL.equals(this.memberRegisterType) && StringUtils.isNotBlank(
 			providerUsername)) {

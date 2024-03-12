@@ -194,8 +194,7 @@ public class HospitalSchService {
 
 	public String getXmlRootElementAnnoName(Class<?> clazz) {
 		Annotation annotation = clazz.getAnnotation(XmlRootElement.class);
-		if (annotation != null && annotation instanceof XmlRootElement) {
-			XmlRootElement rootElement = (XmlRootElement)annotation;
+		if (annotation != null && annotation instanceof XmlRootElement rootElement) {
 			return rootElement.name();
 		} else {
 			return null;
