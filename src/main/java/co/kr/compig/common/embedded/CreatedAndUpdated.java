@@ -36,7 +36,7 @@ public class CreatedAndUpdated {
 	@PrePersist
 	public void prePersist() {
 		if (StringUtils.isBlank(createdBy)) {
-			createdBy = SecurityUtil.getUserId();
+			createdBy = SecurityUtil.getMemberId();
 		}
 		if (createdOn == null) {
 			createdOn = LocalDateTime.now();
@@ -47,7 +47,7 @@ public class CreatedAndUpdated {
 
 	@PreUpdate
 	public void preUpdate() {
-		updatedBy = SecurityUtil.getUserId();
+		updatedBy = SecurityUtil.getMemberId();
 		updatedOn = LocalDateTime.now();
 	}
 
