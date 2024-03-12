@@ -1,7 +1,5 @@
 package co.kr.compig.domain.question;
 
-import co.kr.compig.api.question.dto.QuestionDetailResponse;
-import co.kr.compig.api.question.dto.QuestionUpdateRequest;
 import co.kr.compig.common.code.IsYn;
 import co.kr.compig.common.code.QuestionType;
 import co.kr.compig.common.code.UseYn;
@@ -74,20 +72,5 @@ public class Question {
 	/* =================================================================
 	* Relation method
 	================================================================= */
-	public QuestionDetailResponse toQuestionDetailResponse() {
-		return QuestionDetailResponse.builder()
-			.questionId(this.id)
-			.questionType(this.questionType)
-			.questionTitle(this.questionTitle)
-			.questionContent(this.questionContent)
-			.isAnswer(this.isAnswer)
-			.build();
-	}
-
-	public void update(QuestionUpdateRequest questionUpdateRequest) {
-		this.questionTitle = questionUpdateRequest.getQuestionTitle();
-		this.questionContent = questionUpdateRequest.getQuestionContent();
-		this.questionType = questionUpdateRequest.getQuestionType();
-	}
 
 }
