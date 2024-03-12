@@ -326,6 +326,51 @@ create table if not exists api_log
 
 comment on table api_log is '로그 테이블';
 
+create sequence if not exists answer_seq start with 1 increment by 1;
+create table if not exists answer (
+    answer_id bigint not null primary key,
+    question_id bigint not null unique,
+    answer_title varchar(255),
+    answer_content varchar(255),
+    use_yn              char(1),
+    created_by varchar(50),
+    created_on timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by varchar(50),
+    updated_on timestamp(6) default CURRENT_TIMESTAMP
+);
+
+comment on table answer is '1:1 문의 답변 테이블';
+comment on column answer.answer_id is 'ID';
+comment on column answer.question_id is '질문 ID';
+comment on column answer.answer_title is '답변 타이틀';
+comment on column answer.answer_content is '답변 내용';
+comment on column answer.use_yn is '답변 상태';
+
+create sequence if not exists question_seq start with 1 increment by 1;
+create table if not exists question (
+    question_id bigint not null primary key,
+    question_type varchar(255),
+    question_title varchar(255),
+    question_content varchar(255),
+    use_yn              char(1),
+    created_by varchar(50),
+    created_on timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by varchar(50),
+    updated_on timestamp(6) default CURRENT_TIMESTAMP
+);
+
+comment on table question is '1:1 문의 질문 테이블';
+comment on column question.question_id is 'ID';
+comment on column question.question_type is '질문 유형';
+comment on column question.question_title is '질문 타이틀';
+comment on column question.question_content is '질문 내용';
+comment on column question.use_yn is '질문 상태';
+
+alter table if exists answer
+    add constraint f01_answer
+    foreign key (question_id)
+    references question;
+
 alter table if exists system_file
     add constraint fk01_system_file
         foreign key (board_id)
