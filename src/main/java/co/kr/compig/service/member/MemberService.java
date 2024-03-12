@@ -9,12 +9,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import co.kr.compig.api.member.dto.AdminMemberCreate;
-import co.kr.compig.api.member.dto.GuardianMemberCreate;
-import co.kr.compig.api.member.dto.MemberResponse;
-import co.kr.compig.api.member.dto.MemberUpdateRequest;
-import co.kr.compig.api.member.dto.PartnerMemberCreate;
-import co.kr.compig.api.social.dto.LeaveRequest;
+import co.kr.compig.api.presentation.member.request.AdminMemberCreate;
+import co.kr.compig.api.presentation.member.request.GuardianMemberCreate;
+import co.kr.compig.api.presentation.member.response.MemberResponse;
+import co.kr.compig.api.presentation.member.request.MemberUpdateRequest;
+import co.kr.compig.api.presentation.member.request.PartnerMemberCreate;
+import co.kr.compig.api.presentation.member.request.LeaveRequest;
 import co.kr.compig.common.code.MemberRegisterType;
 import co.kr.compig.common.code.UserType;
 import co.kr.compig.common.exception.BizException;

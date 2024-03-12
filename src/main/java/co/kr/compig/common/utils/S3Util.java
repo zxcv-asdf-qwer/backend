@@ -22,7 +22,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
-import co.kr.compig.api.board.dto.SystemFileResponse;
+import co.kr.compig.api.presentation.board.response.SystemFileResponse;
 import co.kr.compig.common.exception.UploadException;
 import co.kr.compig.common.exception.dto.ErrorCode;
 import lombok.RequiredArgsConstructor;

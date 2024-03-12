@@ -1,7 +1,7 @@
 package co.kr.compig.domain.hospital;
 
-import co.kr.compig.api.hospital.dto.HospitalDetailResponse;
-import co.kr.compig.api.hospital.dto.HospitalUpdateRequest;
+import co.kr.compig.api.presentation.hospital.response.HospitalDetailResponse;
+import co.kr.compig.api.presentation.hospital.request.HospitalUpdateRequest;
 import co.kr.compig.common.embedded.CreatedAndUpdated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;

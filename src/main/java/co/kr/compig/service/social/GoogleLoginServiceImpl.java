@@ -11,11 +11,11 @@ import org.springframework.web.client.UnknownHttpStatusCodeException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import co.kr.compig.api.social.dto.GoogleLoginResponse;
-import co.kr.compig.api.social.dto.LeaveRequest;
-import co.kr.compig.api.social.dto.LoginRequest;
-import co.kr.compig.api.social.dto.SocialUserResponse;
-import co.kr.compig.api.social.google.GoogleAuthApi;
+import co.kr.compig.api.infrastructure.auth.social.google.model.GoogleLoginResponse;
+import co.kr.compig.api.presentation.member.request.LeaveRequest;
+import co.kr.compig.api.infrastructure.auth.social.common.model.SocialLoginRequest;
+import co.kr.compig.api.infrastructure.auth.social.common.model.SocialUserResponse;
+import co.kr.compig.api.infrastructure.auth.social.google.GoogleAuthApi;
 import co.kr.compig.common.code.MemberRegisterType;
 import co.kr.compig.common.utils.GsonLocalDateTimeAdapter;
 import lombok.RequiredArgsConstructor;
@@ -35,10 +35,10 @@ public class GoogleLoginServiceImpl implements SocialLoginService {
 	}
 
 	@Override
-	public SocialUserResponse tokenToSocialUserResponse(LoginRequest loginRequest) {
+	public SocialUserResponse tokenToSocialUserResponse(SocialLoginRequest socialLoginRequest) {
 		try {
 			ResponseEntity<?> response = googleAuthApi.getAccessTokenToTokenInfo(
-				loginRequest.getToken());
+				socialLoginRequest.getToken());
 
 			log.info(getServiceName().getCode() + " tokenToSocialUserResponse");
 			log.info(response.toString());

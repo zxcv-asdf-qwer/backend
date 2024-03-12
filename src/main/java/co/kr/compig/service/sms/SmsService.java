@@ -4,7 +4,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.stereotype.Service;
 
-import co.kr.compig.api.sms.dto.SmsSend;
+import co.kr.compig.api.presentation.sms.request.SmsSend;
 import co.kr.compig.common.exception.BizException;
 import co.kr.compig.common.exception.dto.ErrorCode;
 import co.kr.compig.domain.sms.SmsRepository;

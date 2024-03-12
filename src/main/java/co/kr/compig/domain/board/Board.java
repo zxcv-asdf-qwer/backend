@@ -8,8 +8,8 @@ import java.util.stream.Collectors;
 
 import org.hibernate.annotations.ColumnDefault;
 
-import co.kr.compig.api.board.dto.BoardDetailResponse;
-import co.kr.compig.api.board.dto.BoardUpdateRequest;
+import co.kr.compig.api.presentation.board.response.BoardDetailResponse;
+import co.kr.compig.api.presentation.board.request.BoardUpdateRequest;
 import co.kr.compig.common.code.BoardType;
 import co.kr.compig.common.code.ContentsType;
 import co.kr.compig.common.code.IsYn;

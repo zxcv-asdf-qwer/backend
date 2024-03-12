@@ -6,8 +6,8 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import co.kr.compig.api.settle.dto.SettleCreateRequest;
-import co.kr.compig.api.settle.dto.SettleResponse;
+import co.kr.compig.api.presentation.settle.request.SettleCreateRequest;
+import co.kr.compig.api.presentation.settle.response.SettleResponse;
 import co.kr.compig.common.exception.NotExistDataException;
 import co.kr.compig.domain.settle.Settle;
 import co.kr.compig.domain.settle.SettleGroup;

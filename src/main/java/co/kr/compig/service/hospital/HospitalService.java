@@ -6,11 +6,11 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import co.kr.compig.api.hospital.dto.HospitalCreateRequest;
-import co.kr.compig.api.hospital.dto.HospitalDetailResponse;
-import co.kr.compig.api.hospital.dto.HospitalResponse;
-import co.kr.compig.api.hospital.dto.HospitalSearchRequest;
-import co.kr.compig.api.hospital.dto.HospitalUpdateRequest;
+import co.kr.compig.api.presentation.hospital.request.HospitalCreateRequest;
+import co.kr.compig.api.presentation.hospital.response.HospitalDetailResponse;
+import co.kr.compig.api.presentation.hospital.response.HospitalResponse;
+import co.kr.compig.api.presentation.hospital.request.HospitalSearchRequest;
+import co.kr.compig.api.presentation.hospital.request.HospitalUpdateRequest;
 import co.kr.compig.common.exception.NotExistDataException;
 import co.kr.compig.domain.hospital.Hospital;
 import co.kr.compig.domain.hospital.HospitalRepository;

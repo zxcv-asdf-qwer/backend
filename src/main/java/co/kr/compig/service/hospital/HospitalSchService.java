@@ -24,10 +24,10 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import co.kr.compig.api.hospital.dto.HospitalCreateRequest;
-import co.kr.compig.api.hospital.dto.openApiDto.HospitalDto;
-import co.kr.compig.api.hospital.dto.openApiDto.HospitalExceptionDto;
-import co.kr.compig.api.hospital.dto.openApiDto.HospitalResponseVO;
+import co.kr.compig.api.presentation.hospital.request.HospitalCreateRequest;
+import co.kr.compig.api.presentation.hospital.openapi.HospitalDto;
+import co.kr.compig.api.presentation.hospital.openapi.HospitalExceptionDto;
+import co.kr.compig.api.presentation.hospital.openapi.HospitalResponseVO;
 import co.kr.compig.common.exception.BizException;
 import co.kr.compig.domain.hospital.Hospital;
 import co.kr.compig.domain.hospital.HospitalRepository;
