@@ -43,7 +43,7 @@ public class UserAccountController {
 			.build());
 	}
 
-	@GetMapping("/{accountId}")
+	@GetMapping(path = "/{accountId}")
 	public ResponseEntity<Response<AccountDetailResponse>> getAccount(
 		@PathVariable(name = "accountId") Long accountId) {
 		return ResponseEntity.ok(Response.<AccountDetailResponse>builder()
@@ -51,7 +51,7 @@ public class UserAccountController {
 			.build());
 	}
 
-	@GetMapping("/member/{memberId}")
+	@GetMapping(path = "/member/{memberId}")
 	public ResponseEntity<Response<AccountDetailResponse>> getAccountByMember(
 		@PathVariable(name = "memberId") String memberId) {
 		return ResponseEntity.ok(Response.<AccountDetailResponse>builder()
@@ -59,7 +59,7 @@ public class UserAccountController {
 			.build());
 	}
 
-	@PutMapping("/{accountId}")
+	@PutMapping(path = "/{accountId}")
 	public ResponseEntity<Response<?>> updateAccount(@PathVariable(name = "accountId") Long accountId,
 		@RequestBody @Valid AccountUpdateRequest accountUpdateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
@@ -70,12 +70,11 @@ public class UserAccountController {
 	@DeleteMapping(path = "/{accountId}")
 	public ResponseEntity<Response<?>> deleteAccount(
 		@PathVariable(name = "accountId") Long accountId) {
-		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-			.data(Map.of("accountId", accountService.deleteAccount(accountId)))
-			.build());
+		accountService.deleteAccount(accountId);
+		return ResponseEntity.ok().build();
 	}
 
-	@GetMapping("/checkAccount")
+	@GetMapping(path = "/checkAccount")
 	public ResponseEntity<Response<AccountCheckResponse>> checkAccount(@ModelAttribute
 	AccountCheckRequest accountCheckRequest) {
 		return ResponseEntity.ok(Response.<AccountCheckResponse>builder()
@@ -83,7 +82,7 @@ public class UserAccountController {
 			.build());
 	}
 
-	@GetMapping("/getAccountCheck")
+	@GetMapping(path = "/getAccountCheck")
 	public ResponseEntity<Response<Boolean>> getAccountCheck(@RequestBody String memberId) {
 		return ResponseEntity.ok(Response.<Boolean>builder()
 			.data(accountService.getAccountCheck(memberId))

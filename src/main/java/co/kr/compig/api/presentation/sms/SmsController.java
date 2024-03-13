@@ -19,7 +19,7 @@ public class SmsController {
 
 	private final SmsService smsService;
 
-	@PostMapping("/authentication/{receiverPhoneNumber}")
+	@PostMapping(path = "/authentication/{receiverPhoneNumber}")
 	public ResponseEntity<Response<?>> sendAuthentication(
 		@PathVariable(name = "receiverPhoneNumber") String receiverPhoneNumber) {
 		smsService.sendSmsAuthentication(receiverPhoneNumber);

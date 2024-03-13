@@ -35,14 +35,14 @@ public class AdminSettleController {
 			.build());
 	}
 
-	@GetMapping("/{settleGroupId}")
+	@GetMapping(path = "/{settleGroupId}")
 	public ResponseEntity<Response<List<SettleResponse>>> pageListSettle(
 		@PathVariable(name = "settleGroupId") Long settleGroupId) {
 		return ResponseEntity.ok().body(Response.<List<SettleResponse>>builder()
 			.data(settleService.getSettleList(settleGroupId)).build());
 	}
 
-	@PutMapping("/{settleId}")
+	@PutMapping(path = "/{settleId}")
 	public ResponseEntity<Response<?>> deleteSettle(@PathVariable(name = "settleId") Long settleId) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("settleId", settleService.updateSettleUseYn(settleId)))

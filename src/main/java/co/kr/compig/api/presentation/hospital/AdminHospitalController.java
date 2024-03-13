@@ -51,7 +51,7 @@ public class AdminHospitalController {
 		return ResponseEntity.ok(pageResponse);
 	}
 
-	@GetMapping("/{hospitalId}")
+	@GetMapping(path = "/{hospitalId}")
 	public ResponseEntity<Response<HospitalDetailResponse>> getHospital(
 		@PathVariable(name = "hospitalId") Long hospitalId) {
 		return ResponseEntity.ok(Response.<HospitalDetailResponse>builder()
@@ -59,7 +59,7 @@ public class AdminHospitalController {
 			.build());
 	}
 
-	@PutMapping("/{hospitalId}")
+	@PutMapping(path = "/{hospitalId}")
 	public ResponseEntity<Response<?>> updateHospital(@PathVariable(name = "hospitalId") Long hospitalId,
 		@RequestBody @Valid HospitalUpdateRequest hospitalUpdateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
@@ -67,10 +67,9 @@ public class AdminHospitalController {
 			.build());
 	}
 
-	@DeleteMapping("/{hospitalId}")
+	@DeleteMapping(path = "/{hospitalId}")
 	public ResponseEntity<Response<?>> deleteHospital(@PathVariable(name = "hospitalId") Long hospitalId) {
-		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-			.data(Map.of("hospitalId", hospitalService.deleteHospital(hospitalId)))
-			.build());
+		hospitalService.deleteHospital(hospitalId);
+		return ResponseEntity.ok().build();
 	}
 }

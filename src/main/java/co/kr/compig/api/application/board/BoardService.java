@@ -70,10 +70,9 @@ public class BoardService {
 		return board.getId();
 	}
 
-	public Long deleteBoard(Long boardId) {
+	public void deleteBoard(Long boardId) {
 		Board board = boardRepository.findById(boardId).orElseThrow(NotExistDataException::new);
 		boardRepository.delete(board);
-		return board.getId();
 	}
 
 	@Transactional(readOnly = true)

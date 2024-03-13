@@ -55,7 +55,7 @@ public class AdminBoardController {
 		return ResponseEntity.ok(pageResponse);
 	}
 
-	@GetMapping("/{boardId}")
+	@GetMapping(path = "/{boardId}")
 	public ResponseEntity<Response<BoardDetailResponse>> getBoard(
 		@PathVariable(name = "boardId") Long boardId) {
 		return ResponseEntity.ok(Response.<BoardDetailResponse>builder()
@@ -63,7 +63,7 @@ public class AdminBoardController {
 			.build());
 	}
 
-	@PutMapping("/{boardId}")
+	@PutMapping(path = "/{boardId}")
 	public ResponseEntity<Response<?>> updateBoard(@PathVariable(name = "boardId") Long boardId,
 		@RequestBody @Valid BoardUpdateRequest boardUpdateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
@@ -73,9 +73,8 @@ public class AdminBoardController {
 
 	@DeleteMapping(path = "/{boardId}")
 	public ResponseEntity<Response<?>> deleteBoard(@PathVariable(name = "boardId") Long boardId) {
-		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-			.data(Map.of("boardId", boardService.deleteBoard(boardId)))
-			.build());
+		boardService.deleteBoard(boardId);
+		return ResponseEntity.ok().build();
 	}
 
 	/**
@@ -94,7 +93,7 @@ public class AdminBoardController {
 	/**
 	 * s3 파일 base64로 인코딩하여 보여주기
 	 */
-	@GetMapping("/base64/{boardId}")
+	@GetMapping(path = "/base64/{boardId}")
 	public ResponseEntity<Response<BoardDetailResponse>> getBoardBase(
 		@PathVariable(name = "boardId") Long boardId) {
 		return ResponseEntity.ok(Response.<BoardDetailResponse>builder()

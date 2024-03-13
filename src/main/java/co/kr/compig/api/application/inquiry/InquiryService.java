@@ -62,10 +62,9 @@ public class InquiryService {
 		return question.getId();
 	}
 
-	public Long deleteQuestion(Long questionId) {
+	public void deleteQuestion(Long questionId) {
 		Question question = questionRepository.findById(questionId).orElseThrow(NotExistDataException::new);
 		questionRepository.delete(question);
-		return question.getId();
 	}
 
 	public Slice<QuestionResponse> pageListCursor(QuestionSearchRequest questionSearchRequest, Pageable pageable) {
@@ -89,11 +88,10 @@ public class InquiryService {
 		return answer.getId();
 	}
 
-	public Long deleteAnswer(Long questionId) {
+	public void deleteAnswer(Long questionId) {
 		Question question = questionRepository.findById(questionId).orElseThrow(NotExistDataException::new);
 		Answer answer = answerRepository.findByQuestion(question).orElseThrow(NotExistDataException::new);
 		answerRepository.delete(answer);
 		question.updateIsAnswer(IsYn.N);
-		return answer.getId();
 	}
 }

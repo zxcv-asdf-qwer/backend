@@ -35,7 +35,7 @@ public class UserMemberController {
 		return ResponseEntity.created(URI.create("/pb/members")).build();
 	}
 
-	@PostMapping("/picture")
+	@PostMapping(path = "/picture")
 	public ResponseEntity<Response<?>> userPictureUpdate(@RequestPart(name = "file") MultipartFile picture) {
 		memberService.userPictureUpdate(picture);
 		return ResponseEntity.created(URI.create("/pb/members/picture")).build();
@@ -49,7 +49,7 @@ public class UserMemberController {
 	}
 
 	//google kakao naver 앱에서 탈퇴 후 -> /pb/members/leave
-	@PutMapping("/leave")
+	@PutMapping(path = "/leave")
 	public ResponseEntity<Response<?>> userLeave(@RequestBody LeaveRequest leaveRequest) {
 		memberService.userLeave(leaveRequest);
 		return ResponseEntity.ok().build();
