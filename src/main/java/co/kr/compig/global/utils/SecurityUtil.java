@@ -3,17 +3,14 @@ package co.kr.compig.global.utils;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.util.Assert;
 
 import co.kr.compig.global.error.exception.BizException;
@@ -117,29 +114,7 @@ public class SecurityUtil {
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
 			if (authentication != null) {
-				JwtAuthenticationToken authentication1 = (JwtAuthenticationToken)authentication;
-				Jwt accessToken = authentication1.getToken();
-				List<String> groups = accessToken.getClaim("groups");
-				Collection<GrantedAuthority> authorities = groups
-					.stream()
-					.map(roleName -> "ROLE_" + roleName)
-					.map(SimpleGrantedAuthority::new)
-					.collect(Collectors.toSet());
-
-				CustomOauth2User customOauth2User = CustomOauth2User.builder()
-					.id(accessToken.getSubject())
-					.userId(accessToken.getClaim("preferred_username"))
-					.username(accessToken.getClaim("name"))
-					.email(accessToken.getClaim("email"))
-					.userYn(true)
-					.build();
-
-				return new CustomOauth2UserAuthenticatedToken(
-					new Jwt(accessToken.getTokenValue(), Instant.now(),
-						Instant.MAX, Map.of("header", "header"), Map.of("claim", "claim")),
-					authorities,
-					customOauth2User
-				);
+				return (CustomOauth2UserAuthenticatedToken)authentication;
 			} else {
 				throw new BizException("알 수 없는 인증 정보");
 			}

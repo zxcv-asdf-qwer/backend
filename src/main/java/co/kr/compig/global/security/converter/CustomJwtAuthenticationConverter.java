@@ -53,6 +53,7 @@ public class CustomJwtAuthenticationConverter implements
 			user.setUserId(jwt.getClaim("clientId"));
 			user.setUserYn(false);
 		} else {
+			user.setId(jwt.getSubject());
 			user.setUserId(jwt.getClaim("preferred_username"));
 			user.setUsername(jwt.getClaim("name"));
 			user.setEmail(jwt.getClaim("email"));

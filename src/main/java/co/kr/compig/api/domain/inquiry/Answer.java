@@ -1,7 +1,7 @@
-package co.kr.compig.api.domain.answer;
+package co.kr.compig.api.domain.inquiry;
 
 import co.kr.compig.api.domain.code.UseYn;
-import co.kr.compig.api.domain.question.Question;
+import co.kr.compig.api.presentation.inquiry.request.AnswerUpdateRequest;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -72,5 +72,9 @@ public class Answer {
 	/* =================================================================
 	 * Relation method
 	   ================================================================= */
+	public void update(AnswerUpdateRequest answerUpdateRequest) {
+		this.answerTitle = answerUpdateRequest.getAnswerTitle();
+		this.answerContent = answerUpdateRequest.getAnswerContent();
+	}
 
 }

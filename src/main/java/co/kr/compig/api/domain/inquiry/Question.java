@@ -1,10 +1,11 @@
-package co.kr.compig.api.domain.question;
+package co.kr.compig.api.domain.inquiry;
 
-import co.kr.compig.api.domain.answer.Answer;
 import co.kr.compig.api.domain.code.IsYn;
 import co.kr.compig.api.domain.code.QuestionType;
 import co.kr.compig.api.domain.code.UseYn;
 import co.kr.compig.api.domain.code.converter.QuestionTypeConverter;
+import co.kr.compig.api.presentation.inquiry.request.QuestionUpdateRequest;
+import co.kr.compig.api.presentation.inquiry.response.QuestionDetailResponse;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -76,8 +77,29 @@ public class Question {
 	@Builder.Default
 	private CreatedAndUpdated createdAndModified = new CreatedAndUpdated();
 
+
 	/* =================================================================
 	* Relation method
 	================================================================= */
 
+	public QuestionDetailResponse toQuestionDetailResponse() {
+		return QuestionDetailResponse.builder()
+			.questionId(this.id)
+			.questionType(this.questionType)
+			.questionTitle(this.questionTitle)
+			.questionContent(this.questionContent)
+			.createOn(this.createdAndModified.getCreatedOn())
+			.isAnswer(this.isAnswer)
+			.build();
+	}
+
+	public void update(QuestionUpdateRequest questionUpdateRequest) {
+		this.questionType = questionUpdateRequest.getQuestionType();
+		this.questionTitle = questionUpdateRequest.getQuestionTitle();
+		this.questionContent = questionUpdateRequest.getQuestionContent();
+	}
+
+	public void updateIsAnswer(IsYn isYn) {
+		this.isAnswer = isYn;
+	}
 }
