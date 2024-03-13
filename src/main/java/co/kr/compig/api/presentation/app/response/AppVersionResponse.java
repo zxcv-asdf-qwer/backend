@@ -2,16 +2,22 @@ package co.kr.compig.api.presentation.app.response;
 
 import co.kr.compig.api.domain.code.AppOsType;
 import co.kr.compig.api.domain.code.IsYn;
-import lombok.Builder;
+import co.kr.compig.global.dto.BaseAudit;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
-@Builder
-public record AppVersionResponse(
-	Long id,
-	AppOsType osCode,
-	String lastVer,
-	String lastVerNm,
-	String minVer,
-	String minVerNm,
-	IsYn forceUpdate
-) {
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@SuperBuilder(toBuilder = true)
+public class AppVersionResponse extends BaseAudit {
+	private Long id;
+	private AppOsType osCode; // 요청된 디바이스 os이름
+	private String lastVer; // 앱 사용 가능한 최신 버전 정보
+	private String lastVerNm; // 앱 사용 가능한 최신 버전 이름
+	private String minVer; // 앱 사용 가능한 최소 버전 정보
+	private String minVerNm; // 앱 사용 가능한 최소 버전 이름
+	private IsYn forceUpdate; // 강제 업데이트 여부
 }

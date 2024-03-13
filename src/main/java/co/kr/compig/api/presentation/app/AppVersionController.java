@@ -45,9 +45,10 @@ public class AppVersionController {
 	}
 
 	@GetMapping("/{app-id}")
-	public ResponseEntity<AppVersionResponse> getById(@PathVariable(name = "app-id") Long appId) {
-
-		return ResponseEntity.ok().body(appVersionService.getById(appId));
+	public ResponseEntity<Response<AppVersionResponse>> getById(@PathVariable(name = "app-id") Long appId) {
+		return ResponseEntity.ok(Response.<AppVersionResponse>builder()
+			.data(appVersionService.getById(appId))
+			.build());
 	}
 
 	@PutMapping("/{app-id}")
