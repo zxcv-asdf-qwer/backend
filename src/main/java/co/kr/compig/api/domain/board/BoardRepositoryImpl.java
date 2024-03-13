@@ -1,6 +1,6 @@
 package co.kr.compig.api.domain.board;
 
-import static co.kr.compig.domain.board.QBoard.*;
+import static co.kr.compig.api.domain.board.QBoard.*;
 
 import java.util.List;
 
@@ -21,8 +21,8 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
-import co.kr.compig.api.presentation.board.response.BoardResponse;
 import co.kr.compig.api.presentation.board.request.BoardSearchRequest;
+import co.kr.compig.api.presentation.board.response.BoardResponse;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
