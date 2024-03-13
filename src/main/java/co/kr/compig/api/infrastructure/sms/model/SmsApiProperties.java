@@ -12,5 +12,5 @@ public class SmsApiProperties {
 
 	private String url;
 	private String serviceId;
-	private String serviceKey;
+	private String basicToken;
 }

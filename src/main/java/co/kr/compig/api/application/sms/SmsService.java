@@ -1,13 +1,15 @@
 package co.kr.compig.api.application.sms;
 
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.stereotype.Service;
 
+import co.kr.compig.api.domain.sms.Sms;
+import co.kr.compig.api.domain.sms.SmsRepository;
 import co.kr.compig.api.presentation.sms.model.SmsSend;
 import co.kr.compig.global.error.exception.BizException;
 import co.kr.compig.global.error.model.ErrorCode;
-import co.kr.compig.api.domain.sms.SmsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,11 +25,12 @@ public class SmsService {
 		String authenticationNumber = String.valueOf(
 			ThreadLocalRandom.current().nextInt(100000, 1000000));
 
-		String contents = "인증번호 : " + authenticationNumber;
+		String contents = "인증 번호 : " + authenticationNumber;
 		//TODO 수정
-		SmsSend smsSend = new SmsSend();
-		smsSend.toBuilder()
+		SmsSend smsSend = SmsSend.builder()
+			.receiverPhoneNumber(receiverPhoneNumber)
 			.contents(contents)
+			.authNumber(authenticationNumber)
 			.build();
 		try {
 			smsRepository.save(smsSend.toEntity());
@@ -37,4 +40,12 @@ public class SmsService {
 		}
 	}
 
+	public void getAuthentication(String receiverPhoneNumber, String authenticationNumber) {
+		if (receiverPhoneNumber.isEmpty() || authenticationNumber.isEmpty()) {
+			throw new BizException("인증 실패");
+		}
+		Optional<Sms> result = smsRepository.findTopByReceiverPhoneNumberAndRef1OrderByIdDesc(
+			receiverPhoneNumber, authenticationNumber);
+		result.orElseThrow(() -> new BizException("인증 실패"));
+	}
 }

@@ -4,17 +4,16 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
-import co.kr.compig.global.utils.SecurityUtil;
 import co.kr.compig.api.domain.sms.Sms;
+import co.kr.compig.global.utils.SecurityUtil;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 @Getter
-@SuperBuilder(toBuilder = true)
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class SmsSend {
@@ -28,6 +27,7 @@ public class SmsSend {
 	@Builder.Default
 	private String refkey = getNow(); //비즈뿌리오에 보내는 unique 값
 	private LocalDateTime sendtime; //발송시간 미입력 즉시발송
+	private String authNumber; //인증 번호
 
 	private static String getNow() {
 		// 현재 날짜와 시간을 구합니다.
@@ -55,6 +55,7 @@ public class SmsSend {
 			.contents(this.contents)
 			.refkey(this.refkey)
 			.sendtime(this.sendtime)
+			.ref1(authNumber)
 			.build();
 	}
 }

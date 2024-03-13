@@ -52,6 +52,8 @@ public class Sms {
 	private String refkey; //비즈뿌리오에 보내는 unique 값
 	@Column
 	private LocalDateTime sendtime; //발송시간 미입력 즉시발송
+	@Column
+	private String ref1; //비고 //인증 번호
 
 	/* =================================================================
    * Default columns
