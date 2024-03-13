@@ -1,7 +1,7 @@
 package co.kr.compig.api.domain.hospital;
 
-import static co.kr.compig.domain.board.QBoard.*;
-import static co.kr.compig.domain.hospital.QHospital.*;
+import static co.kr.compig.api.domain.board.QBoard.*;
+import static co.kr.compig.api.domain.hospital.QHospital.*;
 
 import java.util.List;
 
@@ -22,8 +22,8 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
-import co.kr.compig.api.presentation.hospital.response.HospitalResponse;
 import co.kr.compig.api.presentation.hospital.request.HospitalSearchRequest;
+import co.kr.compig.api.presentation.hospital.response.HospitalResponse;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
