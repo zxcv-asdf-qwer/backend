@@ -5,7 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import co.kr.compig.api.domain.app.AppVersion;
 import co.kr.compig.api.domain.app.AppVersionRepository;
-import co.kr.compig.api.domain.app.AppVersionSearchRepository;
+import co.kr.compig.api.domain.app.AppVersionRepositoryCustom;
 import co.kr.compig.api.presentation.app.request.AppVersionRequest;
 import co.kr.compig.api.presentation.app.response.AppVersionResponse;
 import co.kr.compig.global.error.exception.NotExistDataException;
@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AppVersionService {
 
 	private final AppVersionRepository appVersionRepository;
-	private final AppVersionSearchRepository appVersionSearchRepository;
+	private final AppVersionRepositoryCustom appVersionRepositoryCustom;
 
 	/**
 	 * app version check data create
@@ -37,7 +37,7 @@ public class AppVersionService {
 	 * @return AppVersionResponse
 	 */
 	public AppVersionResponse get() {
-		return appVersionSearchRepository.findByRecentVersion()
+		return appVersionRepositoryCustom.findByRecentVersion()
 			.map(AppVersion::toResponse)
 			.orElse(null);
 	}

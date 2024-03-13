@@ -2,18 +2,16 @@ package co.kr.compig.api.domain.app;
 
 import java.util.Optional;
 
-import org.springframework.stereotype.Repository;
-
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
 
-@Repository
 @RequiredArgsConstructor
-public class AppVersionSearchRepository {
+public class AppVersionRepositoryImpl implements AppVersionRepositoryCustom {
 
 	private final JPAQueryFactory jpaQueryFactory;
 
+	@Override
 	public Optional<AppVersion> findByRecentVersion() {
 		return Optional.ofNullable(jpaQueryFactory
 			.selectFrom(QAppVersion.appVersion)
