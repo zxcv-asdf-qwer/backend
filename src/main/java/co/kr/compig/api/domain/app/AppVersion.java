@@ -93,12 +93,12 @@ public class AppVersion { // 앱 버전 체크
 	}
 
 	public void update(AppVersionRequest request) {
-		this.osCode = request.osCode();
+		this.osCode = AppOsType.of(request.osCode());
 		this.lastVer = request.lastVer();
 		this.lastVerNm = request.lastVerNm();
 		this.minVer = request.minVer();
 		this.minVerNm = request.minVerNm();
-		this.forceUpdate = request.forceUpdate();
+		this.forceUpdate = IsYn.of(request.forceUpdate());
 	}
 }
 

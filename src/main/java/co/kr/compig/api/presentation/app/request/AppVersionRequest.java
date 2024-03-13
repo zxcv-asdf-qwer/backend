@@ -10,7 +10,7 @@ import jakarta.validation.constraints.Pattern;
 public record AppVersionRequest(
 	@NotNull
 	@Pattern(regexp = "^(IOS|AOS)$")
-	AppOsType osCode,
+	String osCode,
 	@NotNull
 	Integer lastVer,
 	@NotBlank
@@ -21,17 +21,17 @@ public record AppVersionRequest(
 	String minVerNm,
 	@NotNull
 	@Pattern(regexp = "^[YN]$")
-	IsYn forceUpdate
+	String forceUpdate
 ) {
 
 	public AppVersion toEntity() {
 		return AppVersion.builder()
-			.osCode(osCode)
+			.osCode(AppOsType.of(osCode))
 			.lastVer(lastVer)
 			.lastVerNm(lastVerNm)
 			.minVer(minVer)
 			.minVerNm(minVerNm)
-			.forceUpdate(forceUpdate)
+			.forceUpdate(IsYn.of(forceUpdate))
 			.build();
 	}
 }

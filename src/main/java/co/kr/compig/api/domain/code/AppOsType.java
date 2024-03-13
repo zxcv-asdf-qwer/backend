@@ -11,4 +11,12 @@ public enum AppOsType implements BaseEnumCode<String> {
 
 	private final String code;
 	private final String desc;
+
+	public static AppOsType of(final String appOsType) {
+		if (appOsType.equals("AOS")) {
+			return AppOsType.AOS;
+		}
+
+		return AppOsType.IOS;
+	}
 }

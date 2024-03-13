@@ -36,7 +36,7 @@ public class AppVersionService {
 	 * recent version read
 	 * @return AppVersionResponse
 	 */
-	public final AppVersionResponse get() {
+	public AppVersionResponse get() {
 		return appVersionSearchRepository.findByRecentVersion()
 			.map(AppVersion::toResponse)
 			.orElse(null);
@@ -47,7 +47,7 @@ public class AppVersionService {
 	 * @param version : version
 	 * @return AppVersionResponse
 	 */
-	public final AppVersionResponse get(final Integer version) {
+	public AppVersionResponse get(final Integer version) {
 		return appVersionRepository.findByLastVer(version)
 			.map(AppVersion::toResponse)
 			.orElse(null);
@@ -58,7 +58,7 @@ public class AppVersionService {
 	 * @param version : version name
 	 * @return AppVersionResponse
 	 */
-	public final AppVersionResponse get(final String version) {
+	public AppVersionResponse get(final String version) {
 		return appVersionRepository.findByLastVerNm(version)
 			.map(AppVersion::toResponse)
 			.orElse(null);
