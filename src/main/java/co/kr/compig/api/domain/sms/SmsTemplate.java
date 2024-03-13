@@ -7,6 +7,8 @@ import co.kr.compig.api.domain.code.SmsTemplateType;
 import co.kr.compig.api.domain.code.SmsType;
 import co.kr.compig.api.domain.code.converter.SmsTemplateTypeConverter;
 import co.kr.compig.api.domain.code.converter.SmsTypeConverter;
+import co.kr.compig.api.presentation.sms.request.SmsTemplateUpdateRequest;
+import co.kr.compig.api.presentation.sms.response.SmsTemplateResponse;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -72,6 +74,15 @@ public class SmsTemplate {
 	@OneToMany(mappedBy = "smsTemplate", cascade = CascadeType.ALL, orphanRemoval = true)
 	@Builder.Default
 	private final Set<Sms> sms = new HashSet<>();
+
+	public SmsTemplateResponse toSmsTemplateDetailResponse() {
+		return SmsTemplateResponse.builder()
+			.build();
+	}
+
+	public void update(SmsTemplateUpdateRequest smsTemplateUpdateRequest) {
+
+	}
 
   /*====================================================================
   * Relation method

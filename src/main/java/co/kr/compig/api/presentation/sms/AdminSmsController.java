@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(path = "/pb/sms", produces = "application/json")
-public class SmsController {
+public class AdminSmsController {
 
 	private final SmsService smsService;
 

@@ -12,7 +12,7 @@ import co.kr.compig.api.infrastructure.sms.model.SmsPayload.Content;
 import co.kr.compig.api.infrastructure.sms.model.SmsPayload.Recontent;
 import co.kr.compig.api.infrastructure.sms.model.SmsPayload.Resend;
 import co.kr.compig.api.infrastructure.sms.model.SmsPayload.Sms;
-import co.kr.compig.api.presentation.sms.request.SmsSend;
+import co.kr.compig.api.presentation.sms.model.SmsSend;
 import co.kr.compig.api.application.system.AccessKeyService;
 import co.kr.compig.api.domain.code.SystemServiceType;
 import lombok.RequiredArgsConstructor;

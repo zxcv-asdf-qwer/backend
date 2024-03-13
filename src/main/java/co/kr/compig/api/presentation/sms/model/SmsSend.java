@@ -1,4 +1,4 @@
-package co.kr.compig.api.presentation.sms.request;
+package co.kr.compig.api.presentation.sms.model;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
