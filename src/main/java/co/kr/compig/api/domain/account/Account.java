@@ -2,13 +2,13 @@ package co.kr.compig.api.domain.account;
 
 import java.util.Base64;
 
-import co.kr.compig.api.presentation.account.request.AccountUpdateRequest;
-import co.kr.compig.api.presentation.account.response.AccountDetailResponse;
 import co.kr.compig.api.domain.code.BankCode;
 import co.kr.compig.api.domain.code.converter.BankCodeConverter;
+import co.kr.compig.api.domain.member.Member;
+import co.kr.compig.api.presentation.account.request.AccountUpdateRequest;
+import co.kr.compig.api.presentation.account.response.AccountDetailResponse;
 import co.kr.compig.global.crypt.AES256;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
-import co.kr.compig.api.domain.member.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Embedded;
@@ -61,6 +61,8 @@ public class Account {
 	@Column(nullable = false)
 	private String iv; // 이니셜 벡터
 
+	@Column
+	private String passBookUrl; // 통장사본
 	/* =================================================================
 	 * Domain mapping
 	   ================================================================= */
