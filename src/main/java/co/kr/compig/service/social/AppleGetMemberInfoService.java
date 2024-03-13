@@ -40,12 +40,12 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 
-import co.kr.compig.api.social.apple.AppleAuthApi;
-import co.kr.compig.api.social.apple.AppleProperties;
-import co.kr.compig.api.social.dto.ApplePublicKeyResponse;
-import co.kr.compig.api.social.dto.ApplePublicKeyResponse.Key;
-import co.kr.compig.api.social.dto.AppleRefreshTokenResponse;
-import co.kr.compig.api.social.dto.AppleSocialTokenResponse;
+import co.kr.compig.api.infrastructure.auth.social.apple.AppleAuthApi;
+import co.kr.compig.api.infrastructure.auth.social.apple.model.AppleProperties;
+import co.kr.compig.api.infrastructure.auth.social.apple.model.ApplePublicKeyResponse;
+import co.kr.compig.api.infrastructure.auth.social.apple.model.ApplePublicKeyResponse.Key;
+import co.kr.compig.api.infrastructure.auth.social.apple.model.AppleRefreshTokenResponse;
+import co.kr.compig.api.infrastructure.auth.social.apple.model.AppleSocialTokenResponse;
 import co.kr.compig.common.utils.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

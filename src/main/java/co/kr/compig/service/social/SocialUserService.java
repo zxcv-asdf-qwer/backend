@@ -14,12 +14,12 @@ import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import co.kr.compig.api.social.dto.KeycloakAccessTokenRequest;
-import co.kr.compig.api.social.dto.LeaveRequest;
-import co.kr.compig.api.social.dto.LoginRequest;
-import co.kr.compig.api.social.dto.LoginResponse;
-import co.kr.compig.api.social.dto.SocialUserResponse;
-import co.kr.compig.api.social.keycloak.KeycloakAuthApi;
+import co.kr.compig.api.infrastructure.auth.keycloak.KeycloakAuthApi;
+import co.kr.compig.api.infrastructure.auth.keycloak.model.KeycloakAccessTokenRequest;
+import co.kr.compig.api.presentation.member.request.LeaveRequest;
+import co.kr.compig.api.presentation.social.request.SocialLoginRequest;
+import co.kr.compig.api.presentation.social.response.SocialLoginResponse;
+import co.kr.compig.api.presentation.social.response.SocialUserResponse;
 import co.kr.compig.common.code.MemberRegisterType;
 import co.kr.compig.common.keycloak.KeycloakProperties;
 import co.kr.compig.common.utils.GsonLocalDateTimeAdapter;
@@ -51,10 +51,10 @@ public class SocialUserService {
 		return new LoginServiceImpl();
 	}
 
-	public LoginResponse doSocialLogin(LoginRequest loginRequest) {
-		SocialLoginService loginService = this.getLoginService(loginRequest.getMemberRegisterType());
+	public SocialLoginResponse doSocialLogin(SocialLoginRequest socialLoginRequest) {
+		SocialLoginService loginService = this.getLoginService(socialLoginRequest.getMemberRegisterType());
 		SocialUserResponse socialUserResponse = loginService.tokenToSocialUserResponse(
-			loginRequest);
+			socialLoginRequest);
 
 		Optional<Member> optionalMember = memberRepository.findByUserId(socialUserResponse.getSub());
 		Member member = optionalMember.orElseGet(() -> {
@@ -70,7 +70,7 @@ public class SocialUserService {
 		// 키클락 로그인 실행
 	}
 
-	private LoginResponse getKeycloakAccessToken(String userId, String userPw) {
+	private SocialLoginResponse getKeycloakAccessToken(String userId, String userPw) {
 		ResponseEntity<?> response = keycloakAuthApi.getAccessToken(
 			KeycloakAccessTokenRequest.builder()
 				.client_id(keycloakProperties.getClientId())
@@ -87,21 +87,21 @@ public class SocialUserService {
 			.registerTypeAdapter(LocalDateTime.class, new GsonLocalDateTimeAdapter())
 			.create();
 
-		LoginResponse loginResponse = gson.fromJson(
+		SocialLoginResponse socialLoginResponse = gson.fromJson(
 			response.getBody().toString(),
-			LoginResponse.class
+			SocialLoginResponse.class
 		);
 
-		loginResponse.setEmail(userId);
+		socialLoginResponse.setEmail(userId);
 		JwtDecoder jwtDecoder = JwtDecoders.fromIssuerLocation(
 			oAuth2ResourceServerProperties.getJwt().getIssuerUri());
 		// LoginResponse에서 토큰 문자열 가져오기
-		String jwtToken = loginResponse.getAccess_token();
+		String jwtToken = socialLoginResponse.getAccess_token();
 		// 토큰 디코딩 및 파싱하여 Jwt 객체 얻기
 		Jwt jwt = jwtDecoder.decode(jwtToken);
-		loginResponse.setRoles(jwt.getClaim("groups"));
+		socialLoginResponse.setRoles(jwt.getClaim("groups"));
 
-		return loginResponse;
+		return socialLoginResponse;
 	}
 
 	public void doSocialRevoke(LeaveRequest leaveRequest) {

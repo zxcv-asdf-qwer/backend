@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import co.kr.compig.api.social.dto.LeaveRequest;
-import co.kr.compig.api.social.dto.LoginRequest;
-import co.kr.compig.api.social.dto.NaverLoginResponse;
-import co.kr.compig.api.social.dto.SocialUserResponse;
-import co.kr.compig.api.social.naver.NaverAuthApi;
+import co.kr.compig.api.infrastructure.auth.social.naver.NaverAuthApi;
+import co.kr.compig.api.infrastructure.auth.social.naver.model.NaverLoginResponse;
+import co.kr.compig.api.presentation.member.request.LeaveRequest;
+import co.kr.compig.api.presentation.social.request.SocialLoginRequest;
+import co.kr.compig.api.presentation.social.response.SocialUserResponse;
 import co.kr.compig.common.code.MemberRegisterType;
 import co.kr.compig.common.utils.GsonLocalDateTimeAdapter;
 import lombok.RequiredArgsConstructor;
@@ -33,9 +33,9 @@ public class NaverLoginServiceImpl implements SocialLoginService {
 	}
 
 	@Override
-	public SocialUserResponse tokenToSocialUserResponse(LoginRequest loginRequest) {
+	public SocialUserResponse tokenToSocialUserResponse(SocialLoginRequest socialLoginRequest) {
 		ResponseEntity<?> response = naverAuthApi.accessTokenToUserInfo(
-			"Bearer " + loginRequest.getToken());
+			"Bearer " + socialLoginRequest.getToken());
 
 		log.info(getServiceName().getCode() + " tokenToSocialUserResponse");
 		log.info(response.toString());

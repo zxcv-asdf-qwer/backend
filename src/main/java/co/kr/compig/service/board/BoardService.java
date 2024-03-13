@@ -14,12 +14,12 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import co.kr.compig.api.board.dto.BoardCreateRequest;
-import co.kr.compig.api.board.dto.BoardDetailResponse;
-import co.kr.compig.api.board.dto.BoardResponse;
-import co.kr.compig.api.board.dto.BoardSearchRequest;
-import co.kr.compig.api.board.dto.BoardUpdateRequest;
-import co.kr.compig.api.board.dto.SystemFileResponse;
+import co.kr.compig.api.presentation.board.request.BoardCreateRequest;
+import co.kr.compig.api.presentation.board.response.BoardDetailResponse;
+import co.kr.compig.api.presentation.board.response.BoardResponse;
+import co.kr.compig.api.presentation.board.request.BoardSearchRequest;
+import co.kr.compig.api.presentation.board.request.BoardUpdateRequest;
+import co.kr.compig.api.presentation.board.response.SystemFileResponse;
 import co.kr.compig.common.exception.NotExistDataException;
 import co.kr.compig.common.utils.S3Util;
 import co.kr.compig.domain.board.Board;

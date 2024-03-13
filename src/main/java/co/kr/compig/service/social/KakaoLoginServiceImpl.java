@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import co.kr.compig.api.social.dto.KaKaoLoginResponse;
-import co.kr.compig.api.social.dto.LeaveRequest;
-import co.kr.compig.api.social.dto.LoginRequest;
-import co.kr.compig.api.social.dto.SocialUserResponse;
-import co.kr.compig.api.social.kakao.KakaoUserApi;
+import co.kr.compig.api.infrastructure.auth.social.kakao.KakaoUserAuthApi;
+import co.kr.compig.api.infrastructure.auth.social.kakao.model.KaKaoLoginResponse;
+import co.kr.compig.api.presentation.member.request.LeaveRequest;
+import co.kr.compig.api.presentation.social.request.SocialLoginRequest;
+import co.kr.compig.api.presentation.social.response.SocialUserResponse;
 import co.kr.compig.common.code.MemberRegisterType;
 import co.kr.compig.common.utils.GsonLocalDateTimeAdapter;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Qualifier("kakaoLogin")
 public class KakaoLoginServiceImpl implements SocialLoginService {
 
-	private final KakaoUserApi kakaoUserApi;
+	private final KakaoUserAuthApi kakaoUserAuthApi;
 
 	@Override
 	public MemberRegisterType getServiceName() {
@@ -33,9 +33,9 @@ public class KakaoLoginServiceImpl implements SocialLoginService {
 	}
 
 	@Override
-	public SocialUserResponse tokenToSocialUserResponse(LoginRequest loginRequest) {
-		ResponseEntity<?> response = kakaoUserApi.accessTokenToUserInfo(
-			"Bearer " + loginRequest.getToken());
+	public SocialUserResponse tokenToSocialUserResponse(SocialLoginRequest socialLoginRequest) {
+		ResponseEntity<?> response = kakaoUserAuthApi.accessTokenToUserInfo(
+			"Bearer " + socialLoginRequest.getToken());
 
 		log.info(getServiceName().getCode() + " tokenToSocialUserResponse");
 		log.info(response.toString());

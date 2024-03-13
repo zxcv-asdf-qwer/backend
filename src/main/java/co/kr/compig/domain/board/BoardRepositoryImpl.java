@@ -21,8 +21,8 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
-import co.kr.compig.api.board.dto.BoardResponse;
-import co.kr.compig.api.board.dto.BoardSearchRequest;
+import co.kr.compig.api.presentation.board.response.BoardResponse;
+import co.kr.compig.api.presentation.board.request.BoardSearchRequest;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

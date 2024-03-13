@@ -6,9 +6,9 @@ import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
 
-import co.kr.compig.api.sms.BizPpurioApi;
-import co.kr.compig.api.sms.SmsApiProperties;
-import co.kr.compig.api.sms.dto.BizPpurioTokenResponse;
+import co.kr.compig.api.infrastructure.sms.BizPpurioApi;
+import co.kr.compig.api.infrastructure.sms.model.SmsApiProperties;
+import co.kr.compig.api.infrastructure.sms.model.BizPpurioTokenResponse;
 import co.kr.compig.common.code.SystemServiceType;
 import co.kr.compig.domain.system.AccessKey;
 import co.kr.compig.domain.system.AccessKeyRepository;

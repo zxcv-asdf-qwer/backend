@@ -13,8 +13,8 @@ import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.FederatedIdentityRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 
-import co.kr.compig.api.member.dto.MemberResponse;
-import co.kr.compig.api.member.dto.MemberUpdateRequest;
+import co.kr.compig.api.presentation.member.response.MemberResponse;
+import co.kr.compig.api.presentation.member.request.MemberUpdateRequest;
 import co.kr.compig.common.code.CareerCode;
 import co.kr.compig.common.code.DomesticForeignCode;
 import co.kr.compig.common.code.GenderCode;

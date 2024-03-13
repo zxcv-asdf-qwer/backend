@@ -1,6 +1,6 @@
 package co.kr.compig.domain.settle;
 
-import co.kr.compig.api.settle.dto.SettleResponse;
+import co.kr.compig.api.presentation.settle.response.SettleResponse;
 import co.kr.compig.common.code.UseYn;
 import co.kr.compig.common.embedded.Created;
 import jakarta.persistence.Column;

@@ -5,8 +5,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Repository;
 
-import co.kr.compig.api.hospital.dto.HospitalResponse;
-import co.kr.compig.api.hospital.dto.HospitalSearchRequest;
+import co.kr.compig.api.presentation.hospital.response.HospitalResponse;
+import co.kr.compig.api.presentation.hospital.request.HospitalSearchRequest;
 
 @Repository
 public interface HospitalRepositoryCustom {

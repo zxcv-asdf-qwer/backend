@@ -22,8 +22,8 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
-import co.kr.compig.api.hospital.dto.HospitalResponse;
-import co.kr.compig.api.hospital.dto.HospitalSearchRequest;
+import co.kr.compig.api.presentation.hospital.response.HospitalResponse;
+import co.kr.compig.api.presentation.hospital.request.HospitalSearchRequest;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
