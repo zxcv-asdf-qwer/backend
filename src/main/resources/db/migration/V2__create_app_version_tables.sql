@@ -4,8 +4,8 @@ create table app_version
 (
     app_version_id bigint      not null primary key,
     force_update   char(1)     default 'N' check (force_update in ('Y', 'N')),
-    last_ver       integer     not null,
-    min_ver        integer     not null,
+    last_ver       varchar(50) not null,
+    min_ver        varchar(50) not null,
     os_code        varchar(20) not null check (os_code in ('AOS', 'IOS')),
     last_ver_nm    varchar(50) not null,
     min_ver_nm     varchar(50) not null,

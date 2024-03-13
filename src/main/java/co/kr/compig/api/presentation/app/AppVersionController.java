@@ -29,44 +29,26 @@ public class AppVersionController {
 		appVersionService.create(request);
 	}
 
-	@GetMapping
-	public ResponseEntity<AppVersionResponse> get() {
-		return ResponseEntity.ok().body(appVersionService.get());
+	@GetMapping("/recent/{os-type}")
+	public ResponseEntity<AppVersionResponse> getRecentByOsType(@PathVariable(name = "os-type") String osType) {
+		return ResponseEntity.ok().body(appVersionService.getRecentByOsType(osType));
 	}
 
-	@GetMapping("/{version}")
-	public ResponseEntity<AppVersionResponse> get(@PathVariable(name = "version") Integer version) {
-		return ResponseEntity.ok().body(appVersionService.get(version));
+	@GetMapping("/{app-id}")
+	public ResponseEntity<AppVersionResponse> getById(@PathVariable(name = "app-id") Long appId) {
+		return ResponseEntity.ok().body(appVersionService.getById(appId));
 	}
 
-	@GetMapping("/names/{version}")
-	public ResponseEntity<AppVersionResponse> get(@PathVariable(name = "version") String version) {
-		return ResponseEntity.ok().body(appVersionService.get(version));
-	}
-
-	@PutMapping("/{version}")
-	public void update(
-		@PathVariable(name = "version") Integer version,
+	@PutMapping("/{app-id}")
+	public void updateById(
+		@PathVariable(name = "app-id") Long appId,
 		@RequestBody @Valid AppVersionRequest request
 	) {
-		appVersionService.update(version, request);
+		appVersionService.updateById(appId, request);
 	}
 
-	@PutMapping("/names/{version}")
-	public void update(
-		@PathVariable(name = "version") String version,
-		@RequestBody @Valid AppVersionRequest request
-	) {
-		appVersionService.update(version, request);
-	}
-
-	@DeleteMapping("/{version}")
-	public void delete(@PathVariable(name = "version") Integer version) {
-		appVersionService.delete(version);
-	}
-
-	@DeleteMapping("/names/{version}")
-	public void delete(@PathVariable(name = "version") String version) {
-		appVersionService.delete(version);
+	@DeleteMapping("/{app-id}")
+	public void deleteById(@PathVariable(name = "app-id") Long appId) {
+		appVersionService.deleteById(appId);
 	}
 }

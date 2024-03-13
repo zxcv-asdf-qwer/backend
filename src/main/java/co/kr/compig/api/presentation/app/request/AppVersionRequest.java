@@ -11,15 +11,15 @@ public record AppVersionRequest(
 	@NotNull
 	@Pattern(regexp = "^(IOS|AOS)$")
 	String osCode,
-	@NotNull
-	Integer lastVer,
+	@NotBlank
+	String lastVer,
 	@NotBlank
 	String lastVerNm,
-	@NotNull
-	Integer minVer,
+	@NotBlank
+	String minVer,
 	@NotBlank
 	String minVerNm,
-	@NotNull
+	@NotBlank
 	@Pattern(regexp = "^[YN]$")
 	String forceUpdate
 ) {

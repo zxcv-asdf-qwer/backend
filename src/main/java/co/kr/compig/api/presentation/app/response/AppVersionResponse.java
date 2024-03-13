@@ -7,9 +7,9 @@ import lombok.Builder;
 @Builder
 public record AppVersionResponse(
 	AppOsType osCode,
-	Integer lastVer,
+	String lastVer,
 	String lastVerNm,
-	Integer minVer,
+	String minVer,
 	String minVerNm,
 	IsYn forceUpdate
 ) {

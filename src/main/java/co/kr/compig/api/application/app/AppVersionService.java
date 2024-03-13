@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import co.kr.compig.api.domain.app.AppVersion;
 import co.kr.compig.api.domain.app.AppVersionRepository;
 import co.kr.compig.api.domain.app.AppVersionRepositoryCustom;
+import co.kr.compig.api.domain.code.AppOsType;
 import co.kr.compig.api.presentation.app.request.AppVersionRequest;
 import co.kr.compig.api.presentation.app.response.AppVersionResponse;
 import co.kr.compig.global.error.exception.NotExistDataException;
@@ -23,7 +24,7 @@ public class AppVersionService {
 	private final AppVersionRepositoryCustom appVersionRepositoryCustom;
 
 	/**
-	 * app version check data create
+	 * app version data create
 	 */
 	public void create(final AppVersionRequest request) {
 		final AppVersion appVersion = request.toEntity();
@@ -32,78 +33,48 @@ public class AppVersionService {
 	}
 
 	/**
-	 * recent version read
+	 * read recent by os type
+	 * @param osType : os type
 	 * @return AppVersionResponse
 	 */
 	@Transactional(readOnly = true)
-	public AppVersionResponse get() {
-		return appVersionRepositoryCustom.findByRecentVersion()
+	public AppVersionResponse getRecentByOsType(final String osType) {
+		final AppOsType appOsType = AppOsType.of(osType);
+
+		return appVersionRepositoryCustom.findRecentByOsCode(appOsType)
 			.map(AppVersion::toResponse)
 			.orElse(null);
 	}
 
 	/**
-	 * matching version read
-	 * @param version : version
+	 * read app version by pk
+	 * @param appId : pk
 	 * @return AppVersionResponse
 	 */
 	@Transactional(readOnly = true)
-	public AppVersionResponse get(final Integer version) {
-		return appVersionRepository.findByLastVer(version)
+	public AppVersionResponse getById(final Long appId) {
+		return appVersionRepository.findById(appId)
 			.map(AppVersion::toResponse)
 			.orElse(null);
 	}
 
 	/**
-	 * matching version name read
-	 * @param version : version name
-	 * @return AppVersionResponse
-	 */
-	@Transactional(readOnly = true)
-	public AppVersionResponse get(final String version) {
-		return appVersionRepository.findByLastVerNm(version)
-			.map(AppVersion::toResponse)
-			.orElse(null);
-	}
-
-	/**
-	 * app version update
-	 * @param version version
+	 * update app version by pk
+	 * @param appId pk
 	 * @param request AppVersionRequest
 	 */
-	public void update(final Integer version, final AppVersionRequest request) {
-		AppVersion appVersion = appVersionRepository.findByLastVer(version)
+	public void updateById(final Long appId, final AppVersionRequest request) {
+		AppVersion appVersion = appVersionRepository.findById(appId)
 			.orElseThrow(() -> new NotExistDataException(ErrorCode.INVALID_NOT_EXIST_DATA));
 		appVersion.update(request);
 	}
 
 	/**
-	 * app version by version name update
-	 * @param version version name
-	 * @param request AppVersionRequest
+	 * delete app version by pk
+	 * @param appId app pk
 	 */
-	public void update(final String version, final AppVersionRequest request) {
-		AppVersion appVersion = appVersionRepository.findByLastVerNm(version)
-			.orElseThrow(() -> new NotExistDataException(ErrorCode.INVALID_NOT_EXIST_DATA));
-		appVersion.update(request);
-	}
-
-	/**
-	 * app version by version delete
-	 * @param version version
-	 */
-	public void delete(final Integer version) {
-		AppVersion appVersion = appVersionRepository.findByLastVer(version)
-			.orElseThrow(() -> new NotExistDataException(ErrorCode.INVALID_NOT_EXIST_DATA));
-		appVersionRepository.delete(appVersion);
-	}
-
-	/**
-	 * app version by version name delete
-	 * @param version version
-	 */
-	public void delete(final String version) {
-		AppVersion appVersion = appVersionRepository.findByLastVerNm(version)
+	public void deleteById(final Long appId) {
+		AppVersion appVersion = appVersionRepository.findById(appId)
 			.orElseThrow(() -> new NotExistDataException(ErrorCode.INVALID_NOT_EXIST_DATA));
 		appVersionRepository.delete(appVersion);
 	}

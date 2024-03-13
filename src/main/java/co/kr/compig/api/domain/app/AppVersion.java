@@ -53,13 +53,13 @@ public class AppVersion { // 앱 버전 체크
 	private AppOsType osCode;        // 요청된 디바이스 os이름
 
 	@Column(nullable = false)
-	private Integer lastVer;    // 앱 사용 가능한 최신 버전 정보
+	private String lastVer;    // 앱 사용 가능한 최신 버전 정보
 
 	@Column(length = 50, nullable = false)
 	private String lastVerNm;    // 앱 사용 가능한 최신 버전 이름
 
 	@Column(nullable = false)
-	private Integer minVer;        // 앱 사용 가능한 최소 버전 정보
+	private String minVer;        // 앱 사용 가능한 최소 버전 정보
 
 	@Column(length = 50, nullable = false)
 	private String minVerNm;    // 앱 사용 가능한 최소 버전 이름
