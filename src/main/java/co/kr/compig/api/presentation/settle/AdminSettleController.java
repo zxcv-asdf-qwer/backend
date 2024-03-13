@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.presentation.settle.request.SettleCreateRequest;
 import co.kr.compig.api.presentation.settle.response.SettleResponse;
-import co.kr.compig.common.dto.Response;
-import co.kr.compig.service.settle.SettleService;
+import co.kr.compig.global.dto.Response;
+import co.kr.compig.api.application.settle.SettleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

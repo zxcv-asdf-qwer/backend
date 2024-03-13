@@ -2,14 +2,14 @@ package co.kr.compig.api.presentation.member.response;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import co.kr.compig.common.code.CareerCode;
-import co.kr.compig.common.code.DomesticForeignCode;
-import co.kr.compig.common.code.GenderCode;
-import co.kr.compig.common.code.IsYn;
-import co.kr.compig.common.code.MemberRegisterType;
-import co.kr.compig.common.code.UseYn;
-import co.kr.compig.common.code.UserType;
-import co.kr.compig.common.dto.BaseAudit;
+import co.kr.compig.api.domain.code.CareerCode;
+import co.kr.compig.api.domain.code.DomesticForeignCode;
+import co.kr.compig.api.domain.code.GenderCode;
+import co.kr.compig.api.domain.code.IsYn;
+import co.kr.compig.api.domain.code.MemberRegisterType;
+import co.kr.compig.api.domain.code.UseYn;
+import co.kr.compig.api.domain.code.UserType;
+import co.kr.compig.global.dto.BaseAudit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

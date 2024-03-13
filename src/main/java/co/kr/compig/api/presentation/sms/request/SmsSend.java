@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
-import co.kr.compig.common.utils.SecurityUtil;
-import co.kr.compig.domain.sms.Sms;
+import co.kr.compig.global.utils.SecurityUtil;
+import co.kr.compig.api.domain.sms.Sms;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

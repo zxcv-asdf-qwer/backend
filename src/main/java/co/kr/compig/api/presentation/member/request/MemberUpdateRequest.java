@@ -2,12 +2,12 @@ package co.kr.compig.api.presentation.member.request;
 
 import org.hibernate.validator.constraints.Length;
 
-import co.kr.compig.common.code.CareerCode;
-import co.kr.compig.common.code.DomesticForeignCode;
-import co.kr.compig.common.code.GenderCode;
-import co.kr.compig.common.code.IsYn;
-import co.kr.compig.common.code.UseYn;
-import co.kr.compig.common.code.UserType;
+import co.kr.compig.api.domain.code.CareerCode;
+import co.kr.compig.api.domain.code.DomesticForeignCode;
+import co.kr.compig.api.domain.code.GenderCode;
+import co.kr.compig.api.domain.code.IsYn;
+import co.kr.compig.api.domain.code.UseYn;
+import co.kr.compig.api.domain.code.UserType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;

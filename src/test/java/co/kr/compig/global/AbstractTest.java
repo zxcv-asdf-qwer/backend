@@ -43,7 +43,7 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
-import co.kr.compig.common.code.BaseEnumCode;
+import co.kr.compig.api.domain.code.BaseEnumCode;
 import jakarta.servlet.ServletException;
 
 @ExtendWith({

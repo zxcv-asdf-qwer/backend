@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import co.kr.compig.common.dto.Response;
-import co.kr.compig.service.sms.SmsService;
+import co.kr.compig.global.dto.Response;
+import co.kr.compig.api.application.sms.SmsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

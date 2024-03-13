@@ -4,9 +4,9 @@ import java.util.Base64;
 
 import org.apache.logging.log4j.core.config.plugins.validation.constraints.NotBlank;
 
-import co.kr.compig.common.code.BankCode;
-import co.kr.compig.domain.account.Account;
-import co.kr.compig.domain.member.Member;
+import co.kr.compig.api.domain.code.BankCode;
+import co.kr.compig.api.domain.account.Account;
+import co.kr.compig.api.domain.member.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

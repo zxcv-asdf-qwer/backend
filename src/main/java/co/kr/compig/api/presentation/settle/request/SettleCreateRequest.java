@@ -2,8 +2,8 @@ package co.kr.compig.api.presentation.settle.request;
 
 import org.apache.logging.log4j.core.config.plugins.validation.constraints.NotBlank;
 
-import co.kr.compig.domain.settle.Settle;
-import co.kr.compig.domain.settle.SettleGroup;
+import co.kr.compig.api.domain.settle.Settle;
+import co.kr.compig.api.domain.settle.SettleGroup;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

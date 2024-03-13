@@ -1,6 +1,6 @@
 package co.kr.compig.api.presentation.social.request;
 
-import co.kr.compig.common.code.MemberRegisterType;
+import co.kr.compig.api.domain.code.MemberRegisterType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

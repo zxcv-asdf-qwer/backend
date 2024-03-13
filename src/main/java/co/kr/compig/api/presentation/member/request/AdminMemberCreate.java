@@ -2,10 +2,10 @@ package co.kr.compig.api.presentation.member.request;
 
 import org.hibernate.validator.constraints.Length;
 
-import co.kr.compig.common.code.MemberRegisterType;
-import co.kr.compig.common.code.UseYn;
-import co.kr.compig.common.code.UserType;
-import co.kr.compig.domain.member.Member;
+import co.kr.compig.api.domain.code.MemberRegisterType;
+import co.kr.compig.api.domain.code.UseYn;
+import co.kr.compig.api.domain.code.UserType;
+import co.kr.compig.api.domain.member.Member;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
