@@ -15,8 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class AppVersionService {
 
 	private final AppVersionRepository appVersionRepository;
@@ -25,7 +25,6 @@ public class AppVersionService {
 	/**
 	 * app version check data create
 	 */
-	@Transactional
 	public void create(final AppVersionRequest request) {
 		final AppVersion appVersion = request.toEntity();
 
@@ -36,6 +35,7 @@ public class AppVersionService {
 	 * recent version read
 	 * @return AppVersionResponse
 	 */
+	@Transactional(readOnly = true)
 	public AppVersionResponse get() {
 		return appVersionRepositoryCustom.findByRecentVersion()
 			.map(AppVersion::toResponse)
@@ -47,6 +47,7 @@ public class AppVersionService {
 	 * @param version : version
 	 * @return AppVersionResponse
 	 */
+	@Transactional(readOnly = true)
 	public AppVersionResponse get(final Integer version) {
 		return appVersionRepository.findByLastVer(version)
 			.map(AppVersion::toResponse)
@@ -58,6 +59,7 @@ public class AppVersionService {
 	 * @param version : version name
 	 * @return AppVersionResponse
 	 */
+	@Transactional(readOnly = true)
 	public AppVersionResponse get(final String version) {
 		return appVersionRepository.findByLastVerNm(version)
 			.map(AppVersion::toResponse)
@@ -69,7 +71,6 @@ public class AppVersionService {
 	 * @param version version
 	 * @param request AppVersionRequest
 	 */
-	@Transactional
 	public void update(final Integer version, final AppVersionRequest request) {
 		AppVersion appVersion = appVersionRepository.findByLastVer(version)
 			.orElseThrow(() -> new NotExistDataException(ErrorCode.INVALID_NOT_EXIST_DATA));
@@ -81,7 +82,6 @@ public class AppVersionService {
 	 * @param version version name
 	 * @param request AppVersionRequest
 	 */
-	@Transactional
 	public void update(final String version, final AppVersionRequest request) {
 		AppVersion appVersion = appVersionRepository.findByLastVerNm(version)
 			.orElseThrow(() -> new NotExistDataException(ErrorCode.INVALID_NOT_EXIST_DATA));
@@ -92,7 +92,6 @@ public class AppVersionService {
 	 * app version by version delete
 	 * @param version version
 	 */
-	@Transactional
 	public void delete(final Integer version) {
 		AppVersion appVersion = appVersionRepository.findByLastVer(version)
 			.orElseThrow(() -> new NotExistDataException(ErrorCode.INVALID_NOT_EXIST_DATA));
@@ -103,7 +102,6 @@ public class AppVersionService {
 	 * app version by version name delete
 	 * @param version version
 	 */
-	@Transactional
 	public void delete(final String version) {
 		AppVersion appVersion = appVersionRepository.findByLastVerNm(version)
 			.orElseThrow(() -> new NotExistDataException(ErrorCode.INVALID_NOT_EXIST_DATA));
