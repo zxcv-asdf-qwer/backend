@@ -4,6 +4,8 @@ import org.hibernate.annotations.ColumnDefault;
 
 import co.kr.compig.api.domain.code.AppOsType;
 import co.kr.compig.api.domain.code.IsYn;
+import co.kr.compig.api.presentation.app.request.AppVersionRequest;
+import co.kr.compig.api.presentation.app.response.AppVersionResponse;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -24,10 +26,10 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(
 	uniqueConstraints = {
 		@UniqueConstraint(
@@ -75,8 +77,29 @@ public class AppVersion { // 앱 버전 체크
 	@Builder.Default
 	private CreatedAndUpdated createdAndModified = new CreatedAndUpdated();
 
-  /* =================================================================
-   * Business login
-   ================================================================= */
+	/* =================================================================
+	 * Business login
+     ================================================================= */
 
+	public AppVersionResponse toResponse() {
+		return AppVersionResponse.builder()
+			.osCode(osCode)
+			.lastVer(lastVer)
+			.lastVerNm(lastVerNm)
+			.minVer(minVer)
+			.minVerNm(minVerNm)
+			.forceUpdate(forceUpdate)
+			.build();
+	}
+
+	public void update(AppVersionRequest request) {
+		this.osCode = request.osCode();
+		this.lastVer = request.lastVer();
+		this.lastVerNm = request.lastVerNm();
+		this.minVer = request.minVer();
+		this.minVerNm = request.minVerNm();
+		this.forceUpdate = request.forceUpdate();
+	}
 }
+
+
