@@ -61,7 +61,8 @@ public class AppVersionController {
 	}
 
 	@DeleteMapping("/{app-id}")
-	public void deleteById(@PathVariable(name = "app-id") Long appId) {
+	public ResponseEntity<Response<?>> deleteById(@PathVariable(name = "app-id") Long appId) {
 		appVersionService.deleteById(appId);
+		return ResponseEntity.ok().build();
 	}
 }
