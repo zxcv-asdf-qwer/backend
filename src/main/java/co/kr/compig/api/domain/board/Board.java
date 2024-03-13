@@ -8,15 +8,15 @@ import java.util.stream.Collectors;
 
 import org.hibernate.annotations.ColumnDefault;
 
-import co.kr.compig.api.domain.file.SystemFile;
-import co.kr.compig.api.presentation.board.response.BoardDetailResponse;
-import co.kr.compig.api.presentation.board.request.BoardUpdateRequest;
 import co.kr.compig.api.domain.code.BoardType;
 import co.kr.compig.api.domain.code.ContentsType;
 import co.kr.compig.api.domain.code.IsYn;
 import co.kr.compig.api.domain.code.UseYn;
 import co.kr.compig.api.domain.code.converter.BoardTypeConverter;
 import co.kr.compig.api.domain.code.converter.ContentsTypeConverter;
+import co.kr.compig.api.domain.file.SystemFile;
+import co.kr.compig.api.presentation.board.request.BoardUpdateRequest;
+import co.kr.compig.api.presentation.board.response.BoardDetailResponse;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
