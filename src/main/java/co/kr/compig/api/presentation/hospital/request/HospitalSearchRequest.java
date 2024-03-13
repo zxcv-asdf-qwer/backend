@@ -1,6 +1,6 @@
 package co.kr.compig.api.presentation.hospital.request;
 
-import co.kr.compig.common.dto.pagination.PageableRequest;
+import co.kr.compig.global.dto.pagination.PageableRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

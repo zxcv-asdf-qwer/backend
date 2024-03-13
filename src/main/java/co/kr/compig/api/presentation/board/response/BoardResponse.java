@@ -2,9 +2,9 @@ package co.kr.compig.api.presentation.board.response;
 
 import java.time.LocalDateTime;
 
-import co.kr.compig.common.code.BoardType;
-import co.kr.compig.common.code.ContentsType;
-import co.kr.compig.common.dto.BaseAudit;
+import co.kr.compig.api.domain.code.BoardType;
+import co.kr.compig.api.domain.code.ContentsType;
+import co.kr.compig.global.dto.BaseAudit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

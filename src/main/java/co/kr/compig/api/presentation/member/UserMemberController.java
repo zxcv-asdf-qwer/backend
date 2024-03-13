@@ -15,8 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 import co.kr.compig.api.presentation.member.response.MemberResponse;
 import co.kr.compig.api.presentation.member.request.MemberUpdateRequest;
 import co.kr.compig.api.presentation.member.request.LeaveRequest;
-import co.kr.compig.common.dto.Response;
-import co.kr.compig.service.member.MemberService;
+import co.kr.compig.global.dto.Response;
+import co.kr.compig.api.application.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

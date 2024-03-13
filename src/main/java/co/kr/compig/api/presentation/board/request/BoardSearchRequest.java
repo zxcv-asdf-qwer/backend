@@ -4,9 +4,9 @@ import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import co.kr.compig.common.code.BoardType;
-import co.kr.compig.common.code.ContentsType;
-import co.kr.compig.common.dto.pagination.PageableRequest;
+import co.kr.compig.api.domain.code.BoardType;
+import co.kr.compig.api.domain.code.ContentsType;
+import co.kr.compig.global.dto.pagination.PageableRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
