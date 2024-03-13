@@ -53,11 +53,10 @@ public class HospitalService {
 		return hospital.getId();
 	}
 
-	public Long deleteHospital(Long hospitalId) {
+	public void deleteHospital(Long hospitalId) {
 		Hospital hospital = hospitalRepository.findById(hospitalId)
 			.orElseThrow(NotExistDataException::new);
 		hospitalRepository.delete(hospital);
-		return hospital.getId();
 	}
 
 	public Long createHospital(HospitalCreateRequest hospitalCreateRequest) {

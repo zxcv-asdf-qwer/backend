@@ -34,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UserInquiryController {
 	private final InquiryService questionService;
 
-	@PostMapping("/question")
+	@PostMapping(path = "/question")
 	public ResponseEntity<Response<?>> createQuestion(
 		@ModelAttribute @Valid QuestionCreateRequest questionCreateRequest
 	) {
@@ -43,7 +43,7 @@ public class UserInquiryController {
 			.build());
 	}
 
-	@GetMapping("/question")
+	@GetMapping(path = "/question")
 	public ResponseEntity<SliceResponse<QuestionResponse>> pageListQuestion(
 		@RequestBody @Valid QuestionSearchRequest questionSearchRequest, Pageable pageable) {
 		Slice<QuestionResponse> slice = questionService.pageListCursor(questionSearchRequest, pageable);
@@ -52,7 +52,7 @@ public class UserInquiryController {
 		return ResponseEntity.ok(sliceResponse);
 	}
 
-	@GetMapping("/question/{questionId}")
+	@GetMapping(path = "/question/{questionId}")
 	public ResponseEntity<Response<QuestionDetailResponse>> getQuestion(
 		@PathVariable(name = "questionId") Long questionId
 	) {
@@ -61,7 +61,7 @@ public class UserInquiryController {
 			.build());
 	}
 
-	@PutMapping("/question/{questionId}")
+	@PutMapping(path = "/question/{questionId}")
 	public ResponseEntity<Response<?>> updateQuestion(@PathVariable(name = "questionId") Long questionId,
 		@RequestBody @Valid QuestionUpdateRequest questionUpdateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
@@ -71,8 +71,7 @@ public class UserInquiryController {
 
 	@DeleteMapping(path = "/question/{questionId}")
 	public ResponseEntity<Response<?>> deleteQuestion(@PathVariable(name = "questionId") Long questionId) {
-		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-			.data(Map.of("questionId", questionService.deleteQuestion(questionId)))
-			.build());
+		questionService.deleteQuestion(questionId);
+		return ResponseEntity.ok().build();
 	}
 }

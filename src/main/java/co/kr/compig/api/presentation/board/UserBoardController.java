@@ -34,7 +34,7 @@ public class UserBoardController {
 		return ResponseEntity.ok(sliceResponse);
 	}
 
-	@GetMapping("/{boardId}")
+	@GetMapping(path = "/{boardId}")
 	public ResponseEntity<Response<BoardDetailResponse>> getBoard(@PathVariable(name = "boardId") Long boardId) {
 		return ResponseEntity.ok(Response.<BoardDetailResponse>builder()
 			.data(boardService.getBoard(boardId))

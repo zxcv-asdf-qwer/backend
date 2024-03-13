@@ -9,24 +9,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import co.kr.compig.api.presentation.member.request.AdminMemberCreate;
-import co.kr.compig.api.presentation.member.request.GuardianMemberCreate;
-import co.kr.compig.api.presentation.member.response.MemberResponse;
-import co.kr.compig.api.presentation.member.request.MemberUpdateRequest;
-import co.kr.compig.api.presentation.member.request.PartnerMemberCreate;
-import co.kr.compig.api.presentation.member.request.LeaveRequest;
 import co.kr.compig.api.domain.code.MemberRegisterType;
 import co.kr.compig.api.domain.code.UserType;
+import co.kr.compig.api.domain.member.Member;
+import co.kr.compig.api.domain.member.MemberGroup;
+import co.kr.compig.api.domain.member.MemberGroupRepository;
+import co.kr.compig.api.domain.member.MemberRepository;
+import co.kr.compig.api.presentation.member.request.AdminMemberCreate;
+import co.kr.compig.api.presentation.member.request.GuardianMemberCreate;
+import co.kr.compig.api.presentation.member.request.LeaveRequest;
+import co.kr.compig.api.presentation.member.request.MemberUpdateRequest;
+import co.kr.compig.api.presentation.member.request.PartnerMemberCreate;
+import co.kr.compig.api.presentation.member.response.MemberResponse;
 import co.kr.compig.global.error.exception.BizException;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import co.kr.compig.global.keycloak.KeycloakHandler;
 import co.kr.compig.global.keycloak.KeycloakHolder;
 import co.kr.compig.global.utils.S3Util;
 import co.kr.compig.global.utils.SecurityUtil;
-import co.kr.compig.api.domain.member.Member;
-import co.kr.compig.api.domain.member.MemberGroup;
-import co.kr.compig.api.domain.member.MemberGroupRepository;
-import co.kr.compig.api.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -140,23 +140,22 @@ public class MemberService {
 	}
 
 	@Transactional(readOnly = true)
-	public boolean availabilityUserId(String userId) {
-		return memberRepository.findByUserId(userId).isPresent();
+	public void availabilityEmail(String email) {
+		if (memberRepository.findByEmail(email).isEmpty()) {
+			return;
+		}
+		throw new BizException("이미 가입된 아이디 입니다.");
 	}
 
 	@Transactional(readOnly = true)
-	public Boolean availabilityEmail(String email) {
-		return memberRepository.findByEmail(email).isPresent();
-	}
-
-	@Transactional(readOnly = true)
-	public String findUserId(String userNm, String userEmail) {
-		Member member = memberRepository.findByUserNmAndEmail(userNm, userEmail).orElseThrow(
+	public String findEmail(String userNm, String userTel) {
+		Member member = memberRepository.findByUserNmAndTelNo(userNm, userTel).orElseThrow(
 			NotExistDataException::new);
 		if (member.getMemberRegisterType() != MemberRegisterType.GENERAL) {
 			throw new BizException(
 				member.getMemberRegisterType().getDesc().concat(" 회원입니다. 소셜로그인을 선택해주세요."));
 		}
+		//TODO 인증번호 발송
 		return member.getUserId();
 	}
 

@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import co.kr.compig.api.application.member.MemberService;
 import co.kr.compig.api.presentation.member.request.AdminMemberCreate;
 import co.kr.compig.api.presentation.member.request.GuardianMemberCreate;
 import co.kr.compig.api.presentation.member.request.PartnerMemberCreate;
 import co.kr.compig.global.dto.Response;
-import co.kr.compig.api.application.member.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ public class MemberController {
 
 	private final MemberService memberService;
 
-	@PostMapping("/admin")
+	@PostMapping(path = "/admin")
 	public ResponseEntity<Response<?>> adminCreate(
 		@ModelAttribute @Valid AdminMemberCreate adminMemberCreate) {
 		return ResponseEntity.ok().body(Response.<Map<String, String>>builder()
@@ -35,7 +35,7 @@ public class MemberController {
 			.build());
 	}
 
-	@PostMapping("/guardian")
+	@PostMapping(path = "/guardian")
 	public ResponseEntity<Response<?>> guardianCreate(
 		@ModelAttribute @Valid GuardianMemberCreate guardianMemberCreate) {
 		return ResponseEntity.ok().body(Response.<Map<String, String>>builder()
@@ -43,7 +43,7 @@ public class MemberController {
 			.build());
 	}
 
-	@PostMapping("/partner")
+	@PostMapping(path = "/partner")
 	public ResponseEntity<Response<?>> partnerCreate(
 		@ModelAttribute @Valid PartnerMemberCreate partnerMemberCreate) {
 		return ResponseEntity.ok().body(Response.<Map<String, String>>builder()
@@ -51,26 +51,18 @@ public class MemberController {
 			.build());
 	}
 
-	@GetMapping("/userIds/availability")
-	public ResponseEntity<Response<?>> availabilityUserId(@RequestParam("userId") String userId) {
-		return ResponseEntity.ok(Response.<Map<String, Boolean>>builder()
-			.data(Map.of("isAvailability", memberService.availabilityUserId(userId)))
-			.build());
-	}
-
-	@GetMapping("/emails/availability")
+	@GetMapping(path = "/emails/availability")
 	public ResponseEntity<Response<?>> availabilityEmail(
 		@RequestParam("userEmail") String userEmail) {
-		return ResponseEntity.ok(Response.<Map<String, Boolean>>builder()
-			.data(Map.of("isAvailability", memberService.availabilityEmail(userEmail)))
-			.build());
+		memberService.availabilityEmail(userEmail);
+		return ResponseEntity.noContent().build();
 	}
 
-	@GetMapping("/find/userIds")
-	public ResponseEntity<Response<?>> findUserId(@RequestParam("userNm") String userNm,
-		@RequestParam("userEmail") String userEmail) {
+	@GetMapping(path = "/emails")
+	public ResponseEntity<Response<?>> findEmail(@RequestParam("userNm") String userNm,
+		@RequestParam("userTel") String userTel) {
 		return ResponseEntity.ok(Response.<Map<String, String>>builder()
-			.data(Map.of("userId", memberService.findUserId(userNm, userEmail)))
+			.data(Map.of("userId", memberService.findEmail(userNm, userTel)))
 			.build());
 	}
 }

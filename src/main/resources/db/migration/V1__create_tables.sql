@@ -274,6 +274,7 @@ create table if not exists sms
     refkey                varchar(255),
     sendtime              timestamp(6),
     sms_template_id       bigint,
+    ref1                  varchar(255),
     created_by            varchar(50),
     created_on            timestamp(6) default CURRENT_TIMESTAMP,
     updated_by            varchar(50),
@@ -288,6 +289,7 @@ comment on column sms.contents is '내용';
 comment on column sms.refkey is '비즈뿌리오에 보내는 unique 값';
 comment on column sms.sendtime is '발송시간';
 comment on column sms.sms_template_id is 'sms 템플릿 ID';
+comment on column sms.ref1 is '비고|인증 번호';
 
 create sequence if not exists sms_template_seq start with 1 increment by 1;
 create table if not exists sms_template

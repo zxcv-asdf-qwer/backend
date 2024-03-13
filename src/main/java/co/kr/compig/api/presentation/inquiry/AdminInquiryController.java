@@ -36,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AdminInquiryController {
 	private final InquiryService inquiryService;
 
-	@PostMapping("/question")
+	@PostMapping(path = "/question")
 	public ResponseEntity<Response<?>> createQuestion(
 		@ModelAttribute @Valid QuestionCreateRequest questionCreateRequest
 	) {
@@ -45,7 +45,7 @@ public class AdminInquiryController {
 			.build());
 	}
 
-	@GetMapping("/question")
+	@GetMapping(path = "/question")
 	public ResponseEntity<PageResponse<QuestionResponse>> pageListQuestion(
 		@RequestBody @Valid QuestionSearchRequest questionSearchRequest, Pageable pageable) {
 		Page<QuestionResponse> page = inquiryService.pageListQuestionPage(questionSearchRequest, pageable);
@@ -54,7 +54,7 @@ public class AdminInquiryController {
 		return ResponseEntity.ok(pageResponse);
 	}
 
-	@GetMapping("/question/{questionId}")
+	@GetMapping(path = "/question/{questionId}")
 	public ResponseEntity<Response<QuestionDetailResponse>> getQuestion(
 		@PathVariable(name = "questionId") Long questionId
 	) {
@@ -63,7 +63,7 @@ public class AdminInquiryController {
 			.build());
 	}
 
-	@PutMapping("/question/{questionId}")
+	@PutMapping(path = "/question/{questionId}")
 	public ResponseEntity<Response<?>> updateQuestion(@PathVariable(name = "questionId") Long questionId,
 		@RequestBody @Valid QuestionUpdateRequest questionUpdateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
@@ -73,9 +73,8 @@ public class AdminInquiryController {
 
 	@DeleteMapping(path = "/question/{questionId}")
 	public ResponseEntity<Response<?>> deleteQuestion(@PathVariable(name = "questionId") Long questionId) {
-		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-			.data(Map.of("questionId", inquiryService.deleteQuestion(questionId)))
-			.build());
+		inquiryService.deleteQuestion(questionId);
+		return ResponseEntity.ok().build();
 	}
 
 	@PostMapping(path = "/answer/{questionId}")
@@ -87,7 +86,7 @@ public class AdminInquiryController {
 				.build());
 	}
 
-	@PutMapping("/answer/{answerId}")
+	@PutMapping(path = "/answer/{answerId}")
 	public ResponseEntity<Response<?>> updateAnswer(@PathVariable(name = "answerId") Long answerId,
 		@RequestBody @Valid AnswerUpdateRequest answerUpdateRequest) {
 		return ResponseEntity.ok()
@@ -96,11 +95,9 @@ public class AdminInquiryController {
 				.build());
 	}
 
-	@DeleteMapping("/answer/{questionId}")
+	@DeleteMapping(path = "/answer/{questionId}")
 	public ResponseEntity<Response<?>> deleteAnswer(@PathVariable(name = "questionId") Long questionId) {
-		return ResponseEntity.ok()
-			.body(Response.<Map<String, Long>>builder()
-				.data(Map.of("questionId", inquiryService.deleteAnswer(questionId)))
-				.build());
+		inquiryService.deleteAnswer(questionId);
+		return ResponseEntity.ok().build();
 	}
 }

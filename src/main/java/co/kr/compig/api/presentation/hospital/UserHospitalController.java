@@ -35,7 +35,7 @@ public class UserHospitalController {
 		return ResponseEntity.ok(sliceResponse);
 	}
 
-	@GetMapping("/{hospitalId}")
+	@GetMapping(path = "/{hospitalId}")
 	public ResponseEntity<Response<HospitalDetailResponse>> getHospital(
 		@PathVariable(name = "hospitalId") Long hospitalId) {
 		return ResponseEntity.ok(Response.<HospitalDetailResponse>builder()

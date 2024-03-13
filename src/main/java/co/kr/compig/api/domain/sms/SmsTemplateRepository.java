@@ -7,7 +7,7 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 import co.kr.compig.api.domain.code.SmsTemplateType;
 
-public interface SmsTemplateRepository extends JpaRepository<SmsTemplate, String>,
+public interface SmsTemplateRepository extends JpaRepository<SmsTemplate, Long>,
 	QuerydslPredicateExecutor<SmsTemplate> {
 
 	Optional<SmsTemplate> findBySmsTemplateType(SmsTemplateType smsTemplateType);

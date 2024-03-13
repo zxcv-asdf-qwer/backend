@@ -54,7 +54,9 @@ public class SecurityConfig {
 				antMatcher(HttpMethod.PUT, "/social/**"),
 				antMatcher(HttpMethod.POST, "/social/**"),
 				antMatcher(HttpMethod.GET, "/members/**"),
-				antMatcher(HttpMethod.POST, "/members/**")
+				antMatcher(HttpMethod.POST, "/members/**"),
+				antMatcher(HttpMethod.GET, "/sms/**"),
+				antMatcher(HttpMethod.POST, "/sms/**")
 			)
 			.permitAll()
 			.anyRequest()

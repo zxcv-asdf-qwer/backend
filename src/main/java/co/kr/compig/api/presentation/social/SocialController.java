@@ -17,14 +17,14 @@ import co.kr.compig.api.application.social.SocialUserService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/social")
+@RequestMapping(path = "/social")
 @RequiredArgsConstructor
 public class SocialController {
 
 	private final SocialUserService socialUserService;
 	private final MemberService memberService;
 
-	@PostMapping("/login")
+	@PostMapping(path = "/login")
 	public ResponseEntity<SocialLoginResponse> doSocialLogin(
 		@RequestBody SocialLoginRequest socialLoginRequest) {
 
@@ -35,7 +35,7 @@ public class SocialController {
 
 	//apple 만 따로 탈퇴
 	//google kakao naver 앱에서 탈퇴 후 -> /pb/members/leave
-	@PostMapping("/leave")
+	@PostMapping(path = "/leave")
 	public ResponseEntity<Response<?>> userLeave(@RequestBody LeaveRequest leaveRequest) {
 		socialUserService.doSocialRevoke(leaveRequest);
 		return ResponseEntity.ok().build();

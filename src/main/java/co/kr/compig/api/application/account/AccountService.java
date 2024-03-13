@@ -94,10 +94,9 @@ public class AccountService {
 		return account.getId();
 	}
 
-	public Long deleteAccount(Long accountId) {
+	public void deleteAccount(Long accountId) {
 		Account account = accountRepository.findById(accountId).orElseThrow(NotExistDataException::new);
 		accountRepository.delete(account);
-		return account.getId();
 	}
 
 	public Boolean getAccountCheck(String memberId) {
