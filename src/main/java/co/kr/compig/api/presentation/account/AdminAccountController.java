@@ -13,14 +13,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import co.kr.compig.api.application.account.AccountCheckService;
+import co.kr.compig.api.application.account.AccountService;
 import co.kr.compig.api.presentation.account.request.AccountCheckRequest;
 import co.kr.compig.api.presentation.account.request.AccountCreateRequest;
 import co.kr.compig.api.presentation.account.request.AccountUpdateRequest;
 import co.kr.compig.api.presentation.account.response.AccountCheckResponse;
 import co.kr.compig.api.presentation.account.response.AccountDetailResponse;
 import co.kr.compig.global.dto.Response;
-import co.kr.compig.api.application.account.AccountCheckService;
-import co.kr.compig.api.application.account.AccountService;
+import co.kr.compig.global.utils.SecurityUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,11 +50,11 @@ public class AdminAccountController {
 			Response.<AccountDetailResponse>builder().data(accountService.getAccountByAccountId(accountId)).build());
 	}
 
-	@GetMapping("/member/{memberId}")
-	public ResponseEntity<Response<AccountDetailResponse>> getAccountByMember(
-		@PathVariable(name = "memberId") String memberId) {
+	@GetMapping("/member")
+	public ResponseEntity<Response<AccountDetailResponse>> getAccountByMember() {
 		return ResponseEntity.ok(
-			Response.<AccountDetailResponse>builder().data(accountService.getAccountByMemberId(memberId)).build());
+			Response.<AccountDetailResponse>builder().data(accountService.getAccountByMemberId(
+				SecurityUtil.getMemberId())).build());
 	}
 
 	@PutMapping("/{accountId}")
@@ -82,7 +83,8 @@ public class AdminAccountController {
 	}
 
 	@GetMapping("/getAccountCheck")
-	public ResponseEntity<Response<Boolean>> getAccountCheck(@RequestBody String memberId) {
-		return ResponseEntity.ok(Response.<Boolean>builder().data(accountService.getAccountCheck(memberId)).build());
+	public ResponseEntity<Response<Boolean>> getAccountCheck() {
+		return ResponseEntity.ok(
+			Response.<Boolean>builder().data(accountService.getAccountCheck(SecurityUtil.getMemberId())).build());
 	}
 }

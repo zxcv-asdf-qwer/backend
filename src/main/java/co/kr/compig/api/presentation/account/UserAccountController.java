@@ -13,14 +13,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import co.kr.compig.api.application.account.AccountCheckService;
+import co.kr.compig.api.application.account.AccountService;
 import co.kr.compig.api.presentation.account.request.AccountCheckRequest;
 import co.kr.compig.api.presentation.account.request.AccountCreateRequest;
 import co.kr.compig.api.presentation.account.request.AccountUpdateRequest;
 import co.kr.compig.api.presentation.account.response.AccountCheckResponse;
 import co.kr.compig.api.presentation.account.response.AccountDetailResponse;
 import co.kr.compig.global.dto.Response;
-import co.kr.compig.api.application.account.AccountCheckService;
-import co.kr.compig.api.application.account.AccountService;
+import co.kr.compig.global.utils.SecurityUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -84,9 +85,9 @@ public class UserAccountController {
 	}
 
 	@GetMapping("/getAccountCheck")
-	public ResponseEntity<Response<Boolean>> getAccountCheck(@RequestBody String memberId) {
+	public ResponseEntity<Response<Boolean>> getAccountCheck() {
 		return ResponseEntity.ok(Response.<Boolean>builder()
-			.data(accountService.getAccountCheck(memberId))
+			.data(accountService.getAccountCheck(SecurityUtil.getMemberId()))
 			.build());
 	}
 }
