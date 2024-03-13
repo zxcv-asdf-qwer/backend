@@ -1,11 +1,13 @@
 package co.kr.compig.api.domain.answer;
 
-import co.kr.compig.api.domain.question.Question;
 import co.kr.compig.api.domain.code.UseYn;
+import co.kr.compig.api.domain.question.Question;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
@@ -47,7 +49,8 @@ public class Answer {
 	@Column
 	private String answerContent;    // 답변 내용
 
-	@Column
+	@Column(length = 1)
+	@Enumerated(EnumType.STRING)
 	@Builder.Default
 	private UseYn useYn = UseYn.Y;    // 사용 유무
 
@@ -69,4 +72,5 @@ public class Answer {
 	/* =================================================================
 	 * Relation method
 	   ================================================================= */
+
 }
