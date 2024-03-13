@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
 public class AppVersionResponse extends BaseAudit {
-	private Long id;
+	private Long appVersionId;
 	private AppOsType osCode; // 요청된 디바이스 os이름
 	private String lastVer; // 앱 사용 가능한 최신 버전 정보
 	private String lastVerNm; // 앱 사용 가능한 최신 버전 이름
