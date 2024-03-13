@@ -3,11 +3,13 @@ package co.kr.compig.api.domain.app;
 import org.hibernate.annotations.ColumnDefault;
 
 import co.kr.compig.api.domain.code.AppOsType;
+import co.kr.compig.api.domain.code.converter.AppOsTypeConverter;
 import co.kr.compig.api.domain.code.IsYn;
-import co.kr.compig.api.presentation.app.request.AppVersionRequest;
+import co.kr.compig.api.presentation.app.request.AppVersionUpdateRequest;
 import co.kr.compig.api.presentation.app.response.AppVersionResponse;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -49,20 +51,20 @@ public class AppVersion { // 앱 버전 체크
 	private Long id;
 
 	@Column(length = 20, nullable = false)
-	@Enumerated(EnumType.STRING)
-	private AppOsType osCode;        // 요청된 디바이스 os이름
+	@Convert(converter = AppOsTypeConverter.class)
+	private AppOsType osCode; // 요청된 디바이스 os이름
 
 	@Column(nullable = false)
-	private String lastVer;    // 앱 사용 가능한 최신 버전 정보
+	private String lastVer; // 앱 사용 가능한 최신 버전 정보
 
 	@Column(length = 50, nullable = false)
-	private String lastVerNm;    // 앱 사용 가능한 최신 버전 이름
+	private String lastVerNm; // 앱 사용 가능한 최신 버전 이름
 
 	@Column(nullable = false)
-	private String minVer;        // 앱 사용 가능한 최소 버전 정보
+	private String minVer; // 앱 사용 가능한 최소 버전 정보
 
 	@Column(length = 50, nullable = false)
-	private String minVerNm;    // 앱 사용 가능한 최소 버전 이름
+	private String minVerNm; // 앱 사용 가능한 최소 버전 이름
 
 	@Column(length = 1)
 	@ColumnDefault("'N'")
@@ -83,6 +85,7 @@ public class AppVersion { // 앱 버전 체크
 
 	public AppVersionResponse toResponse() {
 		return AppVersionResponse.builder()
+			.id(id)
 			.osCode(osCode)
 			.lastVer(lastVer)
 			.lastVerNm(lastVerNm)
@@ -92,13 +95,13 @@ public class AppVersion { // 앱 버전 체크
 			.build();
 	}
 
-	public void update(AppVersionRequest request) {
-		this.osCode = AppOsType.of(request.osCode());
+	public void update(AppVersionUpdateRequest request) {
+		this.osCode = request.osCode();
 		this.lastVer = request.lastVer();
 		this.lastVerNm = request.lastVerNm();
 		this.minVer = request.minVer();
 		this.minVerNm = request.minVerNm();
-		this.forceUpdate = IsYn.of(request.forceUpdate());
+		this.forceUpdate = request.forceUpdate();
 	}
 }
 

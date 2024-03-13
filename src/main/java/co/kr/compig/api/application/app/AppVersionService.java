@@ -7,7 +7,8 @@ import co.kr.compig.api.domain.app.AppVersion;
 import co.kr.compig.api.domain.app.AppVersionRepository;
 import co.kr.compig.api.domain.app.AppVersionRepositoryCustom;
 import co.kr.compig.api.domain.code.AppOsType;
-import co.kr.compig.api.presentation.app.request.AppVersionRequest;
+import co.kr.compig.api.presentation.app.request.AppVersionCreateRequest;
+import co.kr.compig.api.presentation.app.request.AppVersionUpdateRequest;
 import co.kr.compig.api.presentation.app.response.AppVersionResponse;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import co.kr.compig.global.error.model.ErrorCode;
@@ -26,10 +27,11 @@ public class AppVersionService {
 	/**
 	 * app version data create
 	 */
-	public void create(final AppVersionRequest request) {
+	public Long create(final AppVersionCreateRequest request) {
+		//TODO "osCode", "lastVer", "minVer" uk validation 필요
 		final AppVersion appVersion = request.toEntity();
 
-		appVersionRepository.save(appVersion);
+		return appVersionRepository.save(appVersion).getId();
 	}
 
 	/**
@@ -39,11 +41,12 @@ public class AppVersionService {
 	 */
 	@Transactional(readOnly = true)
 	public AppVersionResponse getRecentByOsType(final String osType) {
-		final AppOsType appOsType = AppOsType.of(osType);
+		final AppOsType appOsType = AppOsType.valueOf(osType);
 
 		return appVersionRepositoryCustom.findRecentByOsCode(appOsType)
 			.map(AppVersion::toResponse)
-			.orElse(null);
+			.orElseThrow(() -> new NotExistDataException(ErrorCode.INVALID_NOT_EXIST_DATA));
+
 	}
 
 	/**
@@ -55,7 +58,7 @@ public class AppVersionService {
 	public AppVersionResponse getById(final Long appId) {
 		return appVersionRepository.findById(appId)
 			.map(AppVersion::toResponse)
-			.orElse(null);
+			.orElseThrow(() -> new NotExistDataException(ErrorCode.INVALID_NOT_EXIST_DATA));
 	}
 
 	/**
@@ -63,10 +66,12 @@ public class AppVersionService {
 	 * @param appId pk
 	 * @param request AppVersionRequest
 	 */
-	public void updateById(final Long appId, final AppVersionRequest request) {
+	public Long updateById(final Long appId, final AppVersionUpdateRequest request) {
+		//TODO "osCode", "lastVer", "minVer" uk validation 필요
 		AppVersion appVersion = appVersionRepository.findById(appId)
 			.orElseThrow(() -> new NotExistDataException(ErrorCode.INVALID_NOT_EXIST_DATA));
 		appVersion.update(request);
+		return appVersion.getId();
 	}
 
 	/**

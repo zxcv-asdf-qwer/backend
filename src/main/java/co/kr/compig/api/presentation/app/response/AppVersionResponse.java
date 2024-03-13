@@ -6,6 +6,7 @@ import lombok.Builder;
 
 @Builder
 public record AppVersionResponse(
+	Long id,
 	AppOsType osCode,
 	String lastVer,
 	String lastVerNm,

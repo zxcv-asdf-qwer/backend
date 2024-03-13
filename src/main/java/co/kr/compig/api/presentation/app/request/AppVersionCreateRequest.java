@@ -7,31 +7,29 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
-public record AppVersionRequest(
+public record AppVersionCreateRequest(
 	@NotNull
-	@Pattern(regexp = "^(IOS|AOS)$")
-	String osCode,
+	AppOsType osCode, // 요청된 디바이스 os이름
 	@NotBlank
-	String lastVer,
+	String lastVer, // 앱 사용 가능한 최신 버전 정보
 	@NotBlank
-	String lastVerNm,
+	String lastVerNm, // 앱 사용 가능한 최신 버전 이름
 	@NotBlank
-	String minVer,
+	String minVer, // 앱 사용 가능한 최소 버전 정보
 	@NotBlank
-	String minVerNm,
-	@NotBlank
-	@Pattern(regexp = "^[YN]$")
-	String forceUpdate
+	String minVerNm, // 앱 사용 가능한 최소 버전 이름
+	@NotNull
+	IsYn forceUpdate // 강제 업데이트 여부
 ) {
 
 	public AppVersion toEntity() {
 		return AppVersion.builder()
-			.osCode(AppOsType.of(osCode))
+			.osCode(osCode)
 			.lastVer(lastVer)
 			.lastVerNm(lastVerNm)
 			.minVer(minVer)
 			.minVerNm(minVerNm)
-			.forceUpdate(IsYn.of(forceUpdate))
+			.forceUpdate(forceUpdate)
 			.build();
 	}
 }

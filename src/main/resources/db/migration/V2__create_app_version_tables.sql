@@ -3,10 +3,10 @@ create sequence app_version_seq start with 1 increment by 1;
 create table app_version
 (
     app_version_id bigint      not null primary key,
-    force_update   char(1)     default 'N' check (force_update in ('Y', 'N')),
+    force_update   char(1)     default 'N',
     last_ver       varchar(50) not null,
     min_ver        varchar(50) not null,
-    os_code        varchar(20) not null check (os_code in ('AOS', 'IOS')),
+    os_code        varchar(20) not null,
     last_ver_nm    varchar(50) not null,
     min_ver_nm     varchar(50) not null,
     created_by     varchar(50),
