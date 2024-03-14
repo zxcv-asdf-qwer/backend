@@ -3,8 +3,8 @@ package co.kr.compig.api.domain.app;
 import org.hibernate.annotations.ColumnDefault;
 
 import co.kr.compig.api.domain.code.AppOsType;
-import co.kr.compig.api.domain.code.converter.AppOsTypeConverter;
 import co.kr.compig.api.domain.code.IsYn;
+import co.kr.compig.api.domain.code.converter.AppOsTypeConverter;
 import co.kr.compig.api.presentation.app.request.AppVersionUpdateRequest;
 import co.kr.compig.api.presentation.app.response.AppVersionResponse;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
@@ -85,7 +85,7 @@ public class AppVersion { // 앱 버전 체크
 
 	public AppVersionResponse toResponse() {
 		return AppVersionResponse.builder()
-			.id(id)
+			.appVersionId(id)
 			.osCode(osCode)
 			.lastVer(lastVer)
 			.lastVerNm(lastVerNm)
