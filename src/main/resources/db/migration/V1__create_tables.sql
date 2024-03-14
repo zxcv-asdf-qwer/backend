@@ -213,6 +213,7 @@ create table if not exists account
     account_name   varchar(255) not null,
     account_number varchar(255) not null,
     bank_name      varchar(255) not null,
+    pass_book_url  varchar(255),
     created_by     varchar(50),
     created_on     timestamp(6) default CURRENT_TIMESTAMP,
     updated_by     varchar(50),
