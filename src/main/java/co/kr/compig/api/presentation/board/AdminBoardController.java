@@ -17,14 +17,14 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import co.kr.compig.api.application.board.BoardService;
 import co.kr.compig.api.presentation.board.request.BoardCreateRequest;
-import co.kr.compig.api.presentation.board.response.BoardDetailResponse;
-import co.kr.compig.api.presentation.board.response.BoardResponse;
 import co.kr.compig.api.presentation.board.request.BoardSearchRequest;
 import co.kr.compig.api.presentation.board.request.BoardUpdateRequest;
+import co.kr.compig.api.presentation.board.response.BoardDetailResponse;
+import co.kr.compig.api.presentation.board.response.BoardResponse;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.dto.pagination.PageResponse;
-import co.kr.compig.api.application.board.BoardService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -83,7 +83,7 @@ public class AdminBoardController {
 	@PostMapping(path = "/base64")
 	public ResponseEntity<Response<?>> createBoardBase64(
 		@ModelAttribute @Valid BoardCreateRequest boardCreateRequest,
-		@RequestPart(value = "file") Map<String, String> files
+		@RequestPart(value = "file", required = false) Map<String, String> files
 	) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("boardId", boardService.createBoardBaseFile(boardCreateRequest, files)))

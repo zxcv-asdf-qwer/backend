@@ -11,16 +11,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
+import co.kr.compig.api.application.account.AccountCheckService;
+import co.kr.compig.api.application.account.AccountService;
 import co.kr.compig.api.presentation.account.request.AccountCheckRequest;
 import co.kr.compig.api.presentation.account.request.AccountCreateRequest;
 import co.kr.compig.api.presentation.account.request.AccountUpdateRequest;
 import co.kr.compig.api.presentation.account.response.AccountCheckResponse;
 import co.kr.compig.api.presentation.account.response.AccountDetailResponse;
 import co.kr.compig.global.dto.Response;
-import co.kr.compig.api.application.account.AccountCheckService;
-import co.kr.compig.api.application.account.AccountService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,10 +36,11 @@ public class AdminAccountController {
 	private final AccountCheckService accountCheckService;
 
 	@PostMapping
-	public ResponseEntity<Response<?>> createAccount(@ModelAttribute @Valid AccountCreateRequest accountCreateRequest) {
+	public ResponseEntity<Response<?>> createAccount(@ModelAttribute @Valid AccountCreateRequest accountCreateRequest,
+		@RequestPart(value = "file") Map<String, String> files) {
 		return ResponseEntity.ok()
 			.body(Response.<Map<String, Long>>builder()
-				.data(Map.of("accountId", accountService.createAccount(accountCreateRequest)))
+				.data(Map.of("accountId", accountService.createAccount(accountCreateRequest, files)))
 				.build());
 	}
 

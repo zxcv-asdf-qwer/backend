@@ -18,4 +18,5 @@ public class AccountDetailResponse extends BaseAudit {
 	private String accountNumber; // 계좌번호
 	private String accountName; // 예금주
 	private String bankName; // 은행 이름
+	private String passBookUrl; // 통장 사본 url
 }
