@@ -29,6 +29,10 @@ public class AppVersionService {
 	 */
 	public Long create(final AppVersionCreateRequest request) {
 		//TODO "osCode", "lastVer", "minVer" uk validation 필요
+		if (appVersionRepository.existsByOsCodeAndLastVerAndMinVer(request.osCode(), request.lastVer(),
+			request.minVer())) {
+			throw new IllegalArgumentException("이미 존재하는 버전입니다.");
+		}
 		final AppVersion appVersion = request.toEntity();
 
 		return appVersionRepository.save(appVersion).getId();
@@ -68,6 +72,10 @@ public class AppVersionService {
 	 */
 	public Long updateById(final Long appId, final AppVersionUpdateRequest request) {
 		//TODO "osCode", "lastVer", "minVer" uk validation 필요
+		if (appVersionRepository.existsByOsCodeAndLastVerAndMinVer(request.osCode(), request.lastVer(),
+			request.minVer())) {
+			throw new IllegalArgumentException("이미 존재하는 버전입니다.");
+		}
 		AppVersion appVersion = appVersionRepository.findById(appId)
 			.orElseThrow(() -> new NotExistDataException(ErrorCode.INVALID_NOT_EXIST_DATA));
 		appVersion.update(request);
