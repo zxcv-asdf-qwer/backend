@@ -1,12 +1,15 @@
 package co.kr.compig.api.presentation.account.request;
 
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 
 import org.apache.logging.log4j.core.config.plugins.validation.constraints.NotBlank;
 
-import co.kr.compig.api.domain.code.BankCode;
 import co.kr.compig.api.domain.account.Account;
+import co.kr.compig.api.domain.code.BankCode;
 import co.kr.compig.api.domain.member.Member;
+import co.kr.compig.api.presentation.board.response.SystemFileResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,14 +33,24 @@ public class AccountCreateRequest {
 	@NotBlank
 	private String memberId; // 멤버 id
 
+	private String passBookUrl; // 통장사본 url
+
 	public Account converterEntity(Member member, byte[] iv) {
 		return Account.builder()
 			.accountNumber(this.accountNumber)
 			.accountName(this.accountName)
 			.bankName(BankCode.of(this.bankName))
 			.member(member)
+			.passBookUrl(passBookUrl)
 			.iv(Base64.getUrlEncoder().encodeToString(iv))
 			.build();
 	}
 
+	public void setPassBookUrl(List<SystemFileResponse> imageUrlList) {
+		List<String> imageUrls = new ArrayList<>();
+		for (SystemFileResponse systemFileResponse : imageUrlList) {
+			imageUrls.add(systemFileResponse.getFilePath());
+		}
+		this.passBookUrl = imageUrlList.get(0).getFilePath();
+	}
 }
