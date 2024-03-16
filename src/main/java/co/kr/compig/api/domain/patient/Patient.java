@@ -1,7 +1,6 @@
-package co.kr.compig.api.domain.item;
+package co.kr.compig.api.domain.patient;
 
-import co.kr.compig.api.domain.packing.Packing;
-import co.kr.compig.api.domain.settle.Settle;
+import co.kr.compig.api.domain.member.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -27,27 +26,19 @@ import lombok.extern.slf4j.Slf4j;
 @Entity
 @Table
 @SequenceGenerator(
-	name = "item_seq_gen", //시퀀스 제너레이터 이름
-	sequenceName = "item_seq", //시퀀스 이름
+	name = "patient_seq_gen", //시퀀스 제너레이터 이름
+	sequenceName = "patient_seq", //시퀀스 이름
 	initialValue = 1, //시작값
 	allocationSize = 1 //메모리를 통해 할당 할 범위 사이즈
 )
-public class Item {
-
+public class Patient {
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "item_seq_gen")
-	@Column(name = "item_id")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "patient_seq_gen")
+	@Column(name = "patient_id")
 	private Long id;
 
-	/* =================================================================
-	 * Domain mapping
-	   ================================================================= */
 	@Builder.Default
-	@JoinColumn(name = "packing_id", nullable = false, foreignKey = @ForeignKey(name = "fk01_item"))
+	@JoinColumn(name = "member_id", nullable = false, foreignKey = @ForeignKey(name = "fk01_patient"))
 	@ManyToOne(fetch = FetchType.LAZY)
-	private Packing packing = new Packing();
-
-	@JoinColumn(name = "settle_id", nullable = false, foreignKey = @ForeignKey(name = "fk02_item"))
-	@ManyToOne(fetch = FetchType.LAZY)
-	private Settle settle;
+	private Member member = new Member(); // Member id
 }

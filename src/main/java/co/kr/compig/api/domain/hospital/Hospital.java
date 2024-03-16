@@ -1,7 +1,7 @@
 package co.kr.compig.api.domain.hospital;
 
-import co.kr.compig.api.presentation.hospital.response.HospitalDetailResponse;
 import co.kr.compig.api.presentation.hospital.request.HospitalUpdateRequest;
+import co.kr.compig.api.presentation.hospital.response.HospitalDetailResponse;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -53,9 +53,9 @@ public class Hospital {
 	@Column
 	private String hospitalOperationHours; // 병원 운영 시간
 
-  /* =================================================================
-  * Domain mapping
-  ================================================================= */
+	/* =================================================================
+	* Domain mapping
+	================================================================= */
 
 	/* =================================================================
 	* Relation method

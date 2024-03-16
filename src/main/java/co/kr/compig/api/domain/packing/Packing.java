@@ -3,10 +3,10 @@ package co.kr.compig.api.domain.packing;
 import java.util.HashSet;
 import java.util.Set;
 
-import co.kr.compig.api.domain.hospital.Hospital;
-import co.kr.compig.api.domain.item.Item;
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.domain.payment.Payment;
+import co.kr.compig.api.domain.settle.SettleGroup;
+import co.kr.compig.api.domain.wallet.Wallet;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -55,16 +55,17 @@ public class Packing {
 	private CareOrder careOrder = new CareOrder();
 
 	@Builder.Default
-	@OneToMany(
-		mappedBy = "packing", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<Item> items = new HashSet<>();
+	@JoinColumn(name = "settle_group_id", nullable = false, foreignKey = @ForeignKey(name = "fk03_packing"))
+	@ManyToOne(fetch = FetchType.LAZY)
+	private SettleGroup settleGroup = new SettleGroup();
 
 	@Builder.Default
 	@OneToMany(
 		mappedBy = "packing", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Payment> payments = new HashSet<>();
 
-	@JoinColumn(name = "hospital_id", nullable = false, foreignKey = @ForeignKey(name = "fk02_care_order"))
-	@ManyToOne(fetch = FetchType.LAZY)
-	private Hospital hospital;
+	@Builder.Default
+	@OneToMany(
+		mappedBy = "packing", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<Wallet> wallets = new HashSet<>();
 }

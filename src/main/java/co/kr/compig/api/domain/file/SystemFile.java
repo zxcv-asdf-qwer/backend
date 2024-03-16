@@ -74,7 +74,7 @@ public class SystemFile {
 	 * Domain mapping
 	   ================================================================= */
 	@Builder.Default
-	@JoinColumn(name = "board_id", foreignKey = @ForeignKey(name = "fk01_system_file"))
+	@JoinColumn(name = "board_id", nullable = false, foreignKey = @ForeignKey(name = "fk01_system_file"))
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Board board = new Board();
 

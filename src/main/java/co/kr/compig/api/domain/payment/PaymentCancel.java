@@ -1,10 +1,5 @@
 package co.kr.compig.api.domain.payment;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import co.kr.compig.api.domain.packing.Packing;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -14,7 +9,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -31,28 +25,24 @@ import lombok.extern.slf4j.Slf4j;
 @Entity
 @Table
 @SequenceGenerator(
-	name = "payment_seq_gen", //시퀀스 제너레이터 이름
-	sequenceName = "payment_seq", //시퀀스 이름
+	name = "payment_cancel_seq_gen", //시퀀스 제너레이터 이름
+	sequenceName = "payment_cancel_seq", //시퀀스 이름
 	initialValue = 1, //시작값
 	allocationSize = 1 //메모리를 통해 할당 할 범위 사이즈
 )
-public class Payment {
+public class PaymentCancel {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "payment_seq_gen")
-	@Column(name = "payment_id")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "payment_cancel_seq_gen")
+	@Column(name = "payment_cancel_id")
 	private Long id;
 
 	/* =================================================================
 	 * Domain mapping
 	   ================================================================= */
 	@Builder.Default
-	@JoinColumn(name = "packing_id", nullable = false, foreignKey = @ForeignKey(name = "fk01_payment"))
+	@JoinColumn(name = "payment_id", nullable = false, foreignKey = @ForeignKey(name = "fk01_payment_cancel"))
 	@ManyToOne(fetch = FetchType.LAZY)
-	private Packing packing = new Packing();
+	private Payment payment = new Payment();
 
-	@Builder.Default
-	@OneToMany(
-		mappedBy = "payment", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<PaymentCancel> paymentCancels = new HashSet<>();
 }

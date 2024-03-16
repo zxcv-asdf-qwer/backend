@@ -14,7 +14,11 @@ import org.keycloak.representations.idm.FederatedIdentityRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 
 import co.kr.compig.api.domain.account.Account;
+import co.kr.compig.api.domain.order.CareOrder;
+import co.kr.compig.api.domain.patient.OrderPatient;
+import co.kr.compig.api.domain.patient.Patient;
 import co.kr.compig.api.domain.permission.MenuPermission;
+import co.kr.compig.api.domain.wallet.Wallet;
 import co.kr.compig.api.presentation.member.response.MemberResponse;
 import co.kr.compig.api.presentation.member.request.MemberUpdateRequest;
 import co.kr.compig.api.domain.code.CareerCode;
@@ -160,6 +164,23 @@ public class Member {
 
 	@OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
 	private Account account;
+
+	@Builder.Default
+	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Patient> patients = new HashSet<>();
+
+	@Builder.Default
+	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<OrderPatient> orderPatients = new HashSet<>();
+
+	@Builder.Default
+	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Wallet> wallets = new HashSet<>();
+
+	@Builder.Default
+	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<CareOrder> careOrders = new HashSet<>();
+
 
 	/* =================================================================
 	 * Relation method
