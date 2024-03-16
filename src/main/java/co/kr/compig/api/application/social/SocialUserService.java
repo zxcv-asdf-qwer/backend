@@ -14,18 +14,19 @@ import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import co.kr.compig.api.application.member.MemberService;
+import co.kr.compig.api.domain.code.ApplicationType;
+import co.kr.compig.api.domain.code.MemberRegisterType;
+import co.kr.compig.api.domain.member.Member;
+import co.kr.compig.api.domain.member.MemberRepository;
 import co.kr.compig.api.infrastructure.auth.keycloak.KeycloakAuthApi;
 import co.kr.compig.api.infrastructure.auth.keycloak.model.KeycloakAccessTokenRequest;
 import co.kr.compig.api.presentation.member.request.LeaveRequest;
 import co.kr.compig.api.presentation.social.request.SocialLoginRequest;
 import co.kr.compig.api.presentation.social.response.SocialLoginResponse;
 import co.kr.compig.api.presentation.social.response.SocialUserResponse;
-import co.kr.compig.api.application.member.MemberService;
-import co.kr.compig.api.domain.code.MemberRegisterType;
 import co.kr.compig.global.keycloak.KeycloakProperties;
 import co.kr.compig.global.utils.GsonLocalDateTimeAdapter;
-import co.kr.compig.api.domain.member.Member;
-import co.kr.compig.api.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -53,8 +54,15 @@ public class SocialUserService {
 
 	public SocialLoginResponse doSocialLogin(SocialLoginRequest socialLoginRequest) {
 		SocialLoginService loginService = this.getLoginService(socialLoginRequest.getMemberRegisterType());
-		SocialUserResponse socialUserResponse = loginService.tokenToSocialUserResponse(
-			socialLoginRequest);
+		new SocialUserResponse();
+		SocialUserResponse socialUserResponse;
+		if (socialLoginRequest.getApplicationType() != ApplicationType.WEB) {
+			socialUserResponse = loginService.appTokenToSocialUserResponse(
+				socialLoginRequest);
+		} else {
+			socialUserResponse = loginService.webTokenToSocialUserResponse(
+				socialLoginRequest);
+		}
 
 		Optional<Member> optionalMember = memberRepository.findByUserId(socialUserResponse.getSub());
 		Member member = optionalMember.orElseGet(() -> {

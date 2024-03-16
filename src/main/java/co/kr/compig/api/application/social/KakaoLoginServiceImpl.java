@@ -33,11 +33,11 @@ public class KakaoLoginServiceImpl implements SocialLoginService {
 	}
 
 	@Override
-	public SocialUserResponse tokenToSocialUserResponse(SocialLoginRequest socialLoginRequest) {
+	public SocialUserResponse appTokenToSocialUserResponse(SocialLoginRequest socialLoginRequest) {
 		ResponseEntity<?> response = kakaoAuthApi.accessTokenToUserInfo(
 			"Bearer " + socialLoginRequest.getToken());
 
-		log.info(getServiceName().getCode() + " tokenToSocialUserResponse");
+		log.info(getServiceName().getCode() + " appTokenToSocialUserResponse");
 		log.info(response.toString());
 
 		Gson gson = new GsonBuilder()
@@ -55,6 +55,11 @@ public class KakaoLoginServiceImpl implements SocialLoginService {
 			.memberRegisterType(getServiceName())
 			.email(kaKaoLoginResponse.getKakao_account().getEmail())
 			.build();
+	}
+
+	@Override
+	public SocialUserResponse webTokenToSocialUserResponse(SocialLoginRequest socialLoginRequest) {
+		return null;
 	}
 
 	@Override

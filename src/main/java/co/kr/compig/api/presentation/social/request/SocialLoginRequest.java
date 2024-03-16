@@ -1,5 +1,6 @@
 package co.kr.compig.api.presentation.social.request;
 
+import co.kr.compig.api.domain.code.ApplicationType;
 import co.kr.compig.api.domain.code.MemberRegisterType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,4 +15,6 @@ public class SocialLoginRequest {
 
 	private String token;
 	private MemberRegisterType memberRegisterType;
+	private ApplicationType applicationType;
+
 }

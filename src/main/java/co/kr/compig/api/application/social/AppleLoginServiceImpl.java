@@ -28,12 +28,12 @@ public class AppleLoginServiceImpl implements SocialLoginService {
 	}
 
 	@Override
-	public SocialUserResponse tokenToSocialUserResponse(SocialLoginRequest socialLoginRequest) {
+	public SocialUserResponse appTokenToSocialUserResponse(SocialLoginRequest socialLoginRequest) {
 		//TODO idToken 유효성검사
 		AppleIdTokenPayload appleLoginResponse = appleGetMemberInfoService.decodePayload(socialLoginRequest.getToken(),
 			AppleIdTokenPayload.class);
 
-		log.info(getServiceName().getCode() + " tokenToSocialUserResponse");
+		log.info(getServiceName().getCode() + " appTokenToSocialUserResponse");
 		log.info(appleLoginResponse.toString());
 
 		return SocialUserResponse.builder()
@@ -41,6 +41,11 @@ public class AppleLoginServiceImpl implements SocialLoginService {
 			.memberRegisterType(getServiceName())
 			.email(appleLoginResponse.getEmail())
 			.build();
+	}
+
+	@Override
+	public SocialUserResponse webTokenToSocialUserResponse(SocialLoginRequest socialLoginRequest) {
+		return null;
 	}
 
 	@Override
@@ -52,7 +57,7 @@ public class AppleLoginServiceImpl implements SocialLoginService {
 			throw new RuntimeException(e);
 		}
 
-		log.info(getServiceName().getCode() + " tokenToSocialUserResponse");
+		log.info(getServiceName().getCode() + " appTokenToSocialUserResponse");
 	}
 
 }

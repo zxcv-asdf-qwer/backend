@@ -35,12 +35,12 @@ public class GoogleLoginServiceImpl implements SocialLoginService {
 	}
 
 	@Override
-	public SocialUserResponse tokenToSocialUserResponse(SocialLoginRequest socialLoginRequest) {
+	public SocialUserResponse appTokenToSocialUserResponse(SocialLoginRequest socialLoginRequest) {
 		try {
 			ResponseEntity<?> response = googleAuthApi.getAccessTokenToTokenInfo(
 				socialLoginRequest.getToken());
 
-			log.info(getServiceName().getCode() + " tokenToSocialUserResponse");
+			log.info(getServiceName().getCode() + " appTokenToSocialUserResponse");
 			log.info(response.toString());
 
 			Gson gson = new GsonBuilder()
@@ -64,6 +64,11 @@ public class GoogleLoginServiceImpl implements SocialLoginService {
 				e.getStatusCode(), e.getMessage());
 		}
 
+		return null;
+	}
+
+	@Override
+	public SocialUserResponse webTokenToSocialUserResponse(SocialLoginRequest socialLoginRequest) {
 		return null;
 	}
 
