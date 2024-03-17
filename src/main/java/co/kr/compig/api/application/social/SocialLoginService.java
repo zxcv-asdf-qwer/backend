@@ -13,9 +13,9 @@ public interface SocialLoginService {
 	MemberRegisterType getServiceName();
 
 	//token to userInfo
-	SocialUserResponse appTokenToSocialUserResponse(SocialLoginRequest socialLoginRequest);
+	SocialUserResponse appSocialUserResponse(SocialLoginRequest socialLoginRequest);
 
-	SocialUserResponse webTokenToSocialUserResponse(SocialLoginRequest socialLoginRequest);
+	SocialUserResponse webSocialUserResponse(SocialLoginRequest socialLoginRequest);
 
 	//apple만
 	void revoke(LeaveRequest leaveRequest);

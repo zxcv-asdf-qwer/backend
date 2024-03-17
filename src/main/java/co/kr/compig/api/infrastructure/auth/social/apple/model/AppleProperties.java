@@ -17,4 +17,5 @@ public class AppleProperties {
 	private String issueUrl;
 	private String audience;
 	private String keyPath;
+	private String redirectUri;
 }

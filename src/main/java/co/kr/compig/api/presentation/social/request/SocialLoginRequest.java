@@ -13,6 +13,8 @@ import lombok.NoArgsConstructor;
 @Getter
 public class SocialLoginRequest {
 
+	private String state;
+	private String code;
 	private String token;
 	private MemberRegisterType memberRegisterType;
 	private ApplicationType applicationType;

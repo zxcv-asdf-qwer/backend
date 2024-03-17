@@ -58,12 +58,24 @@ public class AppleGetMemberInfoService {
 	private final AppleAuthApi appleAuthClient;
 	private final AppleProperties appleProperties;
 
-	public AppleSocialTokenResponse getTokens(String authorizationCode)
+	public AppleSocialTokenResponse getTokensForApp(String authorizationCode)
 		throws NoSuchAlgorithmException {
 		return appleAuthClient.getTokens(
 			appleProperties.getClientId(),
 			generateClientSecret(),
 			appleProperties.getAuthorizationGrantType(),
+			null,
+			authorizationCode
+		);
+	}
+
+	public AppleSocialTokenResponse getTokensForWeb(String authorizationCode)
+		throws NoSuchAlgorithmException {
+		return appleAuthClient.getTokens(
+			appleProperties.getClientId(),
+			generateClientSecret(),
+			appleProperties.getAuthorizationGrantType(),
+			appleProperties.getRedirectUri(),
 			authorizationCode
 		);
 	}

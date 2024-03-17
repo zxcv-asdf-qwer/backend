@@ -5,12 +5,12 @@ import java.security.NoSuchAlgorithmException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import co.kr.compig.api.domain.code.MemberRegisterType;
 import co.kr.compig.api.infrastructure.auth.social.apple.model.AppleIdTokenPayload;
 import co.kr.compig.api.infrastructure.auth.social.apple.model.AppleSocialTokenResponse;
 import co.kr.compig.api.presentation.member.request.LeaveRequest;
 import co.kr.compig.api.presentation.social.request.SocialLoginRequest;
 import co.kr.compig.api.presentation.social.response.SocialUserResponse;
-import co.kr.compig.api.domain.code.MemberRegisterType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,13 +27,41 @@ public class AppleLoginServiceImpl implements SocialLoginService {
 		return MemberRegisterType.APPLE;
 	}
 
+	@Override //idToken
+	public SocialUserResponse appSocialUserResponse(SocialLoginRequest socialLoginRequest) {
+		log.info(getServiceName().getCode() + " appSocialUserResponse");
+		return this.idTokenToUserInfo(socialLoginRequest.getToken());
+	}
+
+	@Override //code
+	public SocialUserResponse webSocialUserResponse(SocialLoginRequest socialLoginRequest) {
+		log.info(getServiceName().getCode() + " webSocialUserResponse");
+		try {
+			AppleSocialTokenResponse tokens = appleGetMemberInfoService.getTokensForWeb(socialLoginRequest.getCode());
+			return this.idTokenToUserInfo(tokens.getAccessToken());
+		} catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	@Override
-	public SocialUserResponse appTokenToSocialUserResponse(SocialLoginRequest socialLoginRequest) {
+	public void revoke(LeaveRequest leaveRequest) {
+		log.info(getServiceName().getCode() + " revoke");
+
+		try {
+			AppleSocialTokenResponse tokens = appleGetMemberInfoService.getTokensForApp(leaveRequest.getCode());
+			appleGetMemberInfoService.revokeTokens(tokens);
+		} catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException(e);
+		}
+
+	}
+
+	private SocialUserResponse idTokenToUserInfo(String idToken) {
 		//TODO idToken 유효성검사
-		AppleIdTokenPayload appleLoginResponse = appleGetMemberInfoService.decodePayload(socialLoginRequest.getToken(),
+		AppleIdTokenPayload appleLoginResponse = appleGetMemberInfoService.decodePayload(idToken,
 			AppleIdTokenPayload.class);
 
-		log.info(getServiceName().getCode() + " appTokenToSocialUserResponse");
 		log.info(appleLoginResponse.toString());
 
 		return SocialUserResponse.builder()
@@ -42,22 +70,4 @@ public class AppleLoginServiceImpl implements SocialLoginService {
 			.email(appleLoginResponse.getEmail())
 			.build();
 	}
-
-	@Override
-	public SocialUserResponse webTokenToSocialUserResponse(SocialLoginRequest socialLoginRequest) {
-		return null;
-	}
-
-	@Override
-	public void revoke(LeaveRequest leaveRequest) {
-		try {
-			AppleSocialTokenResponse tokens = appleGetMemberInfoService.getTokens(leaveRequest.getCode());
-			appleGetMemberInfoService.revokeTokens(tokens);
-		} catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException(e);
-		}
-
-		log.info(getServiceName().getCode() + " appTokenToSocialUserResponse");
-	}
-
 }

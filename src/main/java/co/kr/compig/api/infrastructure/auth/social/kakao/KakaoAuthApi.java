@@ -1,14 +1,20 @@
 package co.kr.compig.api.infrastructure.auth.social.kakao;
 
+import org.json.simple.JSONObject;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(value = "kakaoAuth", url = "https://kapi.kakao.com")
+@FeignClient(value = "kakaoAuth", url = "https://kauth.kakao.com")
 public interface KakaoAuthApi {
 
-	@GetMapping(value = "/v2/user/me")
-	ResponseEntity<String> accessTokenToUserInfo(@RequestHeader("Authorization") String accessToken);
-
+	@PostMapping(value = "/oauth/token")
+	ResponseEntity<JSONObject> getAccessToken(
+		@RequestParam("client_id") String clientId,
+		@RequestParam("client_secret") String clientSecret,
+		@RequestParam("grant_type") String grantType,
+		@RequestParam("redirect_url") String redirectUrl,
+		@RequestParam("code") String code
+	);
 }

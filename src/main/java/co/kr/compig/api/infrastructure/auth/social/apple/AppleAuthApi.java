@@ -22,8 +22,8 @@ public interface AppleAuthApi {
 		@RequestParam("client_id") String clientId,
 		@RequestParam("client_secret") String clientSecret,
 		@RequestParam("grant_type") String grantType,
+		@RequestParam(value = "redirect_uri", required = false) String redirectUri,
 		@RequestParam("code") String code
-
 	);
 
 	/**

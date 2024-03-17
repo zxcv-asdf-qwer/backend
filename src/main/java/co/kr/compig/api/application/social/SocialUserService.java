@@ -57,10 +57,10 @@ public class SocialUserService {
 		new SocialUserResponse();
 		SocialUserResponse socialUserResponse;
 		if (socialLoginRequest.getApplicationType() != ApplicationType.WEB) {
-			socialUserResponse = loginService.appTokenToSocialUserResponse(
+			socialUserResponse = loginService.appSocialUserResponse(
 				socialLoginRequest);
 		} else {
-			socialUserResponse = loginService.webTokenToSocialUserResponse(
+			socialUserResponse = loginService.webSocialUserResponse(
 				socialLoginRequest);
 		}
 
