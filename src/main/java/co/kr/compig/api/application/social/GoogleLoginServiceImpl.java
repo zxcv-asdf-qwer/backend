@@ -26,7 +26,6 @@ import co.kr.compig.api.presentation.member.request.LeaveRequest;
 import co.kr.compig.api.presentation.social.request.SocialLoginRequest;
 import co.kr.compig.api.presentation.social.response.SocialAuthResponse;
 import co.kr.compig.api.presentation.social.response.SocialUserResponse;
-import co.kr.compig.api.social.dto.GoogleRequestAccessTokenDto;
 import co.kr.compig.global.utils.GsonLocalDateTimeAdapter;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -103,13 +102,11 @@ public class GoogleLoginServiceImpl implements SocialLoginService {
 	public SocialAuthResponse getTokens(String authorizationCode) {
 		try {
 			ResponseEntity<?> response = googleAuthApi.getAccessToken(
-				GoogleRequestAccessTokenDto.builder()
-					.code(authorizationCode)
-					.client_id(googleProperties.getRestApiKey())
-					.clientSecret(googleProperties.getSecretKey())
-					.redirect_uri(googleProperties.getRedirectUri())
-					.grant_type(googleProperties.getAuthorizationGrantType())
-					.build()
+				googleProperties.getRestApiKey(),
+				googleProperties.getSecretKey(),
+				googleProperties.getAuthorizationGrantType(),
+				googleProperties.getRedirectUri(),
+				authorizationCode
 			);
 
 			log.info("google getTokens");

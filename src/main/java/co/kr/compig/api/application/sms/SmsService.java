@@ -28,6 +28,7 @@ public class SmsService {
 		String contents = "인증 번호 : " + authenticationNumber;
 		//TODO 수정
 		SmsSend smsSend = SmsSend.builder()
+			.senderPhoneNumber("0234305001")
 			.receiverPhoneNumber(receiverPhoneNumber)
 			.contents(contents)
 			.authNumber(authenticationNumber)

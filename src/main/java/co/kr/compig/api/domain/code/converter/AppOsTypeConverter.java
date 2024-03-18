@@ -5,11 +5,10 @@ import org.apache.ibatis.type.MappedJdbcTypes;
 import org.apache.ibatis.type.MappedTypes;
 
 import co.kr.compig.api.domain.code.AppOsType;
-import co.kr.compig.api.domain.code.BoardType;
 import jakarta.persistence.Converter;
 
 @Converter(autoApply = true)
-@MappedTypes(BoardType.class)
+@MappedTypes(AppOsType.class)
 @MappedJdbcTypes(value = JdbcType.VARCHAR)
 public class AppOsTypeConverter extends AbstractBaseEnumConverter<AppOsType, String> {
 

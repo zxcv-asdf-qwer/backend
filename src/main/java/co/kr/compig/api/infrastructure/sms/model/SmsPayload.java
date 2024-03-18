@@ -5,7 +5,9 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import co.kr.compig.global.config.jackson.NonEmptyListSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,6 +33,7 @@ public class SmsPayload { //sms만 발송
 
 	@Getter
 	@Builder
+	@JsonInclude(Include.NON_NULL)
 	public static class Content {
 
 		private Sms sms;
@@ -39,6 +42,7 @@ public class SmsPayload { //sms만 발송
 
 	@Getter
 	@Builder
+	@JsonInclude(Include.NON_NULL)
 	public static class Sms {
 
 		private String message;
@@ -46,16 +50,19 @@ public class SmsPayload { //sms만 발송
 
 	@Getter
 	@Builder
+	@JsonInclude(Include.NON_NULL)
 	public static class At {
 
 		private String senderkey;
 		private String templatecode;
 		private String message;
+		@JsonSerialize(using = NonEmptyListSerializer.class)
 		private List<Button> button;
 	}
 
 	@Getter
 	@Builder
+	@JsonInclude(Include.NON_NULL)
 	public static class Button {
 
 		private String name;
@@ -68,6 +75,7 @@ public class SmsPayload { //sms만 발송
 
 	@Getter
 	@Builder
+	@JsonInclude(Include.NON_NULL)
 	public static class Resend {
 
 		private String first;// 1치 대체 발송 메세지 유형 *sms, mms, Ims, at, ai, res
@@ -75,6 +83,7 @@ public class SmsPayload { //sms만 발송
 
 	@Getter
 	@Builder
+	@JsonInclude(Include.NON_NULL)
 	public static class Recontent {
 
 		private Sms sms;

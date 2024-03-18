@@ -40,14 +40,14 @@ public class AccessKey {
 	@Column(name = "access_key_id")
 	private Long id;
 
-	@Column(nullable = false)
+	@Column(length = 10, nullable = false)
 	@Convert(converter = SystemServiceTypeConverter.class)
 	private SystemServiceType systemServiceType; //서비스 타입
 
 	@Column(nullable = false)
 	private String serviceName; //서비스 업체 명
 
-	@Column
+	@Column(columnDefinition = "TEXT")
 	private String accessKey; //서비스 업체 키
 
 	@Column

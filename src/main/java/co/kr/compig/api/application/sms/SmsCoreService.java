@@ -10,7 +10,6 @@ import co.kr.compig.api.domain.code.SystemServiceType;
 import co.kr.compig.api.infrastructure.sms.BizPpurioApi;
 import co.kr.compig.api.infrastructure.sms.model.SmsApiProperties;
 import co.kr.compig.api.infrastructure.sms.model.SmsPayload;
-import co.kr.compig.api.infrastructure.sms.model.SmsPayload.Content;
 import co.kr.compig.api.infrastructure.sms.model.SmsPayload.Sms;
 import co.kr.compig.api.presentation.sms.model.SmsSend;
 import lombok.RequiredArgsConstructor;
@@ -38,20 +37,24 @@ public class SmsCoreService {
 			.refkey(smsSend.getRefkey())
 			.userinfo("")
 			.resllercode("")
-			.sendtime(String.valueOf(smsSend.getSendtime().toEpochSecond(ZoneOffset.ofHours(9))))
-			.content(Content.builder()
+			.sendtime(smsSend.getSendtime() != null ?
+				String.valueOf(smsSend.getSendtime().toEpochSecond(ZoneOffset.ofHours(9))) : null
+			)
+			.content(SmsPayload.Content.builder()
+				.at(SmsPayload.At.builder()
+					.senderkey("12345")
+					.templatecode("template")
+					.message(smsSend.getContents())
+					.build())
+				.build())
+			.resend(SmsPayload.Resend.builder()
+				.first("sms")
+				.build())
+			.recontent(SmsPayload.Recontent.builder()
 				.sms(Sms.builder()
 					.message(smsSend.getContents())
 					.build())
 				.build())
-			// .resend(Resend.builder()
-			// 	.first("sms")
-			// 	.build())
-			// .recontent(Recontent.builder()
-			// 	.sms(Sms.builder()
-			// 		.message(smsSend.getContents())
-			// 		.build())
-			// 	.build())
 			.build();
 
 		bizPpurioApi.sendSms("Bearer " + accessToken,
