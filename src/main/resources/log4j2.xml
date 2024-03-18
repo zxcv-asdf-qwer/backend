@@ -28,6 +28,7 @@
         <Logger name="jdbc.resultset" level="OFF"/>
         <Logger name="jdbc.connection" level="OFF"/>
         <logger name="org.springframework" level="INFO"/>
+        <logger name="org.springframework.web.client.RestTemplate" level="DEBUG"/>
         <Logger name="co.kr" level="DEBUG" additivity="false">
             <AppenderRef ref="STDOUT"/>
         </Logger>

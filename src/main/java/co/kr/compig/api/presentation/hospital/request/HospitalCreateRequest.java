@@ -1,9 +1,9 @@
 package co.kr.compig.api.presentation.hospital.request;
 
-import org.apache.logging.log4j.core.config.plugins.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Length;
 
 import co.kr.compig.api.domain.hospital.Hospital;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

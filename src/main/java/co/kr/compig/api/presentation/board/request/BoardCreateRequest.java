@@ -4,15 +4,15 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.logging.log4j.core.config.plugins.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import co.kr.compig.api.presentation.board.response.SystemFileResponse;
+import co.kr.compig.api.domain.board.Board;
 import co.kr.compig.api.domain.code.BoardType;
 import co.kr.compig.api.domain.code.ContentsType;
 import co.kr.compig.api.domain.code.IsYn;
-import co.kr.compig.api.domain.board.Board;
+import co.kr.compig.api.presentation.board.response.SystemFileResponse;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

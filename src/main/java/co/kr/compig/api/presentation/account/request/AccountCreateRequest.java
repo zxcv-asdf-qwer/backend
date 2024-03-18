@@ -4,12 +4,11 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-import org.apache.logging.log4j.core.config.plugins.validation.constraints.NotBlank;
-
 import co.kr.compig.api.domain.account.Account;
 import co.kr.compig.api.domain.code.BankCode;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.presentation.board.response.SystemFileResponse;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

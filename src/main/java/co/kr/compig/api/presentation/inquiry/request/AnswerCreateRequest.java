@@ -1,9 +1,8 @@
 package co.kr.compig.api.presentation.inquiry.request;
 
-import org.apache.logging.log4j.core.config.plugins.validation.constraints.NotBlank;
-
 import co.kr.compig.api.domain.inquiry.Answer;
 import co.kr.compig.api.domain.inquiry.Question;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

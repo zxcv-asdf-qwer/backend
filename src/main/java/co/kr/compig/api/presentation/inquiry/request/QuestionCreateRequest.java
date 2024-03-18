@@ -1,10 +1,10 @@
 package co.kr.compig.api.presentation.inquiry.request;
 
-import org.apache.logging.log4j.core.config.plugins.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Length;
 
 import co.kr.compig.api.domain.code.QuestionType;
 import co.kr.compig.api.domain.inquiry.Question;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
