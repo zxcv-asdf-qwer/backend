@@ -1,6 +1,5 @@
 package co.kr.compig.global.config;
 
-import static org.springframework.security.config.Customizer.*;
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.*;
 
 import org.springframework.context.annotation.Bean;
@@ -66,8 +65,7 @@ public class SecurityConfig {
 			.accessDeniedHandler(customAccessDeniedHandler()));
 		http.oauth2ResourceServer((oauth2) -> oauth2.jwt(jwt ->
 			jwt.jwtAuthenticationConverter(new CustomJwtAuthenticationConverter("compig-back"))));
-		http.oauth2Login(withDefaults())
-			.logout(logout -> logout.addLogoutHandler(keycloakLogoutHandler).logoutSuccessUrl("/"));
+		http.logout(logout -> logout.addLogoutHandler(keycloakLogoutHandler).logoutSuccessUrl("/"));
 		SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
 		return http.build();
 	}
