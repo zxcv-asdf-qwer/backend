@@ -52,22 +52,22 @@ public class InboundApi {
 	@Column(length = 50, nullable = false)
 	private String service;
 
-	@Column(nullable = false)
+	@Column(columnDefinition = "TEXT", nullable = false)
 	private String path;
 
 	@Column(length = 6, nullable = false)
 	private String method;
 
-	@Column
+	@Column(columnDefinition = "TEXT")
 	private String requestParam;
 
-	@Column
+	@Column(columnDefinition = "TEXT")
 	private String requestData;
 
-	@Column
+	@Column(columnDefinition = "TEXT")
 	private String responseData;
 
-	@Column
+	@Column(columnDefinition = "TEXT")
 	private String error;
 
 	@Column(nullable = false)
