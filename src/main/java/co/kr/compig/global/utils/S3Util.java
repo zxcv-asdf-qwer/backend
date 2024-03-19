@@ -37,6 +37,9 @@ public class S3Util {
 	@Value("${cloud.aws.s3.bucket}")
 	private String bucket;
 
+	@Value("${cloud.aws.s3.folder}")
+	private String folder;
+
 	public String upload(MultipartFile multipartFile) {
 		if (multipartFile == null || multipartFile.isEmpty())
 			return null;
@@ -76,7 +79,7 @@ public class S3Util {
 		metadata.setContentLength(fileBytes.length);
 		metadata.setContentType(contentType);
 		ByteArrayInputStream inputStream = new ByteArrayInputStream(fileBytes);
-		amazonS3.putObject(new PutObjectRequest(bucket, fileName, inputStream, metadata));
+		amazonS3.putObject(new PutObjectRequest(bucket + "/" + folder, fileName, inputStream, metadata));
 	}
 
 	public void delete(List<String> imageUrlList) {
@@ -85,8 +88,8 @@ public class S3Util {
 				String fileName = extractObjectKeyFromUrl(imageUrl);
 				try {
 					String decodedFileName = URLDecoder.decode(fileName, StandardCharsets.UTF_8);
-					if (amazonS3.doesObjectExist(bucket, decodedFileName)) {
-						amazonS3.deleteObject(bucket, decodedFileName);
+					if (amazonS3.doesObjectExist(bucket + "/" + folder, decodedFileName)) {
+						amazonS3.deleteObject(bucket + "/" + folder, decodedFileName);
 					}
 				} catch (IllegalArgumentException e) {
 					throw new UploadException(ErrorCode.FILE_DECODE_FAIL, e);
@@ -122,7 +125,7 @@ public class S3Util {
 	}
 
 	public String generateUnsignedUrl(String objectKey) {
-		String baseUrl = "https://d10dmw3w6l1et0.cloudfront.net/";
+		String baseUrl = "https://d1qy21g8owbgj0.cloudfront.net/";
 		return baseUrl + objectKey;
 	}
 
