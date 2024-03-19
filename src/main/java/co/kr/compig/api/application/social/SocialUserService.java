@@ -117,33 +117,13 @@ public class SocialUserService {
 		memberService.socialUserLeave(leaveRequest);
 	}
 
-	public Object doSocialLogin(ApplicationType applicationType, MemberRegisterType memberRegisterType,
+	public SocialLoginResponse doSocialLogin(ApplicationType applicationType, MemberRegisterType memberRegisterType,
 		String code, String token) {
 		SocialLoginRequest socialLoginRequest = SocialLoginRequest.builder()
 			.applicationType(applicationType)
 			.memberRegisterType(memberRegisterType)
 			.code(code)
 			.token(token).build();
-		SocialLoginService loginService = this.getLoginService(memberRegisterType);
-		SocialUserResponse socialUserResponse;
-
-		if (socialLoginRequest.getApplicationType() != ApplicationType.WEB) {
-			socialUserResponse = loginService.appSocialUserResponse(
-				socialLoginRequest);
-		} else {
-			socialUserResponse = loginService.webSocialUserResponse(
-				socialLoginRequest);
-		}
-
-		Optional<Member> optionalMember = memberRepository.findByUserId(socialUserResponse.getSub());
-
-		if (optionalMember.isPresent()) {
-			// 공통 로직 처리: 키클락 로그인 실행
-			return this.getKeycloakAccessToken(optionalMember.get().getEmail(),
-				optionalMember.get().getEmail() + optionalMember.get().getMemberRegisterType());
-			// 키클락 로그인 실행
-		} else {
-			return socialUserResponse;
-		}
+		return doSocialLogin(socialLoginRequest);
 	}
 }

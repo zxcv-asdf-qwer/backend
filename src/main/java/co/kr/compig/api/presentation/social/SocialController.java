@@ -38,7 +38,7 @@ public class SocialController {
 	}
 
 	@GetMapping(path = "/login")
-	public ResponseEntity<?> doSocialLogin(
+	public ResponseEntity<SocialLoginResponse> doSocialLogin(
 		@RequestParam(name = "applicationType", required = false) ApplicationType applicationType,
 		@RequestParam(name = "memberRegisterType", required = false) MemberRegisterType memberRegisterType,
 		@RequestParam(name = "code", required = false) String code,
