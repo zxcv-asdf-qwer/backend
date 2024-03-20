@@ -131,13 +131,12 @@ public class SocialUserService {
 		ResponseCookie springCookie = ResponseCookie.from("refreshToken", socialLoginResponse.getRefresh_token())
 			.httpOnly(true) // JS를 통한 접근 방지
 			.secure(true) // HTTPS를 통해서만 쿠키 전송
-			.path("/") // 쿠키를 전송할 경로
 			.maxAge(86400) // 쿠키의 유효 시간(초 단위)
 			.build();
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.add(HttpHeaders.SET_COOKIE, springCookie.toString());
 
-		return new ResponseEntity<>(socialLoginResponse, headers, HttpStatus.OK);
+		return new ResponseEntity<>(socialLoginResponse, headers, HttpStatus.FOUND);
 	}
 }
