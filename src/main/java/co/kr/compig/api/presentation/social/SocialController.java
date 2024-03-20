@@ -44,10 +44,7 @@ public class SocialController {
 		@RequestParam(name = "code", required = false) String code,
 		@RequestParam(name = "id_token", required = false) String token
 	) {
-
-		return ResponseEntity.ok()
-			.body(
-				socialUserService.doSocialLogin(applicationType, memberRegisterType, code, token));
+		return socialUserService.doSocialLogin(applicationType, memberRegisterType, code, token);
 	}
 
 	//apple 만 따로 탈퇴
