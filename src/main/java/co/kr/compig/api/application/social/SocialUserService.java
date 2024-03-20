@@ -54,7 +54,6 @@ public class SocialUserService {
 
 	public SocialLoginResponse doSocialLogin(SocialLoginRequest socialLoginRequest) {
 		SocialLoginService loginService = this.getLoginService(socialLoginRequest.getMemberRegisterType());
-		new SocialUserResponse();
 		SocialUserResponse socialUserResponse;
 		if (socialLoginRequest.getApplicationType() != ApplicationType.WEB) {
 			socialUserResponse = loginService.appSocialUserResponse(
@@ -116,5 +115,15 @@ public class SocialUserService {
 		SocialLoginService loginService = this.getLoginService(leaveRequest.getMemberRegisterType());
 		loginService.revoke(leaveRequest);
 		memberService.socialUserLeave(leaveRequest);
+	}
+
+	public SocialLoginResponse doSocialLogin(ApplicationType applicationType, MemberRegisterType memberRegisterType,
+		String code, String token) {
+		SocialLoginRequest socialLoginRequest = SocialLoginRequest.builder()
+			.applicationType(applicationType)
+			.memberRegisterType(memberRegisterType)
+			.code(code)
+			.token(token).build();
+		return doSocialLogin(socialLoginRequest);
 	}
 }

@@ -12,7 +12,7 @@ public interface NaverAuthApi {
 		@RequestParam("client_id") String clientId,
 		@RequestParam("client_secret") String clientSecret,
 		@RequestParam("grant_type") String grantType,
-		@RequestParam("redirect_url") String redirectUrl,
+		@RequestParam("redirect_uri") String redirectUri,
 		@RequestParam("code") String code,
 		@RequestParam("state") String state
 	);
