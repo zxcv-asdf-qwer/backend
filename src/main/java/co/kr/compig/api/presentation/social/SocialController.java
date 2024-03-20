@@ -38,16 +38,13 @@ public class SocialController {
 	}
 
 	@GetMapping(path = "/login")
-	public ResponseEntity<SocialLoginResponse> doSocialLogin(
+	public ResponseEntity<?> doSocialLogin(
 		@RequestParam(name = "applicationType", required = false) ApplicationType applicationType,
 		@RequestParam(name = "memberRegisterType", required = false) MemberRegisterType memberRegisterType,
 		@RequestParam(name = "code", required = false) String code,
 		@RequestParam(name = "id_token", required = false) String token
 	) {
-
-		return ResponseEntity.ok()
-			.body(
-				socialUserService.doSocialLogin(applicationType, memberRegisterType, code, token));
+		return socialUserService.doSocialLogin(applicationType, memberRegisterType, code, token);
 	}
 
 	//apple 만 따로 탈퇴

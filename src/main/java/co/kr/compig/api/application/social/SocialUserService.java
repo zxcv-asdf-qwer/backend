@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -117,13 +120,24 @@ public class SocialUserService {
 		memberService.socialUserLeave(leaveRequest);
 	}
 
-	public SocialLoginResponse doSocialLogin(ApplicationType applicationType, MemberRegisterType memberRegisterType,
+	public ResponseEntity<?> doSocialLogin(ApplicationType applicationType, MemberRegisterType memberRegisterType,
 		String code, String token) {
 		SocialLoginRequest socialLoginRequest = SocialLoginRequest.builder()
 			.applicationType(applicationType)
 			.memberRegisterType(memberRegisterType)
 			.code(code)
 			.token(token).build();
-		return doSocialLogin(socialLoginRequest);
+		SocialLoginResponse socialLoginResponse = doSocialLogin(socialLoginRequest);
+		ResponseCookie springCookie = ResponseCookie.from("refreshToken", socialLoginResponse.getRefresh_token())
+			.httpOnly(true) // JS를 통한 접근 방지
+			.secure(true) // HTTPS를 통해서만 쿠키 전송
+			.path("/") // 쿠키를 전송할 경로
+			.maxAge(86400) // 쿠키의 유효 시간(초 단위)
+			.build();
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.add(HttpHeaders.SET_COOKIE, springCookie.toString());
+
+		return new ResponseEntity<>(socialLoginResponse, headers, HttpStatus.OK);
 	}
 }
