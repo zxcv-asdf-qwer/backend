@@ -39,8 +39,8 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		//    http.csrf(withDefaults());
-		//    http.cors(withDefaults());
+		// http.csrf(withDefaults());
+		// http.cors(withDefaults());
 		http.csrf(AbstractHttpConfigurer::disable);
 		http.authorizeHttpRequests(auth -> auth
 			.requestMatchers(new AntPathRequestMatcher("/pb/**"))
