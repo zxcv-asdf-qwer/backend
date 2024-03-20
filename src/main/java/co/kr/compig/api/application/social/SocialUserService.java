@@ -137,6 +137,6 @@ public class SocialUserService {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add(HttpHeaders.SET_COOKIE, springCookie.toString());
 
-		return new ResponseEntity<>(socialLoginResponse, headers, HttpStatus.FOUND);
+		return new ResponseEntity<>(socialLoginResponse, headers, HttpStatus.OK);
 	}
 }
