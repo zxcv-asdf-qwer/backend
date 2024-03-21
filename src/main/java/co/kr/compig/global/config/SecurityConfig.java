@@ -19,6 +19,7 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsUtils;
 
 import co.kr.compig.global.security.converter.CustomJwtAuthenticationConverter;
 import jakarta.servlet.http.HttpServletResponse;
@@ -43,6 +44,7 @@ public class SecurityConfig {
 		// http.cors(withDefaults());
 		http.csrf(AbstractHttpConfigurer::disable);
 		http.authorizeHttpRequests(auth -> auth
+			.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
 			.requestMatchers(new AntPathRequestMatcher("/pb/**"))
 			.hasRole("USER")
 			.requestMatchers(new AntPathRequestMatcher("/pv/**"))
