@@ -47,7 +47,7 @@ public class AdminInquiryController {
 
 	@GetMapping(path = "/question")
 	public ResponseEntity<PageResponse<QuestionResponse>> pageListQuestion(
-		@RequestBody @Valid QuestionSearchRequest questionSearchRequest, Pageable pageable) {
+		@ModelAttribute @Valid QuestionSearchRequest questionSearchRequest, Pageable pageable) {
 		Page<QuestionResponse> page = inquiryService.pageListQuestionPage(questionSearchRequest, pageable);
 		PageResponse<QuestionResponse> pageResponse = new PageResponse<>(page.getContent(), pageable,
 			page.getTotalElements());

@@ -4,17 +4,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import co.kr.compig.api.application.hospital.HospitalService;
+import co.kr.compig.api.presentation.hospital.request.HospitalSearchRequest;
 import co.kr.compig.api.presentation.hospital.response.HospitalDetailResponse;
 import co.kr.compig.api.presentation.hospital.response.HospitalResponse;
-import co.kr.compig.api.presentation.hospital.request.HospitalSearchRequest;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.dto.pagination.SliceResponse;
-import co.kr.compig.api.application.hospital.HospitalService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +28,7 @@ public class UserHospitalController {
 
 	@GetMapping
 	public ResponseEntity<SliceResponse<HospitalResponse>> pageListHospital(
-		@RequestBody @Valid HospitalSearchRequest hospitalSearchRequest, Pageable pageable) {
+		@ModelAttribute @Valid HospitalSearchRequest hospitalSearchRequest, Pageable pageable) {
 		Slice<HospitalResponse> slice = hospitalService.pageListHospitalCursor(hospitalSearchRequest, pageable);
 		SliceResponse<HospitalResponse> sliceResponse = new SliceResponse<>(slice.getContent(), pageable,
 			slice.hasNext());
