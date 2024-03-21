@@ -5,9 +5,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -20,6 +17,7 @@ import com.google.gson.GsonBuilder;
 import co.kr.compig.api.application.member.MemberService;
 import co.kr.compig.api.domain.code.ApplicationType;
 import co.kr.compig.api.domain.code.MemberRegisterType;
+import co.kr.compig.api.domain.code.UserType;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.member.MemberRepository;
 import co.kr.compig.api.infrastructure.auth.keycloak.KeycloakAuthApi;
@@ -66,10 +64,16 @@ public class SocialUserService {
 				socialLoginRequest);
 		}
 
-		Optional<Member> optionalMember = memberRepository.findByUserId(socialUserResponse.getSub());
+		Optional<Member> optionalMember = memberRepository.findByEmail(socialUserResponse.getEmail());
 		Member member = optionalMember.orElseGet(() -> {
 			// 중복되지 않는 경우 새 회원 생성 후 반환
-			String newMemberId = memberService.socialCreate(socialUserResponse.convertEntity());
+			Member newMember = socialUserResponse.convertEntity();
+			memberService.setReferenceDomain(UserType.USER, newMember);
+			newMember.createUserKeyCloak(socialUserResponse.getSub(), socialUserResponse.getName());
+			newMember.passwordEncode();
+
+			String newMemberId = memberRepository.save(newMember).getId();
+
 			return memberRepository.findById(newMemberId)
 				.orElseThrow(() -> new RuntimeException("회원 생성 후 조회 실패"));
 		});
@@ -120,23 +124,4 @@ public class SocialUserService {
 		memberService.socialUserLeave(leaveRequest);
 	}
 
-	public ResponseEntity<?> doSocialLogin(ApplicationType applicationType, MemberRegisterType memberRegisterType,
-		String code, String token) {
-		SocialLoginRequest socialLoginRequest = SocialLoginRequest.builder()
-			.applicationType(applicationType)
-			.memberRegisterType(memberRegisterType)
-			.code(code)
-			.token(token).build();
-		SocialLoginResponse socialLoginResponse = doSocialLogin(socialLoginRequest);
-		ResponseCookie springCookie = ResponseCookie.from("refreshToken", socialLoginResponse.getRefresh_token())
-			.httpOnly(true) // JS를 통한 접근 방지
-			.secure(true) // HTTPS를 통해서만 쿠키 전송
-			.maxAge(86400) // 쿠키의 유효 시간(초 단위)
-			.build();
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.add(HttpHeaders.SET_COOKIE, springCookie.toString());
-
-		return new ResponseEntity<>(socialLoginResponse, headers, HttpStatus.OK);
-	}
 }

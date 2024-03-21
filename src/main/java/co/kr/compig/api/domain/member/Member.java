@@ -14,13 +14,6 @@ import org.keycloak.representations.idm.FederatedIdentityRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 
 import co.kr.compig.api.domain.account.Account;
-import co.kr.compig.api.domain.order.CareOrder;
-import co.kr.compig.api.domain.patient.OrderPatient;
-import co.kr.compig.api.domain.patient.Patient;
-import co.kr.compig.api.domain.permission.MenuPermission;
-import co.kr.compig.api.domain.wallet.Wallet;
-import co.kr.compig.api.presentation.member.response.MemberResponse;
-import co.kr.compig.api.presentation.member.request.MemberUpdateRequest;
 import co.kr.compig.api.domain.code.CareerCode;
 import co.kr.compig.api.domain.code.DomesticForeignCode;
 import co.kr.compig.api.domain.code.GenderCode;
@@ -29,6 +22,13 @@ import co.kr.compig.api.domain.code.MemberRegisterType;
 import co.kr.compig.api.domain.code.UseYn;
 import co.kr.compig.api.domain.code.UserType;
 import co.kr.compig.api.domain.code.converter.UserTypeConverter;
+import co.kr.compig.api.domain.order.CareOrder;
+import co.kr.compig.api.domain.patient.OrderPatient;
+import co.kr.compig.api.domain.patient.Patient;
+import co.kr.compig.api.domain.permission.MenuPermission;
+import co.kr.compig.api.domain.wallet.Wallet;
+import co.kr.compig.api.presentation.member.request.MemberUpdateRequest;
+import co.kr.compig.api.presentation.member.response.MemberResponse;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import co.kr.compig.global.error.exception.KeyCloakRequestException;
 import co.kr.compig.global.keycloak.KeycloakHandler;
@@ -180,7 +180,6 @@ public class Member {
 	@Builder.Default
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<CareOrder> careOrders = new HashSet<>();
-
 
 	/* =================================================================
 	 * Relation method
