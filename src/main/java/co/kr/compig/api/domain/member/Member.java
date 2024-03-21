@@ -262,15 +262,16 @@ public class Member {
 	public UserRepresentation getUserRepresentation(String providerId, String providerUsername) {
 		UserRepresentation userRepresentation = new UserRepresentation();
 		String userNm = this.userNm;
-
-		String[] userNmSplit = userNm.split(" ");
-		String firstName = userNmSplit[0];
-		String lastName = userNmSplit.length > 1 ? userNmSplit[1] : userNmSplit[0];
+		if (userNm != null) {
+			String[] userNmSplit = userNm.split(" ");
+			String firstName = userNmSplit[0];
+			String lastName = userNmSplit.length > 1 ? userNmSplit[1] : userNmSplit[0];
+			userRepresentation.setFirstName(firstName);
+			userRepresentation.setLastName(lastName);
+		}
 
 		userRepresentation.setId(this.id);
 		userRepresentation.setUsername(Optional.ofNullable(this.userId).orElseGet(() -> this.email));
-		userRepresentation.setFirstName(firstName);
-		userRepresentation.setLastName(lastName);
 		userRepresentation.setEmail(this.email);
 		// 탈퇴 회원일 경우 keycloak 도 비 활성화 처리
 		userRepresentation.setEnabled(!this.useYn.equals(UseYn.N) || this.leaveDate == null); //TODO 제거
