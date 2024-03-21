@@ -104,7 +104,7 @@ public class HospitalRepositoryImpl implements HospitalRepositoryCustom {
 		applySorting(query, pageable);
 
 		List<HospitalResponse> hospitals = query
-			.where(cursorCursorId(hospitalSearchRequest.getCursorId()))
+			.where(cursorCursorId(Long.parseLong(hospitalSearchRequest.getCursorId())))
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize() + 1) // 페이징 + 다음 페이지 존재 여부 확인을 위해 +1
 			.fetch();

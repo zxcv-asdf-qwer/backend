@@ -5,6 +5,8 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.keycloak.representations.idm.GroupRepresentation;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,11 +17,14 @@ import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.member.MemberGroup;
 import co.kr.compig.api.domain.member.MemberGroupRepository;
 import co.kr.compig.api.domain.member.MemberRepository;
+import co.kr.compig.api.domain.member.MemberRepositoryCustom;
 import co.kr.compig.api.presentation.member.request.AdminMemberCreate;
 import co.kr.compig.api.presentation.member.request.GuardianMemberCreate;
 import co.kr.compig.api.presentation.member.request.LeaveRequest;
+import co.kr.compig.api.presentation.member.request.MemberSearchRequest;
 import co.kr.compig.api.presentation.member.request.MemberUpdateRequest;
 import co.kr.compig.api.presentation.member.request.PartnerMemberCreate;
+import co.kr.compig.api.presentation.member.response.MemberPageResponse;
 import co.kr.compig.api.presentation.member.response.MemberResponse;
 import co.kr.compig.global.error.exception.BizException;
 import co.kr.compig.global.error.exception.NotExistDataException;
@@ -27,6 +32,7 @@ import co.kr.compig.global.keycloak.KeycloakHandler;
 import co.kr.compig.global.keycloak.KeycloakHolder;
 import co.kr.compig.global.utils.S3Util;
 import co.kr.compig.global.utils.SecurityUtil;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,6 +42,7 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 public class MemberService {
 
+	private final MemberRepositoryCustom memberRepositoryCustom;
 	private final MemberRepository memberRepository;
 	private final MemberGroupRepository memberGroupRepository;
 	private final KeycloakHandler keycloakHandler;
@@ -171,5 +178,10 @@ public class MemberService {
 		} catch (Exception e) {
 			log.error("LeaveMember Keycloak Error", e);
 		}
+	}
+
+	public Slice<MemberPageResponse> getUserPageCursor(@Valid MemberSearchRequest memberSearchRequest,
+		Pageable pageable) {
+		return memberRepositoryCustom.getUserPageCursor(memberSearchRequest, pageable);
 	}
 }

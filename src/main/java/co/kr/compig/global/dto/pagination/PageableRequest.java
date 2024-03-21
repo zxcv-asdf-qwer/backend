@@ -8,7 +8,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
 public class PageableRequest {
-	private Long cursorId; // 커서 id
+	private String cursorId; // 커서 id
 	private String keywordType; // 검색조건
 	private String keyword;
 }

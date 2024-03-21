@@ -1,6 +1,7 @@
 package co.kr.compig.api.presentation.social.response;
 
 import co.kr.compig.api.domain.code.MemberRegisterType;
+import co.kr.compig.api.domain.code.UserType;
 import co.kr.compig.api.domain.member.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,6 +28,7 @@ public class SocialUserResponse {
 			.userNm(this.name)
 			.email(this.email)
 			.userPw(this.email + this.memberRegisterType)
+			.userType(UserType.USER)
 			.memberRegisterType(this.memberRegisterType)
 			.build();
 	}

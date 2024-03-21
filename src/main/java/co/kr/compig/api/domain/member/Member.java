@@ -334,7 +334,6 @@ public class Member {
 	public MemberResponse toResponse() {
 		return MemberResponse.builder()
 			.userNm(this.userNm)
-			.userPw(this.userPw)
 			.telNo(this.telNo)
 			.email(this.email)
 			.gender(this.gender)
