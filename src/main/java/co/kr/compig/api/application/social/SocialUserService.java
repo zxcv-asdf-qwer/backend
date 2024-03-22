@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -26,14 +27,17 @@ import co.kr.compig.api.presentation.social.request.SocialLoginRequest;
 import co.kr.compig.api.presentation.social.response.SocialLoginResponse;
 import co.kr.compig.api.presentation.social.response.SocialUserResponse;
 import co.kr.compig.global.error.exception.BizException;
+import co.kr.compig.global.error.exception.NotExistDataException;
 import co.kr.compig.global.keycloak.KeycloakProperties;
 import co.kr.compig.global.utils.GsonLocalDateTimeAdapter;
+import co.kr.compig.global.utils.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j
+@Transactional
 public class SocialUserService {
 
 	private final MemberService memberService;
@@ -120,9 +124,10 @@ public class SocialUserService {
 	}
 
 	public void doSocialRevoke(LeaveRequest leaveRequest) {
-		SocialLoginService loginService = this.getLoginService(leaveRequest.getMemberRegisterType());
+		Member member = memberRepository.findById(SecurityUtil.getMemberId()).orElseThrow(NotExistDataException::new);
+		SocialLoginService loginService = this.getLoginService(member.getMemberRegisterType());
 		loginService.revoke(leaveRequest);
-		memberService.socialUserLeave(leaveRequest);
+		memberService.socialUserLeave(member, leaveRequest);
 	}
 
 }

@@ -170,8 +170,7 @@ public class MemberService {
 		}
 	}
 
-	public void socialUserLeave(LeaveRequest leaveRequest) {
-		Member member = memberRepository.findById(SecurityUtil.getMemberId()).orElseThrow(NotExistDataException::new);
+	public void socialUserLeave(Member member, LeaveRequest leaveRequest) {
 		member.setLeaveMember(leaveRequest.getLeaveReason());
 		try {
 			KeycloakHandler keycloakHandler = KeycloakHolder.get();
