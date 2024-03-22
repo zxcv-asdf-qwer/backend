@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import co.kr.compig.api.domain.code.MemberRegisterType;
+import co.kr.compig.api.domain.code.UseYn;
 import co.kr.compig.api.domain.code.UserType;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.member.MemberGroup;
@@ -140,7 +141,7 @@ public class MemberService {
 
 	@Transactional(readOnly = true)
 	public void availabilityEmail(String email) {
-		if (memberRepository.findByEmail(email).isEmpty()) {
+		if (memberRepository.findByEmailAndUseYn(email, UseYn.Y).isEmpty()) {
 			return;
 		}
 		throw new BizException("이미 가입된 아이디 입니다.");

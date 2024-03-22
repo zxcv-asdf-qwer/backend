@@ -17,7 +17,7 @@ import lombok.ToString;
 public class SocialUserResponse {
 
 	private MemberRegisterType memberRegisterType;
-	private String sub;//social userId
+	private String socialId;//social userId
 	private String email;
 	private String name;
 	private String gender;

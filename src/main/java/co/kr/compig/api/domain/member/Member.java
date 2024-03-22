@@ -148,7 +148,10 @@ public class Member {
 	@ColumnDefault("'N'")
 	@Enumerated(EnumType.STRING)
 	@Builder.Default
-	private IsYn realNameYn = IsYn.N; // 실명 확인 여부
+	private IsYn realNameYn = IsYn.N; // 실명 확인 여부 //지우기
+
+	@Column(columnDefinition = "TEXT")
+	private String ci; //나이스 본인인증 CI 값
 
 	/* =================================================================
 	 * Domain mapping

@@ -73,7 +73,7 @@ public class GoogleLoginServiceImpl implements SocialLoginService {
 				GoogleLoginResponse.class);
 
 			return SocialUserResponse.builder()
-				.sub(googleLoginResponse.getSub())
+				.socialId(googleLoginResponse.getSub())
 				.memberRegisterType(getServiceName())
 				.email(googleLoginResponse.getEmail())
 				.build();
@@ -149,7 +149,7 @@ public class GoogleLoginServiceImpl implements SocialLoginService {
 			GoogleLoginResponse googleLoginResponse = gson.fromJson(jsonString, GoogleLoginResponse.class);
 
 			return SocialUserResponse.builder()
-				.sub(googleLoginResponse.getSub())
+				.socialId(googleLoginResponse.getSub())
 				.memberRegisterType(getServiceName())
 				.email(googleLoginResponse.getEmail())
 				.build();
