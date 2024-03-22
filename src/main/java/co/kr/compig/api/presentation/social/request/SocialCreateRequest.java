@@ -43,6 +43,7 @@ public class SocialCreateRequest {
 	public Member converterEntity() {
 		return Member.builder()
 			.userNm(this.userNm)
+			.userId(this.email)
 			.email(this.email)
 			.telNo(this.telNo)
 			.ci(this.ci)
