@@ -56,6 +56,25 @@ public class NaverLoginServiceImpl implements SocialLoginService {
 
 	@Override
 	public void revoke(LeaveRequest leaveRequest) {
+		log.info(getServiceName().getCode() + " revoke");
+		SocialAuthResponse socialAuthResponse = this.getAccessToken(leaveRequest.getCode(), null);
+		try {
+			naverAuthApi.revokeAccessToken(
+				naverProperties.getClientId(),
+				naverProperties.getClientSecret(),
+				"delete",
+				socialAuthResponse.getAccess_token(),
+				"NAVER"
+			);
+		} catch (HttpServerErrorException e) {
+			log.error("Naver revoke HttpServerErrorException - Status : {}, Message : {}",
+				e.getStatusCode(),
+				e.getMessage());
+		} catch (UnknownHttpStatusCodeException e) {
+			log.error("Naver revoke UnknownHttpStatusCodeException - Status : {}, Message : {}",
+				e.getStatusCode(),
+				e.getMessage());
+		}
 	}
 
 	private SocialUserResponse accessTokenToUserInfo(String accessToken) {

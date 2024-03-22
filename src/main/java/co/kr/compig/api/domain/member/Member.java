@@ -327,7 +327,6 @@ public class Member {
 		this.marketingAppPushDate = marketingDate(memberUpdateRequest.isMarketingAppPush());
 		this.marketingKakaoDate = marketingDate(memberUpdateRequest.isMarketingKakao());
 		this.marketingSmsDate = marketingDate(memberUpdateRequest.isMarketingSms());
-		this.realNameYn = memberUpdateRequest.getRealNameYn();
 	}
 
 	public LocalDate marketingDate(boolean isMarketing) {

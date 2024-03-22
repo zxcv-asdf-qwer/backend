@@ -16,4 +16,13 @@ public interface NaverAuthApi {
 		@RequestParam("code") String code,
 		@RequestParam("state") String state
 	);
+
+	@GetMapping("/oauth2.0/token")
+	ResponseEntity<String> revokeAccessToken(
+		@RequestParam("client_id") String clientId,
+		@RequestParam("client_secret") String clientSecret,
+		@RequestParam("grant_type") String grantType, //delete
+		@RequestParam("access_token") String accessToken,
+		@RequestParam("service_provider") String serviceProvider //NAVER
+	);
 }

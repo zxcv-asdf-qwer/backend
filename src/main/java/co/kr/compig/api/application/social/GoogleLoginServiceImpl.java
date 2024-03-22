@@ -97,6 +97,17 @@ public class GoogleLoginServiceImpl implements SocialLoginService {
 
 	@Override
 	public void revoke(LeaveRequest leaveRequest) {
+		log.info(getServiceName().getCode() + " revoke");
+		SocialAuthResponse tokens = this.getTokens(leaveRequest.getCode());
+		try {
+			googleAuthApi.revokeAccessToken(tokens.getAccess_token());
+		} catch (HttpServerErrorException e) {
+			log.error("Google revoke HttpServerErrorException - Status : {}, Message : {}",
+				e.getStatusCode(), e.getMessage());
+		} catch (UnknownHttpStatusCodeException e) {
+			log.error("Google revoke UnknownHttpStatusCodeException - Status : {}, Message : {}",
+				e.getStatusCode(), e.getMessage());
+		}
 	}
 
 	public SocialAuthResponse getTokens(String authorizationCode) {
