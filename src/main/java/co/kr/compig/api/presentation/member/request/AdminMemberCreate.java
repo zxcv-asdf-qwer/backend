@@ -42,7 +42,7 @@ public class AdminMemberCreate {
 	private UserType userType; //관리자 타입
 
 	@Builder.Default
-	private MemberRegisterType memberRegisterType = MemberRegisterType.GENERAL; // 소셜로그인 유형
+	private MemberRegisterType memberRegisterType = MemberRegisterType.GENERAL; // 회원가입 유형
 
 	public Member convertEntity() {
 		return Member.builder()

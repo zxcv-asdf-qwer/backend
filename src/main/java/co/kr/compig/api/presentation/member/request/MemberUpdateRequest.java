@@ -5,7 +5,6 @@ import org.hibernate.validator.constraints.Length;
 import co.kr.compig.api.domain.code.CareerCode;
 import co.kr.compig.api.domain.code.DomesticForeignCode;
 import co.kr.compig.api.domain.code.GenderCode;
-import co.kr.compig.api.domain.code.IsYn;
 import co.kr.compig.api.domain.code.UseYn;
 import co.kr.compig.api.domain.code.UserType;
 import jakarta.validation.constraints.NotBlank;
@@ -64,7 +63,4 @@ public class MemberUpdateRequest {
 	private boolean marketingAppPush; // 앱 푸시알림 수신동의
 	private boolean marketingKakao; // 알림톡 수신동의
 	private boolean marketingSms; // 문자 수신동의
-
-	private IsYn realNameYn; // 실명 확인 여부
-
 }
