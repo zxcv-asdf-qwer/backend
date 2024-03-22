@@ -38,7 +38,7 @@ public class AppleLoginServiceImpl implements SocialLoginService {
 		log.info(getServiceName().getCode() + " webSocialUserResponse");
 		try {
 			AppleSocialTokenResponse tokens = appleGetMemberInfoService.getTokensForWeb(socialLoginRequest.getCode());
-			return this.idTokenToUserInfo(tokens.getAccessToken());
+			return this.idTokenToUserInfo(tokens.getIdToken());
 		} catch (NoSuchAlgorithmException e) {
 			throw new RuntimeException(e);
 		}
