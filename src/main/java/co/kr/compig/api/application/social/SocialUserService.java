@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +41,6 @@ public class SocialUserService {
 	private final List<SocialLoginService> loginServices;
 	private final KeycloakAuthApi keycloakAuthApi;
 	private final KeycloakProperties keycloakProperties;
-	private final OAuth2ResourceServerProperties oAuth2ResourceServerProperties;
 
 	private SocialLoginService getLoginService(MemberRegisterType memberRegisterType) {
 		for (SocialLoginService loginService : loginServices) {
@@ -69,7 +67,8 @@ public class SocialUserService {
 		if (optionalMember.isPresent()) {
 			Member member = optionalMember.get();
 			// 공통 로직 처리: 키클락 로그인 실행
-			return this.getKeycloakAccessToken(member.getEmail(), member.getEmail() + member.getMemberRegisterType());
+			return this.getKeycloakAccessToken(member.getEmail(),
+				member.getEmail() + member.getMemberRegisterType() + "compig");
 			// 키클락 로그인 실행
 		}
 		return socialUserResponse;
@@ -89,11 +88,11 @@ public class SocialUserService {
 
 			String newMemberId = memberRepository.save(newMember).getId();
 
-			return memberRepository.findById(newMemberId)
-				.orElseThrow(() -> new RuntimeException("회원 생성 후 조회 실패"));
+			return memberRepository.findById(newMemberId).orElseThrow(() -> new RuntimeException("회원 생성 후 조회 실패"));
 		});
 		// 공통 로직 처리: 키클락 로그인 실행
-		return this.getKeycloakAccessToken(member.getEmail(), member.getEmail() + member.getMemberRegisterType());
+		return this.getKeycloakAccessToken(member.getEmail(),
+			member.getEmail() + member.getMemberRegisterType() + "compig");
 		// 키클락 로그인 실행
 	}
 
