@@ -53,7 +53,7 @@ public class SocialUserService {
 		return new LoginServiceImpl();
 	}
 
-	public SocialLoginResponse doSocialLogin(SocialLoginRequest socialLoginRequest) {
+	public SocialLoginResponse doSocialLoginAndCreateKeycloak(SocialLoginRequest socialLoginRequest) {
 		SocialLoginService loginService = this.getLoginService(socialLoginRequest.getMemberRegisterType());
 		SocialUserResponse socialUserResponse;
 		if (socialLoginRequest.getApplicationType() != ApplicationType.WEB) {
@@ -82,6 +82,20 @@ public class SocialUserService {
 		return this.getKeycloakAccessToken(member.getEmail(),
 			member.getEmail() + member.getMemberRegisterType());
 		// 키클락 로그인 실행
+	}
+
+	public SocialUserResponse doSocialLogin(SocialLoginRequest socialLoginRequest) {
+		SocialLoginService loginService = this.getLoginService(socialLoginRequest.getMemberRegisterType());
+		SocialUserResponse socialUserResponse;
+		if (socialLoginRequest.getApplicationType() != ApplicationType.WEB) {
+			socialUserResponse = loginService.appSocialUserResponse(
+				socialLoginRequest);
+		} else {
+			socialUserResponse = loginService.webSocialUserResponse(
+				socialLoginRequest);
+		}
+
+		return socialUserResponse;
 	}
 
 	private SocialLoginResponse getKeycloakAccessToken(String userId, String userPw) {
