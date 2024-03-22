@@ -1,6 +1,5 @@
 package co.kr.compig.api.presentation.member.request;
 
-import co.kr.compig.api.domain.code.MemberRegisterType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,5 +13,4 @@ public class LeaveRequest {
 
 	private String leaveReason; //탈퇴사유
 	private String code;
-	private MemberRegisterType memberRegisterType;
 }

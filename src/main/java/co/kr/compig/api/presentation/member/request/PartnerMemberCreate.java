@@ -8,7 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 import co.kr.compig.api.domain.code.CareerCode;
 import co.kr.compig.api.domain.code.DomesticForeignCode;
 import co.kr.compig.api.domain.code.GenderCode;
-import co.kr.compig.api.domain.code.IsYn;
 import co.kr.compig.api.domain.code.MemberRegisterType;
 import co.kr.compig.api.domain.code.UseYn;
 import co.kr.compig.api.domain.code.UserType;
@@ -80,7 +79,8 @@ public class PartnerMemberCreate {
 	private boolean marketingKakao; // 알림톡 수신동의
 	private boolean marketingSms; // 문자 수신동의
 
-	private IsYn realNameYn; // 실명 확인 여부
+	@NotBlank
+	private String ci; //나이스 본인인증 ci 값
 
 	public Member convertEntity() {
 		return Member.builder()
@@ -102,7 +102,7 @@ public class PartnerMemberCreate {
 			.marketingAppPushDate(this.marketingAppPush ? LocalDate.now() : null)
 			.marketingKakaoDate(this.marketingKakao ? LocalDate.now() : null)
 			.marketingSmsDate(this.marketingSms ? LocalDate.now() : null)
-			.realNameYn(this.realNameYn)
+			.ci(this.ci)
 			.build();
 	}
 }

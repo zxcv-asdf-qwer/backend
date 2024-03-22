@@ -5,21 +5,27 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.keycloak.representations.idm.GroupRepresentation;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import co.kr.compig.api.domain.code.MemberRegisterType;
+import co.kr.compig.api.domain.code.UseYn;
 import co.kr.compig.api.domain.code.UserType;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.member.MemberGroup;
 import co.kr.compig.api.domain.member.MemberGroupRepository;
 import co.kr.compig.api.domain.member.MemberRepository;
+import co.kr.compig.api.domain.member.MemberRepositoryCustom;
 import co.kr.compig.api.presentation.member.request.AdminMemberCreate;
 import co.kr.compig.api.presentation.member.request.GuardianMemberCreate;
 import co.kr.compig.api.presentation.member.request.LeaveRequest;
+import co.kr.compig.api.presentation.member.request.MemberSearchRequest;
 import co.kr.compig.api.presentation.member.request.MemberUpdateRequest;
 import co.kr.compig.api.presentation.member.request.PartnerMemberCreate;
+import co.kr.compig.api.presentation.member.response.MemberPageResponse;
 import co.kr.compig.api.presentation.member.response.MemberResponse;
 import co.kr.compig.global.error.exception.BizException;
 import co.kr.compig.global.error.exception.NotExistDataException;
@@ -27,6 +33,7 @@ import co.kr.compig.global.keycloak.KeycloakHandler;
 import co.kr.compig.global.keycloak.KeycloakHolder;
 import co.kr.compig.global.utils.S3Util;
 import co.kr.compig.global.utils.SecurityUtil;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,6 +43,7 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 public class MemberService {
 
+	private final MemberRepositoryCustom memberRepositoryCustom;
 	private final MemberRepository memberRepository;
 	private final MemberGroupRepository memberGroupRepository;
 	private final KeycloakHandler keycloakHandler;
@@ -50,7 +58,7 @@ public class MemberService {
 		return memberRepository.save(member).getId();
 	}
 
-	private void setReferenceDomain(UserType userType, Member member) {
+	public void setReferenceDomain(UserType userType, Member member) {
 		// keycloakHandler를 사용하여 그룹 리스트를 가져옴
 		List<GroupRepresentation> groups = keycloakHandler.getGroups().groups();
 
@@ -99,17 +107,9 @@ public class MemberService {
 		return memberRepository.save(member).getId();
 	}
 
-	public String socialCreate(Member member) {
-		setReferenceDomain(UserType.USER, member);
-		member.createUserKeyCloak(member.getUserId(), member.getUserNm());
-		member.passwordEncode();
-
-		return memberRepository.save(member).getId();
-	}
-
 	public void updateMember(MemberUpdateRequest memberUpdateRequest) {
-		Optional.ofNullable(SecurityUtil.getUserId()).ifPresentOrElse(currentUserId ->
-			memberRepository.findByUserId(currentUserId).ifPresentOrElse(
+		Optional.ofNullable(SecurityUtil.getMemberId()).ifPresentOrElse(currentMemberId ->
+			memberRepository.findById(currentMemberId).ifPresentOrElse(
 				member -> {
 					setReferenceDomain(memberUpdateRequest.getUserType(), member);
 					member.updateUserKeyCloak();
@@ -122,7 +122,7 @@ public class MemberService {
 	}
 
 	public void userPictureUpdate(MultipartFile picture) {
-		Optional<Member> byUserId = memberRepository.findByUserId(SecurityUtil.getUserId());
+		Optional<Member> byUserId = memberRepository.findById(SecurityUtil.getMemberId());
 		byUserId.ifPresentOrElse(member -> {
 			Optional.ofNullable(picture).ifPresent(file -> {
 				member.setPicture(s3Util.uploads(List.of(file)).stream().findFirst().orElse(null));
@@ -134,14 +134,14 @@ public class MemberService {
 
 	@Transactional(readOnly = true)
 	public MemberResponse getUser() {
-		Member byUserId = memberRepository.findByUserId(SecurityUtil.getUserId()).orElseThrow(
+		Member byUserId = memberRepository.findById(SecurityUtil.getMemberId()).orElseThrow(
 			NotExistDataException::new);
 		return byUserId.toResponse();
 	}
 
 	@Transactional(readOnly = true)
 	public void availabilityEmail(String email) {
-		if (memberRepository.findByEmail(email).isEmpty()) {
+		if (memberRepository.findByEmailAndUseYn(email, UseYn.Y).isEmpty()) {
 			return;
 		}
 		throw new BizException("이미 가입된 아이디 입니다.");
@@ -160,8 +160,7 @@ public class MemberService {
 	}
 
 	public void userLeave(LeaveRequest leaveRequest) {
-		String userId = SecurityUtil.getUserId();
-		Member member = memberRepository.findByUserId(userId).orElseThrow(NotExistDataException::new);
+		Member member = memberRepository.findById(SecurityUtil.getMemberId()).orElseThrow(NotExistDataException::new);
 		member.setLeaveMember(leaveRequest.getLeaveReason());
 		try {
 			KeycloakHandler keycloakHandler = KeycloakHolder.get();
@@ -171,9 +170,7 @@ public class MemberService {
 		}
 	}
 
-	public void socialUserLeave(LeaveRequest leaveRequest) {
-		String userId = SecurityUtil.getUserId();
-		Member member = memberRepository.findByUserId(userId).orElseThrow(NotExistDataException::new);
+	public void socialUserLeave(Member member, LeaveRequest leaveRequest) {
 		member.setLeaveMember(leaveRequest.getLeaveReason());
 		try {
 			KeycloakHandler keycloakHandler = KeycloakHolder.get();
@@ -181,5 +178,10 @@ public class MemberService {
 		} catch (Exception e) {
 			log.error("LeaveMember Keycloak Error", e);
 		}
+	}
+
+	public Slice<MemberPageResponse> getUserPageCursor(@Valid MemberSearchRequest memberSearchRequest,
+		Pageable pageable) {
+		return memberRepositoryCustom.getUserPageCursor(memberSearchRequest, pageable);
 	}
 }

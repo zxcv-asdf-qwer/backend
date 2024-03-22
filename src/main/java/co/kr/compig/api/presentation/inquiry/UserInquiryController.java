@@ -45,7 +45,7 @@ public class UserInquiryController {
 
 	@GetMapping(path = "/question")
 	public ResponseEntity<SliceResponse<QuestionResponse>> pageListQuestion(
-		@RequestBody @Valid QuestionSearchRequest questionSearchRequest, Pageable pageable) {
+		@ModelAttribute @Valid QuestionSearchRequest questionSearchRequest, Pageable pageable) {
 		Slice<QuestionResponse> slice = questionService.pageListCursor(questionSearchRequest, pageable);
 		SliceResponse<QuestionResponse> sliceResponse = new SliceResponse<>(slice.getContent(), pageable,
 			slice.hasNext());

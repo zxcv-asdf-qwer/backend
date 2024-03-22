@@ -2,17 +2,12 @@ package co.kr.compig.api.application.social;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
-import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.JwtDecoders;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -20,22 +15,29 @@ import com.google.gson.GsonBuilder;
 import co.kr.compig.api.application.member.MemberService;
 import co.kr.compig.api.domain.code.ApplicationType;
 import co.kr.compig.api.domain.code.MemberRegisterType;
+import co.kr.compig.api.domain.code.UseYn;
+import co.kr.compig.api.domain.code.UserType;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.member.MemberRepository;
 import co.kr.compig.api.infrastructure.auth.keycloak.KeycloakAuthApi;
 import co.kr.compig.api.infrastructure.auth.keycloak.model.KeycloakAccessTokenRequest;
 import co.kr.compig.api.presentation.member.request.LeaveRequest;
+import co.kr.compig.api.presentation.social.request.SocialCreateRequest;
 import co.kr.compig.api.presentation.social.request.SocialLoginRequest;
 import co.kr.compig.api.presentation.social.response.SocialLoginResponse;
 import co.kr.compig.api.presentation.social.response.SocialUserResponse;
+import co.kr.compig.global.error.exception.BizException;
+import co.kr.compig.global.error.exception.NotExistDataException;
 import co.kr.compig.global.keycloak.KeycloakProperties;
 import co.kr.compig.global.utils.GsonLocalDateTimeAdapter;
+import co.kr.compig.global.utils.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j
+@Transactional
 public class SocialUserService {
 
 	private final MemberService memberService;
@@ -43,7 +45,6 @@ public class SocialUserService {
 	private final List<SocialLoginService> loginServices;
 	private final KeycloakAuthApi keycloakAuthApi;
 	private final KeycloakProperties keycloakProperties;
-	private final OAuth2ResourceServerProperties oAuth2ResourceServerProperties;
 
 	private SocialLoginService getLoginService(MemberRegisterType memberRegisterType) {
 		for (SocialLoginService loginService : loginServices) {
@@ -55,7 +56,7 @@ public class SocialUserService {
 		return new LoginServiceImpl();
 	}
 
-	public SocialLoginResponse doSocialLogin(SocialLoginRequest socialLoginRequest) {
+	public Object doSocialLogin(SocialLoginRequest socialLoginRequest) {
 		SocialLoginService loginService = this.getLoginService(socialLoginRequest.getMemberRegisterType());
 		SocialUserResponse socialUserResponse;
 		if (socialLoginRequest.getApplicationType() != ApplicationType.WEB) {
@@ -66,17 +67,36 @@ public class SocialUserService {
 				socialLoginRequest);
 		}
 
-		Optional<Member> optionalMember = memberRepository.findByUserId(socialUserResponse.getSub());
+		Optional<Member> optionalMember = memberRepository.findByEmailAndUseYn(socialUserResponse.getEmail(), UseYn.Y);
+		if (optionalMember.isPresent()) {
+			Member member = optionalMember.get();
+			// 공통 로직 처리: 키클락 로그인 실행
+			return this.getKeycloakAccessToken(member.getEmail(),
+				member.getEmail() + member.getMemberRegisterType() + "compig");
+			// 키클락 로그인 실행
+		}
+		return socialUserResponse;
+	}
+
+	public SocialLoginResponse doSocialCreate(SocialCreateRequest socialCreateRequest) {
+		Optional<Member> optionalMember = memberRepository.findByEmailAndUseYn(socialCreateRequest.getEmail(), UseYn.Y);
+		if (optionalMember.isPresent()) {
+			throw new BizException("이미 가입된 회원 입니다.");
+		}
 		Member member = optionalMember.orElseGet(() -> {
 			// 중복되지 않는 경우 새 회원 생성 후 반환
-			String newMemberId = memberService.socialCreate(socialUserResponse.convertEntity());
-			return memberRepository.findById(newMemberId)
-				.orElseThrow(() -> new RuntimeException("회원 생성 후 조회 실패"));
-		});
+			Member newMember = socialCreateRequest.converterEntity();
+			memberService.setReferenceDomain(UserType.USER, newMember);
+			newMember.createUserKeyCloak(socialCreateRequest.getSocialId(), socialCreateRequest.getUserNm());
+			newMember.passwordEncode();
 
+			String newMemberId = memberRepository.save(newMember).getId();
+
+			return memberRepository.findById(newMemberId).orElseThrow(() -> new RuntimeException("회원 생성 후 조회 실패"));
+		});
 		// 공통 로직 처리: 키클락 로그인 실행
 		return this.getKeycloakAccessToken(member.getEmail(),
-			member.getEmail() + member.getMemberRegisterType());
+			member.getEmail() + member.getMemberRegisterType() + "compig");
 		// 키클락 로그인 실행
 	}
 
@@ -97,46 +117,17 @@ public class SocialUserService {
 			.registerTypeAdapter(LocalDateTime.class, new GsonLocalDateTimeAdapter())
 			.create();
 
-		SocialLoginResponse socialLoginResponse = gson.fromJson(
-			response.getBody().toString(),
+		return gson.fromJson(
+			Objects.requireNonNull(response.getBody()).toString(),
 			SocialLoginResponse.class
 		);
-
-		socialLoginResponse.setEmail(userId);
-		JwtDecoder jwtDecoder = JwtDecoders.fromIssuerLocation(
-			oAuth2ResourceServerProperties.getJwt().getIssuerUri());
-		// LoginResponse에서 토큰 문자열 가져오기
-		String jwtToken = socialLoginResponse.getAccess_token();
-		// 토큰 디코딩 및 파싱하여 Jwt 객체 얻기
-		Jwt jwt = jwtDecoder.decode(jwtToken);
-		socialLoginResponse.setRoles(jwt.getClaim("groups"));
-
-		return socialLoginResponse;
 	}
 
 	public void doSocialRevoke(LeaveRequest leaveRequest) {
-		SocialLoginService loginService = this.getLoginService(leaveRequest.getMemberRegisterType());
+		Member member = memberRepository.findById(SecurityUtil.getMemberId()).orElseThrow(NotExistDataException::new);
+		SocialLoginService loginService = this.getLoginService(member.getMemberRegisterType());
 		loginService.revoke(leaveRequest);
-		memberService.socialUserLeave(leaveRequest);
+		memberService.socialUserLeave(member, leaveRequest);
 	}
 
-	public ResponseEntity<?> doSocialLogin(ApplicationType applicationType, MemberRegisterType memberRegisterType,
-		String code, String token) {
-		SocialLoginRequest socialLoginRequest = SocialLoginRequest.builder()
-			.applicationType(applicationType)
-			.memberRegisterType(memberRegisterType)
-			.code(code)
-			.token(token).build();
-		SocialLoginResponse socialLoginResponse = doSocialLogin(socialLoginRequest);
-		ResponseCookie springCookie = ResponseCookie.from("refreshToken", socialLoginResponse.getRefresh_token())
-			.httpOnly(true) // JS를 통한 접근 방지
-			.secure(true) // HTTPS를 통해서만 쿠키 전송
-			.maxAge(86400) // 쿠키의 유효 시간(초 단위)
-			.build();
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.add(HttpHeaders.SET_COOKIE, springCookie.toString());
-
-		return new ResponseEntity<>(socialLoginResponse, headers, HttpStatus.OK);
-	}
 }

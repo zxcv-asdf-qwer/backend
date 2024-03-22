@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -51,7 +52,7 @@ public class AdminSmsTemplateController {
 
 	@GetMapping
 	public ResponseEntity<PageResponse<SmsTemplateResponse>> getPage(
-		@RequestBody @Valid SmsTemplateSearchRequest smsTemplateSearchRequest, Pageable pageable) {
+		@ModelAttribute @Valid SmsTemplateSearchRequest smsTemplateSearchRequest, Pageable pageable) {
 		Page<SmsTemplateResponse> page = smsTemplateService.getPage(smsTemplateSearchRequest, pageable);
 		PageResponse<SmsTemplateResponse> pageResponse = new PageResponse<>(page.getContent(), pageable,
 			page.getTotalElements());

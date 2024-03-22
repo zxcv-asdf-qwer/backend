@@ -20,9 +20,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import co.kr.compig.api.domain.member.MemberGroup;
 import co.kr.compig.global.error.exception.BizException;
 import co.kr.compig.global.error.exception.KeyCloakRequestException;
-import co.kr.compig.api.domain.member.MemberGroup;
 import jakarta.annotation.PostConstruct;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.client.ClientBuilder;
@@ -116,8 +116,7 @@ public class KeycloakHandler {
 				+ status + " - " + reasonPhrase + "]"
 			);
 		}
-		return getUser(userRepresentation.getUsername())
-			.orElseThrow(KeyCloakRequestException::new);
+		return getUser(userRepresentation.getUsername()).orElseThrow(KeyCloakRequestException::new);
 	}
 
 	public void usersJoinGroups(String id, Set<MemberGroup> groups) {

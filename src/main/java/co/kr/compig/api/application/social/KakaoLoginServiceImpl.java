@@ -54,7 +54,19 @@ public class KakaoLoginServiceImpl implements SocialLoginService {
 
 	@Override
 	public void revoke(LeaveRequest leaveRequest) {
-
+		log.info(getServiceName().getCode() + " revoke");
+		String accessToken = this.codeToAccessToken(leaveRequest.getCode());
+		try {
+			kakaoAuthApi.revokeAccessToken("Bearer " + accessToken);
+		} catch (HttpServerErrorException e) {
+			log.error("Kakao revoke HttpServerErrorException - Status : {}, Message : {}",
+				e.getStatusCode(),
+				e.getMessage());
+		} catch (UnknownHttpStatusCodeException e) {
+			log.error("Kakao revoke UnknownHttpStatusCodeException - Status : {}, Message : {}",
+				e.getStatusCode(),
+				e.getMessage());
+		}
 	}
 
 	private SocialUserResponse accessTokenToUserInfo(String accessToken) {
@@ -75,7 +87,7 @@ public class KakaoLoginServiceImpl implements SocialLoginService {
 			);
 
 			return SocialUserResponse.builder()
-				.sub(kaKaoLoginResponse.getId())
+				.socialId(kaKaoLoginResponse.getId())
 				.memberRegisterType(getServiceName())
 				.email(kaKaoLoginResponse.getKakao_account().getEmail())
 				.build();

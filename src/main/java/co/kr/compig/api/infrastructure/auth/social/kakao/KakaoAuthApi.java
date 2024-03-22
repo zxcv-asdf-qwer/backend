@@ -4,6 +4,7 @@ import org.json.simple.JSONObject;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(value = "kakaoAuth", url = "https://kauth.kakao.com")
@@ -17,4 +18,7 @@ public interface KakaoAuthApi {
 		@RequestParam("redirect_uri") String redirectUri,
 		@RequestParam("code") String code
 	);
+
+	@PostMapping("/v1/user/unlink")
+	ResponseEntity<String> revokeAccessToken(@RequestHeader("Authorization") String token);
 }

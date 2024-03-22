@@ -14,13 +14,6 @@ import org.keycloak.representations.idm.FederatedIdentityRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 
 import co.kr.compig.api.domain.account.Account;
-import co.kr.compig.api.domain.order.CareOrder;
-import co.kr.compig.api.domain.patient.OrderPatient;
-import co.kr.compig.api.domain.patient.Patient;
-import co.kr.compig.api.domain.permission.MenuPermission;
-import co.kr.compig.api.domain.wallet.Wallet;
-import co.kr.compig.api.presentation.member.response.MemberResponse;
-import co.kr.compig.api.presentation.member.request.MemberUpdateRequest;
 import co.kr.compig.api.domain.code.CareerCode;
 import co.kr.compig.api.domain.code.DomesticForeignCode;
 import co.kr.compig.api.domain.code.GenderCode;
@@ -29,6 +22,13 @@ import co.kr.compig.api.domain.code.MemberRegisterType;
 import co.kr.compig.api.domain.code.UseYn;
 import co.kr.compig.api.domain.code.UserType;
 import co.kr.compig.api.domain.code.converter.UserTypeConverter;
+import co.kr.compig.api.domain.order.CareOrder;
+import co.kr.compig.api.domain.patient.OrderPatient;
+import co.kr.compig.api.domain.patient.Patient;
+import co.kr.compig.api.domain.permission.MenuPermission;
+import co.kr.compig.api.domain.wallet.Wallet;
+import co.kr.compig.api.presentation.member.request.MemberUpdateRequest;
+import co.kr.compig.api.presentation.member.response.MemberResponse;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import co.kr.compig.global.error.exception.KeyCloakRequestException;
 import co.kr.compig.global.keycloak.KeycloakHandler;
@@ -148,7 +148,10 @@ public class Member {
 	@ColumnDefault("'N'")
 	@Enumerated(EnumType.STRING)
 	@Builder.Default
-	private IsYn realNameYn = IsYn.N; // 실명 확인 여부
+	private IsYn realNameYn = IsYn.N; // 실명 확인 여부 //지우기
+
+	@Column(columnDefinition = "TEXT")
+	private String ci; //나이스 본인인증 CI 값
 
 	/* =================================================================
 	 * Domain mapping
@@ -180,7 +183,6 @@ public class Member {
 	@Builder.Default
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<CareOrder> careOrders = new HashSet<>();
-
 
 	/* =================================================================
 	 * Relation method
@@ -263,15 +265,16 @@ public class Member {
 	public UserRepresentation getUserRepresentation(String providerId, String providerUsername) {
 		UserRepresentation userRepresentation = new UserRepresentation();
 		String userNm = this.userNm;
-
-		String[] userNmSplit = userNm.split(" ");
-		String firstName = userNmSplit[0];
-		String lastName = userNmSplit.length > 1 ? userNmSplit[1] : userNmSplit[0];
+		if (userNm != null) {
+			String[] userNmSplit = userNm.split(" ");
+			String firstName = userNmSplit[0];
+			String lastName = userNmSplit.length > 1 ? userNmSplit[1] : userNmSplit[0];
+			userRepresentation.setFirstName(firstName);
+			userRepresentation.setLastName(lastName);
+		}
 
 		userRepresentation.setId(this.id);
 		userRepresentation.setUsername(Optional.ofNullable(this.userId).orElseGet(() -> this.email));
-		userRepresentation.setFirstName(firstName);
-		userRepresentation.setLastName(lastName);
 		userRepresentation.setEmail(this.email);
 		// 탈퇴 회원일 경우 keycloak 도 비 활성화 처리
 		userRepresentation.setEnabled(!this.useYn.equals(UseYn.N) || this.leaveDate == null); //TODO 제거
@@ -324,7 +327,6 @@ public class Member {
 		this.marketingAppPushDate = marketingDate(memberUpdateRequest.isMarketingAppPush());
 		this.marketingKakaoDate = marketingDate(memberUpdateRequest.isMarketingKakao());
 		this.marketingSmsDate = marketingDate(memberUpdateRequest.isMarketingSms());
-		this.realNameYn = memberUpdateRequest.getRealNameYn();
 	}
 
 	public LocalDate marketingDate(boolean isMarketing) {
@@ -334,7 +336,6 @@ public class Member {
 	public MemberResponse toResponse() {
 		return MemberResponse.builder()
 			.userNm(this.userNm)
-			.userPw(this.userPw)
 			.telNo(this.telNo)
 			.email(this.email)
 			.gender(this.gender)

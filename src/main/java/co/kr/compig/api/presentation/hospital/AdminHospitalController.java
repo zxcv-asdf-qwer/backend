@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import co.kr.compig.api.application.hospital.HospitalService;
 import co.kr.compig.api.presentation.hospital.request.HospitalCreateRequest;
-import co.kr.compig.api.presentation.hospital.response.HospitalDetailResponse;
-import co.kr.compig.api.presentation.hospital.response.HospitalResponse;
 import co.kr.compig.api.presentation.hospital.request.HospitalSearchRequest;
 import co.kr.compig.api.presentation.hospital.request.HospitalUpdateRequest;
+import co.kr.compig.api.presentation.hospital.response.HospitalDetailResponse;
+import co.kr.compig.api.presentation.hospital.response.HospitalResponse;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.dto.pagination.PageResponse;
-import co.kr.compig.api.application.hospital.HospitalService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +43,7 @@ public class AdminHospitalController {
 	}
 
 	@GetMapping
-	public ResponseEntity<PageResponse<HospitalResponse>> pageListHospital(@RequestBody @Valid
+	public ResponseEntity<PageResponse<HospitalResponse>> pageListHospital(@ModelAttribute @Valid
 	HospitalSearchRequest hospitalSearchRequest, Pageable pageable) {
 		Page<HospitalResponse> page = hospitalService.pageListHospital(hospitalSearchRequest, pageable);
 		PageResponse<HospitalResponse> pageResponse = new PageResponse<>(page.getContent(), pageable,

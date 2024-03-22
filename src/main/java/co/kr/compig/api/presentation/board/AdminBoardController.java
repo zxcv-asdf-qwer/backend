@@ -48,7 +48,7 @@ public class AdminBoardController {
 
 	@GetMapping
 	public ResponseEntity<PageResponse<BoardResponse>> pageListBoard(
-		@RequestBody @Valid BoardSearchRequest boardSearchRequest, Pageable pageable) {
+		@ModelAttribute @Valid BoardSearchRequest boardSearchRequest, Pageable pageable) {
 		Page<BoardResponse> page = boardService.pageListBoard(boardSearchRequest, pageable);
 		PageResponse<BoardResponse> pageResponse = new PageResponse<>(page.getContent(), pageable,
 			page.getTotalElements());

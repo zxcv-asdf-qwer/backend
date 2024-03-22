@@ -1,7 +1,5 @@
 package co.kr.compig.api.presentation.social.response;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,8 +11,8 @@ import lombok.NoArgsConstructor;
 @Getter
 public class SocialLoginResponse {
 
-	private String email;
-	private List<String> roles;
+	// private String email;
+	// private List<String> roles;
 	private String access_token;
 	private String expires_in;
 	private String refresh_expires_in;
@@ -23,11 +21,11 @@ public class SocialLoginResponse {
 	private String session_state;
 	private String scope;
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public void setRoles(List<String> roles) {
-		this.roles = roles;
-	}
+	// public void setEmail(String email) {
+	// 	this.email = email;
+	// }
+	//
+	// public void setRoles(List<String> roles) {
+	// 	this.roles = roles;
+	// }
 }
