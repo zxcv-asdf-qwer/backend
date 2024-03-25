@@ -4,13 +4,16 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import co.kr.compig.api.domain.permission.MenuPermission;
 import co.kr.compig.api.domain.code.MenuDivCode;
 import co.kr.compig.api.domain.code.MenuTypeCode;
 import co.kr.compig.api.domain.code.UseYn;
 import co.kr.compig.api.domain.code.converter.MenuDivCodeConverter;
 import co.kr.compig.api.domain.code.converter.MenuTypeCodeConverter;
+import co.kr.compig.api.domain.permission.MenuPermission;
+import co.kr.compig.api.presentation.menu.request.MenuUpdateRequest;
+import co.kr.compig.api.presentation.menu.response.MenuDetailResponse;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -107,12 +110,38 @@ public class Menu {
 		this.parent = parent;
 	}
 
+	public MenuDetailResponse toMenuDetailResponse() {
+		return MenuDetailResponse.builder()
+			.id(this.id)
+			.menuDiv(this.menuDiv)
+			.menuNm(this.menuNm)
+			.menuUrl(this.menuUrl)
+			.seq(this.seq)
+			.menuType(this.menuType)
+			.useYn(this.useYn)
+			.child(this.child.stream()
+				.map(Menu::toMenuDetailResponse)
+				.collect(Collectors.toList())) // Convert child Menu list
+			.build();
+	}
+
 	/* =================================================================
 	 * Default columns
 	   ================================================================= */
 	@Embedded
 	@Builder.Default
 	private CreatedAndUpdated createdAndModified = new CreatedAndUpdated();
+
+	public void update(MenuUpdateRequest menuUpdateRequest, Menu parent) {
+		this.menuDiv = menuUpdateRequest.getMenuDiv();
+		this.menuNm = menuUpdateRequest.getMenuNm();
+		this.menuUrl = menuUpdateRequest.getMenuUrl();
+		this.seq = menuUpdateRequest.getSeq();
+		this.menuType = menuUpdateRequest.getMenuType();
+		this.useYn = menuUpdateRequest.getUseYn();
+		this.parent = parent;
+	}
+
 
   /* =================================================================
    * Business
