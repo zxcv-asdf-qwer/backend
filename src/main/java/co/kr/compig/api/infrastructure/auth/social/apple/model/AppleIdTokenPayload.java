@@ -14,6 +14,7 @@ public class AppleIdTokenPayload {
 	private String c_hash;
 	private String at_hash;
 	private String email;
+	private String name;
 	private String email_verified;
 	private String is_private_email;
 	private Long auth_time;

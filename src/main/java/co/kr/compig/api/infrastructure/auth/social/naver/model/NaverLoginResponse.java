@@ -22,6 +22,7 @@ public class NaverLoginResponse {
 
 		private String id;
 		private String email;
+		private String name;
 	}
 
 }

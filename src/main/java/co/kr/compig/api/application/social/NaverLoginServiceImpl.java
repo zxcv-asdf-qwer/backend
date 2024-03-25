@@ -98,6 +98,7 @@ public class NaverLoginServiceImpl implements SocialLoginService {
 				.socialId(naverLoginResponse.getResponse().getId())
 				.memberRegisterType(getServiceName())
 				.email(naverLoginResponse.getResponse().getEmail())
+				.name(naverLoginResponse.getResponse().getName())
 				.build();
 		} catch (HttpServerErrorException e) {
 			log.error("Naver accessTokenToUserInfo HttpServerErrorException - Status : {}, Message : {}",

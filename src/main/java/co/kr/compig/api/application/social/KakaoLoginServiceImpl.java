@@ -90,6 +90,7 @@ public class KakaoLoginServiceImpl implements SocialLoginService {
 				.socialId(kaKaoLoginResponse.getId())
 				.memberRegisterType(getServiceName())
 				.email(kaKaoLoginResponse.getKakao_account().getEmail())
+				.name(kaKaoLoginResponse.getKakao_account().getName())
 				.build();
 		} catch (HttpServerErrorException e) {
 			log.error("Kakao accessTokenToUserInfo HttpServerErrorException - Status : {}, Message : {}",

@@ -163,6 +163,7 @@ public class GoogleLoginServiceImpl implements SocialLoginService {
 				.socialId(googleLoginResponse.getSub())
 				.memberRegisterType(getServiceName())
 				.email(googleLoginResponse.getEmail())
+				.name(googleLoginResponse.getName())
 				.build();
 		} catch (HttpServerErrorException e) {
 			log.error("Google idTokenToUserInfo HttpServerErrorException - Status : {}, Message : {}",
