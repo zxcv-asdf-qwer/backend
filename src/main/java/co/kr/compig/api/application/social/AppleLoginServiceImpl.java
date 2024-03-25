@@ -91,7 +91,7 @@ public class AppleLoginServiceImpl implements SocialLoginService {
 			.socialId(appleLoginResponse.getSub())
 			.memberRegisterType(getServiceName())
 			.email(user.getEmail())
-			.name(user.getName().getFirstName() + " " + user.getName().getLastName())
+			.name(user.getName().getLastName() + " " + user.getName().getFirstName())
 			.build();
 	}
 }
