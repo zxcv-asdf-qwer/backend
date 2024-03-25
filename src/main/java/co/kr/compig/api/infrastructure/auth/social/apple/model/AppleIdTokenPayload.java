@@ -1,8 +1,10 @@
 package co.kr.compig.api.infrastructure.auth.social.apple.model;
 
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class AppleIdTokenPayload {
 
 	private String iss;
@@ -14,17 +16,9 @@ public class AppleIdTokenPayload {
 	private String c_hash;
 	private String at_hash;
 	private String email;
-	private Name name;
 	private String email_verified;
 	private String is_private_email;
 	private Long auth_time;
 	private boolean nonce_supported;
 
-	@Getter
-	public static class Name {
-
-		private String firstName;
-		private String middleName;
-		private String lastName;
-	}
 }

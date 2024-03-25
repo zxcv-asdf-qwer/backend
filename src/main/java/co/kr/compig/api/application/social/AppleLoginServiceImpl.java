@@ -40,6 +40,9 @@ public class AppleLoginServiceImpl implements SocialLoginService {
 		log.info(getServiceName().getCode() + " webSocialUserResponse");
 		try {
 			AppleSocialTokenResponse tokens = appleGetMemberInfoService.getTokensForWeb(socialLoginRequest.getCode());
+			if (socialLoginRequest.getUser() != null) {
+				return this.idTokenToUserInfo(socialLoginRequest.getUser(), tokens.getIdToken());
+			}
 			return this.idTokenToUserInfo(tokens.getIdToken());
 		} catch (NoSuchAlgorithmException e) {
 			throw new RuntimeException(e);
@@ -60,7 +63,6 @@ public class AppleLoginServiceImpl implements SocialLoginService {
 	}
 
 	private SocialUserResponse idTokenToUserInfo(String idToken) {
-		//TODO idToken 유효성검사
 		AppleIdTokenPayload appleLoginResponse = appleGetMemberInfoService.decodePayload(idToken,
 			AppleIdTokenPayload.class);
 
@@ -73,7 +75,23 @@ public class AppleLoginServiceImpl implements SocialLoginService {
 			.socialId(appleLoginResponse.getSub())
 			.memberRegisterType(getServiceName())
 			.email(appleLoginResponse.getEmail())
-			.name(appleLoginResponse.getName().getFirstName() + " " + appleLoginResponse.getName().getLastName())
+			.build();
+	}
+
+	private SocialUserResponse idTokenToUserInfo(SocialLoginRequest.User user, String idToken) {
+		AppleIdTokenPayload appleLoginResponse = appleGetMemberInfoService.decodePayload(idToken,
+			AppleIdTokenPayload.class);
+
+		log.info(appleLoginResponse.toString());
+
+		Optional.ofNullable(appleLoginResponse.getEmail()).orElseThrow(() -> new BizException(
+			"apple 로그인 ERROR : 이메일이 없습니다."));
+
+		return SocialUserResponse.builder()
+			.socialId(appleLoginResponse.getSub())
+			.memberRegisterType(getServiceName())
+			.email(user.getEmail())
+			.name(user.getName().getFirstName() + " " + user.getName().getLastName())
 			.build();
 	}
 }
