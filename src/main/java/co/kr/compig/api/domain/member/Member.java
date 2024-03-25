@@ -335,6 +335,8 @@ public class Member {
 
 	public MemberResponse toResponse() {
 		return MemberResponse.builder()
+			.memberId(this.id)
+			.userId(this.userId)
 			.userNm(this.userNm)
 			.telNo(this.telNo)
 			.email(this.email)
