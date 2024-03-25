@@ -129,7 +129,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
 		applySorting(query, pageable);
 
 		List<BoardResponse> boards = query
-			.where(cursorCursorId(Long.parseLong(boardSearchRequest.getCursorId())))
+			.where(cursorCursorId(Long.valueOf(boardSearchRequest.getCursorId())))
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize() + 1) // 페이징 + 다음 페이지 존재 여부 확인을 위해 +1
 			.fetch();
