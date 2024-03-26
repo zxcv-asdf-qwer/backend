@@ -5,11 +5,13 @@ import co.kr.compig.api.domain.code.MenuTypeCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Setter
 @SuperBuilder(toBuilder = true)
 public class MenuSearchRequest {
 

@@ -1,6 +1,5 @@
 package co.kr.compig.api.domain.hospital;
 
-import static co.kr.compig.api.domain.board.QBoard.*;
 import static co.kr.compig.api.domain.hospital.QHospital.*;
 
 import java.util.List;
@@ -120,6 +119,6 @@ public class HospitalRepositoryImpl implements HospitalRepositoryCustom {
 	private BooleanExpression cursorCursorId(Long cursorId) {
 		if (cursorId == null)
 			return null;
-		return board.id.lt(cursorId);
+		return hospital.id.lt(cursorId);
 	}
 }
