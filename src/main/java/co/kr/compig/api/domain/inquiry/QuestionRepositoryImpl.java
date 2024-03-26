@@ -89,7 +89,9 @@ public class QuestionRepositoryImpl implements QuestionRepositoryCustom {
 
 	private BooleanExpression createPredicate(QuestionSearchRequest request) {
 		BooleanExpression predicate = Expressions.asBoolean(true).isTrue();
-		predicate = predicate.and(question.createdAndModified.createdBy.eq(request.getMemberId()));
+		if (request.getMemberId() != null) {
+			predicate = predicate.and(question.createdAndModified.createdBy.eq(request.getMemberId()));
+		}
 		return predicate;
 	}
 

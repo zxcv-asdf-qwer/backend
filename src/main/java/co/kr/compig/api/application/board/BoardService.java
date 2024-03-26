@@ -14,19 +14,20 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import co.kr.compig.api.presentation.board.request.BoardCreateRequest;
-import co.kr.compig.api.presentation.board.response.BoardDetailResponse;
-import co.kr.compig.api.presentation.board.response.BoardResponse;
-import co.kr.compig.api.presentation.board.request.BoardSearchRequest;
-import co.kr.compig.api.presentation.board.request.BoardUpdateRequest;
-import co.kr.compig.api.presentation.board.response.SystemFileResponse;
-import co.kr.compig.global.error.exception.NotExistDataException;
-import co.kr.compig.global.utils.S3Util;
 import co.kr.compig.api.domain.board.Board;
 import co.kr.compig.api.domain.board.BoardRepository;
 import co.kr.compig.api.domain.board.BoardRepositoryCustom;
 import co.kr.compig.api.domain.file.SystemFile;
 import co.kr.compig.api.domain.file.SystemFileRepository;
+import co.kr.compig.api.presentation.board.request.BoardCreateRequest;
+import co.kr.compig.api.presentation.board.request.BoardSearchRequest;
+import co.kr.compig.api.presentation.board.request.BoardUpdateRequest;
+import co.kr.compig.api.presentation.board.response.BoardDetailResponse;
+import co.kr.compig.api.presentation.board.response.BoardResponse;
+import co.kr.compig.api.presentation.board.response.SystemFileResponse;
+import co.kr.compig.global.error.exception.NotExistDataException;
+import co.kr.compig.global.utils.S3Util;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -113,7 +114,7 @@ public class BoardService {
 	}
 
 	@Transactional(readOnly = true)
-	public Slice<BoardResponse> pageListBoardCursor(BoardSearchRequest boardSearchRequest,
+	public Slice<BoardResponse> pageListBoardCursor(@Valid BoardSearchRequest boardSearchRequest,
 		Pageable pageable) {
 		return boardRepositoryCustom.findAllByCondition(boardSearchRequest, pageable);
 	}
