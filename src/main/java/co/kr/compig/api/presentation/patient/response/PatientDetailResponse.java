@@ -34,4 +34,5 @@ public class PatientDetailResponse extends BaseAudit {
 	private String addressCd; // 간병 장소 우편 번호
 	private String address1; // 간병 장소 주소
 	private String address2; // 간병 장소 상세 주소
+	private String memberId; // 멤버 ID
 }

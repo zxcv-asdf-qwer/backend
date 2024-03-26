@@ -7,6 +7,7 @@ import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.member.MemberRepository;
 import co.kr.compig.api.domain.patient.Patient;
 import co.kr.compig.api.domain.patient.PatientRepository;
+import co.kr.compig.api.presentation.patient.request.AdminPatientCreateRequest;
 import co.kr.compig.api.presentation.patient.request.PatientCreateRequest;
 import co.kr.compig.api.presentation.patient.request.PatientUpdateRequest;
 import co.kr.compig.api.presentation.patient.response.PatientDetailResponse;
@@ -24,8 +25,16 @@ public class PatientService {
 	private final PatientRepository patientRepository;
 	private final MemberRepository memberRepository;
 
-	public Long createPatient(PatientCreateRequest patientCreateRequest) {
-		Member member = memberRepository.findById(SecurityUtil.getMemberId()).orElseThrow(NotExistDataException::new);
+	public Long createPatientAdmin(AdminPatientCreateRequest patientCreateRequest) {
+		Member member = memberRepository.findById(patientCreateRequest.getMemberId())
+			.orElseThrow(NotExistDataException::new);
+		Patient patient = patientCreateRequest.converterEntity(member);
+		return patientRepository.save(patient).getId();
+	}
+
+	public Long createPatientUser(PatientCreateRequest patientCreateRequest) {
+		Member member = memberRepository.findById(SecurityUtil.getMemberId())
+			.orElseThrow(NotExistDataException::new);
 		Patient patient = patientCreateRequest.converterEntity(member);
 		return patientRepository.save(patient).getId();
 	}

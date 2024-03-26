@@ -140,6 +140,7 @@ public class Patient {
 			.addressCd(this.addressCd)
 			.address1(this.address1)
 			.address2(this.address2)
+			.memberId(this.member.getId())
 			.build();
 	}
 
