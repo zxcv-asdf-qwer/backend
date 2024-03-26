@@ -49,15 +49,14 @@ public class NaverLoginServiceImpl implements SocialLoginService {
 	@Override //code, state
 	public SocialUserResponse webSocialUserResponse(SocialLoginRequest socialLoginRequest) {
 		log.info(getServiceName().getCode() + " webSocialUserResponse");
-		SocialAuthResponse socialAuthResponse = this.getAccessToken(socialLoginRequest.getCode(),
-			socialLoginRequest.getState());
+		SocialAuthResponse socialAuthResponse = this.getAccessToken(socialLoginRequest.getCode());
 		return this.accessTokenToUserInfo(socialAuthResponse.getAccess_token());
 	}
 
 	@Override
 	public void revoke(LeaveRequest leaveRequest) {
 		log.info(getServiceName().getCode() + " revoke");
-		SocialAuthResponse socialAuthResponse = this.getAccessToken(leaveRequest.getCode(), null);
+		SocialAuthResponse socialAuthResponse = this.getAccessToken(leaveRequest.getCode());
 		try {
 			naverAuthApi.revokeAccessToken(
 				naverProperties.getClientId(),
@@ -98,6 +97,7 @@ public class NaverLoginServiceImpl implements SocialLoginService {
 				.socialId(naverLoginResponse.getResponse().getId())
 				.memberRegisterType(getServiceName())
 				.email(naverLoginResponse.getResponse().getEmail())
+				.name(naverLoginResponse.getResponse().getName())
 				.build();
 		} catch (HttpServerErrorException e) {
 			log.error("Naver accessTokenToUserInfo HttpServerErrorException - Status : {}, Message : {}",
@@ -111,15 +111,14 @@ public class NaverLoginServiceImpl implements SocialLoginService {
 		return null;
 	}
 
-	private SocialAuthResponse getAccessToken(String code, String state) {
+	private SocialAuthResponse getAccessToken(String code) {
 		try {
 			ResponseEntity<?> response = naverAuthApi.getAccessToken(
 				naverProperties.getClientId(),
 				naverProperties.getClientSecret(),
 				naverProperties.getAuthorizationGrantType(),
 				naverProperties.getRedirectUri(),
-				code,
-				state);
+				code);
 
 			log.info(response.toString());
 

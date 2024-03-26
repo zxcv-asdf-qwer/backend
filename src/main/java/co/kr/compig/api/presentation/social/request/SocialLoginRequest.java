@@ -13,10 +13,23 @@ import lombok.NoArgsConstructor;
 @Getter
 public class SocialLoginRequest {
 
-	private String state;
+	private User user; //apple //{ "name": { "firstName": string, "lastName": string }, "email": string }
 	private String code;
 	private String token;
 	private MemberRegisterType memberRegisterType;
 	private ApplicationType applicationType;
 
+	@Getter
+	public static class User {
+
+		private Name name;
+		private String email;
+	}
+
+	@Getter
+	public static class Name {
+
+		private String firstName;
+		private String lastName;
+	}
 }

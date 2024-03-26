@@ -13,8 +13,7 @@ public interface NaverAuthApi {
 		@RequestParam("client_secret") String clientSecret,
 		@RequestParam("grant_type") String grantType,
 		@RequestParam("redirect_uri") String redirectUri,
-		@RequestParam("code") String code,
-		@RequestParam("state") String state
+		@RequestParam("code") String code
 	);
 
 	@GetMapping("/oauth2.0/token")

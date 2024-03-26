@@ -180,6 +180,7 @@ public class MemberService {
 		}
 	}
 
+	@Transactional(readOnly = true)
 	public Slice<MemberPageResponse> getUserPageCursor(@Valid MemberSearchRequest memberSearchRequest,
 		Pageable pageable) {
 		return memberRepositoryCustom.getUserPageCursor(memberSearchRequest, pageable);

@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class GoogleLoginResponse {
 
 	private String sub;
+	private String name;
 	private String email;
 	private String picture;
 }
