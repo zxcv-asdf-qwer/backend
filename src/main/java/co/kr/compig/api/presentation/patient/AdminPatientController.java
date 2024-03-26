@@ -48,7 +48,7 @@ public class AdminPatientController {
 	}
 
 	@PutMapping(path = "/{patientId}")
-	public ResponseEntity<Response<?>> updateBoard(
+	public ResponseEntity<Response<?>> updatePatient(
 		@PathVariable(name = "patientId") Long patientId,
 		@RequestBody @Valid PatientUpdateRequest patientUpdateRequest
 	) {
