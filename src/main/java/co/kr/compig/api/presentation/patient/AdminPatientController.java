@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.patient.PatientService;
-import co.kr.compig.api.presentation.patient.request.PatientCreateRequest;
+import co.kr.compig.api.presentation.patient.request.AdminPatientCreateRequest;
 import co.kr.compig.api.presentation.patient.request.PatientUpdateRequest;
 import co.kr.compig.api.presentation.patient.response.PatientDetailResponse;
 import co.kr.compig.global.dto.Response;
@@ -31,10 +31,10 @@ public class AdminPatientController {
 
 	@PostMapping
 	public ResponseEntity<Response<?>> createPatient(
-		@ModelAttribute @Valid PatientCreateRequest patientCreateRequest
+		@ModelAttribute @Valid AdminPatientCreateRequest adminPatientCreateRequest
 	) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-			.data(Map.of("patientId", patientService.createPatient(patientCreateRequest)))
+			.data(Map.of("patientId", patientService.createPatientAdmin(adminPatientCreateRequest)))
 			.build());
 	}
 
@@ -48,7 +48,7 @@ public class AdminPatientController {
 	}
 
 	@PutMapping(path = "/{patientId}")
-	public ResponseEntity<Response<?>> updateBoard(
+	public ResponseEntity<Response<?>> updatePatient(
 		@PathVariable(name = "patientId") Long patientId,
 		@RequestBody @Valid PatientUpdateRequest patientUpdateRequest
 	) {

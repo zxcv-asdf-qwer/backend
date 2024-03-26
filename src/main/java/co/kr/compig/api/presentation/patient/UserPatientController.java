@@ -34,7 +34,7 @@ public class UserPatientController {
 		@ModelAttribute @Valid PatientCreateRequest patientCreateRequest
 	) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-			.data(Map.of("patientId", patientService.createPatient(patientCreateRequest)))
+			.data(Map.of("patientId", patientService.createPatientUser(patientCreateRequest)))
 			.build());
 	}
 

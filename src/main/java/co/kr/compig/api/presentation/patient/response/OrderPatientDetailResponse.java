@@ -4,7 +4,6 @@ import co.kr.compig.api.domain.code.GenderCode;
 import co.kr.compig.api.domain.code.IsYn;
 import co.kr.compig.api.domain.code.LocationType;
 import co.kr.compig.api.domain.code.ToiletType;
-import co.kr.compig.global.dto.BaseAudit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
-public class PatientDetailResponse extends BaseAudit {
+public class OrderPatientDetailResponse {
 	private Long id; // 환자ID
 	private String patientNm;    // 환자 이름
 	private GenderCode gender;    // 환자 성별
