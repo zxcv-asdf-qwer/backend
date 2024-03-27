@@ -133,6 +133,7 @@ public class Patient {
 			.diseaseNm(this.diseaseNm)
 			.selfToiletAvailability(this.selfToiletAvailability)
 			.moveAvailability(this.moveAvailability)
+			.mealAvailability(this.mealAvailability)
 			.genderPreference(this.genderPreference)
 			.covid19Test(this.covid19Test)
 			.requestedTerm(this.requestedTerm)
@@ -156,7 +157,7 @@ public class Patient {
 		this.mealAvailability = patientUpdateRequest.getMealAvailability();
 		this.genderPreference = patientUpdateRequest.getGenderPreference();
 		this.covid19Test = patientUpdateRequest.getCovid19Test();
-		this.requestedTerm = patientUpdateRequest.getRequestTerm();
+		this.requestedTerm = patientUpdateRequest.getRequestedTerm();
 		this.addressCd = patientUpdateRequest.getAddressCd();
 		this.address1 = patientUpdateRequest.getAddress1();
 		this.address2 = patientUpdateRequest.getAddress2();
