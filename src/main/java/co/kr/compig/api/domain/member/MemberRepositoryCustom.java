@@ -11,4 +11,6 @@ import co.kr.compig.api.presentation.member.response.MemberPageResponse;
 public interface MemberRepositoryCustom {
 
 	Slice<MemberPageResponse> getUserPageCursor(MemberSearchRequest memberSearchRequest, Pageable pageable);
+
+	Member getMemberInfo(String id);
 }

@@ -127,6 +127,7 @@ public class OrderPatient {
 			.diseaseNm(this.diseaseNm)
 			.selfToiletAvailability(this.selfToiletAvailability)
 			.moveAvailability(this.moveAvailability)
+			.mealAvailability(this.mealAvailability)
 			.genderPreference(this.genderPreference)
 			.covid19Test(this.covid19Test)
 			.requestedTerm(this.requestedTerm)
@@ -138,7 +139,7 @@ public class OrderPatient {
 			.build();
 	}
 
-	public void update(OrderPatientUpdateRequest orderPatientUpdateRequest, Member member) {
+	public void update(OrderPatientUpdateRequest orderPatientUpdateRequest) {
 		this.patientNm = orderPatientUpdateRequest.getPatientNm();
 		this.gender = orderPatientUpdateRequest.getGender();
 		this.patientAge = orderPatientUpdateRequest.getPatientAge();
@@ -154,6 +155,5 @@ public class OrderPatient {
 		this.addressCd = orderPatientUpdateRequest.getAddressCd();
 		this.address1 = orderPatientUpdateRequest.getAddress1();
 		this.address2 = orderPatientUpdateRequest.getAddress2();
-		this.member = member;
 	}
 }

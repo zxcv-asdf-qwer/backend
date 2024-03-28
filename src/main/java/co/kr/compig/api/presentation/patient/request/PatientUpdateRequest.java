@@ -23,7 +23,7 @@ public class PatientUpdateRequest {
 	private IsYn mealAvailability; // 식사 가능 여부
 	private GenderCode genderPreference; // 선호 성별
 	private IsYn covid19Test; // 코로나 검사 필요 여부
-	private String requestTerm; // 요청 사항
+	private String requestedTerm; // 요청 사항
 	private LocationType locationType; // 간병 장소 종류
 	private String addressCd; // 간병 장소 우편 번호
 	private String address1; // 간병 장소 주소

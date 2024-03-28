@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderPatientCreateRequest {
+public class AdminOrderPatientCreateRequest {
 	@NotBlank
 	@Length(min = 2, max = 50)
 	private String patientNm; // 환자 이름
@@ -67,6 +67,9 @@ public class OrderPatientCreateRequest {
 
 	@NotBlank
 	private String address2; // 간병 장소 상세 주소
+
+	@NotBlank
+	private String memberId; // 멤버 ID
 
 	public OrderPatient converterEntity(Member member) {
 		return OrderPatient.builder()

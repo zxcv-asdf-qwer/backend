@@ -1,8 +1,14 @@
 package co.kr.compig.api.domain.apply;
 
+import co.kr.compig.api.domain.code.ApplyStatusCode;
+import co.kr.compig.api.domain.code.converter.ApplyStatusConverter;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.order.CareOrder;
+import co.kr.compig.api.presentation.apply.request.ApplyUpdateRequest;
+import co.kr.compig.api.presentation.apply.response.ApplyCareOrderResponse;
+import co.kr.compig.api.presentation.apply.response.ApplyDetailResponse;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
@@ -39,6 +45,11 @@ public class Apply {
 	@Column(name = "apply_id")
 	private Long id;
 
+	@Column(length = 10)
+	@Convert(converter = ApplyStatusConverter.class)
+	@Builder.Default
+	private ApplyStatusCode applyStatusCode = ApplyStatusCode.MATCHING_WAIT;
+
 	/* =================================================================
 	 * Domain mapping
 	   ================================================================= */
@@ -51,5 +62,24 @@ public class Apply {
 	@JoinColumn(name = "member_id", nullable = false, foreignKey = @ForeignKey(name = "fk02_apply"))
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Member member = new Member();
+
+	public ApplyDetailResponse toApplyDetailResponse(Member member, CareOrder careOrder) {
+		return ApplyDetailResponse.builder()
+			.id(this.id)
+			.memberId(member.getId())
+			.careOrderId(careOrder.getId())
+			.build();
+	}
+
+	public void update(ApplyUpdateRequest applyUpdateRequest) {
+		this.applyStatusCode = applyUpdateRequest.getApplyStatusCode();
+	}
+
+	public ApplyCareOrderResponse toApplyCareOrderResponse() {
+		return ApplyCareOrderResponse.builder()
+			.applyId(this.id)
+			.applyStatusCode(this.applyStatusCode)
+			.build();
+	}
 }
 
