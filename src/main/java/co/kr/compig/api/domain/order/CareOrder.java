@@ -1,14 +1,31 @@
 package co.kr.compig.api.domain.order;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import co.kr.compig.api.domain.apply.Apply;
+import co.kr.compig.api.domain.code.CareOrderRegisterType;
+import co.kr.compig.api.domain.code.IsYn;
+import co.kr.compig.api.domain.code.OrderStatusCode;
+import co.kr.compig.api.domain.code.PeriodType;
+import co.kr.compig.api.domain.code.converter.CareOrderRegisterTypeConverter;
+import co.kr.compig.api.domain.code.converter.OrderStatusCodeConverter;
+import co.kr.compig.api.domain.code.converter.PeriodTypeConverter;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.patient.OrderPatient;
+import co.kr.compig.api.presentation.apply.response.ApplyCareOrderResponse;
+import co.kr.compig.api.presentation.order.request.CareOrderUpdateRequest;
+import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
@@ -46,6 +63,33 @@ public class CareOrder {
 	@Column(name = "care_order_id")
 	private Long id;
 
+	@Column
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+	private LocalDateTime startDateTime; // 시작 날짜
+
+	@Column
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+	private LocalDateTime endDateTime; // 종료 날짜
+
+	@Column
+	@Builder.Default
+	@Convert(converter = OrderStatusCodeConverter.class)
+	private OrderStatusCode orderStatus = OrderStatusCode.POSTING; // 공고 상태
+
+	@Column
+	@Enumerated(EnumType.STRING)
+	private IsYn newStatus; // 신규 여부
+
+	@Column
+	@Convert(converter = PeriodTypeConverter.class)
+	private PeriodType periodType; // 시간제, 기간제
+
+	@Column
+	@Convert(converter = CareOrderRegisterTypeConverter.class)
+	private CareOrderRegisterType careOrderRegisterType; // 등록 구분
+
+	@Column
+	private String orderRequest; // 요청사항
 
   /* =================================================================
    * Domain mapping
@@ -66,4 +110,47 @@ public class CareOrder {
 	@OneToOne(fetch = FetchType.LAZY)
 	private OrderPatient orderPatient = new OrderPatient();
 
+	public CareOrderDetailResponse toCareOrderDetailResponse(Member member
+		, OrderPatient orderPatient
+		, Set<Apply> applies
+	) {
+		Set<ApplyCareOrderResponse> applyResponses = applies.stream()
+			.map(Apply::toApplyCareOrderResponse) // Apply 객체를 ApplyDetailResponse 객체로 매핑
+			.collect(Collectors.toSet());
+
+		return CareOrderDetailResponse.builder()
+			.id(this.id)
+			.startDateTime(this.startDateTime)
+			.endDateTime(this.endDateTime)
+			.orderStatusCode(this.orderStatus)
+			.newStatus(this.newStatus)
+			.periodType(this.periodType)
+			.careOrderRegisterType(this.careOrderRegisterType)
+			.orderRequest(this.orderRequest)
+			.userNm(member.getUserNm())
+			.telNo(member.getTelNo())
+			.patientNm(orderPatient.getPatientNm())
+			.gender(orderPatient.getGender())
+			.patientAge(orderPatient.getPatientAge())
+			.patientHeight(orderPatient.getPatientHeight())
+			.patientWeight(orderPatient.getPatientWeight())
+			.diseaseNm(orderPatient.getDiseaseNm())
+			.selfToiletAvailability(orderPatient.getSelfToiletAvailability())
+			.moveAvailability(orderPatient.getMoveAvailability())
+			.mealAvailability(orderPatient.getMealAvailability())
+			.genderPreference(orderPatient.getGenderPreference())
+			.covid19Test(orderPatient.getCovid19Test())
+			.requestedTerm(orderPatient.getRequestedTerm())
+			.locationType(orderPatient.getLocationType())
+			.addressCd(orderPatient.getAddressCd())
+			.address1(orderPatient.getAddress1())
+			.address2(orderPatient.getAddress2())
+			.applies(applyResponses)
+			.build();
+	}
+
+	public void update(CareOrderUpdateRequest careOrderUpdateRequest) {
+		this.startDateTime = careOrderUpdateRequest.getStartDateTime();
+		this.endDateTime = careOrderUpdateRequest.getEndDateTime();
+	}
 }

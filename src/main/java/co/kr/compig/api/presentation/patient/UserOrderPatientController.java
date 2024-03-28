@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.patient.OrderPatientService;
-import co.kr.compig.api.presentation.patient.request.AdminOrderPatientCreateRequest;
+import co.kr.compig.api.presentation.patient.request.OrderPatientCreateRequest;
 import co.kr.compig.api.presentation.patient.request.OrderPatientUpdateRequest;
 import co.kr.compig.api.presentation.patient.response.OrderPatientDetailResponse;
 import co.kr.compig.global.dto.Response;
@@ -25,17 +25,17 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/pv/order-patient", produces = "application/json")
-public class AdminOrderPatientController {
+@RequestMapping(path = "/pb/order-patient", produces = "application/json")
+public class UserOrderPatientController {
 
 	private final OrderPatientService orderPatientService;
 
 	@PostMapping
 	public ResponseEntity<Response<?>> createOrderPatient(
-		@ModelAttribute @Valid AdminOrderPatientCreateRequest adminOrderPatientCreateRequest
+		@ModelAttribute @Valid OrderPatientCreateRequest orderPatientCreateRequest
 	) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-			.data(Map.of("orderPatientId", orderPatientService.createOrderPatientAdmin(adminOrderPatientCreateRequest)))
+			.data(Map.of("orderPatientId", orderPatientService.createOrderPatientUser(orderPatientCreateRequest)))
 			.build());
 	}
 

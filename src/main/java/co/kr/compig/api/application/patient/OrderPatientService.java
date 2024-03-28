@@ -7,10 +7,12 @@ import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.member.MemberRepository;
 import co.kr.compig.api.domain.patient.OrderPatient;
 import co.kr.compig.api.domain.patient.OrderPatientRepository;
+import co.kr.compig.api.presentation.patient.request.AdminOrderPatientCreateRequest;
 import co.kr.compig.api.presentation.patient.request.OrderPatientCreateRequest;
 import co.kr.compig.api.presentation.patient.request.OrderPatientUpdateRequest;
 import co.kr.compig.api.presentation.patient.response.OrderPatientDetailResponse;
 import co.kr.compig.global.error.exception.NotExistDataException;
+import co.kr.compig.global.utils.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -20,8 +22,15 @@ public class OrderPatientService {
 	private final OrderPatientRepository orderPatientRepository;
 	private final MemberRepository memberRepository;
 
-	public Long createOrderPatient(OrderPatientCreateRequest orderPatientCreateRequest) {
-		Member member = memberRepository.findById(orderPatientCreateRequest.getMemberId())
+	public Long createOrderPatientAdmin(AdminOrderPatientCreateRequest adminOrderPatientCreateRequest) {
+		Member member = memberRepository.findById(adminOrderPatientCreateRequest.getMemberId())
+			.orElseThrow(NotExistDataException::new);
+		OrderPatient orderPatient = adminOrderPatientCreateRequest.converterEntity(member);
+		return orderPatientRepository.save(orderPatient).getId();
+	}
+
+	public Long createOrderPatientUser(OrderPatientCreateRequest orderPatientCreateRequest) {
+		Member member = memberRepository.findById(SecurityUtil.getMemberId())
 			.orElseThrow(NotExistDataException::new);
 		OrderPatient orderPatient = orderPatientCreateRequest.converterEntity(member);
 		return orderPatientRepository.save(orderPatient).getId();
@@ -36,9 +45,7 @@ public class OrderPatientService {
 	public Long updateOrderPatient(Long orderPatientId, OrderPatientUpdateRequest orderPatientUpdateRequest) {
 		OrderPatient orderPatient = orderPatientRepository.findById(orderPatientId)
 			.orElseThrow(NotExistDataException::new);
-		Member member = memberRepository.findById(orderPatientUpdateRequest.getMemberId())
-			.orElseThrow(NotExistDataException::new);
-		orderPatient.update(orderPatientUpdateRequest, member);
+		orderPatient.update(orderPatientUpdateRequest);
 		return orderPatient.getId();
 	}
 
