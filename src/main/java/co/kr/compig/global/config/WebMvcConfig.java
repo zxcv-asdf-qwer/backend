@@ -3,11 +3,14 @@ package co.kr.compig.global.config;
 import java.util.List;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,8 +26,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
 	@Override
 	public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-		converters.add(new MappingJackson2HttpMessageConverter(objectMapper));
 		converters.add(new StringHttpMessageConverter());
+		converters.add(new ByteArrayHttpMessageConverter());
+		converters.add(new MappingJackson2HttpMessageConverter(objectMapper));
 	}
 
 	@Override
@@ -35,5 +39,21 @@ public class WebMvcConfig implements WebMvcConfigurer {
 			.allowedHeaders("*")
 			.allowCredentials(true)
 			.maxAge(3600L);
+	}
+
+	private static final String[] CLASSPATH_RESOURCE_LOCATIONS = {
+		"classpath:/resources/"
+	};
+
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("/favicon.ico").addResourceLocations("/");
+		registry.addResourceHandler("/**").addResourceLocations(CLASSPATH_RESOURCE_LOCATIONS);
+	}
+
+	@Override
+	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+		configurer.enable();
+
 	}
 }
