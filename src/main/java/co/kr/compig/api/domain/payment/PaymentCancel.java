@@ -1,5 +1,7 @@
 package co.kr.compig.api.domain.payment;
 
+import co.kr.compig.api.presentation.payment.request.PaymentCancelUpdateRequest;
+import co.kr.compig.api.presentation.payment.response.PaymentCancelDetailResponse;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -45,4 +47,13 @@ public class PaymentCancel {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Payment payment = new Payment();
 
+	public PaymentCancelDetailResponse toPaymentCancelDetailResponse() {
+		return PaymentCancelDetailResponse.builder()
+			.id(this.id)
+			.paymentId(this.payment.getId())
+			.build();
+	}
+
+	public void update(PaymentCancelUpdateRequest paymentCancelUpdateRequest) {
+	}
 }
