@@ -2,6 +2,7 @@ package co.kr.compig.api.domain.wallet;
 
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.packing.Packing;
+import co.kr.compig.api.presentation.wallet.response.WalletDetailResponse;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -47,4 +48,16 @@ public class Wallet {
 	@JoinColumn(name = "packing_id", nullable = false, foreignKey = @ForeignKey(name = "fk02_wallet"))
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Packing packing = new Packing();
+
+	public WalletDetailResponse toWalletDetailResponse() {
+		return WalletDetailResponse.builder()
+			.memberId(this.member.getId())
+			.packingId(this.packing.getId())
+			.build();
+	}
+
+	public void update(Member member, Packing packing) {
+		this.member = member;
+		this.packing = packing;
+	}
 }
