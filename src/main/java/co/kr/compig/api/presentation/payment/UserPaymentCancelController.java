@@ -2,8 +2,8 @@ package co.kr.compig.api.presentation.payment;
 
 import java.util.Map;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +22,7 @@ import co.kr.compig.api.presentation.payment.request.PaymentCancelUpdateRequest;
 import co.kr.compig.api.presentation.payment.response.PaymentCancelDetailResponse;
 import co.kr.compig.api.presentation.payment.response.PaymentCancelResponse;
 import co.kr.compig.global.dto.Response;
-import co.kr.compig.global.dto.pagination.PageResponse;
+import co.kr.compig.global.dto.pagination.SliceResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,14 +45,14 @@ public class UserPaymentCancelController {
 	}
 
 	@GetMapping
-	public ResponseEntity<PageResponse<PaymentCancelResponse>> pageListPaymentCancel(
+	public ResponseEntity<SliceResponse<PaymentCancelResponse>> pageListPayment(
 		@ModelAttribute @Valid PaymentCancelSearchRequest paymentCancelSearchRequest, Pageable pageable
 	) {
-		Page<PaymentCancelResponse> page = paymentCancelService.pageListPaymentCancel(paymentCancelSearchRequest,
-			pageable);
-		PageResponse<PaymentCancelResponse> pageResponse = new PageResponse<>(page.getContent(), pageable,
-			page.getTotalElements());
-		return ResponseEntity.ok(pageResponse);
+		Slice<PaymentCancelResponse> slice = paymentCancelService.pageListPaymentCancelCursor(
+			paymentCancelSearchRequest, pageable);
+		SliceResponse<PaymentCancelResponse> sliceResponse = new SliceResponse<>(slice.getContent(), pageable,
+			slice.hasNext());
+		return ResponseEntity.ok(sliceResponse);
 	}
 
 	@GetMapping(path = "/{paymentCancelId}")

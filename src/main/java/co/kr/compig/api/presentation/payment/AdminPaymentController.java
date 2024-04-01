@@ -2,6 +2,8 @@ package co.kr.compig.api.presentation.payment;
 
 import java.util.Map;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,8 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.payment.PaymentService;
 import co.kr.compig.api.presentation.payment.request.PaymentCreateRequest;
+import co.kr.compig.api.presentation.payment.request.PaymentSearchRequest;
 import co.kr.compig.api.presentation.payment.response.PaymentDetailResponse;
+import co.kr.compig.api.presentation.payment.response.PaymentResponse;
 import co.kr.compig.global.dto.Response;
+import co.kr.compig.global.dto.pagination.PageResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +39,16 @@ public class AdminPaymentController {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("paymentId", paymentService.createPayment(paymentCreateRequest)))
 			.build());
+	}
+
+	@GetMapping
+	public ResponseEntity<PageResponse<PaymentResponse>> pageListPayment(
+		@ModelAttribute @Valid PaymentSearchRequest paymentSearchRequest, Pageable pageable
+	) {
+		Page<PaymentResponse> page = paymentService.pageListPayment(paymentSearchRequest, pageable);
+		PageResponse<PaymentResponse> pageResponse = new PageResponse<>(page.getContent(), pageable,
+			page.getTotalElements());
+		return ResponseEntity.ok(pageResponse);
 	}
 
 	@GetMapping(path = "/{paymentId}")

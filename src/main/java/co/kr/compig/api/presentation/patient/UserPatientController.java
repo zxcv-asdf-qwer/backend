@@ -2,6 +2,8 @@ package co.kr.compig.api.presentation.patient;
 
 import java.util.Map;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,9 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.patient.PatientService;
 import co.kr.compig.api.presentation.patient.request.PatientCreateRequest;
+import co.kr.compig.api.presentation.patient.request.PatientSearchRequest;
 import co.kr.compig.api.presentation.patient.request.PatientUpdateRequest;
 import co.kr.compig.api.presentation.patient.response.PatientDetailResponse;
+import co.kr.compig.api.presentation.patient.response.PatientResponse;
 import co.kr.compig.global.dto.Response;
+import co.kr.compig.global.dto.pagination.SliceResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +41,17 @@ public class UserPatientController {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("patientId", patientService.createPatientUser(patientCreateRequest)))
 			.build());
+	}
+
+	// TODO 내 환자 목록 보기
+	@GetMapping
+	public ResponseEntity<SliceResponse<PatientResponse>> pageListPatient(
+		@ModelAttribute @Valid PatientSearchRequest patientSearchRequest, Pageable pageable
+	) {
+		Slice<PatientResponse> slice = patientService.pageListPatientCursor(patientSearchRequest, pageable);
+		SliceResponse<PatientResponse> sliceResponse = new SliceResponse<>(slice.getContent(), pageable,
+			slice.hasNext());
+		return ResponseEntity.ok(sliceResponse);
 	}
 
 	@GetMapping(path = "/{patientId}")

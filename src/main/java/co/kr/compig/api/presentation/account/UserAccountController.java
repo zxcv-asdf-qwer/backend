@@ -22,6 +22,7 @@ import co.kr.compig.api.presentation.account.request.AccountUpdateRequest;
 import co.kr.compig.api.presentation.account.response.AccountCheckResponse;
 import co.kr.compig.api.presentation.account.response.AccountDetailResponse;
 import co.kr.compig.global.dto.Response;
+import co.kr.compig.global.utils.SecurityUtil;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -55,11 +56,10 @@ public class UserAccountController {
 			.build());
 	}
 
-	@GetMapping(path = "/member/{memberId}")
-	public ResponseEntity<Response<AccountDetailResponse>> getAccountByMember(
-		@PathVariable(name = "memberId") String memberId) {
+	@GetMapping(path = "/member")
+	public ResponseEntity<Response<AccountDetailResponse>> getAccountByMember() {
 		return ResponseEntity.ok(Response.<AccountDetailResponse>builder()
-			.data(accountService.getAccountByMemberId(memberId))
+			.data(accountService.getAccountByMemberId(SecurityUtil.getMemberId()))
 			.build());
 	}
 

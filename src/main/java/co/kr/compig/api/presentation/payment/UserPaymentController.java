@@ -2,6 +2,8 @@ package co.kr.compig.api.presentation.payment;
 
 import java.util.Map;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,8 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.payment.PaymentService;
 import co.kr.compig.api.presentation.payment.request.PaymentCreateRequest;
+import co.kr.compig.api.presentation.payment.request.PaymentSearchRequest;
 import co.kr.compig.api.presentation.payment.response.PaymentDetailResponse;
+import co.kr.compig.api.presentation.payment.response.PaymentResponse;
 import co.kr.compig.global.dto.Response;
+import co.kr.compig.global.dto.pagination.SliceResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +39,17 @@ public class UserPaymentController {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("paymentId", paymentService.createPayment(paymentCreateRequest)))
 			.build());
+	}
+
+	// TODO 내 결제 내역 리스트 보기 구현
+	@GetMapping
+	public ResponseEntity<SliceResponse<PaymentResponse>> pageListPayment(
+		@ModelAttribute @Valid PaymentSearchRequest paymentSearchRequest, Pageable pageable
+	) {
+		Slice<PaymentResponse> slice = paymentService.pageListPaymentCursor(paymentSearchRequest, pageable);
+		SliceResponse<PaymentResponse> sliceResponse = new SliceResponse<>(slice.getContent(), pageable,
+			slice.hasNext());
+		return ResponseEntity.ok(sliceResponse);
 	}
 
 	@GetMapping(path = "/{paymentId}")

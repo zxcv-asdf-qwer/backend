@@ -2,6 +2,8 @@ package co.kr.compig.api.presentation.apply;
 
 import java.util.Map;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,9 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.apply.ApplyService;
 import co.kr.compig.api.presentation.apply.request.ApplyCreateRequest;
+import co.kr.compig.api.presentation.apply.request.ApplySearchRequest;
 import co.kr.compig.api.presentation.apply.request.ApplyUpdateRequest;
 import co.kr.compig.api.presentation.apply.response.ApplyDetailResponse;
+import co.kr.compig.api.presentation.apply.response.ApplyResponse;
 import co.kr.compig.global.dto.Response;
+import co.kr.compig.global.dto.pagination.SliceResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +42,16 @@ public class UserApplyController {
 			.data(Map.of("applyId", applyService.createApply(applyCreateRequest)))
 			.build());
 	}
-	
+
+	@GetMapping
+	public ResponseEntity<SliceResponse<ApplyResponse>> pageListApply(
+		@ModelAttribute @Valid ApplySearchRequest applySearchRequest, Pageable pageable
+	) {
+		Slice<ApplyResponse> slice = applyService.pageListApplyCursor(applySearchRequest, pageable);
+		SliceResponse<ApplyResponse> sliceResponse = new SliceResponse<>(slice.getContent(), pageable, slice.hasNext());
+		return ResponseEntity.ok(sliceResponse);
+	}
+
 	@GetMapping(path = "/{applyId}")
 	public ResponseEntity<Response<ApplyDetailResponse>> getApply(@PathVariable(name = "applyId") Long applyId) {
 		return ResponseEntity.ok(Response.<ApplyDetailResponse>builder()

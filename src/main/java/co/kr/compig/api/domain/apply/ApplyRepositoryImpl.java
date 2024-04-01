@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
 
@@ -20,6 +21,7 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
+import co.kr.compig.api.presentation.apply.request.ApplySearchRequest;
 import co.kr.compig.api.presentation.apply.response.ApplyResponse;
 import lombok.RequiredArgsConstructor;
 
@@ -55,8 +57,8 @@ public class ApplyRepositoryImpl implements ApplyRepositoryCustom {
 	}
 
 	@Override
-	public Slice<ApplyResponse> findAllByCondition(Pageable pageable) {
-		BooleanExpression predicate = Expressions.asBoolean(true).isTrue();
+	public Slice<ApplyResponse> findAllByCondition(ApplySearchRequest applySearchRequest, Pageable pageable) {
+		BooleanExpression predicate = createPredicate(applySearchRequest);
 
 		JPAQuery<ApplyResponse> query = createBaseQuery(predicate)
 			.select(Projections.constructor(ApplyResponse.class,
@@ -69,7 +71,28 @@ public class ApplyRepositoryImpl implements ApplyRepositoryCustom {
 
 		applySorting(query, pageable);
 
-		return null;
+		List<ApplyResponse> applies = query
+			.where(cursorCursorId(Long.valueOf(applySearchRequest.getCursorId())))
+			.offset(pageable.getOffset())
+			.limit(pageable.getPageSize() + 1)
+			.fetch();
+
+		boolean hasNext = false;
+		if (applies.size() > pageable.getPageSize()) {
+			applies.remove(pageable.getPageSize());
+			hasNext = true;
+		}
+
+		return new SliceImpl<>(applies, pageable, hasNext);
+	}
+
+	private BooleanExpression createPredicate(ApplySearchRequest request) {
+		BooleanExpression predicate = Expressions.asBoolean(true).isTrue();
+
+		if (request.getMemberId() != null) {
+			predicate = predicate.and(apply.member.id.eq(request.getMemberId()));
+		}
+		return predicate;
 	}
 
 	private JPAQuery<?> createBaseQuery(BooleanExpression predicate) {
@@ -87,5 +110,11 @@ public class ApplyRepositoryImpl implements ApplyRepositoryCustom {
 				order.isAscending() ? Order.ASC : Order.DESC, target);
 			query.orderBy(orderSpecifier);
 		}
+	}
+
+	private BooleanExpression cursorCursorId(Long cursorId) {
+		if (cursorId == null)
+			return null;
+		return apply.id.lt(cursorId);
 	}
 }
