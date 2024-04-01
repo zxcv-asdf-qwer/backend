@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "/apps", produces = "application/json")
+@RequestMapping(path = "/pv/apps", produces = "application/json")
 public class AppVersionController {
 
 	private final AppVersionService appVersionService;
