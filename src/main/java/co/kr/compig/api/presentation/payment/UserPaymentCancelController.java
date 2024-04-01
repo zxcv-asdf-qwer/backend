@@ -5,16 +5,20 @@ import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.payment.PaymentCancelService;
 import co.kr.compig.api.presentation.payment.request.PaymentCancelCreateRequest;
 import co.kr.compig.api.presentation.payment.request.PaymentCancelSearchRequest;
+import co.kr.compig.api.presentation.payment.request.PaymentCancelUpdateRequest;
 import co.kr.compig.api.presentation.payment.response.PaymentCancelDetailResponse;
 import co.kr.compig.api.presentation.payment.response.PaymentCancelResponse;
 import co.kr.compig.global.dto.Response;
@@ -58,5 +62,21 @@ public class UserPaymentCancelController {
 		return ResponseEntity.ok(Response.<PaymentCancelDetailResponse>builder()
 			.data(paymentCancelService.getPaymentCancel(paymentCancelId))
 			.build());
+	}
+
+	@PutMapping(path = "/{paymentCancelId}")
+	public ResponseEntity<Response<?>> updatePaymentCancel(@PathVariable(name = "paymentCancelId") Long paymentCancelId,
+		@RequestBody @Valid PaymentCancelUpdateRequest paymentCancelUpdateRequest) {
+		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
+			.data(Map.of("paymentCancelId",
+				paymentCancelService.updatePaymentCancel(paymentCancelId, paymentCancelUpdateRequest)))
+			.build());
+	}
+
+	@DeleteMapping(path = "/{paymentCancelId}")
+	public ResponseEntity<Response<?>> deletePaymentCancel(
+		@PathVariable(name = "paymentCancelId") Long paymentCancelId) {
+		paymentCancelService.deletePaymentCancel(paymentCancelId);
+		return ResponseEntity.ok().build();
 	}
 }
