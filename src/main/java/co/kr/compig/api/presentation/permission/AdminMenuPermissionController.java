@@ -23,10 +23,13 @@ import co.kr.compig.api.presentation.permission.response.MenuPermissionDetailRes
 import co.kr.compig.api.presentation.permission.response.MenuPermissionResponse;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.dto.pagination.PageResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Tag(name = "관리자 메뉴 권한", description = "메뉴 권한 관련 API")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -35,6 +38,7 @@ public class AdminMenuPermissionController {
 
 	private final MenuPermissionService menuPermissionService;
 
+	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createMenuPermission(
 		@ModelAttribute @Valid MenuPermissionCreateRequest menuPermissionCreateRequest
@@ -44,6 +48,7 @@ public class AdminMenuPermissionController {
 			.build());
 	}
 
+	@Operation(summary = "조회")
 	@GetMapping
 	public ResponseEntity<PageResponse<MenuPermissionResponse>> pageListMenuPermission(
 		@ModelAttribute @Valid MenuPermissionSearchRequest menuPermissionSearchRequest, Pageable pageable
@@ -55,6 +60,7 @@ public class AdminMenuPermissionController {
 		return ResponseEntity.ok(pageResponse);
 	}
 
+	@Operation(summary = "상세 조회")
 	@GetMapping(path = "/{menuPermissionId}")
 	public ResponseEntity<Response<MenuPermissionDetailResponse>> getMenuPermission(
 		@PathVariable(name = "menuPermissionId") Long menuPermissionId
@@ -64,6 +70,7 @@ public class AdminMenuPermissionController {
 			.build());
 	}
 
+	@Operation(summary = "정보 수정하기")
 	@PutMapping(path = "/{menuPermissionId}")
 	public ResponseEntity<Response<?>> updateMenuPermission(
 		@PathVariable(name = "menuPermissionId") Long menuPermissionId,
@@ -74,6 +81,7 @@ public class AdminMenuPermissionController {
 			.build());
 	}
 
+	@Operation(summary = "삭제")
 	@DeleteMapping(path = "/{menuPermissionId}")
 	public ResponseEntity<Response<?>> deleteMenuPermission(
 		@PathVariable(name = "menuPermissionId") Long menuPermissionId) {

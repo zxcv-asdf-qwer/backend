@@ -22,6 +22,8 @@ import co.kr.compig.api.presentation.account.request.AccountUpdateRequest;
 import co.kr.compig.api.presentation.account.response.AccountCheckResponse;
 import co.kr.compig.api.presentation.account.response.AccountDetailResponse;
 import co.kr.compig.global.dto.Response;
+import co.kr.compig.global.utils.SecurityUtil;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +39,7 @@ public class UserAccountController {
 	private final AccountService accountService;
 	private final AccountCheckService accountCheckService;
 
+	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createAccount(
 		@ModelAttribute @Valid AccountCreateRequest accountCreateRequest,
@@ -47,6 +50,7 @@ public class UserAccountController {
 			.build());
 	}
 
+	@Operation(summary = "상세 조회")
 	@GetMapping(path = "/{accountId}")
 	public ResponseEntity<Response<AccountDetailResponse>> getAccount(
 		@PathVariable(name = "accountId") Long accountId) {
@@ -55,14 +59,15 @@ public class UserAccountController {
 			.build());
 	}
 
-	@GetMapping(path = "/member/{memberId}")
-	public ResponseEntity<Response<AccountDetailResponse>> getAccountByMember(
-		@PathVariable(name = "memberId") String memberId) {
+	@Operation(summary = "상세 조회 - 멤버 id")
+	@GetMapping(path = "/member")
+	public ResponseEntity<Response<AccountDetailResponse>> getAccountByMember() {
 		return ResponseEntity.ok(Response.<AccountDetailResponse>builder()
-			.data(accountService.getAccountByMemberId(memberId))
+			.data(accountService.getAccountByMemberId(SecurityUtil.getMemberId()))
 			.build());
 	}
 
+	@Operation(summary = "정보 수정하기")
 	@PutMapping(path = "/{accountId}")
 	public ResponseEntity<Response<?>> updateAccount(@PathVariable(name = "accountId") Long accountId,
 		@RequestBody @Valid AccountUpdateRequest accountUpdateRequest) {
@@ -71,6 +76,7 @@ public class UserAccountController {
 			.build());
 	}
 
+	@Operation(summary = "삭제")
 	@DeleteMapping(path = "/{accountId}")
 	public ResponseEntity<Response<?>> deleteAccount(
 		@PathVariable(name = "accountId") Long accountId) {
@@ -78,6 +84,7 @@ public class UserAccountController {
 		return ResponseEntity.ok().build();
 	}
 
+	@Operation(summary = "인증하기")
 	@GetMapping(path = "/checkAccount")
 	public ResponseEntity<Response<AccountCheckResponse>> checkAccount(@ModelAttribute
 	AccountCheckRequest accountCheckRequest) {

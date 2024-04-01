@@ -25,10 +25,13 @@ import co.kr.compig.api.presentation.board.response.BoardDetailResponse;
 import co.kr.compig.api.presentation.board.response.BoardResponse;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.dto.pagination.PageResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Tag(name = "관리자 게시판", description = "게시판 관련 API")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -37,6 +40,7 @@ public class AdminBoardController {
 
 	private final BoardService boardService;
 
+	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createBoard(
 		@ModelAttribute @Valid BoardCreateRequest boardCreateRequest,
@@ -46,6 +50,7 @@ public class AdminBoardController {
 			.build());
 	}
 
+	@Operation(summary = "조회")
 	@GetMapping
 	public ResponseEntity<PageResponse<BoardResponse>> pageListBoard(
 		@ModelAttribute @Valid BoardSearchRequest boardSearchRequest, Pageable pageable) {
@@ -55,6 +60,7 @@ public class AdminBoardController {
 		return ResponseEntity.ok(pageResponse);
 	}
 
+	@Operation(summary = "상세 조회")
 	@GetMapping(path = "/{boardId}")
 	public ResponseEntity<Response<BoardDetailResponse>> getBoard(
 		@PathVariable(name = "boardId") Long boardId) {
@@ -63,6 +69,7 @@ public class AdminBoardController {
 			.build());
 	}
 
+	@Operation(summary = "정보 수정하기")
 	@PutMapping(path = "/{boardId}")
 	public ResponseEntity<Response<?>> updateBoard(@PathVariable(name = "boardId") Long boardId,
 		@RequestBody @Valid BoardUpdateRequest boardUpdateRequest) {
@@ -71,6 +78,7 @@ public class AdminBoardController {
 			.build());
 	}
 
+	@Operation(summary = "삭제")
 	@DeleteMapping(path = "/{boardId}")
 	public ResponseEntity<Response<?>> deleteBoard(@PathVariable(name = "boardId") Long boardId) {
 		boardService.deleteBoard(boardId);
@@ -80,6 +88,7 @@ public class AdminBoardController {
 	/**
 	 * base64로 인코딩 된 파일 받아 게시물 생성
 	 */
+	@Operation(summary = "생성하기 - base64")
 	@PostMapping(path = "/base64")
 	public ResponseEntity<Response<?>> createBoardBase64(
 		@ModelAttribute @Valid BoardCreateRequest boardCreateRequest,
@@ -93,6 +102,7 @@ public class AdminBoardController {
 	/**
 	 * s3 파일 base64로 인코딩하여 보여주기
 	 */
+	@Operation(summary = "상세 조회 - base64")
 	@GetMapping(path = "/base64/{boardId}")
 	public ResponseEntity<Response<BoardDetailResponse>> getBoardBase(
 		@PathVariable(name = "boardId") Long boardId) {

@@ -15,10 +15,13 @@ import co.kr.compig.api.presentation.board.response.BoardDetailResponse;
 import co.kr.compig.api.presentation.board.response.BoardResponse;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.dto.pagination.SliceResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Tag(name = "유저 게시판", description = "게시판 관련 API")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -26,6 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UserBoardController {
 	private final BoardService boardService;
 
+	@Operation(summary = "조회")
 	@GetMapping
 	public ResponseEntity<SliceResponse<BoardResponse>> pageListBoard(
 		@ModelAttribute @Valid BoardSearchRequest boardSearchRequest, Pageable pageable) {
@@ -34,6 +38,7 @@ public class UserBoardController {
 		return ResponseEntity.ok(sliceResponse);
 	}
 
+	@Operation(summary = "상세 조회")
 	@GetMapping(path = "/{boardId}")
 	public ResponseEntity<Response<BoardDetailResponse>> getBoard(@PathVariable(name = "boardId") Long boardId) {
 		return ResponseEntity.ok(Response.<BoardDetailResponse>builder()

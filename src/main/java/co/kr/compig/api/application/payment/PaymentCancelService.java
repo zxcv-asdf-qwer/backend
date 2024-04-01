@@ -2,6 +2,7 @@ package co.kr.compig.api.application.payment;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,5 +57,10 @@ public class PaymentCancelService {
 		PaymentCancel paymentCancel = paymentCancelRepository.findById(paymentCancelId)
 			.orElseThrow(NotExistDataException::new);
 		paymentCancelRepository.delete(paymentCancel);
+	}
+
+	public Slice<PaymentCancelResponse> pageListPaymentCancelCursor(
+		PaymentCancelSearchRequest paymentCancelSearchRequest, Pageable pageable) {
+		return paymentCancelRepositoryCustom.findAllByCondition(paymentCancelSearchRequest, pageable);
 	}
 }

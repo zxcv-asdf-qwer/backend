@@ -22,10 +22,13 @@ import co.kr.compig.api.presentation.apply.response.ApplyDetailResponse;
 import co.kr.compig.api.presentation.apply.response.ApplyResponse;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.dto.pagination.PageResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Tag(name = "관리자 지원", description = "지원 관련 API")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -34,6 +37,7 @@ public class AdminApplyController {
 
 	private final ApplyService applyService;
 
+	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createApply(
 		@ModelAttribute @Valid ApplyCreateRequest applyCreateRequest
@@ -43,6 +47,7 @@ public class AdminApplyController {
 			.build());
 	}
 
+	@Operation(summary = "조회")
 	@GetMapping
 	public ResponseEntity<PageResponse<ApplyResponse>> pageListCareOrder(
 		Pageable pageable
@@ -53,6 +58,7 @@ public class AdminApplyController {
 		return ResponseEntity.ok(pageResponse);
 	}
 
+	@Operation(summary = "상세 조회")
 	@GetMapping(path = "/{applyId}")
 	public ResponseEntity<Response<ApplyDetailResponse>> getApply(
 		@PathVariable(name = "applyId") Long applyId
@@ -62,6 +68,7 @@ public class AdminApplyController {
 			.build());
 	}
 
+	@Operation(summary = "정보 수정하기")
 	@PutMapping(path = "/{applyId}")
 	public ResponseEntity<Response<?>> updateApply(@PathVariable(name = "applyId") Long applyId,
 		@RequestBody @Valid ApplyUpdateRequest applyUpdateRequest) {
@@ -70,6 +77,7 @@ public class AdminApplyController {
 			.build());
 	}
 
+	@Operation(summary = "삭제")
 	@DeleteMapping(path = "/{applyId}")
 	public ResponseEntity<Response<?>> deleteApply(@PathVariable(name = "applyId") Long applyId) {
 		applyService.deleteApply(applyId);

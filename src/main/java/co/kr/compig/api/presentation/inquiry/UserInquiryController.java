@@ -23,10 +23,13 @@ import co.kr.compig.api.presentation.inquiry.response.QuestionDetailResponse;
 import co.kr.compig.api.presentation.inquiry.response.QuestionResponse;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.dto.pagination.SliceResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Tag(name = "유저 1:1 문의", description = "1:1 문의 관련 API")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -34,6 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UserInquiryController {
 	private final InquiryService questionService;
 
+	@Operation(summary = "질문 생성하기")
 	@PostMapping(path = "/question")
 	public ResponseEntity<Response<?>> createQuestion(
 		@ModelAttribute @Valid QuestionCreateRequest questionCreateRequest
@@ -43,6 +47,7 @@ public class UserInquiryController {
 			.build());
 	}
 
+	@Operation(summary = "질문 조회")
 	@GetMapping(path = "/question")
 	public ResponseEntity<SliceResponse<QuestionResponse>> pageListQuestion(
 		@ModelAttribute @Valid QuestionSearchRequest questionSearchRequest, Pageable pageable) {
@@ -52,6 +57,7 @@ public class UserInquiryController {
 		return ResponseEntity.ok(sliceResponse);
 	}
 
+	@Operation(summary = "질문 상세 조회")
 	@GetMapping(path = "/question/{questionId}")
 	public ResponseEntity<Response<QuestionDetailResponse>> getQuestion(
 		@PathVariable(name = "questionId") Long questionId
@@ -61,6 +67,7 @@ public class UserInquiryController {
 			.build());
 	}
 
+	@Operation(summary = "질문 수정하기")
 	@PutMapping(path = "/question/{questionId}")
 	public ResponseEntity<Response<?>> updateQuestion(@PathVariable(name = "questionId") Long questionId,
 		@RequestBody @Valid QuestionUpdateRequest questionUpdateRequest) {
@@ -69,6 +76,7 @@ public class UserInquiryController {
 			.build());
 	}
 
+	@Operation(summary = "질문 삭제")
 	@DeleteMapping(path = "/question/{questionId}")
 	public ResponseEntity<Response<?>> deleteQuestion(@PathVariable(name = "questionId") Long questionId) {
 		questionService.deleteQuestion(questionId);

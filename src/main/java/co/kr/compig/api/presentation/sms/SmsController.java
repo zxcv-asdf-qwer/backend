@@ -9,9 +9,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.sms.SmsService;
 import co.kr.compig.global.dto.Response;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Tag(name = "SMS", description = "SMS 관련 API")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -20,6 +23,7 @@ public class SmsController {
 
 	private final SmsService smsService;
 
+	@Operation(summary = "생성하기")
 	@PostMapping(path = "/authentication/{receiverPhoneNumber}")
 	public ResponseEntity<Response<?>> sendAuthentication(
 		@PathVariable(name = "receiverPhoneNumber") String receiverPhoneNumber) {
@@ -27,6 +31,7 @@ public class SmsController {
 		return ResponseEntity.ok().build();
 	}
 
+	@Operation(summary = "인증 상태 조회")
 	@GetMapping(path = "/authentication/{receiverPhoneNumber}/{authenticationNumber}")
 	public ResponseEntity<Response<?>> getAuthentication(
 		@PathVariable(name = "receiverPhoneNumber") String receiverPhoneNumber,
