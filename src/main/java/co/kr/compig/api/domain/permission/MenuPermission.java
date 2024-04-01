@@ -1,8 +1,10 @@
 package co.kr.compig.api.domain.permission;
 
-import co.kr.compig.global.embedded.CreatedAndUpdated;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.menu.Menu;
+import co.kr.compig.api.presentation.permission.request.MenuPermissionUpdateRequest;
+import co.kr.compig.api.presentation.permission.response.MenuPermissionDetailResponse;
+import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -69,4 +71,21 @@ public class MenuPermission {
 	@Builder.Default
 	private CreatedAndUpdated createdAndModified = new CreatedAndUpdated();
 
+	public MenuPermissionDetailResponse toMenuPermissionDetailResponse() {
+		return MenuPermissionDetailResponse.builder()
+			.id(this.id)
+			.groupKey(this.groupKey)
+			.memberId(this.member.getId())
+			.userNm(this.member.getUserNm())
+			.menuId(this.menu.getId())
+			.menuNm(this.menu.getMenuNm())
+			.build();
+	}
+
+	public void update(MenuPermissionUpdateRequest menuPermissionUpdateRequest, Member member, Menu menu) {
+		this.member = member;
+		this.menu = menu;
+		this.groupKey = menuPermissionUpdateRequest.getGroupKey();
+
+	}
 }

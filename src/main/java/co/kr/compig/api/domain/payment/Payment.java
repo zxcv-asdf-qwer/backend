@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import co.kr.compig.api.domain.packing.Packing;
+import co.kr.compig.api.presentation.payment.response.PaymentDetailResponse;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -55,4 +56,11 @@ public class Payment {
 	@OneToMany(
 		mappedBy = "payment", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<PaymentCancel> paymentCancels = new HashSet<>();
+
+	public PaymentDetailResponse toPaymentDetailResponse() {
+		return PaymentDetailResponse.builder()
+			.id(this.id)
+			.packingId(this.packing.getId())
+			.build();
+	}
 }
