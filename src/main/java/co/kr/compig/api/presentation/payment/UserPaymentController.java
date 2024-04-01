@@ -20,10 +20,13 @@ import co.kr.compig.api.presentation.payment.response.PaymentDetailResponse;
 import co.kr.compig.api.presentation.payment.response.PaymentResponse;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.dto.pagination.SliceResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Tag(name = "유저 결제", description = "결제 관련 API")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -32,6 +35,7 @@ public class UserPaymentController {
 
 	private final PaymentService paymentService;
 
+	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createPayment(
 		@ModelAttribute @Valid PaymentCreateRequest paymentCreateRequest
@@ -41,7 +45,7 @@ public class UserPaymentController {
 			.build());
 	}
 
-	// TODO 내 결제 내역 리스트 보기 구현
+	@Operation(summary = "조회")
 	@GetMapping
 	public ResponseEntity<SliceResponse<PaymentResponse>> pageListPayment(
 		@ModelAttribute @Valid PaymentSearchRequest paymentSearchRequest, Pageable pageable
@@ -52,6 +56,7 @@ public class UserPaymentController {
 		return ResponseEntity.ok(sliceResponse);
 	}
 
+	@Operation(summary = "상세 조회")
 	@GetMapping(path = "/{paymentId}")
 	public ResponseEntity<Response<PaymentDetailResponse>> getPayment(
 		@PathVariable(name = "paymentId") Long paymentId
@@ -61,6 +66,7 @@ public class UserPaymentController {
 			.build());
 	}
 
+	@Operation(summary = "삭제")
 	@DeleteMapping(path = "/{paymentId}")
 	public ResponseEntity<Response<?>> deletePayment(@PathVariable(name = "paymentId") Long paymentId) {
 		paymentService.deletePayment(paymentId);

@@ -18,10 +18,13 @@ import co.kr.compig.api.presentation.wallet.request.WalletCreateRequest;
 import co.kr.compig.api.presentation.wallet.request.WalletUpdateRequest;
 import co.kr.compig.api.presentation.wallet.response.WalletDetailResponse;
 import co.kr.compig.global.dto.Response;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Tag(name = "유저 지갑", description = "지갑 관련 API")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -29,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UserWalletController {
 	private final WalletService walletService;
 
+	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createWallet(
 		@ModelAttribute @Valid WalletCreateRequest walletCreateRequest
@@ -38,6 +42,7 @@ public class UserWalletController {
 			.build());
 	}
 
+	@Operation(summary = "상세 조회")
 	@GetMapping(path = "/{walletId}")
 	public ResponseEntity<Response<WalletDetailResponse>> getWallet(
 		@PathVariable(name = "walletId") Long walletId
@@ -47,6 +52,7 @@ public class UserWalletController {
 			.build());
 	}
 
+	@Operation(summary = "정보 수정하기")
 	@PutMapping(path = "/{walletId}")
 	public ResponseEntity<Response<?>> updateWallet(@PathVariable(name = "walletId") Long walletId,
 		@RequestBody @Valid WalletUpdateRequest walletUpdateRequest) {
@@ -55,6 +61,7 @@ public class UserWalletController {
 			.build());
 	}
 
+	@Operation(summary = "삭제")
 	@DeleteMapping(path = "/{walletId}")
 	public ResponseEntity<Response<?>> deleteWallet(@PathVariable(name = "walletId") Long walletId) {
 		walletService.deleteWallet(walletId);

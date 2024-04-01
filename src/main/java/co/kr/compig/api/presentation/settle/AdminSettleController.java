@@ -12,14 +12,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import co.kr.compig.api.application.settle.SettleService;
 import co.kr.compig.api.presentation.settle.request.SettleCreateRequest;
 import co.kr.compig.api.presentation.settle.response.SettleResponse;
 import co.kr.compig.global.dto.Response;
-import co.kr.compig.api.application.settle.SettleService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Tag(name = "관리자 간병 요소", description = "간병 요소 관련 API")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -27,6 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AdminSettleController {
 	private final SettleService settleService;
 
+	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createSettle(
 		@RequestBody @Valid List<SettleCreateRequest> settleCreateRequest) {
@@ -35,6 +39,7 @@ public class AdminSettleController {
 			.build());
 	}
 
+	@Operation(summary = "상세 조회 - settleGroupId")
 	@GetMapping(path = "/{settleGroupId}")
 	public ResponseEntity<Response<List<SettleResponse>>> pageListSettle(
 		@PathVariable(name = "settleGroupId") Long settleGroupId) {
@@ -42,6 +47,7 @@ public class AdminSettleController {
 			.data(settleService.getSettleList(settleGroupId)).build());
 	}
 
+	@Operation(summary = "상세 조회")
 	@PutMapping(path = "/{settleId}")
 	public ResponseEntity<Response<?>> deleteSettle(@PathVariable(name = "settleId") Long settleId) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()

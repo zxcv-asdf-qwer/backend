@@ -23,17 +23,22 @@ import co.kr.compig.api.presentation.menu.response.MenuDetailResponse;
 import co.kr.compig.api.presentation.menu.response.MenuResponse;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.dto.pagination.PageResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Tag(name = "관리자 메뉴", description = "메뉴 관련 API")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(path = "/pv/menu", produces = "application/json")
 public class AdminMenuController {
+
 	private final MenuService menuService;
 
+	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createMenu(
 		@ModelAttribute @Valid MenuCreateRequest menuCreateRequest
@@ -43,6 +48,7 @@ public class AdminMenuController {
 			.build());
 	}
 
+	@Operation(summary = "조회")
 	@GetMapping
 	public ResponseEntity<PageResponse<MenuResponse>> pageListMenu(
 		@ModelAttribute @Valid MenuSearchRequest menuSearchRequest,
@@ -54,6 +60,7 @@ public class AdminMenuController {
 		return ResponseEntity.ok(pageResponse);
 	}
 
+	@Operation(summary = "상세 조회")
 	@GetMapping(path = "/{menuId}")
 	public ResponseEntity<Response<MenuDetailResponse>> getMenu(
 		@PathVariable(name = "menuId") Long menuId
@@ -63,6 +70,7 @@ public class AdminMenuController {
 			.build());
 	}
 
+	@Operation(summary = "정보 수정하기")
 	@PutMapping(path = "/{menuId}")
 	public ResponseEntity<Response<?>> updateMenu(@PathVariable(name = "menuId") Long menuId,
 		@RequestBody @Valid MenuUpdateRequest menuUpdateRequest) {
@@ -71,6 +79,7 @@ public class AdminMenuController {
 			.build());
 	}
 
+	@Operation(summary = "삭제")
 	@DeleteMapping(path = "/{menuId}")
 	public ResponseEntity<Response<?>> deleteMenu(@PathVariable(name = "menuId") Long menuId) {
 		menuService.deleteMenu(menuId);

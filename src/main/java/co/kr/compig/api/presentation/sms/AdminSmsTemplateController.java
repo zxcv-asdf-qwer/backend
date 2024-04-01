@@ -22,10 +22,13 @@ import co.kr.compig.api.presentation.sms.request.SmsTemplateUpdateRequest;
 import co.kr.compig.api.presentation.sms.response.SmsTemplateResponse;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.dto.pagination.PageResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Tag(name = "관리자 SMS 템플릿", description = "SMS 템플릿 관련 API")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -34,6 +37,7 @@ public class AdminSmsTemplateController {
 
 	private final SmsTemplateService smsTemplateService;
 
+	@Operation(summary = "생성하기")
 	@PostMapping(path = "/smsTemplate")
 	public ResponseEntity<Response<?>> createSmsTemplate(
 		@RequestBody @Valid SmsTemplateCreateRequest smsTemplateCreateRequest) {
@@ -42,6 +46,7 @@ public class AdminSmsTemplateController {
 			.build());
 	}
 
+	@Operation(summary = "상세 조회")
 	@GetMapping("/{smsTemplateId}")
 	public ResponseEntity<Response<SmsTemplateResponse>> getByIdSmsTemplate(
 		@PathVariable(name = "smsTemplateId") Long smsTemplateId) {
@@ -50,6 +55,7 @@ public class AdminSmsTemplateController {
 			.build());
 	}
 
+	@Operation(summary = "조회")
 	@GetMapping
 	public ResponseEntity<PageResponse<SmsTemplateResponse>> getPage(
 		@ModelAttribute @Valid SmsTemplateSearchRequest smsTemplateSearchRequest, Pageable pageable) {
@@ -59,6 +65,7 @@ public class AdminSmsTemplateController {
 		return ResponseEntity.ok(pageResponse);
 	}
 
+	@Operation(summary = "정보 수정하기")
 	@PutMapping("/{smsTemplateId}")
 	public ResponseEntity<Response<?>> updateByIdSmsTemplate(
 		@PathVariable(name = "smsTemplateId") Long smsTemplateId,
@@ -69,6 +76,7 @@ public class AdminSmsTemplateController {
 			.build());
 	}
 
+	@Operation(summary = "삭제")
 	@DeleteMapping("/{smsTemplateId}")
 	public ResponseEntity<Response<?>> deleteByIdSmsTemplate(@PathVariable(name = "smsTemplateId") Long smsTemplateId) {
 		smsTemplateService.deleteById(smsTemplateId);

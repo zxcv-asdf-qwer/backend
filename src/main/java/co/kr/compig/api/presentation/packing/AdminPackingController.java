@@ -23,10 +23,13 @@ import co.kr.compig.api.presentation.packing.response.PackingDetailResponse;
 import co.kr.compig.api.presentation.packing.response.PackingResponse;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.dto.pagination.PageResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Tag(name = "관리자 간병 하루", description = "간병 하루 관련 API")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -35,6 +38,7 @@ public class AdminPackingController {
 
 	private final PackingService packingService;
 
+	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createPacking(
 		@ModelAttribute @Valid PackingCreateRequest packingCreateRequest
@@ -44,6 +48,7 @@ public class AdminPackingController {
 			.build());
 	}
 
+	@Operation(summary = "조회")
 	@GetMapping
 	public ResponseEntity<PageResponse<PackingResponse>> pageListPacking(
 		@ModelAttribute @Valid PackingSearchRequest packingSearchRequest, Pageable pageable
@@ -54,6 +59,7 @@ public class AdminPackingController {
 		return ResponseEntity.ok(pageResponse);
 	}
 
+	@Operation(summary = "상세 조회")
 	@GetMapping(path = "/{packingId}")
 	public ResponseEntity<Response<PackingDetailResponse>> getPacking(
 		@PathVariable(name = "packingId") Long packingId
@@ -63,6 +69,7 @@ public class AdminPackingController {
 			.build());
 	}
 
+	@Operation(summary = "정보 수정하기")
 	@PutMapping(path = "/{packingId}")
 	public ResponseEntity<Response<?>> updatePacking(@PathVariable(name = "packingId") Long packingId,
 		@RequestBody @Valid PackingUpdateRequest packingUpdateRequest) {
@@ -71,6 +78,7 @@ public class AdminPackingController {
 			.build());
 	}
 
+	@Operation(summary = "삭제")
 	@DeleteMapping(path = "/{packingId}")
 	public ResponseEntity<Response<?>> deletePacking(@PathVariable(name = "packingId") Long packingId) {
 		packingService.deletePacking(packingId);

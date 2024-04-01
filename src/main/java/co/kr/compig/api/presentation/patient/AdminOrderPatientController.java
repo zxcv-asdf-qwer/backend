@@ -18,10 +18,13 @@ import co.kr.compig.api.presentation.patient.request.AdminOrderPatientCreateRequ
 import co.kr.compig.api.presentation.patient.request.OrderPatientUpdateRequest;
 import co.kr.compig.api.presentation.patient.response.OrderPatientDetailResponse;
 import co.kr.compig.global.dto.Response;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Tag(name = "관리자 간병 공고 후 환자 정보", description = "간병 공고 후 환자 정보 관련 API")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -30,6 +33,7 @@ public class AdminOrderPatientController {
 
 	private final OrderPatientService orderPatientService;
 
+	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createOrderPatient(
 		@ModelAttribute @Valid AdminOrderPatientCreateRequest adminOrderPatientCreateRequest
@@ -39,6 +43,7 @@ public class AdminOrderPatientController {
 			.build());
 	}
 
+	@Operation(summary = "상세 조회")
 	@GetMapping(path = "/{orderPatientId}")
 	public ResponseEntity<Response<OrderPatientDetailResponse>> getOrderPatient(
 		@PathVariable(name = "orderPatientId") Long orderPatientId
@@ -48,6 +53,7 @@ public class AdminOrderPatientController {
 			.build());
 	}
 
+	@Operation(summary = "정보 수정하기")
 	@PutMapping(path = "/{orderPatientId}")
 	public ResponseEntity<Response<?>> updateOrderPatient(
 		@PathVariable(name = "orderPatientId") Long orderPatientId,
@@ -59,6 +65,7 @@ public class AdminOrderPatientController {
 			.build());
 	}
 
+	@Operation(summary = "삭제")
 	@DeleteMapping(path = "/{orderPatientId}")
 	public ResponseEntity<Response<?>> deleteOrderPatient(
 		@PathVariable(name = "orderPatientId") Long orderPatientId

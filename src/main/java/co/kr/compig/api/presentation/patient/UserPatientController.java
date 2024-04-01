@@ -23,10 +23,13 @@ import co.kr.compig.api.presentation.patient.response.PatientDetailResponse;
 import co.kr.compig.api.presentation.patient.response.PatientResponse;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.dto.pagination.SliceResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Tag(name = "유저 환자 정보", description = "환자 정보 관련 API")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -34,6 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UserPatientController {
 	private final PatientService patientService;
 
+	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createPatient(
 		@ModelAttribute @Valid PatientCreateRequest patientCreateRequest
@@ -43,7 +47,7 @@ public class UserPatientController {
 			.build());
 	}
 
-	// TODO 내 환자 목록 보기
+	@Operation(summary = "조회")
 	@GetMapping
 	public ResponseEntity<SliceResponse<PatientResponse>> pageListPatient(
 		@ModelAttribute @Valid PatientSearchRequest patientSearchRequest, Pageable pageable
@@ -54,6 +58,7 @@ public class UserPatientController {
 		return ResponseEntity.ok(sliceResponse);
 	}
 
+	@Operation(summary = "상세 조회")
 	@GetMapping(path = "/{patientId}")
 	public ResponseEntity<Response<PatientDetailResponse>> getPatient(
 		@PathVariable(name = "patientId") Long patientId
@@ -63,6 +68,7 @@ public class UserPatientController {
 			.build());
 	}
 
+	@Operation(summary = "정보 수정하기")
 	@PutMapping(path = "/{patientId}")
 	public ResponseEntity<Response<?>> updateBoard(
 		@PathVariable(name = "patientId") Long patientId,
@@ -73,6 +79,7 @@ public class UserPatientController {
 			.build());
 	}
 
+	@Operation(summary = "삭제")
 	@DeleteMapping(path = "/{patientId}")
 	public ResponseEntity<Response<?>> deletePatient(
 		@PathVariable(name = "patientId") Long patientId
