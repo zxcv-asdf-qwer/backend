@@ -15,10 +15,13 @@ import co.kr.compig.api.presentation.member.request.AdminMemberCreate;
 import co.kr.compig.api.presentation.member.request.GuardianMemberCreate;
 import co.kr.compig.api.presentation.member.request.PartnerMemberCreate;
 import co.kr.compig.global.dto.Response;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Tag(name = "일반 회원가입", description = "일반 회원가입 관련 API")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -27,6 +30,7 @@ public class MemberController {
 
 	private final MemberService memberService;
 
+	@Operation(summary = "관리자 회원가입")
 	@PostMapping(path = "/admin")
 	public ResponseEntity<Response<?>> adminCreate(
 		@ModelAttribute @Valid AdminMemberCreate adminMemberCreate) {
@@ -35,6 +39,7 @@ public class MemberController {
 			.build());
 	}
 
+	@Operation(summary = "보호자 회원가입")
 	@PostMapping(path = "/guardian")
 	public ResponseEntity<Response<?>> guardianCreate(
 		@ModelAttribute @Valid GuardianMemberCreate guardianMemberCreate) {
@@ -43,6 +48,7 @@ public class MemberController {
 			.build());
 	}
 
+	@Operation(summary = "간병인 회원가입")
 	@PostMapping(path = "/partner")
 	public ResponseEntity<Response<?>> partnerCreate(
 		@ModelAttribute @Valid PartnerMemberCreate partnerMemberCreate) {
@@ -51,6 +57,7 @@ public class MemberController {
 			.build());
 	}
 
+	@Operation(summary = "이메일 중복")
 	@GetMapping(path = "/emails/availability")
 	public ResponseEntity<Response<?>> availabilityEmail(
 		@RequestParam("userEmail") String userEmail) {
@@ -58,6 +65,7 @@ public class MemberController {
 		return ResponseEntity.noContent().build();
 	}
 
+	@Operation(summary = "이메일 찾기")
 	@GetMapping(path = "/emails")
 	public ResponseEntity<Response<?>> findEmail(@RequestParam("userNm") String userNm,
 		@RequestParam("userTel") String userTel) {
