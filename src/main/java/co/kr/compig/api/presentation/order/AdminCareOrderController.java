@@ -23,10 +23,13 @@ import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
 import co.kr.compig.api.presentation.order.response.CareOrderResponse;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.dto.pagination.PageResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Tag(name = "관리자 간병 공고", description = "간병 공고 관련 API")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -35,6 +38,7 @@ public class AdminCareOrderController {
 
 	private final CareOrderService careOrderService;
 
+	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createCareOrder(
 		@ModelAttribute @Valid AdminCareOrderCreateRequest adminCareOrderCreateRequest
@@ -44,6 +48,7 @@ public class AdminCareOrderController {
 			.build());
 	}
 
+	@Operation(summary = "조회")
 	@GetMapping
 	public ResponseEntity<PageResponse<CareOrderResponse>> pageListCareOrder(
 		@ModelAttribute @Valid CareOrderSearchRequest careOrderSearchRequest, Pageable pageable
@@ -54,6 +59,7 @@ public class AdminCareOrderController {
 		return ResponseEntity.ok(pageResponse);
 	}
 
+	@Operation(summary = "상세 조회")
 	@GetMapping(path = "/{careOrderId}")
 	public ResponseEntity<Response<CareOrderDetailResponse>> getCareOrder(
 		@PathVariable(name = "careOrderId") Long careOrderId
@@ -63,6 +69,7 @@ public class AdminCareOrderController {
 			.build());
 	}
 
+	@Operation(summary = "정보 수정하기")
 	@PutMapping(path = "/{careOrderId}")
 	public ResponseEntity<Response<?>> updateCareOrder(@PathVariable(name = "careOrderId") Long careOrderId,
 		@RequestBody @Valid CareOrderUpdateRequest careOrderUpdateRequest) {
@@ -71,6 +78,7 @@ public class AdminCareOrderController {
 			.build());
 	}
 
+	@Operation(summary = "삭제")
 	@DeleteMapping(path = "/{careOrderId}")
 	public ResponseEntity<Response<?>> deleteCareOrder(@PathVariable(name = "careOrderId") Long careOrderId) {
 		careOrderService.deleteCareOrder(careOrderId);

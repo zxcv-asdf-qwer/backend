@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
 
@@ -51,6 +53,32 @@ public class PaymentCancelRepositoryImpl implements PaymentCancelRepositoryCusto
 		return PageableExecutionUtils.getPage(paymentCancels, pageable, countQuery::fetchOne);
 	}
 
+	@Override
+	public Slice<PaymentCancelResponse> findAllByCondition(PaymentCancelSearchRequest paymentCancelSearchRequest,
+		Pageable pageable) {
+		BooleanExpression predicate = createPredicate(paymentCancelSearchRequest);
+		JPAQuery<PaymentCancelResponse> query = createBaseQuery(predicate)
+			.select(Projections.constructor(PaymentCancelResponse.class,
+				paymentCancel.id,
+				paymentCancel.payment.id
+			));
+
+		applySorting(query, pageable);
+
+		List<PaymentCancelResponse> paymentCancels = query
+			.where(cursorCursorId(Long.valueOf(paymentCancelSearchRequest.getCursorId())))
+			.offset(pageable.getOffset())
+			.limit(pageable.getPageSize() + 1)
+			.fetch();
+
+		boolean hasNext = false;
+		if (paymentCancels.size() > pageable.getPageSize()) {
+			paymentCancels.remove(pageable.getPageSize());
+			hasNext = true;
+		}
+		return new SliceImpl<>(paymentCancels, pageable, hasNext);
+	}
+
 	private BooleanExpression createPredicate(PaymentCancelSearchRequest request) {
 		BooleanExpression predicate = Expressions.asBoolean(true).isTrue();
 		if (request.getPaymentId() != null) {
@@ -74,5 +102,11 @@ public class PaymentCancelRepositoryImpl implements PaymentCancelRepositoryCusto
 				order.isAscending() ? Order.ASC : Order.DESC, target);
 			query.orderBy(orderSpecifier);
 		}
+	}
+
+	private BooleanExpression cursorCursorId(Long cursorId) {
+		if (cursorId == null)
+			return null;
+		return paymentCancel.id.lt(cursorId);
 	}
 }

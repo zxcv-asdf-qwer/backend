@@ -25,10 +25,13 @@ import co.kr.compig.api.presentation.inquiry.response.QuestionDetailResponse;
 import co.kr.compig.api.presentation.inquiry.response.QuestionResponse;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.dto.pagination.PageResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Tag(name = "관리자 1:1 문의", description = "1:1 문의 관련 API")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -36,6 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AdminInquiryController {
 	private final InquiryService inquiryService;
 
+	@Operation(summary = "질문 생성하기")
 	@PostMapping(path = "/question")
 	public ResponseEntity<Response<?>> createQuestion(
 		@ModelAttribute @Valid QuestionCreateRequest questionCreateRequest
@@ -45,6 +49,7 @@ public class AdminInquiryController {
 			.build());
 	}
 
+	@Operation(summary = "질문 조회")
 	@GetMapping(path = "/question")
 	public ResponseEntity<PageResponse<QuestionResponse>> pageListQuestion(
 		@ModelAttribute @Valid QuestionSearchRequest questionSearchRequest, Pageable pageable) {
@@ -54,6 +59,7 @@ public class AdminInquiryController {
 		return ResponseEntity.ok(pageResponse);
 	}
 
+	@Operation(summary = "질문 상세 조회")
 	@GetMapping(path = "/question/{questionId}")
 	public ResponseEntity<Response<QuestionDetailResponse>> getQuestion(
 		@PathVariable(name = "questionId") Long questionId
@@ -63,6 +69,7 @@ public class AdminInquiryController {
 			.build());
 	}
 
+	@Operation(summary = "질문 정보 수정하기")
 	@PutMapping(path = "/question/{questionId}")
 	public ResponseEntity<Response<?>> updateQuestion(@PathVariable(name = "questionId") Long questionId,
 		@RequestBody @Valid QuestionUpdateRequest questionUpdateRequest) {
@@ -71,12 +78,14 @@ public class AdminInquiryController {
 			.build());
 	}
 
+	@Operation(summary = "질문 삭제")
 	@DeleteMapping(path = "/question/{questionId}")
 	public ResponseEntity<Response<?>> deleteQuestion(@PathVariable(name = "questionId") Long questionId) {
 		inquiryService.deleteQuestion(questionId);
 		return ResponseEntity.ok().build();
 	}
 
+	@Operation(summary = "답변 생성하기")
 	@PostMapping(path = "/answer/{questionId}")
 	public ResponseEntity<Response<?>> createAnswer(@PathVariable(name = "questionId") Long questionId,
 		@ModelAttribute @Valid AnswerCreateRequest answerCreateRequest) {
@@ -86,6 +95,7 @@ public class AdminInquiryController {
 				.build());
 	}
 
+	@Operation(summary = "답변 수정하기")
 	@PutMapping(path = "/answer/{answerId}")
 	public ResponseEntity<Response<?>> updateAnswer(@PathVariable(name = "answerId") Long answerId,
 		@RequestBody @Valid AnswerUpdateRequest answerUpdateRequest) {
@@ -95,6 +105,7 @@ public class AdminInquiryController {
 				.build());
 	}
 
+	@Operation(summary = "답변 삭제")
 	@DeleteMapping(path = "/answer/{questionId}")
 	public ResponseEntity<Response<?>> deleteAnswer(@PathVariable(name = "questionId") Long questionId) {
 		inquiryService.deleteAnswer(questionId);

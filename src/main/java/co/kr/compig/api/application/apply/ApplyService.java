@@ -14,6 +14,7 @@ import co.kr.compig.api.domain.member.MemberRepository;
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.domain.order.CareOrderRepository;
 import co.kr.compig.api.presentation.apply.request.ApplyCreateRequest;
+import co.kr.compig.api.presentation.apply.request.ApplySearchRequest;
 import co.kr.compig.api.presentation.apply.request.ApplyUpdateRequest;
 import co.kr.compig.api.presentation.apply.response.ApplyDetailResponse;
 import co.kr.compig.api.presentation.apply.response.ApplyResponse;
@@ -65,7 +66,7 @@ public class ApplyService {
 		applyRepository.delete(apply);
 	}
 
-	public Slice<ApplyResponse> pageListApplyCursor(Pageable pageable) {
-		return applyRepositoryCustom.findAllByCondition(pageable);
+	public Slice<ApplyResponse> pageListApplyCursor(ApplySearchRequest applySearchRequest, Pageable pageable) {
+		return applyRepositoryCustom.findAllByCondition(applySearchRequest, pageable);
 	}
 }
