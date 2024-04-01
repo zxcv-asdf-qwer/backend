@@ -7,6 +7,8 @@ import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.domain.payment.Payment;
 import co.kr.compig.api.domain.settle.SettleGroup;
 import co.kr.compig.api.domain.wallet.Wallet;
+import co.kr.compig.api.presentation.packing.request.PackingUpdateRequest;
+import co.kr.compig.api.presentation.packing.response.PackingDetailResponse;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -68,4 +70,15 @@ public class Packing {
 	@OneToMany(
 		mappedBy = "packing", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Wallet> wallets = new HashSet<>();
+
+	public PackingDetailResponse toPackingDetailResponse() {
+		return PackingDetailResponse.builder()
+			.packingId(this.id)
+			.careOrderId(this.careOrder.getId())
+			.settleGroupId(this.settleGroup.getId())
+			.build();
+	}
+
+	public void update(PackingUpdateRequest packingUpdateRequest) {
+	}
 }
