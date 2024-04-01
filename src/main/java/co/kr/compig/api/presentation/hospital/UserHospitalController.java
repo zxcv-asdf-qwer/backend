@@ -1,5 +1,6 @@
 package co.kr.compig.api.presentation.hospital;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +33,8 @@ public class UserHospitalController {
 	@Operation(summary = "조회")
 	@GetMapping
 	public ResponseEntity<SliceResponse<HospitalResponse>> pageListHospital(
-		@ModelAttribute @Valid HospitalSearchRequest hospitalSearchRequest, Pageable pageable) {
+		@ParameterObject @ModelAttribute @Valid HospitalSearchRequest hospitalSearchRequest,
+		@ParameterObject Pageable pageable) {
 		Slice<HospitalResponse> slice = hospitalService.pageListHospitalCursor(hospitalSearchRequest, pageable);
 		SliceResponse<HospitalResponse> sliceResponse = new SliceResponse<>(slice.getContent(), pageable,
 			slice.hasNext());
