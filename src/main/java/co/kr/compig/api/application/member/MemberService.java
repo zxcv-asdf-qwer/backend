@@ -95,12 +95,12 @@ public class MemberService {
 		return memberRepository.save(member).getId();
 	}
 
-	public String partnerCreate(PartnerMemberCreate partnerMemberCreate) {
+	public String partnerCreate(PartnerMemberCreate partnerMemberCreate, MultipartFile picture) {
 		Member member = partnerMemberCreate.convertEntity();
 		setReferenceDomain(partnerMemberCreate.getUserType(), member);
 		member.createUserKeyCloak(null, null);
 		member.passwordEncode();
-		Optional.ofNullable(partnerMemberCreate.getPicture()).ifPresent(file -> {
+		Optional.ofNullable(picture).ifPresent(file -> {
 			member.setPicture(s3Util.uploads(List.of(file)).stream().findFirst().orElse(null));
 		});
 

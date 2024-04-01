@@ -4,6 +4,7 @@ import java.net.URI;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -47,8 +48,8 @@ public class UserMemberController {
 	}
 
 	@Operation(summary = "프로필 사진 수정")
-	@PostMapping(path = "/picture")
-	public ResponseEntity<Response<?>> userPictureUpdate(@RequestPart(name = "file") MultipartFile picture) {
+	@PostMapping(path = "/picture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<Response<?>> userPictureUpdate(@RequestPart(name = "picture") MultipartFile picture) {
 		memberService.userPictureUpdate(picture);
 		return ResponseEntity.created(URI.create("/pb/members/picture")).build();
 	}
@@ -62,7 +63,7 @@ public class UserMemberController {
 	}
 
 	//google kakao naver 앱에서 탈퇴 후 -> /pb/members/leave
-	@Operation(summary = "회원정보 프로필 사진 수정")
+	@Operation(summary = "탈퇴")
 	@PutMapping(path = "/leave")
 	public ResponseEntity<Response<?>> userLeave(@RequestBody LeaveRequest leaveRequest) {
 		memberService.userLeave(leaveRequest);

@@ -3,7 +3,6 @@ package co.kr.compig.api.presentation.member.request;
 import java.time.LocalDate;
 
 import org.hibernate.validator.constraints.Length;
-import org.springframework.web.multipart.MultipartFile;
 
 import co.kr.compig.api.domain.code.CareerCode;
 import co.kr.compig.api.domain.code.DomesticForeignCode;
@@ -59,8 +58,6 @@ public class PartnerMemberCreate {
 
 	@NotBlank
 	private String address2; //주소
-
-	private MultipartFile picture; //프로필사진
 
 	@NotNull
 	private DomesticForeignCode domesticForeignCode; //외국인 내국인
