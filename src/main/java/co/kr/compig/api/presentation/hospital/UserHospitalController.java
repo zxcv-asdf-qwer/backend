@@ -5,9 +5,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.hospital.HospitalService;
@@ -33,8 +33,8 @@ public class UserHospitalController {
 	@Operation(summary = "조회")
 	@GetMapping
 	public ResponseEntity<SliceResponse<HospitalResponse>> pageListHospital(
-		@ParameterObject @ModelAttribute @Valid HospitalSearchRequest hospitalSearchRequest,
-		@ParameterObject Pageable pageable) {
+		@ParameterObject @RequestParam @Valid HospitalSearchRequest hospitalSearchRequest,
+		@RequestParam Pageable pageable) {
 		Slice<HospitalResponse> slice = hospitalService.pageListHospitalCursor(hospitalSearchRequest, pageable);
 		SliceResponse<HospitalResponse> sliceResponse = new SliceResponse<>(slice.getContent(), pageable,
 			slice.hasNext());
