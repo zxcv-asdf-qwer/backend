@@ -69,6 +69,7 @@ public class CareOrderCreateRequest {
 		return CareOrder.builder()
 			.startDateTime(this.startDateTime)
 			.endDateTime(this.endDateTime)
+			.realEndDateTime(this.endDateTime)
 			.title(this.title)
 			.orderRequest(this.orderRequest)
 			.publishYn(this.publishYn)

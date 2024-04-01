@@ -71,6 +71,17 @@ public class Account {
 	@OneToOne(fetch = FetchType.LAZY)
 	private Member member = new Member();
 
+	/* =================================================================
+	 * Relation method
+	   ================================================================= */
+
+	public void setMember(final Member member) {
+		this.member = member;
+	}
+
+	/* =================================================================
+	 * Business
+	   ================================================================= */
 	public AccountDetailResponse toAccountDetailResponse() {
 		return AccountDetailResponse.builder()
 			.accountId(this.id)

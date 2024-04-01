@@ -39,6 +39,8 @@ public class CareOrderPageResponse extends BaseAudit {
 	private LocalDateTime startDateTime; // 시작 날짜
 	@Parameter(description = "종료 날짜")
 	private LocalDateTime endDateTime; // 종료 날짜
+	@Parameter(description = "진짜 종료 날짜")
+	private LocalDateTime realEndDateTime; // 진짜 종료 날짜
 	@Parameter(description = "공고 상태")
 	private OrderStatus orderStatus; // 공고 상태
 	@Parameter(description = "시간제, 기간제")

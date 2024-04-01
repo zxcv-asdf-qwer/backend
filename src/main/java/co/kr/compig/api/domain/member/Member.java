@@ -483,6 +483,7 @@ public class Member {
 			.gender(getGenderDescription())
 			.registerDate(this.createdAndModified.getCreatedOn().toLocalDate())
 			.picture(this.picture)
+			.careStartYear(this.careStartYear)
 			.careerYear(calculateYearsFromStartYear(this.careStartYear))
 			.matchingCount((int)this.careOrders.stream()
 				.filter(order -> order.getOrderStatus() == OrderStatus.ORDER_COMPLETE)
@@ -490,10 +491,23 @@ public class Member {
 			.starAverage(this.reviews.size())
 			.address1(this.address1)
 			.address2(this.address2)
+			.domesticForeignCode(this.domesticForeignCode)
+			.jumin1(this.jumin1)
 			.introduce(this.introduce)
 			.diseaseNms(this.diseaseNms)
 			.selfToiletAvailabilities(this.selfToiletAvailabilities)
+			.marketingEmail(
+				this.marketingEmailDate != null && this.marketingEmailDate.isBefore(LocalDate.now()))
+			.marketingAppPush(
+				this.marketingAppPushDate != null && this.marketingAppPushDate.isBefore(
+					LocalDate.now()))
+			.marketingKakao(
+				this.marketingKakaoDate != null && this.marketingKakaoDate.isBefore(LocalDate.now()))
+			.marketingSms(
+				this.marketingSmsDate != null && this.marketingSmsDate.isBefore(LocalDate.now()))
 			.build();
+		partnerMemberResponse.setGroups(
+			this.groups.stream().map(MemberGroup::converterDto).collect(Collectors.toSet()));
 		partnerMemberResponse.setCreatedAndUpdated(this.createdAndModified);
 		return partnerMemberResponse;
 	}
@@ -573,17 +587,42 @@ public class Member {
 			}
 			this.userPw = partnerMemberUpdate.getNewUserPw();
 		}
-
-		this.telNo = partnerMemberUpdate.getTelNo();
-		this.gender = partnerMemberUpdate.getGender();
-		this.address1 = partnerMemberUpdate.getAddress1();
-		this.address2 = partnerMemberUpdate.getAddress2();
-		this.domesticForeignCode = partnerMemberUpdate.getDomesticForeignCode();
-		this.careerCode = partnerMemberUpdate.getCareerCode();
-		this.careStartYear = partnerMemberUpdate.getCareStartYear();
-		this.introduce = partnerMemberUpdate.getIntroduce();
-		this.diseaseNms = partnerMemberUpdate.getDiseaseNms();
-		this.selfToiletAvailabilities = partnerMemberUpdate.getSelfToiletAvailabilities();
+		if (StringUtils.isNotEmpty(partnerMemberUpdate.getTelNo())) {
+			this.telNo = partnerMemberUpdate.getTelNo();
+		}
+		if (partnerMemberUpdate.getGender() != null) {
+			this.gender = partnerMemberUpdate.getGender();
+		}
+		if (StringUtils.isNotEmpty(partnerMemberUpdate.getAddress1())) {
+			this.address1 = partnerMemberUpdate.getAddress1();
+		}
+		if (StringUtils.isNotEmpty(partnerMemberUpdate.getAddress2())) {
+			this.address2 = partnerMemberUpdate.getAddress2();
+		}
+		if (partnerMemberUpdate.getDomesticForeignCode() != null) {
+			this.domesticForeignCode = partnerMemberUpdate.getDomesticForeignCode();
+		}
+		if (partnerMemberUpdate.getCareerCode() != null) {
+			this.careerCode = partnerMemberUpdate.getCareerCode();
+		}
+		if (partnerMemberUpdate.getCareStartYear() != null) {
+			this.careStartYear = partnerMemberUpdate.getCareStartYear();
+		}
+		if (StringUtils.isNotEmpty(partnerMemberUpdate.getIntroduce())) {
+			this.introduce = partnerMemberUpdate.getIntroduce();
+		}
+		if (StringUtils.isNotEmpty(partnerMemberUpdate.getJumin1())) {
+			this.jumin1 = partnerMemberUpdate.getJumin1();
+		}
+		if (StringUtils.isNotEmpty(partnerMemberUpdate.getJumin2())) {
+			this.jumin2 = partnerMemberUpdate.getJumin2();
+		}
+		if (CollectionUtils.isEmpty(partnerMemberUpdate.getDiseaseNms())) {
+			this.diseaseNms = partnerMemberUpdate.getDiseaseNms();
+		}
+		if (CollectionUtils.isEmpty(partnerMemberUpdate.getSelfToiletAvailabilities())) {
+			this.selfToiletAvailabilities = partnerMemberUpdate.getSelfToiletAvailabilities();
+		}
 
 		setMarketingDate(partnerMemberUpdate.isMarketingEmail(),
 			partnerMemberUpdate.isMarketingAppPush(),

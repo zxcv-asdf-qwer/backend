@@ -31,6 +31,7 @@ public class CareOrderDetailResponse extends BaseAudit {
 	private String telNo; // 보호자번호
 	private LocalDateTime startDateTime; // 시작 날짜
 	private LocalDateTime endDateTime; // 종료 날짜
+	private LocalDateTime realEndDateTime; // 진짜 종료 날짜
 	private OrderStatus orderStatus; // 공고 상태
 	private OrderType orderType; // 일반간병|가족간병
 	private IsYn publishYn; // 게시 여부

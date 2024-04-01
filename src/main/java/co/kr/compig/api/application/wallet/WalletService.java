@@ -147,7 +147,7 @@ public class WalletService {
 	@Transactional(readOnly = true)
 	public ResponseEntity<PageResponse> getExchangeOneDayWalletPage(WalletSearchRequest walletSearchRequest) {
 		Page<Wallet> page = walletRepositoryCustom.getExchangeOneDayWalletPage(walletSearchRequest);
-		if(CollectionUtils.isEmpty(page.getContent())) {
+		if (CollectionUtils.isEmpty(page.getContent())) {
 			return PageResponse.noResult();
 		}
 		AES256 aes256 = encryptKeyService.getEncryptKey();
@@ -184,7 +184,8 @@ public class WalletService {
 					.orderId(wallet.getPacking().getCareOrder().getId())
 					.accountName(accountName)
 					.jumin(wallet.getMember().getJumin1() + "-" + wallet.getMember().getJumin2())
-					.bankName(wallet.getMember().getAccount() != null ?  wallet.getMember().getAccount().getBankName() : null)
+					.bankName(
+						wallet.getMember().getAccount() != null ? wallet.getMember().getAccount().getBankName() : null)
 					.accountNumber(accountNumber)
 					.build();
 			}).collect(Collectors.toList());

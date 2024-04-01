@@ -23,13 +23,18 @@ import co.kr.compig.api.application.social.LoginServiceImpl;
 import co.kr.compig.api.application.social.SocialLoginService;
 import co.kr.compig.api.application.system.EncryptKeyService;
 import co.kr.compig.api.domain.account.Account;
+import co.kr.compig.api.domain.account.AccountRepository;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.member.MemberGroup;
 import co.kr.compig.api.domain.member.MemberGroupRepository;
 import co.kr.compig.api.domain.member.MemberRepository;
 import co.kr.compig.api.domain.member.MemberRepositoryCustom;
+import co.kr.compig.api.domain.system.EncryptKey;
+import co.kr.compig.api.domain.system.EncryptKeyRepository;
 import co.kr.compig.api.infrastructure.auth.keycloak.KeycloakAuthApi;
 import co.kr.compig.api.infrastructure.auth.keycloak.model.KeycloakAccessTokenRequest;
+import co.kr.compig.api.presentation.account.request.AccountUpdateRequest;
+import co.kr.compig.api.presentation.account.response.AccountDetailResponse;
 import co.kr.compig.api.presentation.member.request.AdminMemberCreate;
 import co.kr.compig.api.presentation.member.request.AdminMemberUpdate;
 import co.kr.compig.api.presentation.member.request.GuardianMemberCreate;
@@ -51,6 +56,7 @@ import co.kr.compig.api.presentation.social.response.SocialLoginResponse;
 import co.kr.compig.api.presentation.social.response.SocialUserResponse;
 import co.kr.compig.global.code.ApplicationType;
 import co.kr.compig.global.code.BankCode;
+import co.kr.compig.global.code.EncryptTarget;
 import co.kr.compig.global.code.MemberRegisterType;
 import co.kr.compig.global.code.UseYn;
 import co.kr.compig.global.code.UserType;
@@ -82,6 +88,8 @@ public class MemberService {
 	private final KeycloakAuthApi keycloakAuthApi;
 	private final KeycloakProperties keycloakProperties;
 	private final EncryptKeyService encryptKeyService;
+	private final AccountRepository accountRepository;
+	private final EncryptKeyRepository encryptKeyRepository;
 
 	public String adminCreate(AdminMemberCreate adminMemberCreate) {
 		Member member = adminMemberCreate.convertEntity();
@@ -114,7 +122,7 @@ public class MemberService {
 				.build();
 			member.setAccount(account);
 		} catch (Exception e) {
-			throw new RuntimeException("AES256 암호화 중 예외발생");
+			throw new RuntimeException("AES256 암호화 중 예외발생", e);
 		}
 
 		setReferenceDomain(member.getUserType(), member);
@@ -138,11 +146,9 @@ public class MemberService {
 		SocialLoginService loginService = this.getLoginService(socialLoginRequest.getMemberRegisterType());
 		SocialUserResponse socialUserResponse;
 		if (socialLoginRequest.getApplicationType() != ApplicationType.WEB) {
-			socialUserResponse = loginService.appSocialUserResponse(
-				socialLoginRequest);
+			socialUserResponse = loginService.appSocialUserResponse(socialLoginRequest);
 		} else {
-			socialUserResponse = loginService.webSocialUserResponse(
-				socialLoginRequest);
+			socialUserResponse = loginService.webSocialUserResponse(socialLoginRequest);
 		}
 
 		Optional<Member> optionalMember = memberRepository.findByEmailAndUseYn(socialUserResponse.getEmail(), UseYn.Y);
@@ -185,8 +191,7 @@ public class MemberService {
 		// 모든 그룹과 하위 그룹을 포함하는 하나의 리스트로 평탄화
 		List<GroupRepresentation> allGroups = groups.stream()
 			// 각 그룹에 대해 Stream<Group>을 반환
-			.flatMap(group -> Stream.concat(Stream.of(group), group.getSubGroups().stream()))
-			.toList();
+			.flatMap(group -> Stream.concat(Stream.of(group), group.getSubGroups().stream())).toList();
 
 		Optional<GroupRepresentation> handler = allGroups.stream()
 			.filter(group -> group.getName().equals(userType.getCode()))
@@ -195,8 +200,7 @@ public class MemberService {
 		Optional<MemberGroup> memberGroup = memberGroupRepository.findByMember_id(member.getId());
 
 		if (memberGroup.isPresent() && handler.isPresent()) {
-			memberGroup.get()
-				.updateGroupInfo(handler.get().getId(), handler.get().getName(), handler.get().getPath());
+			memberGroup.get().updateGroupInfo(handler.get().getId(), handler.get().getName(), handler.get().getPath());
 		} else {
 			member.addGroups(MemberGroup.builder()
 				.groupKey(handler.get().getId())
@@ -207,26 +211,20 @@ public class MemberService {
 	}
 
 	private SocialLoginResponse getKeycloakAccessToken(String userId, String userPw) {
-		ResponseEntity<?> response = keycloakAuthApi.getAccessToken(
-			KeycloakAccessTokenRequest.builder()
-				.client_id(keycloakProperties.getClientId())
-				.client_secret(keycloakProperties.getClientSecret())
-				.username(userId)
-				.password(userPw)
-				.build()
-		);
+		ResponseEntity<?> response = keycloakAuthApi.getAccessToken(KeycloakAccessTokenRequest.builder()
+			.client_id(keycloakProperties.getClientId())
+			.client_secret(keycloakProperties.getClientSecret())
+			.username(userId)
+			.password(userPw)
+			.build());
 		log.info("keycloak user response");
 		log.info(response.toString());
 
-		Gson gson = new GsonBuilder()
-			.setPrettyPrinting()
+		Gson gson = new GsonBuilder().setPrettyPrinting()
 			.registerTypeAdapter(LocalDateTime.class, new GsonLocalDateTimeAdapter())
 			.create();
 
-		return gson.fromJson(
-			Objects.requireNonNull(response.getBody()).toString(),
-			SocialLoginResponse.class
-		);
+		return gson.fromJson(Objects.requireNonNull(response.getBody()).toString(), SocialLoginResponse.class);
 	}
 
 	public String noMemberCreate(NoMemberCreate noMemberCreate) {
@@ -263,11 +261,9 @@ public class MemberService {
 
 	@Transactional(readOnly = true)
 	public String findEmail(String userNm, String userTel) {
-		Member member = memberRepository.findByUserNmAndTelNo(userNm, userTel).orElseThrow(
-			NotExistDataException::new);
+		Member member = memberRepository.findByUserNmAndTelNo(userNm, userTel).orElseThrow(NotExistDataException::new);
 		if (member.getMemberRegisterType() != MemberRegisterType.GENERAL) {
-			throw new BizException(
-				member.getMemberRegisterType().getDesc().concat(" 회원입니다. 소셜로그인을 선택해주세요."));
+			throw new BizException(member.getMemberRegisterType().getDesc().concat(" 회원입니다. 소셜로그인을 선택해주세요."));
 		}
 		//TODO 인증번호 발송
 		return member.getUserId();
@@ -301,8 +297,7 @@ public class MemberService {
 
 	@Transactional(readOnly = true)
 	public Member getMemberById(String memberId) {
-		return memberRepository.findById(memberId).orElseThrow(
-			NotExistDataException::new);
+		return memberRepository.findById(memberId).orElseThrow(NotExistDataException::new);
 	}
 
 	@Transactional(readOnly = true)
@@ -319,6 +314,27 @@ public class MemberService {
 		Member member = this.getMemberById(memberId);
 		if (member.getUserType() != UserType.PARTNER) {
 			throw new BizException("권한이 없습니다.");
+		}
+		PartnerMemberResponse partnerMemberResponse = member.toPartnerMemberResponse();
+
+		if (null != member.getAccount()) {
+			EncryptKey encryptKey = encryptKeyRepository.findByEncryptTarget(EncryptTarget.ACCOUNT)
+				.orElseThrow(NotExistDataException::new);
+			AES256 aes256 = new AES256(encryptKey.getEncryptKey());
+			try {
+				AccountDetailResponse accountDetailResponse = AccountDetailResponse.builder()
+					.accountId(member.getAccount().getId())
+					.accountNumber(aes256.decrypt(member.getAccount().getAccountNumber(), member.getAccount().getIv()))
+					.accountName(aes256.decrypt(member.getAccount().getAccountName(), member.getAccount().getIv()))
+					.bankName(member.getAccount().getBankName().getCode())
+					.passBookUrl(member.getAccount().getPassBookUrl())
+					.build();
+				partnerMemberResponse.setAccountDetailResponse(accountDetailResponse);
+
+			} catch (Exception e) {
+				throw new RuntimeException("AES256 복호화 중 예외발생", e);
+			}
+
 		}
 		return member.toPartnerMemberResponse();
 	}
@@ -349,19 +365,24 @@ public class MemberService {
 	public String updatePartnerById(String memberId, PartnerMemberUpdate partnerMemberUpdate) {
 		Member memberById = this.getMemberById(memberId);
 		memberById.updatePartnerMember(partnerMemberUpdate);
-		AES256 aes256 = encryptKeyService.getEncryptKey();
-		byte[] iv = aes256.generateIv();
-		try {
-			Account account = Account.builder()
-				.accountNumber(aes256.encrypt(partnerMemberUpdate.getAccountNumber(), iv))
-				.accountName(aes256.encrypt(partnerMemberUpdate.getAccountName(), iv))
-				.bankName(BankCode.of(partnerMemberUpdate.getBankName()))
-				.iv(Base64.getUrlEncoder().encodeToString(iv))
-				.build();
-			memberById.setAccount(account);
-		} catch (Exception e) {
-			throw new RuntimeException("AES256 암호화 중 예외발생");
+		if (partnerMemberUpdate.getAccountUpdateRequest() != null) {
+			AccountUpdateRequest accountUpdateRequest = partnerMemberUpdate.getAccountUpdateRequest();
+			AES256 aes256 = encryptKeyService.getEncryptKey();
+			byte[] iv = aes256.generateIv();
+			try {
+				Account account = Account.builder()
+					.accountNumber(aes256.encrypt(accountUpdateRequest.getAccountNumber(), iv))
+					.accountName(aes256.encrypt(accountUpdateRequest.getAccountName(), iv))
+					.bankName(BankCode.of(accountUpdateRequest.getBankName()))
+					.iv(Base64.getUrlEncoder().encodeToString(iv))
+					.build();
+				account.setMember(memberById);
+				accountRepository.save(account);
+			} catch (Exception e) {
+				throw new RuntimeException("AES256 암호화 중 예외발생", e);
+			}
 		}
+
 		setReferenceDomain(memberById.getUserType(), memberById);
 		memberById.updateUserKeyCloak();
 		memberById.passwordEncode();

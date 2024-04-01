@@ -45,7 +45,7 @@ public class AccountService {
 			accountCreateRequest.setAccountName(
 				aes256.encrypt(accountCreateRequest.getAccountName(), iv));
 		} catch (Exception e) {
-			throw new RuntimeException("AES256 암호화 중 예외발생");
+			throw new RuntimeException("AES256 암호화 중 예외발생", e);
 		}
 
 		Member member = memberService.getMemberById(accountCreateRequest.getMemberId());
@@ -90,7 +90,7 @@ public class AccountService {
 				.passBookUrl(account.getPassBookUrl())
 				.build();
 		} catch (Exception e) {
-			throw new RuntimeException("AES256 복호화 중 예외발생");
+			throw new RuntimeException("AES256 복호화 중 예외발생", e);
 		}
 	}
 
@@ -103,7 +103,7 @@ public class AccountService {
 		try {
 			account.update(accountUpdateRequest, aes256, iv);
 		} catch (Exception e) {
-			throw new RuntimeException("AES256 암호화 중 예외발생");
+			throw new RuntimeException("AES256 암호화 중 예외발생", e);
 		}
 		return account.getId();
 	}

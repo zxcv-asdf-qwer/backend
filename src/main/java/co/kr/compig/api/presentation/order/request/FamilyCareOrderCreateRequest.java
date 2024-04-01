@@ -72,6 +72,7 @@ public class FamilyCareOrderCreateRequest {
 		return CareOrder.builder()
 			.startDateTime(this.startDateTime)
 			.endDateTime(this.endDateTime)
+			.realEndDateTime(this.endDateTime)
 			.title(this.title)
 			.orderRequest(this.orderRequest)
 			.orderType(OrderType.FAMILY)

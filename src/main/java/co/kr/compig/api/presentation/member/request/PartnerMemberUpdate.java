@@ -2,6 +2,7 @@ package co.kr.compig.api.presentation.member.request;
 
 import java.util.List;
 
+import co.kr.compig.api.presentation.account.request.AccountUpdateRequest;
 import co.kr.compig.global.code.CareerCode;
 import co.kr.compig.global.code.DiseaseCode;
 import co.kr.compig.global.code.DomesticForeignCode;
@@ -52,14 +53,9 @@ public class PartnerMemberUpdate {
 
 	@NotBlank
 	private String jumin1; // 주민등록번호 앞자리
-	@NotBlank
 	private String jumin2; // 주민등록번호 뒷자리
-	@NotBlank
-	private String accountNumber; // 계좌번호
-	@NotBlank
-	private String accountName; // 예금주
-	@NotBlank
-	private String bankName; // 은행 이름
+
+	private AccountUpdateRequest accountUpdateRequest;
 
 	private List<DiseaseCode> diseaseNms; // 진단명
 	private List<ToiletType> selfToiletAvailabilities; // 대소변 해결 여부

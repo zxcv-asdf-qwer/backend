@@ -24,7 +24,6 @@ import co.kr.compig.api.domain.patient.OrderPatient;
 import co.kr.compig.api.domain.payment.Payment;
 import co.kr.compig.api.domain.review.Review;
 import co.kr.compig.api.presentation.order.request.CareOrderCalculateRequest;
-import co.kr.compig.api.presentation.order.request.CareOrderExtensionsRequest;
 import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
 import co.kr.compig.api.presentation.order.response.CareOrderPageResponse;
 import co.kr.compig.global.code.ApplyStatus;
@@ -87,6 +86,10 @@ public class CareOrder {
 	@Column
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
 	private LocalDateTime endDateTime; // 종료 날짜
+
+	@Column
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+	private LocalDateTime realEndDateTime; //진짜 종료 날짜
 
 	@Column(length = 15)
 	@Builder.Default
@@ -218,6 +221,7 @@ public class CareOrder {
 				.telNo(this.member.getTelNo())
 				.startDateTime(this.startDateTime)
 				.endDateTime(this.endDateTime)
+				.realEndDateTime(this.realEndDateTime)
 				.orderStatus(this.orderStatus)
 				.orderType(this.orderType)
 				.publishYn(this.publishYn)
@@ -256,6 +260,7 @@ public class CareOrder {
 				.telNo(this.member.getTelNo())
 				.startDateTime(this.startDateTime)
 				.endDateTime(this.endDateTime)
+				.realEndDateTime(this.realEndDateTime)
 				.orderStatus(this.orderStatus)
 				.orderType(this.orderType)
 				.publishYn(this.publishYn)
@@ -286,6 +291,7 @@ public class CareOrder {
 			.hospitalNm(this.orderPatient.getHospitalName())
 			.startDateTime(this.startDateTime)
 			.endDateTime(this.endDateTime)
+			.realEndDateTime(this.realEndDateTime)
 			.orderStatus(this.orderStatus)
 			.periodType(firstPacking
 				.map(Packing::getPeriodType)
@@ -323,6 +329,7 @@ public class CareOrder {
 		return CareOrder.builder()
 			.startDateTime(this.startDateTime)
 			.endDateTime(this.endDateTime)
+			.realEndDateTime(this.realEndDateTime)
 			.orderStatus(OrderStatus.MATCHING_COMPLETE)
 			.orderType(this.orderType)
 			.publishYn(IsYn.Y)
@@ -334,11 +341,6 @@ public class CareOrder {
 			.member(this.member)
 			.orderPatient(this.orderPatient)
 			.build();
-	}
-
-	public void update(CareOrderExtensionsRequest careOrderExtensionsRequest) {
-		this.startDateTime = careOrderExtensionsRequest.getStartDateTime();
-		this.endDateTime = careOrderExtensionsRequest.getEndDateTime();
 	}
 
 	public void cancelOrder() {
