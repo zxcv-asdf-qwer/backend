@@ -22,10 +22,13 @@ import co.kr.compig.api.presentation.account.request.AccountUpdateRequest;
 import co.kr.compig.api.presentation.account.response.AccountCheckResponse;
 import co.kr.compig.api.presentation.account.response.AccountDetailResponse;
 import co.kr.compig.global.dto.Response;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Tag(name = "관리자 계좌", description = "계좌 관련 API")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -35,6 +38,7 @@ public class AdminAccountController {
 	private final AccountService accountService;
 	private final AccountCheckService accountCheckService;
 
+	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createAccount(@ModelAttribute @Valid AccountCreateRequest accountCreateRequest,
 		@RequestPart(value = "file") Map<String, String> files) {
@@ -44,6 +48,7 @@ public class AdminAccountController {
 				.build());
 	}
 
+	@Operation(summary = "상세 조회")
 	@GetMapping(path = "/{accountId}")
 	public ResponseEntity<Response<AccountDetailResponse>> getAccount(
 		@PathVariable(name = "accountId") Long accountId) {
@@ -51,6 +56,7 @@ public class AdminAccountController {
 			Response.<AccountDetailResponse>builder().data(accountService.getAccountByAccountId(accountId)).build());
 	}
 
+	@Operation(summary = "상세 조회 - 멤버 id")
 	@GetMapping(path = "/member/{memberId}")
 	public ResponseEntity<Response<AccountDetailResponse>> getAccountByMember(
 		@PathVariable(name = "memberId") String memberId) {
@@ -58,6 +64,7 @@ public class AdminAccountController {
 			Response.<AccountDetailResponse>builder().data(accountService.getAccountByMemberId(memberId)).build());
 	}
 
+	@Operation(summary = "정보 수정하기")
 	@PutMapping(path = "/{accountId}")
 	public ResponseEntity<Response<?>> updateAccount(@PathVariable(name = "accountId") Long accountId,
 		@RequestBody @Valid AccountUpdateRequest accountUpdateRequest) {
@@ -67,12 +74,14 @@ public class AdminAccountController {
 				.build());
 	}
 
+	@Operation(summary = "삭제")
 	@DeleteMapping(path = "/{accountId}")
 	public ResponseEntity<Response<?>> deleteAccount(@PathVariable(name = "accountId") Long accountId) {
 		accountService.deleteAccount(accountId);
 		return ResponseEntity.ok().build();
 	}
 
+	@Operation(summary = "인증하기")
 	@GetMapping(path = "/checkAccount")
 	public ResponseEntity<Response<AccountCheckResponse>> checkAccount(
 		@ModelAttribute AccountCheckRequest accountCheckRequest) {
