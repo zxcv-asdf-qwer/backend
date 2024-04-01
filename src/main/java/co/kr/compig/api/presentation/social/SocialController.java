@@ -14,8 +14,12 @@ import co.kr.compig.api.presentation.social.request.SocialCreateRequest;
 import co.kr.compig.api.presentation.social.request.SocialLoginRequest;
 import co.kr.compig.api.presentation.social.response.SocialLoginResponse;
 import co.kr.compig.global.dto.Response;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
+@Tag(name = "소셜로그인", description = "소셜로그인 관련 API")
 @RestController
 @RequestMapping(path = "/social")
 @RequiredArgsConstructor
@@ -23,6 +27,7 @@ public class SocialController {
 
 	private final SocialUserService socialUserService;
 
+	@Operation(summary = "앱용 소셜 로그인", description = "사용 안함")
 	@PostMapping(path = "/login")
 	public ResponseEntity<?> doSocialLogin(@RequestBody SocialLoginRequest socialLoginRequest) {
 
@@ -31,6 +36,7 @@ public class SocialController {
 	}
 
 	@PostMapping
+	@Operation(summary = "웹용 소셜 로그인")
 	public ResponseEntity<SocialLoginResponse> doSocialCreate(@RequestBody SocialCreateRequest socialCreateRequest) {
 
 		return ResponseEntity.created(URI.create("/social/login"))
@@ -39,6 +45,8 @@ public class SocialController {
 
 	//apple 만 따로 탈퇴
 	//google kakao naver 앱에서 탈퇴 후 -> /pb/members/leave
+	@Operation(summary = "탈퇴")
+	@SecurityRequirement(name = "Bearer Authentication")
 	@PostMapping(path = "/leave")
 	public ResponseEntity<Response<?>> userLeave(@RequestBody LeaveRequest leaveRequest) {
 		socialUserService.doSocialRevoke(leaveRequest);
