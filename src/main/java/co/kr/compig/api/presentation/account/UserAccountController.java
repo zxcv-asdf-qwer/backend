@@ -2,6 +2,7 @@ package co.kr.compig.api.presentation.account;
 
 import java.util.Map;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,7 +43,7 @@ public class UserAccountController {
 	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createAccount(
-		@ModelAttribute @Valid AccountCreateRequest accountCreateRequest,
+		@ParameterObject @ModelAttribute @Valid AccountCreateRequest accountCreateRequest,
 		@RequestPart(value = "file", required = false) Map<String, String> files
 	) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
@@ -69,7 +70,8 @@ public class UserAccountController {
 
 	@Operation(summary = "정보 수정하기")
 	@PutMapping(path = "/{accountId}")
-	public ResponseEntity<Response<?>> updateAccount(@PathVariable(name = "accountId") Long accountId,
+	public ResponseEntity<Response<?>> updateAccount(
+		@PathVariable(name = "accountId") Long accountId,
 		@RequestBody @Valid AccountUpdateRequest accountUpdateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("accountId", accountService.updateAccount(accountId, accountUpdateRequest)))
@@ -86,15 +88,16 @@ public class UserAccountController {
 
 	@Operation(summary = "인증하기")
 	@GetMapping(path = "/checkAccount")
-	public ResponseEntity<Response<AccountCheckResponse>> checkAccount(@ModelAttribute
-	AccountCheckRequest accountCheckRequest) {
+	public ResponseEntity<Response<AccountCheckResponse>> checkAccount(
+		@ParameterObject @ModelAttribute AccountCheckRequest accountCheckRequest) {
 		return ResponseEntity.ok(Response.<AccountCheckResponse>builder()
 			.data(accountCheckService.getAccountCheck(accountCheckRequest))
 			.build());
 	}
 
 	@GetMapping(path = "/getAccountCheck")
-	public ResponseEntity<Response<Boolean>> getAccountCheck(@RequestBody String memberId) {
+	public ResponseEntity<Response<Boolean>> getAccountCheck(
+		@RequestBody String memberId) {
 		return ResponseEntity.ok(Response.<Boolean>builder()
 			.data(accountService.getAccountCheck(memberId))
 			.build());

@@ -2,6 +2,7 @@ package co.kr.compig.api.presentation.payment;
 
 import java.util.Map;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
@@ -38,8 +39,7 @@ public class UserPaymentCancelController {
 	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createPaymentCancel(
-		@ModelAttribute @Valid PaymentCancelCreateRequest paymentCancelCreateRequest
-	) {
+		@ParameterObject @ModelAttribute @Valid PaymentCancelCreateRequest paymentCancelCreateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("paymentCancelId", paymentCancelService.createPaymentCancel(paymentCancelCreateRequest)))
 			.build());
@@ -48,8 +48,8 @@ public class UserPaymentCancelController {
 	@Operation(summary = "조회")
 	@GetMapping
 	public ResponseEntity<SliceResponse<PaymentCancelResponse>> pageListPayment(
-		@ModelAttribute @Valid PaymentCancelSearchRequest paymentCancelSearchRequest, Pageable pageable
-	) {
+		@ParameterObject @ModelAttribute @Valid PaymentCancelSearchRequest paymentCancelSearchRequest,
+		Pageable pageable) {
 		Slice<PaymentCancelResponse> slice = paymentCancelService.pageListPaymentCancelCursor(
 			paymentCancelSearchRequest, pageable);
 		SliceResponse<PaymentCancelResponse> sliceResponse = new SliceResponse<>(slice.getContent(), pageable,
@@ -60,8 +60,7 @@ public class UserPaymentCancelController {
 	@Operation(summary = "상세 조회")
 	@GetMapping(path = "/{paymentCancelId}")
 	public ResponseEntity<Response<PaymentCancelDetailResponse>> getPaymentCancel(
-		@PathVariable(name = "paymentCancelId") Long paymentCancelId
-	) {
+		@PathVariable(name = "paymentCancelId") Long paymentCancelId) {
 		return ResponseEntity.ok(Response.<PaymentCancelDetailResponse>builder()
 			.data(paymentCancelService.getPaymentCancel(paymentCancelId))
 			.build());

@@ -2,6 +2,7 @@ package co.kr.compig.api.presentation.inquiry;
 
 import java.util.Map;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +43,7 @@ public class AdminInquiryController {
 	@Operation(summary = "질문 생성하기")
 	@PostMapping(path = "/question")
 	public ResponseEntity<Response<?>> createQuestion(
-		@ModelAttribute @Valid QuestionCreateRequest questionCreateRequest
+		@ParameterObject @ModelAttribute @Valid QuestionCreateRequest questionCreateRequest
 	) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("questionId", inquiryService.createQuestion(questionCreateRequest)))
@@ -52,7 +53,8 @@ public class AdminInquiryController {
 	@Operation(summary = "질문 조회")
 	@GetMapping(path = "/question")
 	public ResponseEntity<PageResponse<QuestionResponse>> pageListQuestion(
-		@ModelAttribute @Valid QuestionSearchRequest questionSearchRequest, Pageable pageable) {
+		@ParameterObject @ModelAttribute @Valid QuestionSearchRequest questionSearchRequest,
+		Pageable pageable) {
 		Page<QuestionResponse> page = inquiryService.pageListQuestionPage(questionSearchRequest, pageable);
 		PageResponse<QuestionResponse> pageResponse = new PageResponse<>(page.getContent(), pageable,
 			page.getTotalElements());
@@ -62,8 +64,7 @@ public class AdminInquiryController {
 	@Operation(summary = "질문 상세 조회")
 	@GetMapping(path = "/question/{questionId}")
 	public ResponseEntity<Response<QuestionDetailResponse>> getQuestion(
-		@PathVariable(name = "questionId") Long questionId
-	) {
+		@PathVariable(name = "questionId") Long questionId) {
 		return ResponseEntity.ok(Response.<QuestionDetailResponse>builder()
 			.data(inquiryService.getQuestion(questionId))
 			.build());
@@ -71,7 +72,8 @@ public class AdminInquiryController {
 
 	@Operation(summary = "질문 정보 수정하기")
 	@PutMapping(path = "/question/{questionId}")
-	public ResponseEntity<Response<?>> updateQuestion(@PathVariable(name = "questionId") Long questionId,
+	public ResponseEntity<Response<?>> updateQuestion(
+		@PathVariable(name = "questionId") Long questionId,
 		@RequestBody @Valid QuestionUpdateRequest questionUpdateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("questionId", inquiryService.updateQuestion(questionId, questionUpdateRequest)))
@@ -80,14 +82,16 @@ public class AdminInquiryController {
 
 	@Operation(summary = "질문 삭제")
 	@DeleteMapping(path = "/question/{questionId}")
-	public ResponseEntity<Response<?>> deleteQuestion(@PathVariable(name = "questionId") Long questionId) {
+	public ResponseEntity<Response<?>> deleteQuestion(
+		@PathVariable(name = "questionId") Long questionId) {
 		inquiryService.deleteQuestion(questionId);
 		return ResponseEntity.ok().build();
 	}
 
 	@Operation(summary = "답변 생성하기")
 	@PostMapping(path = "/answer/{questionId}")
-	public ResponseEntity<Response<?>> createAnswer(@PathVariable(name = "questionId") Long questionId,
+	public ResponseEntity<Response<?>> createAnswer(
+		@PathVariable(name = "questionId") Long questionId,
 		@ModelAttribute @Valid AnswerCreateRequest answerCreateRequest) {
 		return ResponseEntity.ok()
 			.body(Response.<Map<String, Long>>builder()
@@ -97,7 +101,8 @@ public class AdminInquiryController {
 
 	@Operation(summary = "답변 수정하기")
 	@PutMapping(path = "/answer/{answerId}")
-	public ResponseEntity<Response<?>> updateAnswer(@PathVariable(name = "answerId") Long answerId,
+	public ResponseEntity<Response<?>> updateAnswer(
+		@PathVariable(name = "answerId") Long answerId,
 		@RequestBody @Valid AnswerUpdateRequest answerUpdateRequest) {
 		return ResponseEntity.ok()
 			.body(Response.<Map<String, Long>>builder()
@@ -107,7 +112,8 @@ public class AdminInquiryController {
 
 	@Operation(summary = "답변 삭제")
 	@DeleteMapping(path = "/answer/{questionId}")
-	public ResponseEntity<Response<?>> deleteAnswer(@PathVariable(name = "questionId") Long questionId) {
+	public ResponseEntity<Response<?>> deleteAnswer(
+		@PathVariable(name = "questionId") Long questionId) {
 		inquiryService.deleteAnswer(questionId);
 		return ResponseEntity.ok().build();
 	}

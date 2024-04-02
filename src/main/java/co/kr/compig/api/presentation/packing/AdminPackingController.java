@@ -2,6 +2,7 @@ package co.kr.compig.api.presentation.packing;
 
 import java.util.Map;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -41,8 +42,7 @@ public class AdminPackingController {
 	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createPacking(
-		@ModelAttribute @Valid PackingCreateRequest packingCreateRequest
-	) {
+		@ParameterObject @ModelAttribute @Valid PackingCreateRequest packingCreateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("packingId", packingService.createPacking(packingCreateRequest)))
 			.build());
@@ -51,8 +51,8 @@ public class AdminPackingController {
 	@Operation(summary = "조회")
 	@GetMapping
 	public ResponseEntity<PageResponse<PackingResponse>> pageListPacking(
-		@ModelAttribute @Valid PackingSearchRequest packingSearchRequest, Pageable pageable
-	) {
+		@ParameterObject @ModelAttribute @Valid PackingSearchRequest packingSearchRequest,
+		Pageable pageable) {
 		Page<PackingResponse> page = packingService.pageListPacking(packingSearchRequest, pageable);
 		PageResponse<PackingResponse> pageResponse = new PageResponse<>(page.getContent(), pageable,
 			page.getTotalElements());
@@ -62,8 +62,7 @@ public class AdminPackingController {
 	@Operation(summary = "상세 조회")
 	@GetMapping(path = "/{packingId}")
 	public ResponseEntity<Response<PackingDetailResponse>> getPacking(
-		@PathVariable(name = "packingId") Long packingId
-	) {
+		@PathVariable(name = "packingId") Long packingId) {
 		return ResponseEntity.ok(Response.<PackingDetailResponse>builder()
 			.data(packingService.getPacking(packingId))
 			.build());
@@ -71,7 +70,8 @@ public class AdminPackingController {
 
 	@Operation(summary = "정보 수정하기")
 	@PutMapping(path = "/{packingId}")
-	public ResponseEntity<Response<?>> updatePacking(@PathVariable(name = "packingId") Long packingId,
+	public ResponseEntity<Response<?>> updatePacking(
+		@PathVariable(name = "packingId") Long packingId,
 		@RequestBody @Valid PackingUpdateRequest packingUpdateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("packingId", packingService.updatePacking(packingId, packingUpdateRequest)))
@@ -80,7 +80,8 @@ public class AdminPackingController {
 
 	@Operation(summary = "삭제")
 	@DeleteMapping(path = "/{packingId}")
-	public ResponseEntity<Response<?>> deletePacking(@PathVariable(name = "packingId") Long packingId) {
+	public ResponseEntity<Response<?>> deletePacking(
+		@PathVariable(name = "packingId") Long packingId) {
 		packingService.deletePacking(packingId);
 		return ResponseEntity.ok().build();
 	}

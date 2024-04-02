@@ -2,6 +2,7 @@ package co.kr.compig.api.presentation.payment;
 
 import java.util.Map;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -38,8 +39,7 @@ public class AdminPaymentController {
 	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createPayment(
-		@ModelAttribute @Valid PaymentCreateRequest paymentCreateRequest
-	) {
+		@ParameterObject @ModelAttribute @Valid PaymentCreateRequest paymentCreateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("paymentId", paymentService.createPayment(paymentCreateRequest)))
 			.build());
@@ -48,8 +48,8 @@ public class AdminPaymentController {
 	@Operation(summary = "조회")
 	@GetMapping
 	public ResponseEntity<PageResponse<PaymentResponse>> pageListPayment(
-		@ModelAttribute @Valid PaymentSearchRequest paymentSearchRequest, Pageable pageable
-	) {
+		@ParameterObject @ModelAttribute @Valid PaymentSearchRequest paymentSearchRequest,
+		Pageable pageable) {
 		Page<PaymentResponse> page = paymentService.pageListPayment(paymentSearchRequest, pageable);
 		PageResponse<PaymentResponse> pageResponse = new PageResponse<>(page.getContent(), pageable,
 			page.getTotalElements());
@@ -59,8 +59,7 @@ public class AdminPaymentController {
 	@Operation(summary = "상세 조회")
 	@GetMapping(path = "/{paymentId}")
 	public ResponseEntity<Response<PaymentDetailResponse>> getPayment(
-		@PathVariable(name = "paymentId") Long paymentId
-	) {
+		@PathVariable(name = "paymentId") Long paymentId) {
 		return ResponseEntity.ok(Response.<PaymentDetailResponse>builder()
 			.data(paymentService.getPayment(paymentId))
 			.build());
@@ -68,7 +67,8 @@ public class AdminPaymentController {
 
 	@Operation(summary = "삭제")
 	@DeleteMapping(path = "/{paymentId}")
-	public ResponseEntity<Response<?>> deletePayment(@PathVariable(name = "paymentId") Long paymentId) {
+	public ResponseEntity<Response<?>> deletePayment(
+		@PathVariable(name = "paymentId") Long paymentId) {
 		paymentService.deletePayment(paymentId);
 		return ResponseEntity.ok().build();
 	}

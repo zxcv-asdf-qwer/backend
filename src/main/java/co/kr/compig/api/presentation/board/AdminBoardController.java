@@ -2,6 +2,7 @@ package co.kr.compig.api.presentation.board;
 
 import java.util.Map;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +44,7 @@ public class AdminBoardController {
 	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createBoard(
-		@ModelAttribute @Valid BoardCreateRequest boardCreateRequest,
+		@ParameterObject @ModelAttribute @Valid BoardCreateRequest boardCreateRequest,
 		MultipartHttpServletRequest multipartRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("boardId", boardService.createBoard(boardCreateRequest, multipartRequest)))
@@ -53,7 +54,8 @@ public class AdminBoardController {
 	@Operation(summary = "조회")
 	@GetMapping
 	public ResponseEntity<PageResponse<BoardResponse>> pageListBoard(
-		@ModelAttribute @Valid BoardSearchRequest boardSearchRequest, Pageable pageable) {
+		@ParameterObject @ModelAttribute @Valid BoardSearchRequest boardSearchRequest,
+		Pageable pageable) {
 		Page<BoardResponse> page = boardService.pageListBoard(boardSearchRequest, pageable);
 		PageResponse<BoardResponse> pageResponse = new PageResponse<>(page.getContent(), pageable,
 			page.getTotalElements());
@@ -71,7 +73,8 @@ public class AdminBoardController {
 
 	@Operation(summary = "정보 수정하기")
 	@PutMapping(path = "/{boardId}")
-	public ResponseEntity<Response<?>> updateBoard(@PathVariable(name = "boardId") Long boardId,
+	public ResponseEntity<Response<?>> updateBoard(
+		@PathVariable(name = "boardId") Long boardId,
 		@RequestBody @Valid BoardUpdateRequest boardUpdateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("boardId", boardService.updateBoard(boardId, boardUpdateRequest)))
@@ -80,7 +83,8 @@ public class AdminBoardController {
 
 	@Operation(summary = "삭제")
 	@DeleteMapping(path = "/{boardId}")
-	public ResponseEntity<Response<?>> deleteBoard(@PathVariable(name = "boardId") Long boardId) {
+	public ResponseEntity<Response<?>> deleteBoard(
+		@PathVariable(name = "boardId") Long boardId) {
 		boardService.deleteBoard(boardId);
 		return ResponseEntity.ok().build();
 	}
@@ -91,7 +95,7 @@ public class AdminBoardController {
 	@Operation(summary = "생성하기 - base64")
 	@PostMapping(path = "/base64")
 	public ResponseEntity<Response<?>> createBoardBase64(
-		@ModelAttribute @Valid BoardCreateRequest boardCreateRequest,
+		@ParameterObject @ModelAttribute @Valid BoardCreateRequest boardCreateRequest,
 		@RequestPart(value = "file", required = false) Map<String, String> files
 	) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()

@@ -2,6 +2,7 @@ package co.kr.compig.api.presentation.patient;
 
 import java.util.Map;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,8 +37,7 @@ public class AdminOrderPatientController {
 	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createOrderPatient(
-		@ModelAttribute @Valid AdminOrderPatientCreateRequest adminOrderPatientCreateRequest
-	) {
+		@ParameterObject @ModelAttribute @Valid AdminOrderPatientCreateRequest adminOrderPatientCreateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("orderPatientId", orderPatientService.createOrderPatientAdmin(adminOrderPatientCreateRequest)))
 			.build());
@@ -46,8 +46,7 @@ public class AdminOrderPatientController {
 	@Operation(summary = "상세 조회")
 	@GetMapping(path = "/{orderPatientId}")
 	public ResponseEntity<Response<OrderPatientDetailResponse>> getOrderPatient(
-		@PathVariable(name = "orderPatientId") Long orderPatientId
-	) {
+		@PathVariable(name = "orderPatientId") Long orderPatientId) {
 		return ResponseEntity.ok(Response.<OrderPatientDetailResponse>builder()
 			.data(orderPatientService.getOrderPatient(orderPatientId))
 			.build());
@@ -57,8 +56,7 @@ public class AdminOrderPatientController {
 	@PutMapping(path = "/{orderPatientId}")
 	public ResponseEntity<Response<?>> updateOrderPatient(
 		@PathVariable(name = "orderPatientId") Long orderPatientId,
-		@RequestBody @Valid OrderPatientUpdateRequest orderPatientUpdateRequest
-	) {
+		@RequestBody @Valid OrderPatientUpdateRequest orderPatientUpdateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("orderPatientId",
 				orderPatientService.updateOrderPatient(orderPatientId, orderPatientUpdateRequest)))
@@ -68,8 +66,7 @@ public class AdminOrderPatientController {
 	@Operation(summary = "삭제")
 	@DeleteMapping(path = "/{orderPatientId}")
 	public ResponseEntity<Response<?>> deleteOrderPatient(
-		@PathVariable(name = "orderPatientId") Long orderPatientId
-	) {
+		@PathVariable(name = "orderPatientId") Long orderPatientId) {
 		orderPatientService.deleteOrderPatient(orderPatientId);
 		return ResponseEntity.ok().build();
 	}

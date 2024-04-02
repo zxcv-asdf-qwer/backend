@@ -34,7 +34,8 @@ public class AppVersionController {
 
 	@Operation(summary = "생성하기")
 	@PostMapping
-	public ResponseEntity<Response<?>> create(@RequestBody @Valid AppVersionCreateRequest request) {
+	public ResponseEntity<Response<?>> create(
+		@RequestBody @Valid AppVersionCreateRequest request) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("appVersionId", appVersionService.create(request)))
 			.build());
@@ -51,7 +52,8 @@ public class AppVersionController {
 
 	@Operation(summary = "상세 조회")
 	@GetMapping("/{app-id}")
-	public ResponseEntity<Response<AppVersionResponse>> getById(@PathVariable(name = "app-id") Long appId) {
+	public ResponseEntity<Response<AppVersionResponse>> getById(
+		@PathVariable(name = "app-id") Long appId) {
 		return ResponseEntity.ok(Response.<AppVersionResponse>builder()
 			.data(appVersionService.getById(appId))
 			.build());
@@ -70,7 +72,8 @@ public class AppVersionController {
 
 	@Operation(summary = "삭제")
 	@DeleteMapping("/{app-id}")
-	public ResponseEntity<Response<?>> deleteById(@PathVariable(name = "app-id") Long appId) {
+	public ResponseEntity<Response<?>> deleteById(
+		@PathVariable(name = "app-id") Long appId) {
 		appVersionService.deleteById(appId);
 		return ResponseEntity.ok().build();
 	}

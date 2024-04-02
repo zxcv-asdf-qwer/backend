@@ -2,6 +2,7 @@ package co.kr.compig.api.presentation.account;
 
 import java.util.Map;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,7 +41,8 @@ public class AdminAccountController {
 
 	@Operation(summary = "생성하기")
 	@PostMapping
-	public ResponseEntity<Response<?>> createAccount(@ModelAttribute @Valid AccountCreateRequest accountCreateRequest,
+	public ResponseEntity<Response<?>> createAccount(
+		@ParameterObject @ModelAttribute @Valid AccountCreateRequest accountCreateRequest,
 		@RequestPart(value = "file") Map<String, String> files) {
 		return ResponseEntity.ok()
 			.body(Response.<Map<String, Long>>builder()
@@ -66,7 +68,8 @@ public class AdminAccountController {
 
 	@Operation(summary = "정보 수정하기")
 	@PutMapping(path = "/{accountId}")
-	public ResponseEntity<Response<?>> updateAccount(@PathVariable(name = "accountId") Long accountId,
+	public ResponseEntity<Response<?>> updateAccount(
+		@PathVariable(name = "accountId") Long accountId,
 		@RequestBody @Valid AccountUpdateRequest accountUpdateRequest) {
 		return ResponseEntity.ok()
 			.body(Response.<Map<String, Long>>builder()
@@ -76,7 +79,8 @@ public class AdminAccountController {
 
 	@Operation(summary = "삭제")
 	@DeleteMapping(path = "/{accountId}")
-	public ResponseEntity<Response<?>> deleteAccount(@PathVariable(name = "accountId") Long accountId) {
+	public ResponseEntity<Response<?>> deleteAccount(
+		@PathVariable(name = "accountId") Long accountId) {
 		accountService.deleteAccount(accountId);
 		return ResponseEntity.ok().build();
 	}
@@ -91,7 +95,8 @@ public class AdminAccountController {
 	}
 
 	@GetMapping(path = "/getAccountCheck")
-	public ResponseEntity<Response<Boolean>> getAccountCheck(@RequestBody String memberId) {
+	public ResponseEntity<Response<Boolean>> getAccountCheck(
+		@RequestBody String memberId) {
 		return ResponseEntity.ok(Response.<Boolean>builder().data(accountService.getAccountCheck(memberId)).build());
 	}
 }

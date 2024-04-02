@@ -2,6 +2,7 @@ package co.kr.compig.api.presentation.hospital;
 
 import java.util.Map;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +41,7 @@ public class AdminHospitalController {
 	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createHospital(
-		@ModelAttribute @Valid HospitalCreateRequest hospitalCreateRequest) {
+		@ParameterObject @ModelAttribute @Valid HospitalCreateRequest hospitalCreateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("hospitalId", hospitalService.createHospital(hospitalCreateRequest)))
 			.build());
@@ -48,8 +49,9 @@ public class AdminHospitalController {
 
 	@Operation(summary = "조회")
 	@GetMapping
-	public ResponseEntity<PageResponse<HospitalResponse>> pageListHospital(@ModelAttribute @Valid
-	HospitalSearchRequest hospitalSearchRequest, Pageable pageable) {
+	public ResponseEntity<PageResponse<HospitalResponse>> pageListHospital(
+		@ParameterObject @ModelAttribute @Valid HospitalSearchRequest hospitalSearchRequest,
+		Pageable pageable) {
 		Page<HospitalResponse> page = hospitalService.pageListHospital(hospitalSearchRequest, pageable);
 		PageResponse<HospitalResponse> pageResponse = new PageResponse<>(page.getContent(), pageable,
 			page.getTotalElements());
@@ -67,7 +69,8 @@ public class AdminHospitalController {
 
 	@Operation(summary = "정보 수정하기")
 	@PutMapping(path = "/{hospitalId}")
-	public ResponseEntity<Response<?>> updateHospital(@PathVariable(name = "hospitalId") Long hospitalId,
+	public ResponseEntity<Response<?>> updateHospital(
+		@PathVariable(name = "hospitalId") Long hospitalId,
 		@RequestBody @Valid HospitalUpdateRequest hospitalUpdateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("hospitalId", hospitalService.updateHospital(hospitalId, hospitalUpdateRequest)))
@@ -76,7 +79,8 @@ public class AdminHospitalController {
 
 	@Operation(summary = "삭제")
 	@DeleteMapping(path = "/{hospitalId}")
-	public ResponseEntity<Response<?>> deleteHospital(@PathVariable(name = "hospitalId") Long hospitalId) {
+	public ResponseEntity<Response<?>> deleteHospital(
+		@PathVariable(name = "hospitalId") Long hospitalId) {
 		hospitalService.deleteHospital(hospitalId);
 		return ResponseEntity.ok().build();
 	}

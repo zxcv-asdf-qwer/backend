@@ -2,6 +2,7 @@ package co.kr.compig.api.presentation.inquiry;
 
 import java.util.Map;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +41,7 @@ public class UserInquiryController {
 	@Operation(summary = "질문 생성하기")
 	@PostMapping(path = "/question")
 	public ResponseEntity<Response<?>> createQuestion(
-		@ModelAttribute @Valid QuestionCreateRequest questionCreateRequest
+		@ParameterObject @ModelAttribute @Valid QuestionCreateRequest questionCreateRequest
 	) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("questionId", questionService.createQuestion(questionCreateRequest)))
@@ -50,7 +51,8 @@ public class UserInquiryController {
 	@Operation(summary = "질문 조회")
 	@GetMapping(path = "/question")
 	public ResponseEntity<SliceResponse<QuestionResponse>> pageListQuestion(
-		@ModelAttribute @Valid QuestionSearchRequest questionSearchRequest, Pageable pageable) {
+		@ParameterObject @ModelAttribute @Valid QuestionSearchRequest questionSearchRequest,
+		Pageable pageable) {
 		Slice<QuestionResponse> slice = questionService.pageListCursor(questionSearchRequest, pageable);
 		SliceResponse<QuestionResponse> sliceResponse = new SliceResponse<>(slice.getContent(), pageable,
 			slice.hasNext());
@@ -69,7 +71,8 @@ public class UserInquiryController {
 
 	@Operation(summary = "질문 수정하기")
 	@PutMapping(path = "/question/{questionId}")
-	public ResponseEntity<Response<?>> updateQuestion(@PathVariable(name = "questionId") Long questionId,
+	public ResponseEntity<Response<?>> updateQuestion(
+		@PathVariable(name = "questionId") Long questionId,
 		@RequestBody @Valid QuestionUpdateRequest questionUpdateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("questionId", questionService.updateQuestion(questionId, questionUpdateRequest)))
@@ -78,7 +81,8 @@ public class UserInquiryController {
 
 	@Operation(summary = "질문 삭제")
 	@DeleteMapping(path = "/question/{questionId}")
-	public ResponseEntity<Response<?>> deleteQuestion(@PathVariable(name = "questionId") Long questionId) {
+	public ResponseEntity<Response<?>> deleteQuestion(
+		@PathVariable(name = "questionId") Long questionId) {
 		questionService.deleteQuestion(questionId);
 		return ResponseEntity.ok().build();
 	}

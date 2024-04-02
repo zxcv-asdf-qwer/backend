@@ -2,6 +2,7 @@ package co.kr.compig.api.presentation.permission;
 
 import java.util.Map;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -41,8 +42,7 @@ public class AdminMenuPermissionController {
 	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createMenuPermission(
-		@ModelAttribute @Valid MenuPermissionCreateRequest menuPermissionCreateRequest
-	) {
+		@ParameterObject @ModelAttribute @Valid MenuPermissionCreateRequest menuPermissionCreateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("menuPermissionId", menuPermissionService.createMenuPermission(menuPermissionCreateRequest)))
 			.build());
@@ -51,8 +51,8 @@ public class AdminMenuPermissionController {
 	@Operation(summary = "조회")
 	@GetMapping
 	public ResponseEntity<PageResponse<MenuPermissionResponse>> pageListMenuPermission(
-		@ModelAttribute @Valid MenuPermissionSearchRequest menuPermissionSearchRequest, Pageable pageable
-	) {
+		@ParameterObject @ModelAttribute @Valid MenuPermissionSearchRequest menuPermissionSearchRequest,
+		Pageable pageable) {
 		Page<MenuPermissionResponse> page = menuPermissionService.pageListMenuPermission(menuPermissionSearchRequest,
 			pageable);
 		PageResponse<MenuPermissionResponse> pageResponse = new PageResponse<>(page.getContent(), pageable,
@@ -63,8 +63,7 @@ public class AdminMenuPermissionController {
 	@Operation(summary = "상세 조회")
 	@GetMapping(path = "/{menuPermissionId}")
 	public ResponseEntity<Response<MenuPermissionDetailResponse>> getMenuPermission(
-		@PathVariable(name = "menuPermissionId") Long menuPermissionId
-	) {
+		@PathVariable(name = "menuPermissionId") Long menuPermissionId) {
 		return ResponseEntity.ok(Response.<MenuPermissionDetailResponse>builder()
 			.data(menuPermissionService.getMenuPermission(menuPermissionId))
 			.build());

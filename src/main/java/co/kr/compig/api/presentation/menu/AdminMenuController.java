@@ -2,6 +2,7 @@ package co.kr.compig.api.presentation.menu;
 
 import java.util.Map;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +42,7 @@ public class AdminMenuController {
 	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createMenu(
-		@ModelAttribute @Valid MenuCreateRequest menuCreateRequest
+		@ParameterObject @ModelAttribute @Valid MenuCreateRequest menuCreateRequest
 	) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("menuId", menuService.createMenu(menuCreateRequest)))
@@ -51,7 +52,7 @@ public class AdminMenuController {
 	@Operation(summary = "조회")
 	@GetMapping
 	public ResponseEntity<PageResponse<MenuResponse>> pageListMenu(
-		@ModelAttribute @Valid MenuSearchRequest menuSearchRequest,
+		@ParameterObject @ModelAttribute @Valid MenuSearchRequest menuSearchRequest,
 		Pageable pageable
 	) {
 		Page<MenuResponse> page = menuService.pageListMenu(menuSearchRequest, pageable);
@@ -72,7 +73,8 @@ public class AdminMenuController {
 
 	@Operation(summary = "정보 수정하기")
 	@PutMapping(path = "/{menuId}")
-	public ResponseEntity<Response<?>> updateMenu(@PathVariable(name = "menuId") Long menuId,
+	public ResponseEntity<Response<?>> updateMenu(
+		@PathVariable(name = "menuId") Long menuId,
 		@RequestBody @Valid MenuUpdateRequest menuUpdateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("menuId", menuService.updateMenu(menuId, menuUpdateRequest)))
@@ -81,7 +83,8 @@ public class AdminMenuController {
 
 	@Operation(summary = "삭제")
 	@DeleteMapping(path = "/{menuId}")
-	public ResponseEntity<Response<?>> deleteMenu(@PathVariable(name = "menuId") Long menuId) {
+	public ResponseEntity<Response<?>> deleteMenu(
+		@PathVariable(name = "menuId") Long menuId) {
 		menuService.deleteMenu(menuId);
 		return ResponseEntity.ok().build();
 	}

@@ -2,6 +2,7 @@ package co.kr.compig.api.presentation.wallet;
 
 import java.util.Map;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,8 +36,7 @@ public class UserWalletController {
 	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createWallet(
-		@ModelAttribute @Valid WalletCreateRequest walletCreateRequest
-	) {
+		@ParameterObject @ModelAttribute @Valid WalletCreateRequest walletCreateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("walletId", walletService.createWallet(walletCreateRequest)))
 			.build());
@@ -45,8 +45,7 @@ public class UserWalletController {
 	@Operation(summary = "상세 조회")
 	@GetMapping(path = "/{walletId}")
 	public ResponseEntity<Response<WalletDetailResponse>> getWallet(
-		@PathVariable(name = "walletId") Long walletId
-	) {
+		@PathVariable(name = "walletId") Long walletId) {
 		return ResponseEntity.ok(Response.<WalletDetailResponse>builder()
 			.data(walletService.getWallet(walletId))
 			.build());
@@ -54,7 +53,8 @@ public class UserWalletController {
 
 	@Operation(summary = "정보 수정하기")
 	@PutMapping(path = "/{walletId}")
-	public ResponseEntity<Response<?>> updateWallet(@PathVariable(name = "walletId") Long walletId,
+	public ResponseEntity<Response<?>> updateWallet(
+		@PathVariable(name = "walletId") Long walletId,
 		@RequestBody @Valid WalletUpdateRequest walletUpdateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("walletId", walletService.updateWallet(walletId, walletUpdateRequest)))
@@ -63,7 +63,8 @@ public class UserWalletController {
 
 	@Operation(summary = "삭제")
 	@DeleteMapping(path = "/{walletId}")
-	public ResponseEntity<Response<?>> deleteWallet(@PathVariable(name = "walletId") Long walletId) {
+	public ResponseEntity<Response<?>> deleteWallet(
+		@PathVariable(name = "walletId") Long walletId) {
 		walletService.deleteWallet(walletId);
 		return ResponseEntity.ok().build();
 	}

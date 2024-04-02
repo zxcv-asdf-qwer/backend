@@ -2,6 +2,7 @@ package co.kr.compig.api.presentation.patient;
 
 import java.util.Map;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,8 +36,7 @@ public class AdminPatientController {
 	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createPatient(
-		@ModelAttribute @Valid AdminPatientCreateRequest adminPatientCreateRequest
-	) {
+		@ParameterObject @ModelAttribute @Valid AdminPatientCreateRequest adminPatientCreateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("patientId", patientService.createPatientAdmin(adminPatientCreateRequest)))
 			.build());
@@ -45,8 +45,7 @@ public class AdminPatientController {
 	@Operation(summary = "상세 조회")
 	@GetMapping(path = "/{patientId}")
 	public ResponseEntity<Response<PatientDetailResponse>> getPatient(
-		@PathVariable(name = "patientId") Long patientId
-	) {
+		@PathVariable(name = "patientId") Long patientId) {
 		return ResponseEntity.ok(Response.<PatientDetailResponse>builder()
 			.data(patientService.getPatient(patientId))
 			.build());
@@ -56,8 +55,7 @@ public class AdminPatientController {
 	@PutMapping(path = "/{patientId}")
 	public ResponseEntity<Response<?>> updatePatient(
 		@PathVariable(name = "patientId") Long patientId,
-		@RequestBody @Valid PatientUpdateRequest patientUpdateRequest
-	) {
+		@RequestBody @Valid PatientUpdateRequest patientUpdateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("patientId", patientService.updatePatient(patientId, patientUpdateRequest)))
 			.build());
@@ -66,8 +64,7 @@ public class AdminPatientController {
 	@Operation(summary = "삭제")
 	@DeleteMapping(path = "/{patientId}")
 	public ResponseEntity<Response<?>> deletePatient(
-		@PathVariable(name = "patientId") Long patientId
-	) {
+		@PathVariable(name = "patientId") Long patientId) {
 		patientService.deletePatient(patientId);
 		return ResponseEntity.ok().build();
 	}

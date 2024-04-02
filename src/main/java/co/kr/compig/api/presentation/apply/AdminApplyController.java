@@ -2,6 +2,7 @@ package co.kr.compig.api.presentation.apply;
 
 import java.util.Map;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -40,8 +41,7 @@ public class AdminApplyController {
 	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createApply(
-		@ModelAttribute @Valid ApplyCreateRequest applyCreateRequest
-	) {
+		@ParameterObject @ModelAttribute @Valid ApplyCreateRequest applyCreateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("applyId", applyService.createApply(applyCreateRequest)))
 			.build());
@@ -50,8 +50,7 @@ public class AdminApplyController {
 	@Operation(summary = "조회")
 	@GetMapping
 	public ResponseEntity<PageResponse<ApplyResponse>> pageListCareOrder(
-		Pageable pageable
-	) {
+		Pageable pageable) {
 		Page<ApplyResponse> page = applyService.pageListApply(pageable);
 		PageResponse<ApplyResponse> pageResponse = new PageResponse<>(page.getContent(), pageable,
 			page.getTotalElements());
@@ -61,8 +60,7 @@ public class AdminApplyController {
 	@Operation(summary = "상세 조회")
 	@GetMapping(path = "/{applyId}")
 	public ResponseEntity<Response<ApplyDetailResponse>> getApply(
-		@PathVariable(name = "applyId") Long applyId
-	) {
+		@PathVariable(name = "applyId") Long applyId) {
 		return ResponseEntity.ok(Response.<ApplyDetailResponse>builder()
 			.data(applyService.getApply(applyId))
 			.build());
@@ -70,7 +68,8 @@ public class AdminApplyController {
 
 	@Operation(summary = "정보 수정하기")
 	@PutMapping(path = "/{applyId}")
-	public ResponseEntity<Response<?>> updateApply(@PathVariable(name = "applyId") Long applyId,
+	public ResponseEntity<Response<?>> updateApply(
+		@PathVariable(name = "applyId") Long applyId,
 		@RequestBody @Valid ApplyUpdateRequest applyUpdateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("applyId", applyService.updateApply(applyId, applyUpdateRequest)))
@@ -79,7 +78,8 @@ public class AdminApplyController {
 
 	@Operation(summary = "삭제")
 	@DeleteMapping(path = "/{applyId}")
-	public ResponseEntity<Response<?>> deleteApply(@PathVariable(name = "applyId") Long applyId) {
+	public ResponseEntity<Response<?>> deleteApply(
+		@PathVariable(name = "applyId") Long applyId) {
 		applyService.deleteApply(applyId);
 		return ResponseEntity.ok().build();
 	}

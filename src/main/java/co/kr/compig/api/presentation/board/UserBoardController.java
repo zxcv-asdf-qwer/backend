@@ -1,5 +1,6 @@
 package co.kr.compig.api.presentation.board;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +33,8 @@ public class UserBoardController {
 	@Operation(summary = "조회")
 	@GetMapping
 	public ResponseEntity<SliceResponse<BoardResponse>> pageListBoard(
-		@ModelAttribute @Valid BoardSearchRequest boardSearchRequest, Pageable pageable) {
+		@ParameterObject @ModelAttribute @Valid BoardSearchRequest boardSearchRequest,
+		Pageable pageable) {
 		Slice<BoardResponse> slice = boardService.pageListBoardCursor(boardSearchRequest, pageable);
 		SliceResponse<BoardResponse> sliceResponse = new SliceResponse<>(slice.getContent(), pageable, slice.hasNext());
 		return ResponseEntity.ok(sliceResponse);
@@ -40,7 +42,8 @@ public class UserBoardController {
 
 	@Operation(summary = "상세 조회")
 	@GetMapping(path = "/{boardId}")
-	public ResponseEntity<Response<BoardDetailResponse>> getBoard(@PathVariable(name = "boardId") Long boardId) {
+	public ResponseEntity<Response<BoardDetailResponse>> getBoard(
+		@PathVariable(name = "boardId") Long boardId) {
 		return ResponseEntity.ok(Response.<BoardDetailResponse>builder()
 			.data(boardService.getBoard(boardId))
 			.build());

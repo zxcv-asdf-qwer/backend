@@ -2,6 +2,7 @@ package co.kr.compig.api.presentation.patient;
 
 import java.util.Map;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
@@ -40,8 +41,7 @@ public class UserPatientController {
 	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createPatient(
-		@ModelAttribute @Valid PatientCreateRequest patientCreateRequest
-	) {
+		@ParameterObject @ModelAttribute @Valid PatientCreateRequest patientCreateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("patientId", patientService.createPatientUser(patientCreateRequest)))
 			.build());
@@ -50,8 +50,7 @@ public class UserPatientController {
 	@Operation(summary = "조회")
 	@GetMapping
 	public ResponseEntity<SliceResponse<PatientResponse>> pageListPatient(
-		@ModelAttribute @Valid PatientSearchRequest patientSearchRequest, Pageable pageable
-	) {
+		@ParameterObject @ModelAttribute @Valid PatientSearchRequest patientSearchRequest, Pageable pageable) {
 		Slice<PatientResponse> slice = patientService.pageListPatientCursor(patientSearchRequest, pageable);
 		SliceResponse<PatientResponse> sliceResponse = new SliceResponse<>(slice.getContent(), pageable,
 			slice.hasNext());
@@ -61,8 +60,7 @@ public class UserPatientController {
 	@Operation(summary = "상세 조회")
 	@GetMapping(path = "/{patientId}")
 	public ResponseEntity<Response<PatientDetailResponse>> getPatient(
-		@PathVariable(name = "patientId") Long patientId
-	) {
+		@PathVariable(name = "patientId") Long patientId) {
 		return ResponseEntity.ok(Response.<PatientDetailResponse>builder()
 			.data(patientService.getPatient(patientId))
 			.build());
@@ -72,8 +70,7 @@ public class UserPatientController {
 	@PutMapping(path = "/{patientId}")
 	public ResponseEntity<Response<?>> updateBoard(
 		@PathVariable(name = "patientId") Long patientId,
-		@RequestBody @Valid PatientUpdateRequest patientUpdateRequest
-	) {
+		@RequestBody @Valid PatientUpdateRequest patientUpdateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("patientId", patientService.updatePatient(patientId, patientUpdateRequest)))
 			.build());
@@ -82,8 +79,7 @@ public class UserPatientController {
 	@Operation(summary = "삭제")
 	@DeleteMapping(path = "/{patientId}")
 	public ResponseEntity<Response<?>> deletePatient(
-		@PathVariable(name = "patientId") Long patientId
-	) {
+		@PathVariable(name = "patientId") Long patientId) {
 		patientService.deletePatient(patientId);
 		return ResponseEntity.ok().build();
 	}

@@ -2,6 +2,7 @@ package co.kr.compig.api.presentation.order;
 
 import java.util.Map;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +42,7 @@ public class UserCareOrderController {
 	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createCareOrder(
-		@ModelAttribute @Valid CareOrderCreateRequest careOrderCreateRequest
+		@ParameterObject @ModelAttribute @Valid CareOrderCreateRequest careOrderCreateRequest
 	) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("careOrderId", careOrderService.createCareOrderUser(careOrderCreateRequest)))
@@ -51,7 +52,8 @@ public class UserCareOrderController {
 	@Operation(summary = "조회")
 	@GetMapping
 	public ResponseEntity<SliceResponse<CareOrderResponse>> pageListCareOrder(
-		@ModelAttribute @Valid CareOrderSearchRequest careOrderSearchRequest, Pageable pageable
+		@ParameterObject @ModelAttribute @Valid CareOrderSearchRequest careOrderSearchRequest,
+		Pageable pageable
 	) {
 		Slice<CareOrderResponse> slice = careOrderService.pageListCareOrderCursor(careOrderSearchRequest, pageable);
 		SliceResponse<CareOrderResponse> sliceResponse = new SliceResponse<>(slice.getContent(), pageable,
@@ -71,7 +73,8 @@ public class UserCareOrderController {
 
 	@Operation(summary = "정보 수정하기")
 	@PutMapping(path = "/{careOrderId}")
-	public ResponseEntity<Response<?>> updateCareOrder(@PathVariable(name = "careOrderId") Long careOrderId,
+	public ResponseEntity<Response<?>> updateCareOrder(
+		@PathVariable(name = "careOrderId") Long careOrderId,
 		@RequestBody @Valid CareOrderUpdateRequest careOrderUpdateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("careOrderId", careOrderService.updateCareOrder(careOrderId, careOrderUpdateRequest)))
@@ -80,7 +83,8 @@ public class UserCareOrderController {
 
 	@Operation(summary = "삭제")
 	@DeleteMapping(path = "/{careOrderId}")
-	public ResponseEntity<Response<?>> deleteCareOrder(@PathVariable(name = "careOrderId") Long careOrderId) {
+	public ResponseEntity<Response<?>> deleteCareOrder(
+		@PathVariable(name = "careOrderId") Long careOrderId) {
 		careOrderService.deleteCareOrder(careOrderId);
 		return ResponseEntity.ok().build();
 	}
