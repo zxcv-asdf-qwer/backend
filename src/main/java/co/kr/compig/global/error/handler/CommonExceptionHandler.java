@@ -77,7 +77,7 @@ public class CommonExceptionHandler {
 
 	private void getSimpleExceptionMsg(Exception e) {
 		Arrays.stream(e.getStackTrace())
-			.filter(ex -> ex.getClassName().contains("compig"))
+			.filter(ex -> ex.getClassName().contains("compig") && e.getMessage() != null)
 			.findFirst()
 			.ifPresent(err -> log.error((e.getMessage().equals("null") ? "" : e.getMessage() + "\n")
 				+ err.getClassName() + "." + err.getMethodName() + " - " + err.getFileName() + " : "

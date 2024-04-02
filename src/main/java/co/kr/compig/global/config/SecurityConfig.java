@@ -48,6 +48,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsUtils;
 
 import co.kr.compig.global.security.CustomOidcUserService;
@@ -77,7 +78,7 @@ public class SecurityConfig {
 			.permitAll()
 			.requestMatchers(antMatcher("/pb/**"))
 			.hasRole("USER")
-			.requestMatchers(antMatcher("/pv/**"), antMatcher("/swagger-ui/**"),
+			.requestMatchers(new AntPathRequestMatcher("/pv/**"), antMatcher("/swagger-ui/**"),
 				antMatcher("/v3/**"))
 			.hasRole("ADMIN")
 			.requestMatchers(antMatcher("/actuator/**"), antMatcher("/docs/**"), antMatcher("/social/**"),

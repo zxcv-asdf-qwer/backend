@@ -8,4 +8,5 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 public interface MenuRepository extends JpaRepository<Menu, Long>,
 	QuerydslPredicateExecutor<Menu> {
 	List<Menu> findAllByParent(Menu menu);
+
 }
