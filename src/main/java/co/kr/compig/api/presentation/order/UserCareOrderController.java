@@ -32,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Tag(name = "유저 간병 공고", description = "간병 공고 관련 API")
+@SecurityRequirement(name = "Bearer Authentication")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -40,7 +41,6 @@ public class UserCareOrderController {
 
 	private final CareOrderService careOrderService;
 
-	@SecurityRequirement(name = "Bearer Authentication")
 	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createCareOrder(
@@ -73,7 +73,6 @@ public class UserCareOrderController {
 			.build());
 	}
 
-	@SecurityRequirement(name = "Bearer Authentication")
 	@Operation(summary = "정보 수정하기")
 	@PutMapping(path = "/{careOrderId}")
 	public ResponseEntity<Response<?>> updateCareOrder(
@@ -84,7 +83,6 @@ public class UserCareOrderController {
 			.build());
 	}
 
-	@SecurityRequirement(name = "Bearer Authentication")
 	@Operation(summary = "삭제")
 	@DeleteMapping(path = "/{careOrderId}")
 	public ResponseEntity<Response<?>> deleteCareOrder(
