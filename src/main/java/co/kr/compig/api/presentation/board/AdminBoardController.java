@@ -27,12 +27,14 @@ import co.kr.compig.api.presentation.board.response.BoardResponse;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.dto.pagination.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Tag(name = "관리자 게시판", description = "게시판 관련 API")
+@SecurityRequirement(name = "Bearer Authentication")
 @Slf4j
 @RequiredArgsConstructor
 @RestController

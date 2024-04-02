@@ -25,6 +25,7 @@ import co.kr.compig.api.presentation.patient.response.PatientResponse;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.dto.pagination.SliceResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UserPatientController {
 	private final PatientService patientService;
 
+	@SecurityRequirement(name = "Bearer Authentication")
 	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createPatient(
@@ -66,6 +68,7 @@ public class UserPatientController {
 			.build());
 	}
 
+	@SecurityRequirement(name = "Bearer Authentication")
 	@Operation(summary = "정보 수정하기")
 	@PutMapping(path = "/{patientId}")
 	public ResponseEntity<Response<?>> updateBoard(
@@ -76,6 +79,7 @@ public class UserPatientController {
 			.build());
 	}
 
+	@SecurityRequirement(name = "Bearer Authentication")
 	@Operation(summary = "삭제")
 	@DeleteMapping(path = "/{patientId}")
 	public ResponseEntity<Response<?>> deletePatient(

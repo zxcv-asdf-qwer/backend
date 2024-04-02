@@ -20,12 +20,14 @@ import co.kr.compig.api.presentation.wallet.request.WalletUpdateRequest;
 import co.kr.compig.api.presentation.wallet.response.WalletDetailResponse;
 import co.kr.compig.global.dto.Response;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Tag(name = "유저 지갑", description = "지갑 관련 API")
+@SecurityRequirement(name = "Bearer Authentication")
 @Slf4j
 @RequiredArgsConstructor
 @RestController

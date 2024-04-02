@@ -27,12 +27,14 @@ import co.kr.compig.api.presentation.inquiry.response.QuestionResponse;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.dto.pagination.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Tag(name = "관리자 1:1 문의", description = "1:1 문의 관련 API")
+@SecurityRequirement(name = "Bearer Authentication")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
