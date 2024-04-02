@@ -25,6 +25,7 @@ import co.kr.compig.api.presentation.member.response.MemberResponse;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.dto.pagination.SliceResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,7 @@ public class UserMemberController {
 
 	private final MemberService memberService;
 
+	@SecurityRequirement(name = "Bearer Authentication")
 	@Operation(summary = "수정")
 	@PutMapping
 	public ResponseEntity<Response<?>> userUpdate(
@@ -47,6 +49,7 @@ public class UserMemberController {
 		return ResponseEntity.created(URI.create("/pb/members")).build();
 	}
 
+	@SecurityRequirement(name = "Bearer Authentication")
 	@Operation(summary = "프로필 사진 수정")
 	@PostMapping(path = "/picture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Response<?>> userPictureUpdate(@RequestPart(name = "picture") MultipartFile picture) {
@@ -54,6 +57,7 @@ public class UserMemberController {
 		return ResponseEntity.created(URI.create("/pb/members/picture")).build();
 	}
 
+	@SecurityRequirement(name = "Bearer Authentication")
 	@Operation(summary = "조회")
 	@GetMapping
 	public ResponseEntity<Response<MemberResponse>> getUser() {
@@ -64,6 +68,7 @@ public class UserMemberController {
 
 	//google kakao naver 앱에서 탈퇴 후 -> /pb/members/leave
 	@Operation(summary = "탈퇴")
+	@SecurityRequirement(name = "Bearer Authentication")
 	@PutMapping(path = "/leave")
 	public ResponseEntity<Response<?>> userLeave(@RequestBody LeaveRequest leaveRequest) {
 		memberService.userLeave(leaveRequest);
