@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/pv/members", produces = "application/json")
+@RequestMapping(path = "/admin/members", produces = "application/json")
 public class AdminMemberController {
 
 	private final MemberService memberService;
