@@ -26,8 +26,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/pb/hospital", produces = "application/json")
-public class UserHospitalController {
+@RequestMapping(path = "/guardian/hospital", produces = "application/json")
+public class GuardianHospitalController {
 	private final HospitalService hospitalService;
 
 	@Operation(summary = "조회")

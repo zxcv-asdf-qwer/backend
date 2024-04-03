@@ -36,8 +36,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/pb/inquiry", produces = "application/json")
-public class UserInquiryController {
+@RequestMapping(path = "/partner/inquiry", produces = "application/json")
+public class PartnerInquiryController {
 	private final InquiryService questionService;
 
 	@Operation(summary = "질문 생성하기")

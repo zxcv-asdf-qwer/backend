@@ -36,8 +36,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/pb/apply", produces = "application/json")
-public class UserApplyController {
+@RequestMapping(path = "/guardian/apply", produces = "application/json")
+public class GuardianApplyController {
 	private final ApplyService applyService;
 
 	@Operation(summary = "생성하기")
