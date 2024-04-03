@@ -1,5 +1,7 @@
 package co.kr.compig.api.domain.member;
 
+import static co.kr.compig.global.utils.CalculateUtil.*;
+
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
@@ -31,7 +33,9 @@ import co.kr.compig.api.domain.permission.MenuPermission;
 import co.kr.compig.api.domain.wallet.Wallet;
 import co.kr.compig.api.presentation.member.request.MemberUpdateRequest;
 import co.kr.compig.api.presentation.member.response.AdminMemberResponse;
+import co.kr.compig.api.presentation.member.response.GuardianMemberResponse;
 import co.kr.compig.api.presentation.member.response.MemberResponse;
+import co.kr.compig.api.presentation.member.response.PartnerMemberResponse;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import co.kr.compig.global.error.exception.KeyCloakRequestException;
 import co.kr.compig.global.keycloak.KeycloakHandler;
@@ -380,7 +384,37 @@ public class Member {
 			.email(this.email)
 			.telNo(this.telNo)
 			.build();
+	}
 
+	public PartnerMemberResponse toPartnerMemberResponse() {
+		return PartnerMemberResponse.builder()
+			.memberId(this.id)
+			.userNm(this.userNm)
+			.telNo(this.telNo)
+			.age(calculateAgeFromJumin(this.jumin1))
+			.email(this.email)
+			.memberRegisterType(this.memberRegisterType)
+			.gender(this.gender.equals(GenderCode.M) ? "남자" : "여자")
+			.registerDate(this.createdAndModified.getCreatedOn().toLocalDate())
+			.picture(this.picture)
+			.career(calculateYearsFromStartYear(this.careStartYear))
+			.matchingCount(this.id)
+			.starAverage(this.id)
+			.address1(this.address1)
+			.address2(this.address2)
+			.introduce(this.introduce)
+			.build();
+	}
+
+	public GuardianMemberResponse toGuardianMemberResponse() {
+		return GuardianMemberResponse.builder()
+			.memberId(this.id)
+			.userNm(this.userNm)
+			.telNo(this.telNo)
+			.email(this.email)
+			.memberRegisterType(this.memberRegisterType)
+			.registerDate(this.createdAndModified.getCreatedOn().toLocalDate())
+			.build();
 	}
 
 	public void setLeaveMember(String leaveReason) {

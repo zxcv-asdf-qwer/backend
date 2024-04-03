@@ -27,8 +27,10 @@ import co.kr.compig.api.presentation.member.request.MemberSearchRequest;
 import co.kr.compig.api.presentation.member.request.MemberUpdateRequest;
 import co.kr.compig.api.presentation.member.request.PartnerMemberCreate;
 import co.kr.compig.api.presentation.member.response.AdminMemberResponse;
+import co.kr.compig.api.presentation.member.response.GuardianMemberResponse;
 import co.kr.compig.api.presentation.member.response.MemberPageResponse;
 import co.kr.compig.api.presentation.member.response.MemberResponse;
+import co.kr.compig.api.presentation.member.response.PartnerMemberResponse;
 import co.kr.compig.global.dto.pagination.PageResponse;
 import co.kr.compig.global.error.exception.BizException;
 import co.kr.compig.global.error.exception.NotExistDataException;
@@ -190,8 +192,24 @@ public class MemberService {
 	public PageResponse<AdminMemberResponse> getAdminPage(@Valid MemberSearchRequest memberSearchRequest,
 		Pageable pageable) {
 
-		Page<AdminMemberResponse> adminPage = memberRepositoryCustom.getAdminPage(memberSearchRequest, pageable);
-		return new PageResponse<>(adminPage.getContent(), pageable, adminPage.getTotalElements());
+		Page<AdminMemberResponse> page = memberRepositoryCustom.getAdminPage(memberSearchRequest, pageable);
+		return new PageResponse<>(page.getContent(), pageable, page.getTotalElements());
+	}
+
+	@Transactional(readOnly = true)
+	public PageResponse<PartnerMemberResponse> getPartnerPage(@Valid MemberSearchRequest memberSearchRequest,
+		Pageable pageable) {
+
+		Page<PartnerMemberResponse> page = memberRepositoryCustom.getPartnerPage(memberSearchRequest, pageable);
+		return new PageResponse<>(page.getContent(), pageable, page.getTotalElements());
+	}
+
+	@Transactional(readOnly = true)
+	public PageResponse<GuardianMemberResponse> getGuardianPage(@Valid MemberSearchRequest memberSearchRequest,
+		Pageable pageable) {
+
+		Page<GuardianMemberResponse> page = memberRepositoryCustom.getGuardianPage(memberSearchRequest, pageable);
+		return new PageResponse<>(page.getContent(), pageable, page.getTotalElements());
 	}
 
 	@Transactional(readOnly = true)

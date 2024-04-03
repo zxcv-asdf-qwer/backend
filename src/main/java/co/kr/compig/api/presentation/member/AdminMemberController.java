@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.member.MemberService;
@@ -20,6 +19,8 @@ import co.kr.compig.api.presentation.member.request.GuardianMemberCreate;
 import co.kr.compig.api.presentation.member.request.MemberSearchRequest;
 import co.kr.compig.api.presentation.member.request.PartnerMemberCreate;
 import co.kr.compig.api.presentation.member.response.AdminMemberResponse;
+import co.kr.compig.api.presentation.member.response.GuardianMemberResponse;
+import co.kr.compig.api.presentation.member.response.PartnerMemberResponse;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.dto.pagination.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -60,7 +61,7 @@ public class AdminMemberController {
 	@Operation(summary = "간병인 회원가입")
 	@PostMapping(path = "/partners")
 	public ResponseEntity<Response<?>> partnerCreate(
-		@RequestPart @Valid PartnerMemberCreate partnerMemberCreate) {
+		@RequestBody @Valid PartnerMemberCreate partnerMemberCreate) {
 		return ResponseEntity.ok().body(Response.<Map<String, String>>builder()
 			.data(Map.of("memberId", memberService.partnerCreate(partnerMemberCreate)))
 			.build());
@@ -80,4 +81,19 @@ public class AdminMemberController {
 		return ResponseEntity.ok(memberService.getMemberById(memberId).toAdminMemberResponse());
 	}
 
+	@Operation(summary = "보호자 리스트", description = "페이징")
+	@GetMapping(path = "/guardians")
+	public ResponseEntity<PageResponse<GuardianMemberResponse>> getGuardianPage(
+		@ParameterObject @RequestParam(required = false) @Valid MemberSearchRequest memberSearchRequest,
+		@ParameterObject Pageable pageable) {
+		return ResponseEntity.ok(memberService.getGuardianPage(memberSearchRequest, pageable));
+	}
+
+	@Operation(summary = "간병인 리스트", description = "페이징")
+	@GetMapping(path = "/partners")
+	public ResponseEntity<PageResponse<PartnerMemberResponse>> getPartnerPage(
+		@ParameterObject @RequestParam(required = false) @Valid MemberSearchRequest memberSearchRequest,
+		@ParameterObject Pageable pageable) {
+		return ResponseEntity.ok(memberService.getPartnerPage(memberSearchRequest, pageable));
+	}
 }
