@@ -44,15 +44,6 @@ public class PartnerMemberCreate {
 	@NotNull
 	private GenderCode gender; // 성별
 
-	@Builder.Default
-	private UseYn useYn = UseYn.Y; // 사용유무
-
-	@Builder.Default
-	private UserType userType = UserType.PARTNER; //사용자 타입
-
-	@Builder.Default
-	private MemberRegisterType memberRegisterType = MemberRegisterType.GENERAL; // 회원가입 유형
-
 	@NotBlank
 	private String address1; //주소
 
@@ -69,8 +60,6 @@ public class PartnerMemberCreate {
 
 	private String introduce; //자기소개
 
-	//TODO CREATE 계좌번호 관리 테이블
-
 	private boolean marketingEmail; // 이메일 수신동의
 	private boolean marketingAppPush; // 앱 푸시알림 수신동의
 	private boolean marketingKakao; // 알림톡 수신동의
@@ -82,13 +71,13 @@ public class PartnerMemberCreate {
 	public Member convertEntity() {
 		return Member.builder()
 			.userNm(this.userNm)
+			.email(this.email)
 			.userPw(this.userPw)
 			.telNo(this.telNo)
-			.email(this.email)
 			.gender(this.gender)
-			.useYn(this.useYn)
-			.userType(this.userType)
-			.memberRegisterType(this.memberRegisterType)
+			.useYn(UseYn.Y)
+			.userType(UserType.PARTNER)
+			.memberRegisterType(MemberRegisterType.GENERAL)
 			.address1(this.address1)
 			.address2(this.address2)
 			.domesticForeignCode(this.domesticForeignCode)

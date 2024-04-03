@@ -91,21 +91,18 @@ public class MemberService {
 
 	public String guardianCreate(GuardianMemberCreate guardianMemberCreate) {
 		Member member = guardianMemberCreate.convertEntity();
-		setReferenceDomain(guardianMemberCreate.getUserType(), member);
+		setReferenceDomain(member.getUserType(), member);
 		member.createUserKeyCloak(null, null);
 		member.passwordEncode();
 
 		return memberRepository.save(member).getId();
 	}
 
-	public String partnerCreate(PartnerMemberCreate partnerMemberCreate, MultipartFile picture) {
+	public String partnerCreate(PartnerMemberCreate partnerMemberCreate) {
 		Member member = partnerMemberCreate.convertEntity();
-		setReferenceDomain(partnerMemberCreate.getUserType(), member);
+		setReferenceDomain(member.getUserType(), member);
 		member.createUserKeyCloak(null, null);
 		member.passwordEncode();
-		Optional.ofNullable(picture).ifPresent(file -> {
-			member.setPicture(s3Util.uploads(List.of(file)).stream().findFirst().orElse(null));
-		});
 
 		return memberRepository.save(member).getId();
 	}
