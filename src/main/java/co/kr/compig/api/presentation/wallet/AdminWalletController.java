@@ -36,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/pv/wallet", produces = "application/json")
+@RequestMapping(path = "/admin/wallet", produces = "application/json")
 public class AdminWalletController {
 
 	private final WalletService walletService;

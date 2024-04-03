@@ -20,12 +20,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/sms", produces = "application/json")
+@RequestMapping(path = "/pb/sms", produces = "application/json")
 public class SmsController {
 
 	private final SmsService smsService;
 
-	@Operation(summary = "생성하기")
+	@Operation(summary = "인증 번호 생성하기")
 	@PostMapping(path = "/authentication/{receiverPhoneNumber}")
 	public ResponseEntity<Response<?>> sendAuthentication(
 		@PathVariable(name = "receiverPhoneNumber") String receiverPhoneNumber) {

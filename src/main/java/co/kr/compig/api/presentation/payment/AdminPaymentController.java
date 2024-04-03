@@ -33,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "/pv/payment", produces = "application/json")
+@RequestMapping(path = "/admin/payment", produces = "application/json")
 public class AdminPaymentController {
 
 	private final PaymentService paymentService;

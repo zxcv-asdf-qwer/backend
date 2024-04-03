@@ -26,13 +26,13 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Tag(name = "유저 지갑", description = "지갑 관련 API")
+@Tag(name = "간병인 지갑", description = "지갑 관련 API")
 @SecurityRequirement(name = "Bearer Authentication")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/pb/wallet", produces = "application/json")
-public class UserWalletController {
+@RequestMapping(path = "/partner/wallet", produces = "application/json")
+public class PartnerWalletController {
 	private final WalletService walletService;
 
 	@Operation(summary = "생성하기")

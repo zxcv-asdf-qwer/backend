@@ -36,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/pv/menu-permission", produces = "application/json")
+@RequestMapping(path = "/admin/menu-permission", produces = "application/json")
 public class AdminMenuPermissionController {
 
 	private final MenuPermissionService menuPermissionService;

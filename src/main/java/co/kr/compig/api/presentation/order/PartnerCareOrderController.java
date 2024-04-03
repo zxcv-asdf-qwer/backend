@@ -31,13 +31,13 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Tag(name = "유저 간병 공고", description = "간병 공고 관련 API")
+@Tag(name = "간병인 간병 공고", description = "간병 공고 관련 API")
 @SecurityRequirement(name = "Bearer Authentication")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/pb/care-order", produces = "application/json")
-public class UserCareOrderController {
+@RequestMapping(path = "/partner/care-order", produces = "application/json")
+public class PartnerCareOrderController {
 
 	private final CareOrderService careOrderService;
 

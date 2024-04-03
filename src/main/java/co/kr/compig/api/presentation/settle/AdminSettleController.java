@@ -28,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/pv/settle", produces = "application/json")
+@RequestMapping(path = "/admin/settle", produces = "application/json")
 public class AdminSettleController {
 	private final SettleService settleService;
 

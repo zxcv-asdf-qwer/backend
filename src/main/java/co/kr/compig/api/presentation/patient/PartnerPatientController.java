@@ -31,13 +31,13 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Tag(name = "유저 환자 정보", description = "환자 정보 관련 API")
+@Tag(name = "간병인 환자 정보", description = "환자 정보 관련 API")
 @SecurityRequirement(name = "Bearer Authentication")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/pb/patient", produces = "application/json")
-public class UserPatientController {
+@RequestMapping(path = "/partner/patient", produces = "application/json")
+public class PartnerPatientController {
 	private final PatientService patientService;
 
 	@Operation(summary = "생성하기")

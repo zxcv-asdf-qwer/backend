@@ -28,13 +28,13 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Tag(name = "유저 결제 취소", description = "결제 취소 관련 API")
+@Tag(name = "보호자 결제 취소", description = "결제 취소 관련 API")
 @SecurityRequirement(name = "Bearer Authentication")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/pb/payment-cancel", produces = "application/json")
-public class UserPaymentCancelController {
+@RequestMapping(path = "/guardian/payment-cancel", produces = "application/json")
+public class GuardianPaymentCancelController {
 
 	private final PaymentCancelService paymentCancelService;
 

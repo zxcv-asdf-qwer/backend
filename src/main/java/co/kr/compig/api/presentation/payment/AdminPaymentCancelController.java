@@ -33,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/pv/payment-cancel", produces = "application/json")
+@RequestMapping(path = "/admin/payment-cancel", produces = "application/json")
 public class AdminPaymentCancelController {
 
 	private final PaymentCancelService paymentCancelService;

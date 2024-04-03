@@ -15,7 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class EnumController {
 
 	@Operation(summary = "조회")
-	@GetMapping("/enum-values/{enumName}")
+	@GetMapping("/pb/enum-values/{enumName}")
 	public Object getEnumValues(@Parameter(description = "enum Type class name") @PathVariable String enumName) {
 		try {
 			Class<?> enumClass = Class.forName("co.kr.compig.api.domain.code." + enumName);

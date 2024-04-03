@@ -36,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/pv/packing", produces = "application/json")
+@RequestMapping(path = "/admin/packing", produces = "application/json")
 public class AdminPackingController {
 
 	private final PackingService packingService;

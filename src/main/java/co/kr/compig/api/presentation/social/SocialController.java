@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 
 @Tag(name = "소셜로그인", description = "소셜로그인 관련 API")
 @RestController
-@RequestMapping(path = "/social")
+@RequestMapping(path = "/pb/social")
 @RequiredArgsConstructor
 public class SocialController {
 
