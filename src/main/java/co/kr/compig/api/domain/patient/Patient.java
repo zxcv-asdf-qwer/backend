@@ -8,6 +8,7 @@ import co.kr.compig.api.domain.code.converter.ToiletTypeConverter;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.presentation.patient.request.PatientUpdateRequest;
 import co.kr.compig.api.presentation.patient.response.PatientDetailResponse;
+import co.kr.compig.api.presentation.patient.response.PatientResponse;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -132,8 +133,6 @@ public class Patient {
 			.patientWeight(this.patientWeight)
 			.diseaseNm(this.diseaseNm)
 			.selfToiletAvailability(this.selfToiletAvailability)
-			.moveAvailability(this.moveAvailability)
-			.mealAvailability(this.mealAvailability)
 			.genderPreference(this.genderPreference)
 			.covid19Test(this.covid19Test)
 			.requestedTerm(this.requestedTerm)
@@ -153,13 +152,18 @@ public class Patient {
 		this.patientWeight = patientUpdateRequest.getPatientWeight();
 		this.diseaseNm = patientUpdateRequest.getDiseaseNm();
 		this.selfToiletAvailability = patientUpdateRequest.getSelfToiletAvailability();
-		this.moveAvailability = patientUpdateRequest.getMoveAvailability();
-		this.mealAvailability = patientUpdateRequest.getMealAvailability();
 		this.genderPreference = patientUpdateRequest.getGenderPreference();
 		this.covid19Test = patientUpdateRequest.getCovid19Test();
 		this.requestedTerm = patientUpdateRequest.getRequestedTerm();
 		this.addressCd = patientUpdateRequest.getAddressCd();
 		this.address1 = patientUpdateRequest.getAddress1();
 		this.address2 = patientUpdateRequest.getAddress2();
+	}
+
+	public PatientResponse toPatientResponse() {
+		return PatientResponse.builder()
+			.id(this.id)
+			.patientNm(this.patientNm)
+			.build();
 	}
 }

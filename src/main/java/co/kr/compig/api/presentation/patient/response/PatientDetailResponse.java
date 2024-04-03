@@ -25,8 +25,6 @@ public class PatientDetailResponse extends BaseAudit {
 	private Integer patientWeight; // 환자 몸무게
 	private String diseaseNm; // 진단명
 	private ToiletType selfToiletAvailability; // 대소변 해결 여부
-	private IsYn moveAvailability; // 거동 가능 여부
-	private IsYn mealAvailability; // 식사 가능 여부
 	private GenderCode genderPreference; // 선호 성별
 	private IsYn covid19Test; // 코로나 검사 필요 여부
 	private String requestedTerm; // 요청 사항
