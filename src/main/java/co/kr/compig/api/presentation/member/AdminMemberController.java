@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -70,10 +71,16 @@ public class AdminMemberController {
 
 	@Operation(summary = "관리자 리스트", description = "페이징")
 	@GetMapping
-	public ResponseEntity<PageResponse<AdminMemberResponse>> getPageCursor(
+	public ResponseEntity<PageResponse<AdminMemberResponse>> getAdminPage(
 		@ParameterObject @RequestParam(required = false) @Valid MemberSearchRequest memberSearchRequest,
 		@ParameterObject Pageable pageable) {
 		return ResponseEntity.ok(memberService.getAdminPage(memberSearchRequest, pageable));
+	}
+
+	@Operation(summary = "관리자 memberId 조회")
+	@GetMapping("/{memberId}")
+	public ResponseEntity<AdminMemberResponse> getAdminByMemberId(@PathVariable String memberId) {
+		return ResponseEntity.ok(memberService.getMemberById(memberId).toAdminMemberResponse());
 	}
 
 }

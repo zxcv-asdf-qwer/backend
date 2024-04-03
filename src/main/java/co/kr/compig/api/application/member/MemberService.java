@@ -196,4 +196,10 @@ public class MemberService {
 		Page<AdminMemberResponse> adminPage = memberRepositoryCustom.getAdminPage(memberSearchRequest, pageable);
 		return new PageResponse<>(adminPage.getContent(), pageable, adminPage.getTotalElements());
 	}
+
+	@Transactional(readOnly = true)
+	public Member getMemberById(String memberId) {
+		return memberRepository.findById(memberId).orElseThrow(
+			NotExistDataException::new);
+	}
 }

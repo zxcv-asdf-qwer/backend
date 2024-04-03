@@ -30,6 +30,7 @@ import co.kr.compig.api.domain.patient.Patient;
 import co.kr.compig.api.domain.permission.MenuPermission;
 import co.kr.compig.api.domain.wallet.Wallet;
 import co.kr.compig.api.presentation.member.request.MemberUpdateRequest;
+import co.kr.compig.api.presentation.member.response.AdminMemberResponse;
 import co.kr.compig.api.presentation.member.response.MemberResponse;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import co.kr.compig.global.error.exception.KeyCloakRequestException;
@@ -366,6 +367,18 @@ public class Member {
 			.marketingSms(
 				this.marketingSmsDate != null && this.marketingSmsDate.isBefore(LocalDate.now()))
 			.realNameYn(this.realNameYn)
+			.build();
+
+	}
+
+	public AdminMemberResponse toAdminMemberResponse() {
+		return AdminMemberResponse.builder()
+			.memberId(this.id)
+			.userNm(this.userNm)
+			.userId(this.userId)
+			.deptCode(this.deptCode)
+			.email(this.email)
+			.telNo(this.telNo)
 			.build();
 
 	}
