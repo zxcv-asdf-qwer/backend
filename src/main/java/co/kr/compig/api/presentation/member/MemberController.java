@@ -24,7 +24,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Tag(name = "일반 회원가입", description = "일반 회원가입 관련 API")
+@Tag(name = "회원", description = "회원 관련 API")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -33,7 +33,7 @@ public class MemberController {
 
 	private final MemberService memberService;
 
-	@Operation(summary = "관리자 회원가입")
+	@Operation(summary = "관리자 일반 회원가입")
 	@PostMapping(path = "/admin")
 	public ResponseEntity<Response<?>> adminCreate(
 		@RequestBody @Valid AdminMemberCreate adminMemberCreate) {

@@ -22,7 +22,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Tag(name = "유저 게시판", description = "게시판 관련 API")
+@Tag(name = "간병인 게시판", description = "게시판 관련 API")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
