@@ -34,7 +34,7 @@ public class GuardianHospitalController {
 	@GetMapping
 	public ResponseEntity<SliceResponse<HospitalResponse>> pageListHospital(
 		@ParameterObject @RequestParam @Valid HospitalSearchRequest hospitalSearchRequest,
-		@RequestParam Pageable pageable) {
+		@ParameterObject Pageable pageable) {
 		Slice<HospitalResponse> slice = hospitalService.pageListHospitalCursor(hospitalSearchRequest, pageable);
 		SliceResponse<HospitalResponse> sliceResponse = new SliceResponse<>(slice.getContent(), pageable,
 			slice.hasNext());

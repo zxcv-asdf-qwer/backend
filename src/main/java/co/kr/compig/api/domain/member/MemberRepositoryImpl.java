@@ -5,10 +5,12 @@ import static co.kr.compig.api.domain.member.QMemberGroup.*;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.support.PageableExecutionUtils;
 
 import com.google.common.base.CaseFormat;
 import com.querydsl.core.types.Order;
@@ -20,7 +22,9 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
+import co.kr.compig.api.domain.code.UserType;
 import co.kr.compig.api.presentation.member.request.MemberSearchRequest;
+import co.kr.compig.api.presentation.member.response.AdminMemberResponse;
 import co.kr.compig.api.presentation.member.response.MemberPageResponse;
 import lombok.RequiredArgsConstructor;
 
@@ -81,6 +85,9 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 
 	private BooleanExpression createPredicate(MemberSearchRequest request) {
 		BooleanExpression predicate = Expressions.asBoolean(true).isTrue();
+		if (request == null) {
+			return predicate;
+		}
 		if (request.getKeyword() != null) {
 			predicate = predicate.and(member.userNm.eq(request.getKeyword()));
 		}
@@ -108,5 +115,36 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 			return null;
 		}
 		return member.userNm.lt(userNm);
+	}
+
+	@Override
+	public Page<AdminMemberResponse> getAdminPage(MemberSearchRequest request, Pageable pageable) {
+		BooleanExpression predicate = createPredicate(request);
+
+		JPAQuery<AdminMemberResponse> query = createBaseQuery(predicate)
+			.select(Projections.constructor(AdminMemberResponse.class,
+					member.id,
+					member.userNm,
+					member.userId,
+					member.deptCode,
+					member.email,
+					member.telNo
+				)
+			).where(member.userType.eq(UserType.SYS_ADMIN)
+				.or(member.userType.eq(UserType.SYS_USER))
+			);
+
+		//정렬
+		applySorting(query, pageable);
+
+		List<AdminMemberResponse> responses = query
+			.offset(pageable.getOffset())
+			.limit(pageable.getPageSize()) // 페이징
+			.fetch();
+
+		JPAQuery<Long> countQuery = createBaseQuery(predicate)
+			.select(member.count());
+
+		return PageableExecutionUtils.getPage(responses, pageable, countQuery::fetchOne);
 	}
 }

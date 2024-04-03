@@ -16,7 +16,6 @@ import co.kr.compig.api.application.member.MemberService;
 import co.kr.compig.api.domain.code.ApplicationType;
 import co.kr.compig.api.domain.code.MemberRegisterType;
 import co.kr.compig.api.domain.code.UseYn;
-import co.kr.compig.api.domain.code.UserType;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.member.MemberRepository;
 import co.kr.compig.api.infrastructure.auth.keycloak.KeycloakAuthApi;
@@ -86,7 +85,7 @@ public class SocialUserService {
 		Member member = optionalMember.orElseGet(() -> {
 			// 중복되지 않는 경우 새 회원 생성 후 반환
 			Member newMember = socialCreateRequest.converterEntity();
-			memberService.setReferenceDomain(UserType.USER, newMember);
+			memberService.setReferenceDomain(socialCreateRequest.getUserType(), newMember);
 			newMember.createUserKeyCloak(socialCreateRequest.getSocialId(), socialCreateRequest.getUserNm());
 			newMember.passwordEncode();
 

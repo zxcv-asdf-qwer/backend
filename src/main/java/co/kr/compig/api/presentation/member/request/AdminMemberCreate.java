@@ -2,10 +2,12 @@ package co.kr.compig.api.presentation.member.request;
 
 import org.hibernate.validator.constraints.Length;
 
+import co.kr.compig.api.domain.code.DeptCode;
 import co.kr.compig.api.domain.code.MemberRegisterType;
 import co.kr.compig.api.domain.code.UseYn;
 import co.kr.compig.api.domain.code.UserType;
 import co.kr.compig.api.domain.member.Member;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -33,16 +35,11 @@ public class AdminMemberCreate {
 	@NotBlank
 	private String userPw; // 사용자 비밀번호
 
-	@Builder.Default
-	private UseYn useYn = UseYn.Y; // 사용유무
-
 	private String telNo; // 휴대폰번호
 
+	@Parameter(description = "DEVELOPER, OPERATION")
 	@NotNull
-	private UserType userType; //관리자 타입
-
-	@Builder.Default
-	private MemberRegisterType memberRegisterType = MemberRegisterType.GENERAL; // 회원가입 유형
+	private DeptCode deptCode; //부서코드
 
 	public Member convertEntity() {
 		return Member.builder()
@@ -50,9 +47,10 @@ public class AdminMemberCreate {
 			.userId(this.userId)
 			.userPw(this.userPw)
 			.telNo(this.telNo)
-			.useYn(this.useYn)
-			.userType(this.userType)
-			.memberRegisterType(this.memberRegisterType)
+			.useYn(UseYn.Y)
+			.userType(this.deptCode.equals(DeptCode.DEVELOPER) ? UserType.SYS_ADMIN : UserType.SYS_USER)
+			.deptCode(this.deptCode)
+			.memberRegisterType(MemberRegisterType.GENERAL)
 			.build();
 	}
 }

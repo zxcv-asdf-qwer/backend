@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.keycloak.representations.idm.GroupRepresentation;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -25,8 +26,10 @@ import co.kr.compig.api.presentation.member.request.LeaveRequest;
 import co.kr.compig.api.presentation.member.request.MemberSearchRequest;
 import co.kr.compig.api.presentation.member.request.MemberUpdateRequest;
 import co.kr.compig.api.presentation.member.request.PartnerMemberCreate;
+import co.kr.compig.api.presentation.member.response.AdminMemberResponse;
 import co.kr.compig.api.presentation.member.response.MemberPageResponse;
 import co.kr.compig.api.presentation.member.response.MemberResponse;
+import co.kr.compig.global.dto.pagination.PageResponse;
 import co.kr.compig.global.error.exception.BizException;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import co.kr.compig.global.keycloak.KeycloakHandler;
@@ -51,7 +54,7 @@ public class MemberService {
 
 	public String adminCreate(AdminMemberCreate adminMemberCreate) {
 		Member member = adminMemberCreate.convertEntity();
-		setReferenceDomain(adminMemberCreate.getUserType(), member);
+		setReferenceDomain(member.getUserType(), member);
 		member.createUserKeyCloak(null, null);
 		member.passwordEncode();
 
@@ -184,5 +187,13 @@ public class MemberService {
 	public Slice<MemberPageResponse> getUserPageCursor(@Valid MemberSearchRequest memberSearchRequest,
 		Pageable pageable) {
 		return memberRepositoryCustom.getUserPageCursor(memberSearchRequest, pageable);
+	}
+
+	@Transactional(readOnly = true)
+	public PageResponse<AdminMemberResponse> getAdminPage(@Valid MemberSearchRequest memberSearchRequest,
+		Pageable pageable) {
+
+		Page<AdminMemberResponse> adminPage = memberRepositoryCustom.getAdminPage(memberSearchRequest, pageable);
+		return new PageResponse<>(adminPage.getContent(), pageable, adminPage.getTotalElements());
 	}
 }

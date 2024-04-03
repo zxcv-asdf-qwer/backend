@@ -15,12 +15,14 @@ import org.keycloak.representations.idm.UserRepresentation;
 
 import co.kr.compig.api.domain.account.Account;
 import co.kr.compig.api.domain.code.CareerCode;
+import co.kr.compig.api.domain.code.DeptCode;
 import co.kr.compig.api.domain.code.DomesticForeignCode;
 import co.kr.compig.api.domain.code.GenderCode;
 import co.kr.compig.api.domain.code.IsYn;
 import co.kr.compig.api.domain.code.MemberRegisterType;
 import co.kr.compig.api.domain.code.UseYn;
 import co.kr.compig.api.domain.code.UserType;
+import co.kr.compig.api.domain.code.converter.DeptCodeConverter;
 import co.kr.compig.api.domain.code.converter.UserTypeConverter;
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.domain.patient.OrderPatient;
@@ -96,6 +98,10 @@ public class Member {
 	@Column(length = 10)
 	@Convert(converter = UserTypeConverter.class)
 	private UserType userType; // 사용자 구분
+
+	@Column(length = 10)
+	@Convert(converter = DeptCodeConverter.class)
+	private DeptCode deptCode; // 부서 구분
 
 	@Column(length = 10)
 	@Enumerated(EnumType.STRING)
