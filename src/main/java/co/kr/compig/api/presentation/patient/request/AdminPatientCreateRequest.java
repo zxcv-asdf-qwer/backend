@@ -8,8 +8,10 @@ import co.kr.compig.api.domain.code.LocationType;
 import co.kr.compig.api.domain.code.ToiletType;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.patient.Patient;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,6 +27,7 @@ public class AdminPatientCreateRequest {
 	private String memberId; // 멤버 ID
 
 	@NotBlank
+	@Pattern(regexp = "^[\\sㄱ-ㅎ가-힣A-Za-z0-9_-]{2,100}$")
 	@Length(min = 2, max = 50)
 	private String patientNm; // 환자 이름
 
@@ -32,12 +35,15 @@ public class AdminPatientCreateRequest {
 	private GenderCode gender; // 환자 성별
 
 	@NotNull
+	@Min(0)
 	private Integer patientAge; // 환자 나이
 
 	@NotNull
+	@Min(0)
 	private Integer patientHeight; // 환자 키
 
 	@NotNull
+	@Min(0)
 	private Integer patientWeight; // 환자 체중
 
 	@NotNull
