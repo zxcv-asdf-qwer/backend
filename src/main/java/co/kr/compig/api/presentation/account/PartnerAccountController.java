@@ -36,8 +36,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/pb/account", produces = "application/json")
-public class UserAccountController {
+@RequestMapping(path = "/partner/account", produces = "application/json")
+public class PartnerAccountController {
 
 	private final AccountService accountService;
 	private final AccountCheckService accountCheckService;

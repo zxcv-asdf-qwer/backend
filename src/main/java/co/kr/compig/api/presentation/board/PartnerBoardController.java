@@ -26,8 +26,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/pb/board", produces = "application/json")
-public class UserBoardController {
+@RequestMapping(path = "/partner/board", produces = "application/json")
+public class PartnerBoardController {
 	private final BoardService boardService;
 
 	@Operation(summary = "조회")
