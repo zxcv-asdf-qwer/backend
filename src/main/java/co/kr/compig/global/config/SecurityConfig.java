@@ -1,5 +1,6 @@
 package co.kr.compig.global.config;
 
+import static co.kr.compig.api.domain.code.UserType.*;
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.*;
 
 import java.util.ArrayList;
@@ -76,13 +77,24 @@ public class SecurityConfig {
 		http.csrf(AbstractHttpConfigurer::disable);
 		http.authorizeHttpRequests(auth -> auth.requestMatchers(CorsUtils::isPreFlightRequest)
 			.permitAll()
-			.requestMatchers(antMatcher("/pb/**"))
-			.hasRole("USER")
-			.requestMatchers(new AntPathRequestMatcher("/pv/**"), antMatcher("/swagger-ui/**"),
+			.requestMatchers(antMatcher("/guardian/**"))
+			.hasAnyRole(GUARDIAN.getCode(), SYS_ADMIN.getCode())
+			.requestMatchers(antMatcher("/partner/**"))
+			.hasAnyRole(PARTNER.getCode(), SYS_ADMIN.getCode())
+			.requestMatchers(
+				new AntPathRequestMatcher("/admin/**"),
+				antMatcher("/swagger-ui/**"),
 				antMatcher("/v3/**"))
-			.hasRole("ADMIN")
-			.requestMatchers(antMatcher("/actuator/**"), antMatcher("/docs/**"), antMatcher("/social/**"),
-				antMatcher("/favicon.ico"), antMatcher("/members/**"), antMatcher("/sms/**"))
+			.hasRole(SYS_ADMIN.getCode())
+			.requestMatchers(
+				antMatcher("/pb/**"),
+				antMatcher("/actuator/**"),
+				antMatcher("/docs/**"),
+				antMatcher("/pb/social/**"),
+				antMatcher("/favicon.ico"),
+				antMatcher("/members/**"),
+				antMatcher("/sms/**")
+			)
 			.permitAll()
 			.anyRequest()
 			.authenticated());
