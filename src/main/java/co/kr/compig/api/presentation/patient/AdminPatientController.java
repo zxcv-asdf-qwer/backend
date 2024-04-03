@@ -1,5 +1,6 @@
 package co.kr.compig.api.presentation.patient;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springdoc.core.annotations.ParameterObject;
@@ -12,12 +13,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.patient.PatientService;
 import co.kr.compig.api.presentation.patient.request.AdminPatientCreateRequest;
 import co.kr.compig.api.presentation.patient.request.PatientUpdateRequest;
 import co.kr.compig.api.presentation.patient.response.PatientDetailResponse;
+import co.kr.compig.api.presentation.patient.response.PatientResponse;
 import co.kr.compig.global.dto.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -41,6 +44,16 @@ public class AdminPatientController {
 		@ParameterObject @ModelAttribute @Valid AdminPatientCreateRequest adminPatientCreateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("patientId", patientService.createPatientAdmin(adminPatientCreateRequest)))
+			.build());
+	}
+
+	@Operation(summary = "조회")
+	@GetMapping
+	public ResponseEntity<Response<List<PatientResponse>>> getPatients(
+		@RequestParam(name = "memberId") String memberId
+	) {
+		return ResponseEntity.ok(Response.<List<PatientResponse>>builder()
+			.data(patientService.getPatients(memberId))
 			.build());
 	}
 

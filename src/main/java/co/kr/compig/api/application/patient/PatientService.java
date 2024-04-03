@@ -1,5 +1,8 @@
 package co.kr.compig.api.application.patient;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -16,6 +19,7 @@ import co.kr.compig.api.presentation.patient.request.PatientSearchRequest;
 import co.kr.compig.api.presentation.patient.request.PatientUpdateRequest;
 import co.kr.compig.api.presentation.patient.response.PatientDetailResponse;
 import co.kr.compig.api.presentation.patient.response.PatientResponse;
+import co.kr.compig.global.error.exception.BizException;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import co.kr.compig.global.utils.SecurityUtil;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +38,9 @@ public class PatientService {
 	public Long createPatientAdmin(AdminPatientCreateRequest patientCreateRequest) {
 		Member member = memberRepository.findById(patientCreateRequest.getMemberId())
 			.orElseThrow(NotExistDataException::new);
+		if (patientRepository.existsByMemberAndPatientNm(member, patientCreateRequest.getPatientNm())) {
+			throw new BizException("이미 존재하는 환자입니다.");
+		}
 		Patient patient = patientCreateRequest.converterEntity(member);
 		return patientRepository.save(patient).getId();
 	}
@@ -64,5 +71,16 @@ public class PatientService {
 
 	public Slice<PatientResponse> pageListPatientCursor(PatientSearchRequest patientSearchRequest, Pageable pageable) {
 		return patientRepositoryCustom.findAllByCondition(patientSearchRequest, pageable);
+	}
+
+	public List<PatientResponse> getPatients(String memberId) {
+		if (memberId == null)
+			throw new BizException("memberId가 없습니다.");
+		Member member = memberRepository.findById(memberId)
+			.orElseThrow(NotExistDataException::new);
+
+		return patientRepository.findAllByMember(member).stream()
+			.map(Patient::toPatientResponse)
+			.collect(Collectors.toList());
 	}
 }
