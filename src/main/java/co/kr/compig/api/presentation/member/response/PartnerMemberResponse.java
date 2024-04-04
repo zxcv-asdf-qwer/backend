@@ -27,7 +27,7 @@ public class PartnerMemberResponse extends BaseAudit {
 	private LocalDate registerDate; //가입일자
 	private String picture; //s3 path
 	private Integer career; //경력
-	private String matchingCount; //매칭수
+	private int matchingCount; //매칭수
 	private String starAverage; //리뷰 별 평균
 	private String address1; //주소1
 	private String address2; //상세주소

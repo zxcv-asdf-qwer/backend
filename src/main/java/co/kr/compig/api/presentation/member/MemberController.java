@@ -24,7 +24,7 @@ public class MemberController {
 
 	private final MemberService memberService;
 
-	@Operation(summary = "이메일 중복")
+	@Operation(summary = "이메일 중복", hidden = true)
 	@GetMapping(path = "/emails/availability")
 	public ResponseEntity<Response<?>> availabilityEmail(
 		@RequestParam("userEmail") String userEmail) {
@@ -32,7 +32,7 @@ public class MemberController {
 		return ResponseEntity.noContent().build();
 	}
 
-	@Operation(summary = "이메일 찾기")
+	@Operation(summary = "이메일 찾기", hidden = true)
 	@GetMapping(path = "/emails")
 	public ResponseEntity<Response<?>> findEmail(@RequestParam("userNm") String userNm,
 		@RequestParam("userTel") String userTel) {

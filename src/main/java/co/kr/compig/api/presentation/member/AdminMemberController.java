@@ -1,5 +1,6 @@
 package co.kr.compig.api.presentation.member;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springdoc.core.annotations.ParameterObject;
@@ -21,6 +22,7 @@ import co.kr.compig.api.presentation.member.request.PartnerMemberCreate;
 import co.kr.compig.api.presentation.member.response.AdminMemberResponse;
 import co.kr.compig.api.presentation.member.response.GuardianMemberResponse;
 import co.kr.compig.api.presentation.member.response.PartnerMemberResponse;
+import co.kr.compig.api.presentation.member.response.UserMainSearchResponse;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.dto.pagination.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -107,6 +109,14 @@ public class AdminMemberController {
 	@GetMapping("/partners/{memberId}")
 	public ResponseEntity<PartnerMemberResponse> getPartnerByMemberId(@PathVariable String memberId) {
 		return ResponseEntity.ok(memberService.getMemberById(memberId).toPartnerMemberResponse());
+	}
+
+	@Operation(summary = "[보호자 && 간병인] 이름 || 전화번호로 검색 후 리스트 보여주기")
+	@GetMapping("/search")
+	public ResponseEntity<List<UserMainSearchResponse>> getPartnerByMemberId(
+		@RequestParam(required = false) String userNm,
+		@RequestParam(required = false) String telNo) {
+		return ResponseEntity.ok(memberService.getUsersByNameAndTelNo(userNm, telNo));
 	}
 
 }

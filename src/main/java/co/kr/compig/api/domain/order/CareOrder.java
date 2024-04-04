@@ -74,7 +74,7 @@ public class CareOrder {
 	@Column
 	@Builder.Default
 	@Convert(converter = OrderStatusCodeConverter.class)
-	private OrderStatusCode orderStatus = OrderStatusCode.POSTING; // 공고 상태
+	private OrderStatusCode orderStatus = OrderStatusCode.MATCHING_WAITING; // 공고 상태
 
 	@Column
 	@Enumerated(EnumType.STRING)

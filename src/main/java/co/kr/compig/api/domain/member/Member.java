@@ -22,6 +22,7 @@ import co.kr.compig.api.domain.code.DomesticForeignCode;
 import co.kr.compig.api.domain.code.GenderCode;
 import co.kr.compig.api.domain.code.IsYn;
 import co.kr.compig.api.domain.code.MemberRegisterType;
+import co.kr.compig.api.domain.code.OrderStatusCode;
 import co.kr.compig.api.domain.code.UseYn;
 import co.kr.compig.api.domain.code.UserType;
 import co.kr.compig.api.domain.code.converter.DeptCodeConverter;
@@ -36,6 +37,7 @@ import co.kr.compig.api.presentation.member.response.AdminMemberResponse;
 import co.kr.compig.api.presentation.member.response.GuardianMemberResponse;
 import co.kr.compig.api.presentation.member.response.MemberResponse;
 import co.kr.compig.api.presentation.member.response.PartnerMemberResponse;
+import co.kr.compig.api.presentation.member.response.UserMainSearchResponse;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import co.kr.compig.global.error.exception.KeyCloakRequestException;
 import co.kr.compig.global.keycloak.KeycloakHandler;
@@ -398,8 +400,10 @@ public class Member {
 			.registerDate(this.createdAndModified.getCreatedOn().toLocalDate())
 			.picture(this.picture)
 			.career(calculateYearsFromStartYear(this.careStartYear))
-			.matchingCount(this.id)
-			.starAverage(this.id)
+			.matchingCount((int)this.careOrders.stream()
+				.filter(order -> order.getOrderStatus() == OrderStatusCode.ORDER_COMPLETE)
+				.count())
+			.starAverage(this.id) //TODO 리뷰 생기면 계산 로직 추가
 			.address1(this.address1)
 			.address2(this.address2)
 			.introduce(this.introduce)
@@ -414,6 +418,14 @@ public class Member {
 			.email(this.email)
 			.memberRegisterType(this.memberRegisterType)
 			.registerDate(this.createdAndModified.getCreatedOn().toLocalDate())
+			.build();
+	}
+
+	public UserMainSearchResponse toUserMainSearchResponse() {
+		return UserMainSearchResponse.builder()
+			.memberId(this.id)
+			.userNm(this.userNm)
+			.telNo(this.telNo)
 			.build();
 	}
 

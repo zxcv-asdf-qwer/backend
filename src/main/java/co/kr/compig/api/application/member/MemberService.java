@@ -2,6 +2,7 @@ package co.kr.compig.api.application.member;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.keycloak.representations.idm.GroupRepresentation;
@@ -31,6 +32,7 @@ import co.kr.compig.api.presentation.member.response.GuardianMemberResponse;
 import co.kr.compig.api.presentation.member.response.MemberPageResponse;
 import co.kr.compig.api.presentation.member.response.MemberResponse;
 import co.kr.compig.api.presentation.member.response.PartnerMemberResponse;
+import co.kr.compig.api.presentation.member.response.UserMainSearchResponse;
 import co.kr.compig.global.dto.pagination.PageResponse;
 import co.kr.compig.global.error.exception.BizException;
 import co.kr.compig.global.error.exception.NotExistDataException;
@@ -216,5 +218,13 @@ public class MemberService {
 	public Member getMemberById(String memberId) {
 		return memberRepository.findById(memberId).orElseThrow(
 			NotExistDataException::new);
+	}
+
+	@Transactional(readOnly = true)
+	public List<UserMainSearchResponse> getUsersByNameAndTelNo(String userNm, String userTel) {
+		return memberRepository.findByUserNmOrTelNo(userNm, userTel)
+			.stream()
+			.map(Member::toUserMainSearchResponse)
+			.collect(Collectors.toList());
 	}
 }
