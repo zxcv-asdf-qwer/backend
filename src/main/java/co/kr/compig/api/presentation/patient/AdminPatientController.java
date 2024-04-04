@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.patient.PatientService;
@@ -48,9 +47,9 @@ public class AdminPatientController {
 	}
 
 	@Operation(summary = "조회")
-	@GetMapping
+	@GetMapping(path = "member/{memberId}")
 	public ResponseEntity<Response<List<PatientResponse>>> getPatients(
-		@RequestParam(name = "memberId") String memberId
+		@PathVariable(name = "memberId") String memberId
 	) {
 		return ResponseEntity.ok(Response.<List<PatientResponse>>builder()
 			.data(patientService.getPatients(memberId))
