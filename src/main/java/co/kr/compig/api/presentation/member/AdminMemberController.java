@@ -89,6 +89,12 @@ public class AdminMemberController {
 		return ResponseEntity.ok(memberService.getGuardianPage(memberSearchRequest, pageable));
 	}
 
+	@Operation(summary = "보호자 memberId 조회")
+	@GetMapping("/guardians/{memberId}")
+	public ResponseEntity<GuardianMemberResponse> getGuardianByMemberId(@PathVariable String memberId) {
+		return ResponseEntity.ok(memberService.getMemberById(memberId).toGuardianMemberResponse());
+	}
+
 	@Operation(summary = "간병인 리스트", description = "페이징")
 	@GetMapping(path = "/partners")
 	public ResponseEntity<PageResponse<PartnerMemberResponse>> getPartnerPage(
@@ -96,4 +102,11 @@ public class AdminMemberController {
 		@ParameterObject Pageable pageable) {
 		return ResponseEntity.ok(memberService.getPartnerPage(memberSearchRequest, pageable));
 	}
+
+	@Operation(summary = "간병인 memberId 조회")
+	@GetMapping("/partners/{memberId}")
+	public ResponseEntity<PartnerMemberResponse> getPartnerByMemberId(@PathVariable String memberId) {
+		return ResponseEntity.ok(memberService.getMemberById(memberId).toPartnerMemberResponse());
+	}
+
 }
