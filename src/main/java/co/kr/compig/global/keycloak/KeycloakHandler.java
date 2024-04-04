@@ -147,6 +147,9 @@ public class KeycloakHandler {
 		}
 	}
 
+	/**
+	 * Keyclaok 사용자 삭제
+	 */
 	public void deleteUser(String id) {
 		Response response = getUsers().delete(id);
 		int status = response.getStatus();
@@ -162,5 +165,23 @@ public class KeycloakHandler {
 				+ status + " - " + reasonPhrase + "]"
 			);
 		}
+	}
+
+	/**
+	 * Keycloak 사용자 갱신
+	 */
+	public UserRepresentation updateUser(UserRepresentation userRepresentation) throws KeyCloakRequestException {
+		UserResource userResource = getUsers().get(userRepresentation.getId());
+
+		// 기존 그룹 삭제
+		userResource.groups().stream()
+			.forEach(group -> userResource.leaveGroup(group.getId()));
+
+		//        userRepresentation.setCredentials(null);
+
+		// Users Details update
+		userResource.update(userRepresentation);
+		return getUser(userRepresentation.getUsername())
+			.orElseThrow(KeyCloakRequestException::new);
 	}
 }

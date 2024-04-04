@@ -20,16 +20,13 @@ import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.member.MemberRepository;
 import co.kr.compig.api.infrastructure.auth.keycloak.KeycloakAuthApi;
 import co.kr.compig.api.infrastructure.auth.keycloak.model.KeycloakAccessTokenRequest;
-import co.kr.compig.api.presentation.member.request.LeaveRequest;
 import co.kr.compig.api.presentation.social.request.SocialCreateRequest;
 import co.kr.compig.api.presentation.social.request.SocialLoginRequest;
 import co.kr.compig.api.presentation.social.response.SocialLoginResponse;
 import co.kr.compig.api.presentation.social.response.SocialUserResponse;
 import co.kr.compig.global.error.exception.BizException;
-import co.kr.compig.global.error.exception.NotExistDataException;
 import co.kr.compig.global.keycloak.KeycloakProperties;
 import co.kr.compig.global.utils.GsonLocalDateTimeAdapter;
-import co.kr.compig.global.utils.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -45,7 +42,7 @@ public class SocialUserService {
 	private final KeycloakAuthApi keycloakAuthApi;
 	private final KeycloakProperties keycloakProperties;
 
-	private SocialLoginService getLoginService(MemberRegisterType memberRegisterType) {
+	public SocialLoginService getLoginService(MemberRegisterType memberRegisterType) {
 		for (SocialLoginService loginService : loginServices) {
 			if (memberRegisterType.equals(loginService.getServiceName())) {
 				log.info("login service name: {}", loginService.getServiceName());
@@ -120,13 +117,6 @@ public class SocialUserService {
 			Objects.requireNonNull(response.getBody()).toString(),
 			SocialLoginResponse.class
 		);
-	}
-
-	public void doSocialRevoke(LeaveRequest leaveRequest) {
-		Member member = memberRepository.findById(SecurityUtil.getMemberId()).orElseThrow(NotExistDataException::new);
-		SocialLoginService loginService = this.getLoginService(member.getMemberRegisterType());
-		loginService.revoke(leaveRequest);
-		memberService.socialUserLeave(member, leaveRequest);
 	}
 
 }

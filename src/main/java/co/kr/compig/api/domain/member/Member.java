@@ -1,6 +1,7 @@
 package co.kr.compig.api.domain.member;
 
 import static co.kr.compig.global.utils.CalculateUtil.*;
+import static co.kr.compig.global.utils.PasswordValidation.*;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -32,13 +33,17 @@ import co.kr.compig.api.domain.patient.OrderPatient;
 import co.kr.compig.api.domain.patient.Patient;
 import co.kr.compig.api.domain.permission.MenuPermission;
 import co.kr.compig.api.domain.wallet.Wallet;
+import co.kr.compig.api.presentation.member.request.AdminMemberUpdate;
+import co.kr.compig.api.presentation.member.request.GuardianMemberUpdate;
 import co.kr.compig.api.presentation.member.request.MemberUpdateRequest;
+import co.kr.compig.api.presentation.member.request.PartnerMemberUpdate;
 import co.kr.compig.api.presentation.member.response.AdminMemberResponse;
 import co.kr.compig.api.presentation.member.response.GuardianMemberResponse;
 import co.kr.compig.api.presentation.member.response.MemberResponse;
 import co.kr.compig.api.presentation.member.response.PartnerMemberResponse;
 import co.kr.compig.api.presentation.member.response.UserMainSearchResponse;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
+import co.kr.compig.global.error.exception.BizException;
 import co.kr.compig.global.error.exception.KeyCloakRequestException;
 import co.kr.compig.global.keycloak.KeycloakHandler;
 import co.kr.compig.global.keycloak.KeycloakHolder;
@@ -265,13 +270,6 @@ public class Member {
 		}
 	}
 
-	public void updateUserKeyCloak() {
-		KeycloakHandler keycloakHandler = KeycloakHolder.get();
-		if (isExistGroups()) {
-			keycloakHandler.usersJoinGroups(this.id, this.getGroups());
-		}
-	}
-
 	/**
 	 * Keycloak UserRepresentation
 	 */
@@ -289,8 +287,6 @@ public class Member {
 		userRepresentation.setId(this.id);
 		userRepresentation.setUsername(Optional.ofNullable(this.userId).orElseGet(() -> this.email));
 		userRepresentation.setEmail(this.email);
-		// 탈퇴 회원일 경우 keycloak 도 비 활성화 처리
-		userRepresentation.setEnabled(!this.useYn.equals(UseYn.N) || this.leaveDate == null); //TODO 제거
 
 		if (!MemberRegisterType.GENERAL.equals(this.memberRegisterType) && StringUtils.isNotBlank(
 			providerUsername)) {
@@ -312,6 +308,19 @@ public class Member {
 		}
 
 		return userRepresentation;
+	}
+
+	public void updateUserKeyCloak() {
+		KeycloakHandler keycloakHandler = KeycloakHolder.get();
+		keycloakHandler.updateUser(this.getUserRepresentation(null, null));
+		if (isExistGroups()) {
+			keycloakHandler.usersJoinGroups(this.id, this.getGroups());
+		}
+	}
+
+	// 현재 비밀번호 확인
+	public boolean equalsPassword(String password) {
+		return KeycloakHolder.get().getPasswordEncoder().matches(StringUtils.defaultString(password), this.userPw);
 	}
 
 	public boolean isPasswordEncoded() {
@@ -435,5 +444,92 @@ public class Member {
 		this.leaveReason = leaveReason;
 		this.leaveDate = LocalDate.now();
 		this.useYn = UseYn.N;
+	}
+
+	public void updateAdminMember(AdminMemberUpdate adminMemberUpdate) {
+		if (isUpdateUserPw(adminMemberUpdate.getNewUserPw(), getUserPw())) { // 비밀번호 변경의사 있음
+			if (!isUpdatableUserPw(adminMemberUpdate.getNewUserPw(), getUserPw())) { // 모든 비밀번호 영역 값 입력 확인
+				throw new BizException("모든 비밀번호를 입력해주세요.");
+			}
+			if (!isEqualsNewUserPw(adminMemberUpdate.getNewUserPw(), getUserPw())) { // 새 비밀번호와 확인의 동일 확인
+				throw new BizException("새 비밀번호와 비밀번호 확인의 내용이 다릅니다.");
+			}
+			this.userPw = adminMemberUpdate.getNewUserPw();
+		}
+
+		this.userNm = adminMemberUpdate.getUserNm();
+		this.telNo = adminMemberUpdate.getTelNo();
+		this.deptCode = adminMemberUpdate.getDeptCode();
+	}
+
+	public void updatePartnerMember(PartnerMemberUpdate partnerMemberUpdate) {
+		if (isUpdateUserPw(partnerMemberUpdate.getNewUserPw(), getUserPw())) { // 비밀번호 변경의사 있음
+			if (!isUpdatableUserPw(partnerMemberUpdate.getNewUserPw(), getUserPw())) { // 모든 비밀번호 영역 값 입력 확인
+				throw new BizException("모든 비밀번호를 입력해주세요.");
+			}
+			if (!isEqualsNewUserPw(partnerMemberUpdate.getNewUserPw(), getUserPw())) { // 새 비밀번호와 확인의 동일 확인
+				throw new BizException("새 비밀번호와 비밀번호 확인의 내용이 다릅니다.");
+			}
+			this.userPw = partnerMemberUpdate.getNewUserPw();
+		}
+
+		this.telNo = partnerMemberUpdate.getTelNo();
+		this.gender = partnerMemberUpdate.getGender();
+		this.address1 = partnerMemberUpdate.getAddress1();
+		this.address2 = partnerMemberUpdate.getAddress2();
+		this.domesticForeignCode = partnerMemberUpdate.getDomesticForeignCode();
+		this.careerCode = partnerMemberUpdate.getCareerCode();
+		this.careStartYear = partnerMemberUpdate.getCareStartYear();
+		this.introduce = partnerMemberUpdate.getIntroduce();
+
+		setMarketingDate(partnerMemberUpdate.isMarketingEmail(),
+			partnerMemberUpdate.isMarketingAppPush(),
+			partnerMemberUpdate.isMarketingKakao(),
+			partnerMemberUpdate.isMarketingSms());
+	}
+
+	public void updateGuardianMember(GuardianMemberUpdate guardianMemberUpdate) {
+		if (isUpdateUserPw(guardianMemberUpdate.getNewUserPw(), getUserPw())) { // 비밀번호 변경의사 있음
+			if (!isUpdatableUserPw(guardianMemberUpdate.getNewUserPw(), getUserPw())) { // 모든 비밀번호 영역 값 입력 확인
+				throw new BizException("모든 비밀번호를 입력해주세요.");
+			}
+			if (!isEqualsNewUserPw(guardianMemberUpdate.getNewUserPw(), getUserPw())) { // 새 비밀번호와 확인의 동일 확인
+				throw new BizException("새 비밀번호와 비밀번호 확인의 내용이 다릅니다.");
+			}
+			this.userPw = guardianMemberUpdate.getNewUserPw();
+		}
+
+		this.telNo = guardianMemberUpdate.getTelNo();
+
+		setMarketingDate(guardianMemberUpdate.isMarketingEmail(),
+			guardianMemberUpdate.isMarketingAppPush(),
+			guardianMemberUpdate.isMarketingKakao(),
+			guardianMemberUpdate.isMarketingSms());
+	}
+
+	private void setMarketingDate(boolean isMarketingEmail,
+		boolean isMarketingAppPush,
+		boolean isMarketingKakao,
+		boolean isMarketingSms) {
+		if (isMarketingEmail && this.marketingEmailDate == null) {
+			this.marketingEmailDate = LocalDate.now();
+		} else if (!isMarketingEmail && this.marketingEmailDate != null) {
+			this.marketingEmailDate = null;
+		}
+		if (isMarketingAppPush && this.marketingAppPushDate == null) {
+			this.marketingAppPushDate = LocalDate.now();
+		} else if (!isMarketingAppPush && this.marketingAppPushDate != null) {
+			this.marketingAppPushDate = null;
+		}
+		if (isMarketingKakao && this.marketingKakaoDate == null) {
+			this.marketingKakaoDate = LocalDate.now();
+		} else if (!isMarketingKakao && this.marketingKakaoDate != null) {
+			this.marketingKakaoDate = null;
+		}
+		if (isMarketingSms && this.marketingSmsDate == null) {
+			this.marketingSmsDate = LocalDate.now();
+		} else if (!isMarketingSms && this.marketingSmsDate != null) {
+			this.marketingSmsDate = null;
+		}
 	}
 }

@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import co.kr.compig.api.application.social.SocialLoginService;
+import co.kr.compig.api.application.social.SocialUserService;
 import co.kr.compig.api.domain.code.MemberRegisterType;
 import co.kr.compig.api.domain.code.UseYn;
 import co.kr.compig.api.domain.code.UserType;
@@ -22,11 +24,14 @@ import co.kr.compig.api.domain.member.MemberGroupRepository;
 import co.kr.compig.api.domain.member.MemberRepository;
 import co.kr.compig.api.domain.member.MemberRepositoryCustom;
 import co.kr.compig.api.presentation.member.request.AdminMemberCreate;
+import co.kr.compig.api.presentation.member.request.AdminMemberUpdate;
 import co.kr.compig.api.presentation.member.request.GuardianMemberCreate;
+import co.kr.compig.api.presentation.member.request.GuardianMemberUpdate;
 import co.kr.compig.api.presentation.member.request.LeaveRequest;
 import co.kr.compig.api.presentation.member.request.MemberSearchRequest;
 import co.kr.compig.api.presentation.member.request.MemberUpdateRequest;
 import co.kr.compig.api.presentation.member.request.PartnerMemberCreate;
+import co.kr.compig.api.presentation.member.request.PartnerMemberUpdate;
 import co.kr.compig.api.presentation.member.response.AdminMemberResponse;
 import co.kr.compig.api.presentation.member.response.GuardianMemberResponse;
 import co.kr.compig.api.presentation.member.response.MemberPageResponse;
@@ -55,6 +60,7 @@ public class MemberService {
 	private final MemberGroupRepository memberGroupRepository;
 	private final KeycloakHandler keycloakHandler;
 	private final S3Util s3Util;
+	private final SocialUserService socialUserService;
 
 	public String adminCreate(AdminMemberCreate adminMemberCreate) {
 		Member member = adminMemberCreate.convertEntity();
@@ -163,27 +169,6 @@ public class MemberService {
 		return member.getUserId();
 	}
 
-	public void userLeave(LeaveRequest leaveRequest) {
-		Member member = memberRepository.findById(SecurityUtil.getMemberId()).orElseThrow(NotExistDataException::new);
-		member.setLeaveMember(leaveRequest.getLeaveReason());
-		try {
-			KeycloakHandler keycloakHandler = KeycloakHolder.get();
-			keycloakHandler.deleteUser(member.getId());
-		} catch (Exception e) {
-			log.error("LeaveMember Keycloak Error", e);
-		}
-	}
-
-	public void socialUserLeave(Member member, LeaveRequest leaveRequest) {
-		member.setLeaveMember(leaveRequest.getLeaveReason());
-		try {
-			KeycloakHandler keycloakHandler = KeycloakHolder.get();
-			keycloakHandler.deleteUser(member.getId());
-		} catch (Exception e) {
-			log.error("LeaveMember Keycloak Error", e);
-		}
-	}
-
 	@Transactional(readOnly = true)
 	public Slice<MemberPageResponse> getUserPageCursor(@Valid MemberSearchRequest memberSearchRequest,
 		Pageable pageable) {
@@ -227,4 +212,45 @@ public class MemberService {
 			.map(Member::toUserMainSearchResponse)
 			.collect(Collectors.toList());
 	}
+
+	public String updateAdminById(String memberId, AdminMemberUpdate adminMemberUpdate) {
+		Member memberById = this.getMemberById(memberId);
+		memberById.updateAdminMember(adminMemberUpdate);
+		memberById.updateUserKeyCloak();
+		memberById.passwordEncode();
+		return memberById.getId();
+	}
+
+	public String updatePartnerById(String memberId, PartnerMemberUpdate partnerMemberUpdate) {
+		Member memberById = this.getMemberById(memberId);
+		memberById.updatePartnerMember(partnerMemberUpdate);
+		memberById.updateUserKeyCloak();
+		memberById.passwordEncode();
+		return memberById.getId();
+	}
+
+	public String updateGuardianById(String memberId, GuardianMemberUpdate guardianMemberUpdate) {
+		Member memberById = this.getMemberById(memberId);
+		memberById.updateGuardianMember(guardianMemberUpdate);
+		memberById.updateUserKeyCloak();
+		memberById.passwordEncode();
+		return memberById.getId();
+	}
+
+	public void doUserLeave(LeaveRequest leaveRequest) {
+		Member member = memberRepository.findById(SecurityUtil.getMemberId()).orElseThrow(NotExistDataException::new);
+		if (member.getMemberRegisterType() != MemberRegisterType.GENERAL) {
+			SocialLoginService loginService = socialUserService.getLoginService(member.getMemberRegisterType());
+			loginService.revoke(leaveRequest);
+		}
+
+		member.setLeaveMember(leaveRequest.getLeaveReason());
+		try {
+			KeycloakHandler keycloakHandler = KeycloakHolder.get();
+			keycloakHandler.deleteUser(member.getId());
+		} catch (Exception e) {
+			log.error("LeaveMember Keycloak Error", e);
+		}
+	}
+
 }

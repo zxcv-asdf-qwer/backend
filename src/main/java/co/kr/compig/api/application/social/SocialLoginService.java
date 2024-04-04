@@ -17,7 +17,6 @@ public interface SocialLoginService {
 
 	SocialUserResponse webSocialUserResponse(SocialLoginRequest socialLoginRequest);
 
-	//apple만
 	void revoke(LeaveRequest leaveRequest);
 
 }
