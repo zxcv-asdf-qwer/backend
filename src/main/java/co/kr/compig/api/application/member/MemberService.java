@@ -331,8 +331,12 @@ public class MemberService {
 		return memberById.getId();
 	}
 
-	public void doUserLeave(LeaveRequest leaveRequest) {
-		Member member = memberRepository.findById(SecurityUtil.getMemberId()).orElseThrow(NotExistDataException::new);
+	public void doUserLeave(String memberId, LeaveRequest leaveRequest) {
+		Member member = getMemberById(memberId);
+		doUserLeave(member, leaveRequest);
+	}
+
+	public void doUserLeave(Member member, LeaveRequest leaveRequest) {
 		if (member.getMemberRegisterType() != MemberRegisterType.GENERAL) {
 			SocialLoginService loginService = this.getLoginService(member.getMemberRegisterType());
 			loginService.revoke(leaveRequest);

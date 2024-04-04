@@ -18,6 +18,7 @@ import co.kr.compig.api.presentation.member.request.LeaveRequest;
 import co.kr.compig.api.presentation.member.request.MemberUpdateRequest;
 import co.kr.compig.api.presentation.member.response.MemberResponse;
 import co.kr.compig.global.dto.Response;
+import co.kr.compig.global.utils.SecurityUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -60,7 +61,7 @@ public class PartnerMemberController {
 	@Operation(summary = "탈퇴")
 	@PutMapping(path = "/leave")
 	public ResponseEntity<Response<?>> userLeave(@RequestBody LeaveRequest leaveRequest) {
-		memberService.doUserLeave(leaveRequest);
+		memberService.doUserLeave(SecurityUtil.getMemberId(), leaveRequest);
 		return ResponseEntity.ok().build();
 	}
 

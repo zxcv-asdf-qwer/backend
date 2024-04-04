@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +21,7 @@ import co.kr.compig.api.presentation.member.request.AdminMemberCreate;
 import co.kr.compig.api.presentation.member.request.AdminMemberUpdate;
 import co.kr.compig.api.presentation.member.request.GuardianMemberCreate;
 import co.kr.compig.api.presentation.member.request.GuardianMemberUpdate;
+import co.kr.compig.api.presentation.member.request.LeaveRequest;
 import co.kr.compig.api.presentation.member.request.MemberSearchRequest;
 import co.kr.compig.api.presentation.member.request.PartnerMemberCreate;
 import co.kr.compig.api.presentation.member.request.PartnerMemberUpdate;
@@ -148,6 +150,14 @@ public class AdminMemberController {
 		return ResponseEntity.ok().body(Response.<Map<String, String>>builder()
 			.data(Map.of("memberId", memberService.updateGuardianById(memberId, guardianMemberUpdate)))
 			.build());
+	}
+
+	@Operation(summary = "보호자 탈퇴")
+	@DeleteMapping("/guardians/{memberId}/leave")
+	public ResponseEntity<Response<?>> updateGuardianById(@PathVariable String memberId,
+		@RequestBody LeaveRequest leaveRequest) {
+		memberService.doUserLeave(memberId, leaveRequest);
+		return ResponseEntity.ok().build();
 	}
 
 }
