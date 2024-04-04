@@ -44,7 +44,6 @@ import co.kr.compig.api.presentation.member.request.PartnerMemberUpdate;
 import co.kr.compig.api.presentation.member.response.AdminMemberResponse;
 import co.kr.compig.api.presentation.member.response.GuardianMemberResponse;
 import co.kr.compig.api.presentation.member.response.MemberPageResponse;
-import co.kr.compig.api.presentation.member.response.MemberResponse;
 import co.kr.compig.api.presentation.member.response.PartnerMemberResponse;
 import co.kr.compig.api.presentation.member.response.UserMainSearchResponse;
 import co.kr.compig.api.presentation.social.request.SocialCreateRequest;
@@ -212,17 +211,10 @@ public class MemberService {
 	}
 
 	public void updateMember(MemberUpdateRequest memberUpdateRequest) {
-		Optional.ofNullable(SecurityUtil.getMemberId()).ifPresentOrElse(currentMemberId ->
-			memberRepository.findById(currentMemberId).ifPresentOrElse(
-				member -> {
-					setReferenceDomain(memberUpdateRequest.getUserType(), member);
-					member.updateUserKeyCloak();
-					member.update(memberUpdateRequest);
-				}, () -> {
-					throw new NotExistDataException();
-				}), () -> {
-			throw new NotExistDataException();
-		});
+		Member memberById = this.getMemberById(SecurityUtil.getMemberId());
+		setReferenceDomain(memberUpdateRequest.getUserType(), memberById);
+		memberById.updateUserKeyCloak();
+		memberById.update(memberUpdateRequest);
 	}
 
 	public void userPictureUpdate(MultipartFile picture) {
@@ -234,13 +226,6 @@ public class MemberService {
 		}, () -> {
 			throw new NotExistDataException();
 		});
-	}
-
-	@Transactional(readOnly = true)
-	public MemberResponse getUser() {
-		Member byUserId = memberRepository.findById(SecurityUtil.getMemberId()).orElseThrow(
-			NotExistDataException::new);
-		return byUserId.toResponse();
 	}
 
 	@Transactional(readOnly = true)
@@ -310,6 +295,7 @@ public class MemberService {
 	public String updateAdminById(String memberId, AdminMemberUpdate adminMemberUpdate) {
 		Member memberById = this.getMemberById(memberId);
 		memberById.updateAdminMember(adminMemberUpdate);
+		setReferenceDomain(memberById.getUserType(), memberById);
 		memberById.updateUserKeyCloak();
 		memberById.passwordEncode();
 		return memberById.getId();
@@ -318,6 +304,7 @@ public class MemberService {
 	public String updatePartnerById(String memberId, PartnerMemberUpdate partnerMemberUpdate) {
 		Member memberById = this.getMemberById(memberId);
 		memberById.updatePartnerMember(partnerMemberUpdate);
+		setReferenceDomain(memberById.getUserType(), memberById);
 		memberById.updateUserKeyCloak();
 		memberById.passwordEncode();
 		return memberById.getId();
@@ -326,6 +313,7 @@ public class MemberService {
 	public String updateGuardianById(String memberId, GuardianMemberUpdate guardianMemberUpdate) {
 		Member memberById = this.getMemberById(memberId);
 		memberById.updateGuardianMember(guardianMemberUpdate);
+		setReferenceDomain(memberById.getUserType(), memberById);
 		memberById.updateUserKeyCloak();
 		memberById.passwordEncode();
 		return memberById.getId();
@@ -337,12 +325,16 @@ public class MemberService {
 	}
 
 	public void doUserLeave(Member member, LeaveRequest leaveRequest) {
-		if (member.getMemberRegisterType() != MemberRegisterType.GENERAL) {
+		if (leaveRequest == null) {
+			leaveRequest = new LeaveRequest();
+		}
+		if (member.getMemberRegisterType() != MemberRegisterType.GENERAL && leaveRequest.getCode() != null) {
 			SocialLoginService loginService = this.getLoginService(member.getMemberRegisterType());
 			loginService.revoke(leaveRequest);
 		}
 
 		member.setLeaveMember(leaveRequest.getLeaveReason());
+
 		try {
 			KeycloakHandler keycloakHandler = KeycloakHolder.get();
 			keycloakHandler.deleteUser(member.getId());

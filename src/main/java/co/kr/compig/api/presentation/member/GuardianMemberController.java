@@ -43,7 +43,7 @@ public class GuardianMemberController {
 	@GetMapping
 	public ResponseEntity<Response<MemberResponse>> getUser() {
 		return ResponseEntity.ok(Response.<MemberResponse>builder()
-			.data(memberService.getUser())
+			.data(memberService.getMemberById(SecurityUtil.getMemberId()).toResponse())
 			.build());
 	}
 

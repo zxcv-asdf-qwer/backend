@@ -287,6 +287,7 @@ public class Member {
 		userRepresentation.setId(this.id);
 		userRepresentation.setUsername(Optional.ofNullable(this.userId).orElseGet(() -> this.email));
 		userRepresentation.setEmail(this.email);
+		userRepresentation.setEnabled(true);
 
 		if (!MemberRegisterType.GENERAL.equals(this.memberRegisterType) && StringUtils.isNotBlank(
 			providerUsername)) {
@@ -441,17 +442,21 @@ public class Member {
 	public void setLeaveMember(String leaveReason) {
 		this.userId = "DEL_".concat(this.userId);
 		this.email = this.email != null ? "DEL_".concat(this.email) : null;
-		this.leaveReason = leaveReason;
+		if (StringUtils.isNotEmpty(leaveReason)) {
+			this.leaveReason = leaveReason;
+		}
 		this.leaveDate = LocalDate.now();
 		this.useYn = UseYn.N;
 	}
 
 	public void updateAdminMember(AdminMemberUpdate adminMemberUpdate) {
-		if (isUpdateUserPw(adminMemberUpdate.getNewUserPw(), getUserPw())) { // 비밀번호 변경의사 있음
-			if (!isUpdatableUserPw(adminMemberUpdate.getNewUserPw(), getUserPw())) { // 모든 비밀번호 영역 값 입력 확인
+		if (isUpdateUserPw(adminMemberUpdate.getNewUserPw(), adminMemberUpdate.getChkUserPw())) { // 비밀번호 변경의사 있음
+			if (!isUpdatableUserPw(adminMemberUpdate.getNewUserPw(),
+				adminMemberUpdate.getChkUserPw())) { // 모든 비밀번호 영역 값 입력 확인
 				throw new BizException("모든 비밀번호를 입력해주세요.");
 			}
-			if (!isEqualsNewUserPw(adminMemberUpdate.getNewUserPw(), getUserPw())) { // 새 비밀번호와 확인의 동일 확인
+			if (!isEqualsNewUserPw(adminMemberUpdate.getNewUserPw(),
+				adminMemberUpdate.getChkUserPw())) { // 새 비밀번호와 확인의 동일 확인
 				throw new BizException("새 비밀번호와 비밀번호 확인의 내용이 다릅니다.");
 			}
 			this.userPw = adminMemberUpdate.getNewUserPw();
@@ -459,15 +464,19 @@ public class Member {
 
 		this.userNm = adminMemberUpdate.getUserNm();
 		this.telNo = adminMemberUpdate.getTelNo();
+		this.userType =
+			adminMemberUpdate.getDeptCode().equals(DeptCode.DEVELOPER) ? UserType.SYS_ADMIN : UserType.SYS_USER;
 		this.deptCode = adminMemberUpdate.getDeptCode();
 	}
 
 	public void updatePartnerMember(PartnerMemberUpdate partnerMemberUpdate) {
-		if (isUpdateUserPw(partnerMemberUpdate.getNewUserPw(), getUserPw())) { // 비밀번호 변경의사 있음
-			if (!isUpdatableUserPw(partnerMemberUpdate.getNewUserPw(), getUserPw())) { // 모든 비밀번호 영역 값 입력 확인
+		if (isUpdateUserPw(partnerMemberUpdate.getNewUserPw(), partnerMemberUpdate.getChkUserPw())) { // 비밀번호 변경의사 있음
+			if (!isUpdatableUserPw(partnerMemberUpdate.getNewUserPw(),
+				partnerMemberUpdate.getChkUserPw())) { // 모든 비밀번호 영역 값 입력 확인
 				throw new BizException("모든 비밀번호를 입력해주세요.");
 			}
-			if (!isEqualsNewUserPw(partnerMemberUpdate.getNewUserPw(), getUserPw())) { // 새 비밀번호와 확인의 동일 확인
+			if (!isEqualsNewUserPw(partnerMemberUpdate.getNewUserPw(),
+				partnerMemberUpdate.getChkUserPw())) { // 새 비밀번호와 확인의 동일 확인
 				throw new BizException("새 비밀번호와 비밀번호 확인의 내용이 다릅니다.");
 			}
 			this.userPw = partnerMemberUpdate.getNewUserPw();
@@ -489,11 +498,13 @@ public class Member {
 	}
 
 	public void updateGuardianMember(GuardianMemberUpdate guardianMemberUpdate) {
-		if (isUpdateUserPw(guardianMemberUpdate.getNewUserPw(), getUserPw())) { // 비밀번호 변경의사 있음
-			if (!isUpdatableUserPw(guardianMemberUpdate.getNewUserPw(), getUserPw())) { // 모든 비밀번호 영역 값 입력 확인
+		if (isUpdateUserPw(guardianMemberUpdate.getNewUserPw(), guardianMemberUpdate.getChkUserPw())) { // 비밀번호 변경의사 있음
+			if (!isUpdatableUserPw(guardianMemberUpdate.getNewUserPw(),
+				guardianMemberUpdate.getChkUserPw())) { // 모든 비밀번호 영역 값 입력 확인
 				throw new BizException("모든 비밀번호를 입력해주세요.");
 			}
-			if (!isEqualsNewUserPw(guardianMemberUpdate.getNewUserPw(), getUserPw())) { // 새 비밀번호와 확인의 동일 확인
+			if (!isEqualsNewUserPw(guardianMemberUpdate.getNewUserPw(),
+				guardianMemberUpdate.getChkUserPw())) { // 새 비밀번호와 확인의 동일 확인
 				throw new BizException("새 비밀번호와 비밀번호 확인의 내용이 다릅니다.");
 			}
 			this.userPw = guardianMemberUpdate.getNewUserPw();

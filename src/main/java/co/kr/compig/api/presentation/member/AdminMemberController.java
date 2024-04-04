@@ -6,7 +6,6 @@ import java.util.Map;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -152,10 +151,10 @@ public class AdminMemberController {
 			.build());
 	}
 
-	@Operation(summary = "보호자 탈퇴")
-	@DeleteMapping("/guardians/{memberId}/leave")
+	@Operation(summary = "보호자 탈퇴, 간병인 탈퇴")
+	@PutMapping("/{memberId}/leave")
 	public ResponseEntity<Response<?>> updateGuardianById(@PathVariable String memberId,
-		@RequestBody LeaveRequest leaveRequest) {
+		@RequestBody(required = false) LeaveRequest leaveRequest) {
 		memberService.doUserLeave(memberId, leaveRequest);
 		return ResponseEntity.ok().build();
 	}
