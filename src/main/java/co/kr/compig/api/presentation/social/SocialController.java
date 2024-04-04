@@ -27,19 +27,17 @@ public class SocialController {
 
 	private final SocialUserService socialUserService;
 
-	@Operation(summary = "앱용 소셜 로그인", description = "사용 안함")
+	@Operation(summary = "소셜 로그인")
 	@PostMapping(path = "/login")
 	public ResponseEntity<?> doSocialLogin(@RequestBody SocialLoginRequest socialLoginRequest) {
-
 		return ResponseEntity.ok()
 			.body(socialUserService.doSocialLogin(socialLoginRequest));
 	}
 
 	@PostMapping
-	@Operation(summary = "웹용 소셜 로그인")
+	@Operation(summary = "웹용 소셜 회원가입")
 	public ResponseEntity<SocialLoginResponse> doSocialCreate(@RequestBody SocialCreateRequest socialCreateRequest) {
-
-		return ResponseEntity.created(URI.create("/social/login"))
+		return ResponseEntity.created(URI.create("/social"))
 			.body(socialUserService.doSocialCreate(socialCreateRequest));
 	}
 
