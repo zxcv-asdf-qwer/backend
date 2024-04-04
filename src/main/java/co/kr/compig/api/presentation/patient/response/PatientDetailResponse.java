@@ -1,5 +1,7 @@
 package co.kr.compig.api.presentation.patient.response;
 
+import java.util.List;
+
 import co.kr.compig.api.domain.code.GenderCode;
 import co.kr.compig.api.domain.code.IsYn;
 import co.kr.compig.api.domain.code.LocationType;
@@ -23,7 +25,7 @@ public class PatientDetailResponse extends BaseAudit {
 	private Integer patientAge; // 환자 나이
 	private Integer patientHeight; // 환자 신장
 	private Integer patientWeight; // 환자 몸무게
-	private String diseaseNm; // 진단명
+	private List<String> diseaseNm; // 진단명
 	private ToiletType selfToiletAvailability; // 대소변 해결 여부
 	private GenderCode genderPreference; // 선호 성별
 	private IsYn covid19Test; // 코로나 검사 필요 여부

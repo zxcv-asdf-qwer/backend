@@ -1,5 +1,11 @@
 package co.kr.compig.api.domain.patient;
 
+import java.lang.reflect.Type;
+import java.util.List;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import co.kr.compig.api.domain.code.GenderCode;
 import co.kr.compig.api.domain.code.IsYn;
 import co.kr.compig.api.domain.code.LocationType;
@@ -66,7 +72,7 @@ public class Patient {
 	@Column
 	private Integer patientWeight; // 환자 몸무게
 
-	@Column(length = 50)
+	@Column(columnDefinition = "jsonb")
 	private String diseaseNm; // 진단명
 
 	@Column(length = 10)
@@ -131,7 +137,7 @@ public class Patient {
 			.patientAge(this.patientAge)
 			.patientHeight(this.patientHeight)
 			.patientWeight(this.patientWeight)
-			.diseaseNm(this.diseaseNm)
+			.diseaseNm(convertJsonStringToList(this.diseaseNm))
 			.selfToiletAvailability(this.selfToiletAvailability)
 			.genderPreference(this.genderPreference)
 			.covid19Test(this.covid19Test)
@@ -142,6 +148,13 @@ public class Patient {
 			.address2(this.address2)
 			.memberId(this.member.getId())
 			.build();
+	}
+
+	private static List<String> convertJsonStringToList(String json) {
+		Gson gson = new Gson();
+		Type listType = new TypeToken<List<String>>() {
+		}.getType();
+		return gson.fromJson(json, listType);
 	}
 
 	public void update(PatientUpdateRequest patientUpdateRequest) {

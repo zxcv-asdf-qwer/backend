@@ -1,7 +1,12 @@
 package co.kr.compig.api.presentation.patient.request;
 
+import java.util.List;
+
 import org.hibernate.validator.constraints.Length;
 
+import com.google.gson.Gson;
+
+import co.kr.compig.api.domain.code.DiseaseCode;
 import co.kr.compig.api.domain.code.GenderCode;
 import co.kr.compig.api.domain.code.IsYn;
 import co.kr.compig.api.domain.code.LocationType;
@@ -58,8 +63,8 @@ public class AdminPatientCreateRequest {
 	@NotBlank
 	private String address2; // 간병 장소 상세 주소
 
-	@NotBlank
-	private String diseaseNm; // 질환
+	@NotNull
+	private List<DiseaseCode> diseaseNm; // 질환
 
 	@NotNull
 	private ToiletType selfToiletAvailability; // 대소변 해결 여부
@@ -79,7 +84,7 @@ public class AdminPatientCreateRequest {
 			.patientAge(this.patientAge)
 			.patientHeight(this.patientHeight)
 			.patientWeight(this.patientWeight)
-			.diseaseNm(this.diseaseNm)
+			.diseaseNm(new Gson().toJson(this.diseaseNm))
 			.selfToiletAvailability(this.selfToiletAvailability)
 			.genderPreference(this.genderPreference)
 			.covid19Test(this.covid19Test)
