@@ -1,6 +1,8 @@
 package co.kr.compig.api.application.member;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -9,10 +11,17 @@ import org.keycloak.representations.idm.GroupRepresentation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import co.kr.compig.api.application.social.LoginServiceImpl;
+import co.kr.compig.api.application.social.SocialLoginService;
+import co.kr.compig.api.domain.code.ApplicationType;
 import co.kr.compig.api.domain.code.MemberRegisterType;
 import co.kr.compig.api.domain.code.UseYn;
 import co.kr.compig.api.domain.code.UserType;
@@ -21,23 +30,34 @@ import co.kr.compig.api.domain.member.MemberGroup;
 import co.kr.compig.api.domain.member.MemberGroupRepository;
 import co.kr.compig.api.domain.member.MemberRepository;
 import co.kr.compig.api.domain.member.MemberRepositoryCustom;
+import co.kr.compig.api.infrastructure.auth.keycloak.KeycloakAuthApi;
+import co.kr.compig.api.infrastructure.auth.keycloak.model.KeycloakAccessTokenRequest;
 import co.kr.compig.api.presentation.member.request.AdminMemberCreate;
+import co.kr.compig.api.presentation.member.request.AdminMemberUpdate;
 import co.kr.compig.api.presentation.member.request.GuardianMemberCreate;
+import co.kr.compig.api.presentation.member.request.GuardianMemberUpdate;
 import co.kr.compig.api.presentation.member.request.LeaveRequest;
 import co.kr.compig.api.presentation.member.request.MemberSearchRequest;
 import co.kr.compig.api.presentation.member.request.MemberUpdateRequest;
 import co.kr.compig.api.presentation.member.request.PartnerMemberCreate;
+import co.kr.compig.api.presentation.member.request.PartnerMemberUpdate;
 import co.kr.compig.api.presentation.member.response.AdminMemberResponse;
 import co.kr.compig.api.presentation.member.response.GuardianMemberResponse;
 import co.kr.compig.api.presentation.member.response.MemberPageResponse;
 import co.kr.compig.api.presentation.member.response.MemberResponse;
 import co.kr.compig.api.presentation.member.response.PartnerMemberResponse;
 import co.kr.compig.api.presentation.member.response.UserMainSearchResponse;
+import co.kr.compig.api.presentation.social.request.SocialCreateRequest;
+import co.kr.compig.api.presentation.social.request.SocialLoginRequest;
+import co.kr.compig.api.presentation.social.response.SocialLoginResponse;
+import co.kr.compig.api.presentation.social.response.SocialUserResponse;
 import co.kr.compig.global.dto.pagination.PageResponse;
 import co.kr.compig.global.error.exception.BizException;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import co.kr.compig.global.keycloak.KeycloakHandler;
 import co.kr.compig.global.keycloak.KeycloakHolder;
+import co.kr.compig.global.keycloak.KeycloakProperties;
+import co.kr.compig.global.utils.GsonLocalDateTimeAdapter;
 import co.kr.compig.global.utils.S3Util;
 import co.kr.compig.global.utils.SecurityUtil;
 import jakarta.validation.Valid;
@@ -55,6 +75,9 @@ public class MemberService {
 	private final MemberGroupRepository memberGroupRepository;
 	private final KeycloakHandler keycloakHandler;
 	private final S3Util s3Util;
+	private final List<SocialLoginService> loginServices;
+	private final KeycloakAuthApi keycloakAuthApi;
+	private final KeycloakProperties keycloakProperties;
 
 	public String adminCreate(AdminMemberCreate adminMemberCreate) {
 		Member member = adminMemberCreate.convertEntity();
@@ -63,6 +86,78 @@ public class MemberService {
 		member.passwordEncode();
 
 		return memberRepository.save(member).getId();
+	}
+
+	public String guardianCreate(GuardianMemberCreate guardianMemberCreate) {
+		Member member = guardianMemberCreate.convertEntity();
+		setReferenceDomain(member.getUserType(), member);
+		member.createUserKeyCloak(null, null);
+		member.passwordEncode();
+
+		return memberRepository.save(member).getId();
+	}
+
+	public String partnerCreate(PartnerMemberCreate partnerMemberCreate) {
+		Member member = partnerMemberCreate.convertEntity();
+		setReferenceDomain(member.getUserType(), member);
+		member.createUserKeyCloak(null, null);
+		member.passwordEncode();
+
+		return memberRepository.save(member).getId();
+	}
+
+	public SocialLoginService getLoginService(MemberRegisterType memberRegisterType) {
+		for (SocialLoginService loginService : loginServices) {
+			if (memberRegisterType.equals(loginService.getServiceName())) {
+				log.info("login service name: {}", loginService.getServiceName());
+				return loginService;
+			}
+		}
+		return new LoginServiceImpl();
+	}
+
+	public Object doSocialLogin(SocialLoginRequest socialLoginRequest) {
+		SocialLoginService loginService = this.getLoginService(socialLoginRequest.getMemberRegisterType());
+		SocialUserResponse socialUserResponse;
+		if (socialLoginRequest.getApplicationType() != ApplicationType.WEB) {
+			socialUserResponse = loginService.appSocialUserResponse(
+				socialLoginRequest);
+		} else {
+			socialUserResponse = loginService.webSocialUserResponse(
+				socialLoginRequest);
+		}
+
+		Optional<Member> optionalMember = memberRepository.findByEmailAndUseYn(socialUserResponse.getEmail(), UseYn.Y);
+		if (optionalMember.isPresent()) {
+			Member member = optionalMember.get();
+			// 공통 로직 처리: 키클락 로그인 실행
+			return this.getKeycloakAccessToken(member.getEmail(),
+				member.getEmail() + member.getMemberRegisterType() + "compig");
+			// 키클락 로그인 실행
+		}
+		return socialUserResponse;
+	}
+
+	public SocialLoginResponse doSocialCreate(SocialCreateRequest socialCreateRequest) {
+		Optional<Member> optionalMember = memberRepository.findByEmailAndUseYn(socialCreateRequest.getEmail(), UseYn.Y);
+		if (optionalMember.isPresent()) {
+			throw new BizException("이미 가입된 회원 입니다.");
+		}
+		Member member = optionalMember.orElseGet(() -> {
+			// 중복되지 않는 경우 새 회원 생성 후 반환
+			Member newMember = socialCreateRequest.converterEntity();
+			this.setReferenceDomain(socialCreateRequest.getUserType(), newMember);
+			newMember.createUserKeyCloak(socialCreateRequest.getSocialId(), socialCreateRequest.getUserNm());
+			newMember.passwordEncode();
+
+			String newMemberId = memberRepository.save(newMember).getId();
+
+			return memberRepository.findById(newMemberId).orElseThrow(() -> new RuntimeException("회원 생성 후 조회 실패"));
+		});
+		// 공통 로직 처리: 키클락 로그인 실행
+		return this.getKeycloakAccessToken(member.getEmail(),
+			member.getEmail() + member.getMemberRegisterType() + "compig");
+		// 키클락 로그인 실행
 	}
 
 	public void setReferenceDomain(UserType userType, Member member) {
@@ -93,22 +188,27 @@ public class MemberService {
 		}
 	}
 
-	public String guardianCreate(GuardianMemberCreate guardianMemberCreate) {
-		Member member = guardianMemberCreate.convertEntity();
-		setReferenceDomain(member.getUserType(), member);
-		member.createUserKeyCloak(null, null);
-		member.passwordEncode();
+	private SocialLoginResponse getKeycloakAccessToken(String userId, String userPw) {
+		ResponseEntity<?> response = keycloakAuthApi.getAccessToken(
+			KeycloakAccessTokenRequest.builder()
+				.client_id(keycloakProperties.getClientId())
+				.client_secret(keycloakProperties.getClientSecret())
+				.username(userId)
+				.password(userPw)
+				.build()
+		);
+		log.info("keycloak user response");
+		log.info(response.toString());
 
-		return memberRepository.save(member).getId();
-	}
+		Gson gson = new GsonBuilder()
+			.setPrettyPrinting()
+			.registerTypeAdapter(LocalDateTime.class, new GsonLocalDateTimeAdapter())
+			.create();
 
-	public String partnerCreate(PartnerMemberCreate partnerMemberCreate) {
-		Member member = partnerMemberCreate.convertEntity();
-		setReferenceDomain(member.getUserType(), member);
-		member.createUserKeyCloak(null, null);
-		member.passwordEncode();
-
-		return memberRepository.save(member).getId();
+		return gson.fromJson(
+			Objects.requireNonNull(response.getBody()).toString(),
+			SocialLoginResponse.class
+		);
 	}
 
 	public void updateMember(MemberUpdateRequest memberUpdateRequest) {
@@ -163,27 +263,6 @@ public class MemberService {
 		return member.getUserId();
 	}
 
-	public void userLeave(LeaveRequest leaveRequest) {
-		Member member = memberRepository.findById(SecurityUtil.getMemberId()).orElseThrow(NotExistDataException::new);
-		member.setLeaveMember(leaveRequest.getLeaveReason());
-		try {
-			KeycloakHandler keycloakHandler = KeycloakHolder.get();
-			keycloakHandler.deleteUser(member.getId());
-		} catch (Exception e) {
-			log.error("LeaveMember Keycloak Error", e);
-		}
-	}
-
-	public void socialUserLeave(Member member, LeaveRequest leaveRequest) {
-		member.setLeaveMember(leaveRequest.getLeaveReason());
-		try {
-			KeycloakHandler keycloakHandler = KeycloakHolder.get();
-			keycloakHandler.deleteUser(member.getId());
-		} catch (Exception e) {
-			log.error("LeaveMember Keycloak Error", e);
-		}
-	}
-
 	@Transactional(readOnly = true)
 	public Slice<MemberPageResponse> getUserPageCursor(@Valid MemberSearchRequest memberSearchRequest,
 		Pageable pageable) {
@@ -227,4 +306,49 @@ public class MemberService {
 			.map(Member::toUserMainSearchResponse)
 			.collect(Collectors.toList());
 	}
+
+	public String updateAdminById(String memberId, AdminMemberUpdate adminMemberUpdate) {
+		Member memberById = this.getMemberById(memberId);
+		memberById.updateAdminMember(adminMemberUpdate);
+		memberById.updateUserKeyCloak();
+		memberById.passwordEncode();
+		return memberById.getId();
+	}
+
+	public String updatePartnerById(String memberId, PartnerMemberUpdate partnerMemberUpdate) {
+		Member memberById = this.getMemberById(memberId);
+		memberById.updatePartnerMember(partnerMemberUpdate);
+		memberById.updateUserKeyCloak();
+		memberById.passwordEncode();
+		return memberById.getId();
+	}
+
+	public String updateGuardianById(String memberId, GuardianMemberUpdate guardianMemberUpdate) {
+		Member memberById = this.getMemberById(memberId);
+		memberById.updateGuardianMember(guardianMemberUpdate);
+		memberById.updateUserKeyCloak();
+		memberById.passwordEncode();
+		return memberById.getId();
+	}
+
+	public void doUserLeave(String memberId, LeaveRequest leaveRequest) {
+		Member member = getMemberById(memberId);
+		doUserLeave(member, leaveRequest);
+	}
+
+	public void doUserLeave(Member member, LeaveRequest leaveRequest) {
+		if (member.getMemberRegisterType() != MemberRegisterType.GENERAL) {
+			SocialLoginService loginService = this.getLoginService(member.getMemberRegisterType());
+			loginService.revoke(leaveRequest);
+		}
+
+		member.setLeaveMember(leaveRequest.getLeaveReason());
+		try {
+			KeycloakHandler keycloakHandler = KeycloakHolder.get();
+			keycloakHandler.deleteUser(member.getId());
+		} catch (Exception e) {
+			log.error("LeaveMember Keycloak Error", e);
+		}
+	}
+
 }

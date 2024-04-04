@@ -6,9 +6,11 @@ import java.util.Map;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,9 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.member.MemberService;
 import co.kr.compig.api.presentation.member.request.AdminMemberCreate;
+import co.kr.compig.api.presentation.member.request.AdminMemberUpdate;
 import co.kr.compig.api.presentation.member.request.GuardianMemberCreate;
+import co.kr.compig.api.presentation.member.request.GuardianMemberUpdate;
+import co.kr.compig.api.presentation.member.request.LeaveRequest;
 import co.kr.compig.api.presentation.member.request.MemberSearchRequest;
 import co.kr.compig.api.presentation.member.request.PartnerMemberCreate;
+import co.kr.compig.api.presentation.member.request.PartnerMemberUpdate;
 import co.kr.compig.api.presentation.member.response.AdminMemberResponse;
 import co.kr.compig.api.presentation.member.response.GuardianMemberResponse;
 import co.kr.compig.api.presentation.member.response.PartnerMemberResponse;
@@ -117,6 +123,41 @@ public class AdminMemberController {
 		@RequestParam(required = false) String userNm,
 		@RequestParam(required = false) String telNo) {
 		return ResponseEntity.ok(memberService.getUsersByNameAndTelNo(userNm, telNo));
+	}
+
+	@Operation(summary = "관리자 memberId 수정")
+	@PutMapping("/{memberId}")
+	public ResponseEntity<Response<?>> updateAdminById(@PathVariable String memberId,
+		@RequestBody @Valid AdminMemberUpdate adminMemberUpdate) {
+		return ResponseEntity.ok().body(Response.<Map<String, String>>builder()
+			.data(Map.of("memberId", memberService.updateAdminById(memberId, adminMemberUpdate)))
+			.build());
+	}
+
+	@Operation(summary = "간병인 memberId 수정")
+	@PutMapping("/partners/{memberId}")
+	public ResponseEntity<Response<?>> updatePartnetById(@PathVariable String memberId,
+		@RequestBody @Valid PartnerMemberUpdate partnerMemberUpdate) {
+		return ResponseEntity.ok().body(Response.<Map<String, String>>builder()
+			.data(Map.of("memberId", memberService.updatePartnerById(memberId, partnerMemberUpdate)))
+			.build());
+	}
+
+	@Operation(summary = "보호자 memberId 수정")
+	@PutMapping("/guardians/{memberId}")
+	public ResponseEntity<Response<?>> updateGuardianById(@PathVariable String memberId,
+		@RequestBody @Valid GuardianMemberUpdate guardianMemberUpdate) {
+		return ResponseEntity.ok().body(Response.<Map<String, String>>builder()
+			.data(Map.of("memberId", memberService.updateGuardianById(memberId, guardianMemberUpdate)))
+			.build());
+	}
+
+	@Operation(summary = "보호자 탈퇴")
+	@DeleteMapping("/guardians/{memberId}/leave")
+	public ResponseEntity<Response<?>> updateGuardianById(@PathVariable String memberId,
+		@RequestBody LeaveRequest leaveRequest) {
+		memberService.doUserLeave(memberId, leaveRequest);
+		return ResponseEntity.ok().build();
 	}
 
 }
