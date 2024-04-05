@@ -42,6 +42,7 @@ import co.kr.compig.api.presentation.member.response.GuardianMemberResponse;
 import co.kr.compig.api.presentation.member.response.MemberResponse;
 import co.kr.compig.api.presentation.member.response.PartnerMemberResponse;
 import co.kr.compig.api.presentation.member.response.UserMainSearchResponse;
+import co.kr.compig.api.presentation.pass.request.PassSaveRequest;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import co.kr.compig.global.error.exception.BizException;
 import co.kr.compig.global.error.exception.KeyCloakRequestException;
@@ -168,7 +169,9 @@ public class Member {
 	@Builder.Default
 	private IsYn realNameYn = IsYn.N; // 실명 확인 여부 //지우기
 
-	@Column(columnDefinition = "TEXT")
+	@Column
+	private String di; //나이스 본인인증 DI 값
+	@Column
 	private String ci; //나이스 본인인증 CI 값
 
 	/* =================================================================
@@ -542,5 +545,24 @@ public class Member {
 		} else if (!isMarketingSms && this.marketingSmsDate != null) {
 			this.marketingSmsDate = null;
 		}
+	}
+
+	public void passUpdate(PassSaveRequest passSaveRequest) {
+		this.userNm = passSaveRequest.getName();
+		this.jumin1 = passSaveRequest.getBirthdate();
+		// gender 값이 0이면 "여성", 1이면 "남성"으로 변경
+		if ("0".equals(passSaveRequest.getGender())) {
+			this.gender = GenderCode.F;
+		} else if ("1".equals(passSaveRequest.getGender())) {
+			this.gender = GenderCode.M;
+		}
+		//0 내국인, 1 외국인
+		if ("0".equals(passSaveRequest.getNationalInfo())) {
+			this.domesticForeignCode = DomesticForeignCode.D;
+		} else if ("1".equals(passSaveRequest.getGender())) {
+			this.domesticForeignCode = DomesticForeignCode.F;
+		}
+		this.di = passSaveRequest.getDupInfo();
+		this.ci = passSaveRequest.getConnInfo();
 	}
 }
