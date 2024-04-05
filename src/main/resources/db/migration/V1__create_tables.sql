@@ -26,6 +26,9 @@ create table if not exists member
     leave_reason            varchar(255),
     leave_date              date,
     real_name_yn            varchar(255) default 'N',
+    dept_code               varchar(35),
+    ci                      varchar(255),
+    di                      varchar(255),
     created_by              varchar(50),
     created_on              timestamp(6) default CURRENT_TIMESTAMP,
     updated_by              varchar(50),
@@ -60,6 +63,9 @@ comment on column member.marketing_sms_date is '문자 수신동의 날짜';
 comment on column member.leave_reason is '탈퇴 사유';
 comment on column member.leave_date is '회원 탈퇴 날짜';
 comment on column member.real_name_yn is '실명 확인 여부';
+comment on column member.dept_code is '부서코드';
+comment on column member.ci is 'ci';
+comment on column member.di is 'di';
 
 create sequence if not exists public.board_seq INCREMENT BY 1 START WITH 1;
 create table if not exists board
@@ -295,15 +301,15 @@ comment on column sms.ref1 is '비고|인증 번호';
 create sequence if not exists sms_template_seq start with 1 increment by 1;
 create table if not exists sms_template
 (
-    sms_template_id bigint        not null primary key,
-    sms_type        varchar(3)    not null,
-    sms_template_type   varchar(3)    not null,
-    at_template_code   varchar(25)    not null,
-    contents        varchar(2000) not null,
-    created_by            varchar(50),
-    created_on            timestamp(6) default CURRENT_TIMESTAMP,
-    updated_by            varchar(50),
-    updated_on            timestamp(6) default CURRENT_TIMESTAMP
+    sms_template_id   bigint        not null primary key,
+    sms_type          varchar(3)    not null,
+    sms_template_type varchar(3)    not null,
+    at_template_code  varchar(25)   not null,
+    contents          varchar(2000) not null,
+    created_by        varchar(50),
+    created_on        timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by        varchar(50),
+    updated_on        timestamp(6) default CURRENT_TIMESTAMP
 );
 
 comment on table sms_template is 'sms 템플릿 테이블';
@@ -330,16 +336,17 @@ create table if not exists api_log
 comment on table api_log is '로그 테이블';
 
 create sequence if not exists answer_seq start with 1 increment by 1;
-create table if not exists answer (
-    answer_id bigint not null primary key,
-    question_id bigint not null unique,
-    answer_title varchar(255),
+create table if not exists answer
+(
+    answer_id      bigint not null primary key,
+    question_id    bigint not null unique,
+    answer_title   varchar(255),
     answer_content varchar(255),
-    use_yn              char(1),
-    created_by varchar(50),
-    created_on timestamp(6) default CURRENT_TIMESTAMP,
-    updated_by varchar(50),
-    updated_on timestamp(6) default CURRENT_TIMESTAMP
+    use_yn         char(1),
+    created_by     varchar(50),
+    created_on     timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by     varchar(50),
+    updated_on     timestamp(6) default CURRENT_TIMESTAMP
 );
 
 comment on table answer is '1:1 문의 답변 테이블';
@@ -350,16 +357,17 @@ comment on column answer.answer_content is '답변 내용';
 comment on column answer.use_yn is '답변 상태';
 
 create sequence if not exists question_seq start with 1 increment by 1;
-create table if not exists question (
-    question_id bigint not null primary key,
-    question_type varchar(255),
-    question_title varchar(255),
+create table if not exists question
+(
+    question_id      bigint not null primary key,
+    question_type    varchar(255),
+    question_title   varchar(255),
     question_content varchar(255),
-    use_yn              char(1),
-    created_by varchar(50),
-    created_on timestamp(6) default CURRENT_TIMESTAMP,
-    updated_by varchar(50),
-    updated_on timestamp(6) default CURRENT_TIMESTAMP
+    use_yn           char(1),
+    created_by       varchar(50),
+    created_on       timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by       varchar(50),
+    updated_on       timestamp(6) default CURRENT_TIMESTAMP
 );
 
 comment on table question is '1:1 문의 질문 테이블';
@@ -371,8 +379,8 @@ comment on column question.use_yn is '질문 상태';
 
 alter table if exists answer
     add constraint f01_answer
-    foreign key (question_id)
-    references question;
+        foreign key (question_id)
+            references question;
 
 alter table if exists system_file
     add constraint fk01_system_file
