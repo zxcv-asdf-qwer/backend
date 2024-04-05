@@ -6,15 +6,15 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import co.kr.compig.api.presentation.hospital.request.HospitalCreateRequest;
-import co.kr.compig.api.presentation.hospital.response.HospitalDetailResponse;
-import co.kr.compig.api.presentation.hospital.response.HospitalResponse;
-import co.kr.compig.api.presentation.hospital.request.HospitalSearchRequest;
-import co.kr.compig.api.presentation.hospital.request.HospitalUpdateRequest;
-import co.kr.compig.global.error.exception.NotExistDataException;
 import co.kr.compig.api.domain.hospital.Hospital;
 import co.kr.compig.api.domain.hospital.HospitalRepository;
 import co.kr.compig.api.domain.hospital.HospitalRepositoryCustom;
+import co.kr.compig.api.presentation.hospital.request.HospitalCreateRequest;
+import co.kr.compig.api.presentation.hospital.request.HospitalSearchRequest;
+import co.kr.compig.api.presentation.hospital.request.HospitalUpdateRequest;
+import co.kr.compig.api.presentation.hospital.response.HospitalDetailResponse;
+import co.kr.compig.api.presentation.hospital.response.HospitalResponse;
+import co.kr.compig.global.error.exception.NotExistDataException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

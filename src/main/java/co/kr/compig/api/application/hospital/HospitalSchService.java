@@ -24,13 +24,13 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import co.kr.compig.api.domain.hospital.Hospital;
+import co.kr.compig.api.domain.hospital.HospitalRepository;
 import co.kr.compig.api.presentation.hospital.model.HospitalDto;
 import co.kr.compig.api.presentation.hospital.model.HospitalExceptionDto;
 import co.kr.compig.api.presentation.hospital.model.HospitalResponseVO;
 import co.kr.compig.api.presentation.hospital.request.HospitalCreateRequest;
 import co.kr.compig.global.error.exception.BizException;
-import co.kr.compig.api.domain.hospital.Hospital;
-import co.kr.compig.api.domain.hospital.HospitalRepository;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;

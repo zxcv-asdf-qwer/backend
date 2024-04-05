@@ -4,10 +4,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import co.kr.compig.api.domain.code.MemberRegisterType;
 import co.kr.compig.api.presentation.member.request.LeaveRequest;
 import co.kr.compig.api.presentation.social.request.SocialLoginRequest;
 import co.kr.compig.api.presentation.social.response.SocialUserResponse;
-import co.kr.compig.api.domain.code.MemberRegisterType;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

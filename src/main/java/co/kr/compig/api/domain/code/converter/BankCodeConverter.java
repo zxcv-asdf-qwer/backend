@@ -4,8 +4,8 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.MappedJdbcTypes;
 import org.apache.ibatis.type.MappedTypes;
 
-import co.kr.compig.api.domain.code.BoardType;
 import co.kr.compig.api.domain.code.BankCode;
+import co.kr.compig.api.domain.code.BoardType;
 import jakarta.persistence.Converter;
 
 @Converter(autoApply = true)

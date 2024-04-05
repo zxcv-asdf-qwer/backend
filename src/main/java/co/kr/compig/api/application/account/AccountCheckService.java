@@ -17,9 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import co.kr.compig.api.domain.code.BankCode;
 import co.kr.compig.api.presentation.account.request.AccountCheckRequest;
 import co.kr.compig.api.presentation.account.response.AccountCheckResponse;
-import co.kr.compig.api.domain.code.BankCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

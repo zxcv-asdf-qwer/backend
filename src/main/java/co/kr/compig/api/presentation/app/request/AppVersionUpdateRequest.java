@@ -4,7 +4,6 @@ import co.kr.compig.api.domain.code.AppOsType;
 import co.kr.compig.api.domain.code.IsYn;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 
 public record AppVersionUpdateRequest(
 	@NotNull
