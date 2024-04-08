@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,7 +46,7 @@ public class AdminBoardController {
 	private final BoardService boardService;
 
 	@Operation(summary = "생성하기")
-	@PostMapping
+	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Response<?>> createBoard(
 		@RequestPart(value = "boardCreateRequest") @Valid BoardCreateRequest boardCreateRequest,
 		@RequestPart(value = "file", required = false) List<MultipartFile> files) {
