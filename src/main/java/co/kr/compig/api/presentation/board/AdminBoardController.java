@@ -1,5 +1,6 @@
 package co.kr.compig.api.presentation.board;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springdoc.core.annotations.ParameterObject;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.MultipartFile;
 
 import co.kr.compig.api.application.board.BoardService;
 import co.kr.compig.api.presentation.board.request.BoardCreateRequest;
@@ -46,10 +47,10 @@ public class AdminBoardController {
 	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createBoard(
-		@ParameterObject @ModelAttribute @Valid BoardCreateRequest boardCreateRequest,
-		MultipartHttpServletRequest multipartRequest) {
+		@RequestPart(value = "boardCreateRequest") @Valid BoardCreateRequest boardCreateRequest,
+		@RequestPart(value = "file", required = false) List<MultipartFile> files) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-			.data(Map.of("boardId", boardService.createBoard(boardCreateRequest, multipartRequest)))
+			.data(Map.of("boardId", boardService.createBoard(boardCreateRequest, files)))
 			.build());
 	}
 

@@ -204,4 +204,9 @@ public class S3Util {
 		List<SystemFileResponse> imageUrlList = uploadsToFile(multipartFiles);
 		return imageUrlList;
 	}
+
+	public List<SystemFileResponse> uploadToFile(List<MultipartFile> img) {
+		List<SystemFileResponse> imageUrlList = uploadsToFile(img);
+		return imageUrlList;
+	}
 }

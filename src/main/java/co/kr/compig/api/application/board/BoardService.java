@@ -1,18 +1,14 @@
 package co.kr.compig.api.application.board;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import co.kr.compig.api.domain.board.Board;
 import co.kr.compig.api.domain.board.BoardRepository;
@@ -43,20 +39,19 @@ public class BoardService {
 	private final S3Util s3Util;
 
 	public Long createBoard(BoardCreateRequest boardCreateRequest,
-		MultipartHttpServletRequest multipartRequest) {
-		MultiValueMap<String, MultipartFile> mvm = multipartRequest.getMultiFileMap();
-		Set<String> multiFileKeys = mvm.keySet();
-		List<MultipartFile> multipartFiles = new ArrayList<>();
-		for (String multiFileKey : multiFileKeys) {//파일 객체 갯수 for문
-			for (MultipartFile multipartFile : mvm.get(multiFileKey)) {
-				multipartFiles.add(multipartFile);
-			}
+		List<MultipartFile> files) {
+		Board board = new Board();
+		if (files != null) {
+			List<SystemFileResponse> imageUrlList = s3Util.uploadToFile(files);
+			board = boardCreateRequest.converterEntity();
+			boardRepository.save(board);
+			saveSystemFile(imageUrlList, board.getId());
+		} else {
+			board = boardCreateRequest.converterEntity();
+			boardRepository.save(board);
 		}
-		List<String> imageUrlList = s3Util.uploads(multipartFiles);
-		boardCreateRequest.setImageUrlListAndThumbnail(imageUrlList, 0);
-		boardCreateRequest.setImageUrlList(imageUrlList);
-		Board board = boardCreateRequest.converterEntity();
-		return boardRepository.save(board).getId();
+
+		return board.getId();
 	}
 
 	@Transactional(readOnly = true)
@@ -88,7 +83,6 @@ public class BoardService {
 		Board board = new Board();
 		if (files != null) {
 			List<SystemFileResponse> imageUrlList = s3Util.uploadBase64ToFile(files);
-			boardCreateRequest.setThumbnailImageUrl(imageUrlList, 0);
 			board = boardCreateRequest.converterEntity();
 			boardRepository.save(board);
 			saveSystemFile(imageUrlList, board.getId());
