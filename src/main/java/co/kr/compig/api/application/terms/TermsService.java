@@ -2,6 +2,7 @@ package co.kr.compig.api.application.terms;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,5 +50,9 @@ public class TermsService {
 	public void deleteTerms(Long termsId) {
 		Terms terms = termsRepository.findById(termsId).orElseThrow(NotExistDataException::new);
 		termsRepository.delete(terms);
+	}
+
+	public Slice<TermsResponse> pageListTermsCursor(TermsSearchRequest termsSearchRequest, Pageable pageable) {
+		return termsRepositoryCustom.findAllByCondition(termsSearchRequest, pageable);
 	}
 }

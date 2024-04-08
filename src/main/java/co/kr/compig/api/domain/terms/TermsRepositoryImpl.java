@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
 
@@ -50,6 +52,39 @@ public class TermsRepositoryImpl implements TermsRepositoryCustom {
 			.select(terms.count());
 
 		return PageableExecutionUtils.getPage(responses, pageable, countQuery::fetchOne);
+	}
+
+	@Override
+	public Slice<TermsResponse> findAllByCondition(TermsSearchRequest termsSearchRequest, Pageable pageable) {
+		BooleanExpression predicate = createPredicate(termsSearchRequest);
+
+		JPAQuery<TermsResponse> query = createBaseQuery(predicate)
+			.select(Projections.constructor(TermsResponse.class,
+				terms.termsType,
+				terms.createdAndModified.createdBy,
+				terms.createdAndModified.createdOn
+			));
+
+		applySorting(query, pageable);
+
+		List<TermsResponse> responses = query
+			.where(cursorCursorId(Long.valueOf(termsSearchRequest.getCursorId())))
+			.offset(pageable.getOffset())
+			.limit(pageable.getPageSize() + 1)
+			.fetch();
+
+		boolean hasNext = false;
+		if (responses.size() > pageable.getPageSize()) {
+			responses.remove(pageable.getPageSize());
+			hasNext = true;
+		}
+		return new SliceImpl<>(responses, pageable, hasNext);
+	}
+
+	private BooleanExpression cursorCursorId(Long cursorId) {
+		if (cursorId == null)
+			return null;
+		return terms.id.lt(cursorId);
 	}
 
 	private JPAQuery<?> createBaseQuery(BooleanExpression predicate) {
