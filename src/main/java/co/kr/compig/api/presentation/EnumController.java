@@ -1,5 +1,6 @@
 package co.kr.compig.api.presentation;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,18 +17,19 @@ public class EnumController {
 
 	@Operation(summary = "조회")
 	@GetMapping("/pb/enum-values/{enumName}")
-	public Object getEnumValues(@Parameter(description = "enum Type class name") @PathVariable String enumName) {
+	public ResponseEntity<?> getEnumValues(
+		@Parameter(description = "enum Type class name") @PathVariable String enumName) {
 		try {
 			Class<?> enumClass = Class.forName("co.kr.compig.api.domain.code." + enumName);
 			if (enumClass.isEnum()) {
-				return enumClass.getMethod("values").invoke(null);
+				return ResponseEntity.ok(enumClass.getMethod("values").invoke(null));
 			} else {
 				throw new NotExistDataException();
 			}
 		} catch (ClassNotFoundException e) {
 			throw new NotExistDataException();
 		} catch (Exception e) {
-			throw new BizException("############### 서버 에러 ###############");
+			throw new BizException("############### 서버 에러 ###############" + enumName);
 		}
 	}
 }

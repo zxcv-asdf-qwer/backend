@@ -22,6 +22,5 @@ public class SwaggerController {
 	@GetMapping("favicon.ico")
 	@ResponseBody
 	void returnNoFavicon() {
-
 	}
 }

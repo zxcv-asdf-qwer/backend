@@ -2,7 +2,10 @@ package co.kr.compig.global.error.handler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpStatus;
@@ -16,17 +19,26 @@ import co.kr.compig.global.error.exception.BizException;
 import co.kr.compig.global.error.model.ErrorCode;
 import co.kr.compig.global.error.model.ErrorResponse;
 import co.kr.compig.global.error.model.ErrorResponse.FieldError;
+import co.kr.compig.global.notify.NotifyMessage;
+import io.micrometer.tracing.Tracer;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class CommonExceptionHandler {
+	private final Optional<NotifyMessage> notifyMessage;
+	private final Tracer tracer;
 
 	@ExceptionHandler(Exception.class)
 	protected ResponseEntity<ErrorResponse> handleGlobalException(final Exception e,
 		final WebRequest er) {
 		log.error(e.getMessage(), e);
 		getSimpleExceptionMsg(e);
+
+		this.doSendSlackError(e);
+
 		return new ResponseEntity<>(ErrorResponse.of(e, er), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
@@ -35,6 +47,9 @@ public class CommonExceptionHandler {
 		final WebRequest er) {
 		log.error(e.getMessage(), e);
 		getSimpleExceptionMsg(e);
+
+		this.doSendSlackError(e);
+
 		return new ResponseEntity<>(ErrorResponse.of(e, er), e.getErrorCode().getHttpStatus());
 	}
 
@@ -52,6 +67,8 @@ public class CommonExceptionHandler {
 				return fieldError;
 			}).toList();
 		errorResponse.addFieldError(fieldErrors);
+
+		this.doSendSlackError(ex);
 		return new ResponseEntity<>(errorResponse, invalidInputValue.getHttpStatus());
 	}
 
@@ -67,6 +84,9 @@ public class CommonExceptionHandler {
 			fieldErrors.add(new ErrorResponse.FieldError("", "잘못된 형식의 값을 입력하였습니다."));
 		}
 		errorResponse.addFieldError(fieldErrors);
+
+		this.doSendSlackError(ex);
+
 		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
 
@@ -82,5 +102,17 @@ public class CommonExceptionHandler {
 			.ifPresent(err -> log.error((e.getMessage().equals("null") ? "" : e.getMessage() + "\n")
 				+ err.getClassName() + "." + err.getMethodName() + " - " + err.getFileName() + " : "
 				+ err.getLineNumber() + " line"));
+	}
+
+	private void doSendSlackError(Exception e) {
+		Map<String, Object> tracerMap = new HashMap<>();
+		try {
+			tracerMap.put("traceId", tracer.currentSpan().context().traceId());
+			tracerMap.put("spanId", tracer.currentSpan().context().spanId());
+		} catch (Exception te) {
+			log.error(te.getMessage(), te);
+		}
+
+		notifyMessage.ifPresent(service -> service.sendErrorMessage(e, tracerMap));
 	}
 }
