@@ -1,10 +1,15 @@
 package co.kr.compig.global.utils;
 
+import static java.util.stream.Collectors.*;
+
+import java.util.Arrays;
 import java.util.Optional;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.env.Environment;
 
 public class ApplicationContextUtil implements ApplicationContextAware {
 
@@ -32,5 +37,23 @@ public class ApplicationContextUtil implements ApplicationContextAware {
 	@Override
 	public void setApplicationContext(ApplicationContext ctx) throws BeansException {
 		ApplicationContextUtil.ctx = ctx;
+	}
+
+	/**
+	 * (로컬 환경에서 jvm 옵션에 profile 설정을 별도로 하지 않으면 spring이 기본 default profile 사용)
+	 * 현재 활성화된 프로필 정보
+	 */
+	public static String getActiveProfile() {
+		String[] profiles = getEnvironment().getActiveProfiles();
+
+		if (ArrayUtils.isEmpty(profiles)) {
+			profiles = getEnvironment().getDefaultProfiles();
+		}
+
+		return Arrays.stream(profiles).collect(joining(",", "[", "]"));
+	}
+
+	public static Environment getEnvironment() {
+		return ctx.getEnvironment();
 	}
 }

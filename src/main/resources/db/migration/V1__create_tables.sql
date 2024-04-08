@@ -319,22 +319,6 @@ comment on column sms_template.sms_template_type is 'SMS 템플릿 종류';
 comment on column sms_template.at_template_code is '알림톡 템플릿 코드';
 comment on column sms_template.contents is '내용';
 
-create sequence if not exists public.api_log_seq INCREMENT BY 1 START WITH 1;
-create table if not exists api_log
-(
-    log_id      bigint not null primary key,
-    user_id     varchar(255),
-    http_method varchar(10),
-    request_url varchar(500),
-    ip_addr     varchar(100),
-    created_by  varchar(50),
-    created_on  timestamp(6) default CURRENT_TIMESTAMP,
-    updated_by  varchar(50),
-    updated_on  timestamp(6) default CURRENT_TIMESTAMP
-);
-
-comment on table api_log is '로그 테이블';
-
 create sequence if not exists answer_seq start with 1 increment by 1;
 create table if not exists answer
 (
