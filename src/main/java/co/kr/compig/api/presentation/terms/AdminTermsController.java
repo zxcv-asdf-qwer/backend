@@ -1,9 +1,9 @@
 package co.kr.compig.api.presentation.terms;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.terms.TermsService;
@@ -50,16 +51,21 @@ public class AdminTermsController {
 			.build());
 	}
 
-	@Operation(summary = "조회")
-	@GetMapping
+	@Operation(summary = "조회", description = "페이징")
+	@GetMapping(path = "/page")
 	public ResponseEntity<PageResponse<TermsResponse>> pageListBoard(
-		@ParameterObject @ModelAttribute @Valid TermsSearchRequest termsSearchRequest,
-		Pageable pageable
+		@ParameterObject @RequestParam(required = false) @Valid TermsSearchRequest termsSearchRequest,
+		@ParameterObject Pageable pageable
 	) {
-		Page<TermsResponse> page = termsService.pageListTerms(termsSearchRequest, pageable);
-		PageResponse<TermsResponse> pageResponse = new PageResponse<>(page.getContent(), pageable,
-			page.getTotalElements());
-		return ResponseEntity.ok(pageResponse);
+		return ResponseEntity.ok(termsService.getTermsPage(termsSearchRequest, pageable));
+	}
+
+	@Operation(summary = "조회", description = "리스트")
+	@GetMapping(path = "/list")
+	public ResponseEntity<List<TermsResponse>> getTermsList(
+		@ParameterObject @RequestParam(required = false) @Valid TermsSearchRequest termsSearchRequest
+	) {
+		return ResponseEntity.ok(termsService.getTermsList(termsSearchRequest));
 	}
 
 	@Operation(summary = "상세 조회")

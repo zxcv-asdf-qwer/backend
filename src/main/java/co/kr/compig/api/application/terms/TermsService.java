@@ -1,5 +1,7 @@
 package co.kr.compig.api.application.terms;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -14,6 +16,8 @@ import co.kr.compig.api.presentation.terms.request.TermsCreateRequest;
 import co.kr.compig.api.presentation.terms.request.TermsSearchRequest;
 import co.kr.compig.api.presentation.terms.response.TermsDetailResponse;
 import co.kr.compig.api.presentation.terms.response.TermsResponse;
+import co.kr.compig.global.dto.pagination.PageResponse;
+import co.kr.compig.global.dto.pagination.SliceResponse;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,8 +36,9 @@ public class TermsService {
 		return termsRepository.save(terms).getId();
 	}
 
-	public Page<TermsResponse> pageListTerms(TermsSearchRequest termsSearchRequest, Pageable pageable) {
-		return termsRepositoryCustom.findPage(termsSearchRequest, pageable);
+	public PageResponse<TermsResponse> getTermsPage(TermsSearchRequest termsSearchRequest, Pageable pageable) {
+		Page<TermsResponse> page = termsRepositoryCustom.getTermsPage(termsSearchRequest, pageable);
+		return new PageResponse<>(page.getContent(), pageable, page.getTotalElements());
 	}
 
 	public TermsDetailResponse getTerms(Long termsId) {
@@ -52,7 +57,12 @@ public class TermsService {
 		termsRepository.delete(terms);
 	}
 
-	public Slice<TermsResponse> pageListTermsCursor(TermsSearchRequest termsSearchRequest, Pageable pageable) {
-		return termsRepositoryCustom.findAllByCondition(termsSearchRequest, pageable);
+	public SliceResponse<TermsResponse> pageListTerms(TermsSearchRequest termsSearchRequest, Pageable pageable) {
+		Slice<TermsResponse> slice = termsRepositoryCustom.pageListTerms(termsSearchRequest, pageable);
+		return new SliceResponse<>(slice.getContent(), pageable, slice.hasNext());
+	}
+
+	public List<TermsResponse> getTermsList(TermsSearchRequest termsSearchRequest) {
+		return termsRepositoryCustom.getTermsList(termsSearchRequest);
 	}
 }

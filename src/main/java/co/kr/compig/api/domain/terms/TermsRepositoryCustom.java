@@ -1,5 +1,7 @@
 package co.kr.compig.api.domain.terms;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -10,7 +12,9 @@ import co.kr.compig.api.presentation.terms.response.TermsResponse;
 
 @Repository
 public interface TermsRepositoryCustom {
-	Page<TermsResponse> findPage(TermsSearchRequest termsSearchRequest, Pageable pageable);
+	Page<TermsResponse> getTermsPage(TermsSearchRequest termsSearchRequest, Pageable pageable);
 
-	Slice<TermsResponse> findAllByCondition(TermsSearchRequest termsSearchRequest, Pageable pageable);
+	Slice<TermsResponse> pageListTerms(TermsSearchRequest termsSearchRequest, Pageable pageable);
+
+	List<TermsResponse> getTermsList(TermsSearchRequest termsSearchRequest);
 }
