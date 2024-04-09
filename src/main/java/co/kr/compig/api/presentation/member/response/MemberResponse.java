@@ -3,6 +3,7 @@ package co.kr.compig.api.presentation.member.response;
 import org.springframework.web.multipart.MultipartFile;
 
 import co.kr.compig.api.domain.code.CareerCode;
+import co.kr.compig.api.domain.code.DeptCode;
 import co.kr.compig.api.domain.code.DomesticForeignCode;
 import co.kr.compig.api.domain.code.GenderCode;
 import co.kr.compig.api.domain.code.IsYn;
@@ -31,6 +32,7 @@ public class MemberResponse extends BaseAudit {
 	private GenderCode gender; // 성별
 	private UseYn useYn; // 사용유무
 	private UserType userType; //사용자 타입
+	private DeptCode deptCode; // 부서 구분
 	private MemberRegisterType memberRegisterType; // 회원가입 유형
 	private String address1; //주소
 	private String address2; //주소
