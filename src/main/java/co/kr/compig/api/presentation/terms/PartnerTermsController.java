@@ -2,7 +2,6 @@ package co.kr.compig.api.presentation.terms;
 
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -35,12 +34,9 @@ public class PartnerTermsController {
 	@GetMapping
 	public ResponseEntity<SliceResponse<TermsResponse>> pageListTerms(
 		@ParameterObject @ModelAttribute @Valid TermsSearchRequest termsSearchRequest,
-		Pageable pageable
+		@ParameterObject Pageable pageable
 	) {
-		Slice<TermsResponse> slice = termsService.pageListTermsCursor(termsSearchRequest, pageable);
-		SliceResponse<TermsResponse> sliceResponse = new SliceResponse<>(slice.getContent(), pageable, slice.hasNext());
-
-		return ResponseEntity.ok(sliceResponse);
+		return ResponseEntity.ok(termsService.pageListTerms(termsSearchRequest, pageable));
 	}
 
 	@Operation(summary = "상세 조회")

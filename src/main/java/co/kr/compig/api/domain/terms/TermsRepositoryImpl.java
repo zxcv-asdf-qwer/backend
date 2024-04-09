@@ -31,7 +31,7 @@ public class TermsRepositoryImpl implements TermsRepositoryCustom {
 	private final JPAQueryFactory jpaQueryFactory;
 
 	@Override
-	public Page<TermsResponse> findPage(TermsSearchRequest request, Pageable pageable) {
+	public Page<TermsResponse> getTermsPage(TermsSearchRequest request, Pageable pageable) {
 		BooleanExpression predicate = createPredicate(request);
 
 		JPAQuery<TermsResponse> query = createBaseQuery(predicate)
@@ -55,7 +55,7 @@ public class TermsRepositoryImpl implements TermsRepositoryCustom {
 	}
 
 	@Override
-	public Slice<TermsResponse> findAllByCondition(TermsSearchRequest termsSearchRequest, Pageable pageable) {
+	public Slice<TermsResponse> pageListTerms(TermsSearchRequest termsSearchRequest, Pageable pageable) {
 		BooleanExpression predicate = createPredicate(termsSearchRequest);
 
 		JPAQuery<TermsResponse> query = createBaseQuery(predicate)
@@ -79,6 +79,21 @@ public class TermsRepositoryImpl implements TermsRepositoryCustom {
 			hasNext = true;
 		}
 		return new SliceImpl<>(responses, pageable, hasNext);
+	}
+
+	@Override
+	public List<TermsResponse> getTermsList(TermsSearchRequest termsSearchRequest) {
+		BooleanExpression predicate = createPredicate(termsSearchRequest);
+
+		JPAQuery<TermsResponse> query = createBaseQuery(predicate)
+			.select(Projections.constructor(TermsResponse.class,
+				terms.termsType,
+				terms.createdAndModified.createdBy,
+				terms.createdAndModified.createdOn
+			))
+			.orderBy(terms.createdAndModified.createdOn.desc());
+
+		return query.fetch();
 	}
 
 	private BooleanExpression cursorCursorId(Long cursorId) {
