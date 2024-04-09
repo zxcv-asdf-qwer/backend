@@ -8,10 +8,11 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import co.kr.compig.api.application.member.MemberService;
+import co.kr.compig.api.application.patient.OrderPatientService;
 import co.kr.compig.api.domain.apply.Apply;
 import co.kr.compig.api.domain.apply.ApplyRepository;
 import co.kr.compig.api.domain.member.Member;
-import co.kr.compig.api.domain.member.MemberRepository;
 import co.kr.compig.api.domain.member.MemberRepositoryCustom;
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.domain.order.CareOrderRepository;
@@ -34,25 +35,25 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 public class CareOrderService {
 
-	private final MemberRepository memberRepository;
+	private final MemberService memberService;
 	private final MemberRepositoryCustom memberRepositoryCustom;
+	private final OrderPatientService orderPatientService;
 	private final CareOrderRepository careOrderRepository;
 	private final CareOrderRepositoryCustom careOrderRepositoryCustom;
 	private final OrderPatientRepository orderPatientRepository;
 	private final ApplyRepository applyRepository;
 
 	public Long createCareOrderAdmin(AdminCareOrderCreateRequest adminCareOrderCreateRequest) {
-		Member member = memberRepository.findById(adminCareOrderCreateRequest.getMemberId()).orElseThrow(
-			NotExistDataException::new);
-		OrderPatient orderPatient = orderPatientRepository.findById(adminCareOrderCreateRequest.getOrderPatientId())
-			.orElseThrow(NotExistDataException::new);
+		Member member = memberService.getMemberById(adminCareOrderCreateRequest.getMemberId());
+		OrderPatient orderPatient = orderPatientService.getOrderPatientByOrderPatientId(
+			adminCareOrderCreateRequest.getOrderPatientId());
+
 		CareOrder careOrder = adminCareOrderCreateRequest.converterEntity(member, orderPatient);
 		return careOrderRepository.save(careOrder).getId();
 	}
 
 	public Long createCareOrderUser(CareOrderCreateRequest careOrderCreateRequest) {
-		Member member = memberRepository.findById(careOrderCreateRequest.getMemberId()).orElseThrow(
-			NotExistDataException::new);
+		Member member = memberService.getMemberById(careOrderCreateRequest.getMemberId());
 		OrderPatient orderPatient = orderPatientRepository.findById(careOrderCreateRequest.getOrderPatientId())
 			.orElseThrow(NotExistDataException::new);
 		CareOrder careOrder = careOrderCreateRequest.converterEntity(member, orderPatient);

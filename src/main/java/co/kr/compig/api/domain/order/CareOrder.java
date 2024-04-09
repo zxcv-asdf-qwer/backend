@@ -78,18 +78,21 @@ public class CareOrder {
 
 	@Column
 	@Enumerated(EnumType.STRING)
-	private IsYn newStatus; // 신규 여부
+	private IsYn publishYn; // 게시 여부
 
 	@Column
 	@Convert(converter = PeriodTypeConverter.class)
 	private PeriodType periodType; // 시간제, 기간제
 
 	@Column
-	@Convert(converter = CareOrderRegisterTypeConverter.class)
-	private CareOrderRegisterType careOrderRegisterType; // 등록 구분
+	private String title; // 제목
+
+	@Column(columnDefinition = "TEXT")
+	private String orderRequest; // 요청사항
 
 	@Column
-	private String orderRequest; // 요청사항
+	@Convert(converter = CareOrderRegisterTypeConverter.class)
+	private CareOrderRegisterType careOrderRegisterType; // 등록 구분
 
   /* =================================================================
    * Domain mapping
@@ -123,24 +126,24 @@ public class CareOrder {
 			.startDateTime(this.startDateTime)
 			.endDateTime(this.endDateTime)
 			.orderStatusCode(this.orderStatus)
-			.newStatus(this.newStatus)
+			.publishYn(this.publishYn)
 			.periodType(this.periodType)
 			.careOrderRegisterType(this.careOrderRegisterType)
 			.orderRequest(this.orderRequest)
 			.userNm(member.getUserNm())
 			.telNo(member.getTelNo())
-			.patientNm(orderPatient.getPatientNm())
+			.name(orderPatient.getName())
 			.gender(orderPatient.getGender())
-			.patientAge(orderPatient.getPatientAge())
-			.patientHeight(orderPatient.getPatientHeight())
-			.patientWeight(orderPatient.getPatientWeight())
+			.birthDate(orderPatient.getBirthDate())
+			.height(orderPatient.getHeight())
+			.weight(orderPatient.getWeight())
 			.diseaseNm(orderPatient.getDiseaseNm())
 			.selfToiletAvailability(orderPatient.getSelfToiletAvailability())
 			.moveAvailability(orderPatient.getMoveAvailability())
 			.mealAvailability(orderPatient.getMealAvailability())
 			.genderPreference(orderPatient.getGenderPreference())
 			.covid19Test(orderPatient.getCovid19Test())
-			.requestedTerm(orderPatient.getRequestedTerm())
+			.patientRequest(orderPatient.getPatientRequest())
 			.locationType(orderPatient.getLocationType())
 			.addressCd(orderPatient.getAddressCd())
 			.address1(orderPatient.getAddress1())

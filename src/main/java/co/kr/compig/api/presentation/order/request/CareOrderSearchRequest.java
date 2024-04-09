@@ -16,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 public class CareOrderSearchRequest extends PageableRequest {
 
-	private IsYn newStatus; // 신규 여부
+	private IsYn publishYn; // 신규 여부
 	private PeriodType periodType; // 시간제, 기간제
 	private String userNm; // 보호자명
 	private String telNo; // 전화번호

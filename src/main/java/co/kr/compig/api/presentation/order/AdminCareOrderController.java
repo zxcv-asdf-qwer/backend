@@ -36,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/admin/care-order", produces = "application/json")
+@RequestMapping(path = "/admin/orders", produces = "application/json")
 public class AdminCareOrderController {
 
 	private final CareOrderService careOrderService;

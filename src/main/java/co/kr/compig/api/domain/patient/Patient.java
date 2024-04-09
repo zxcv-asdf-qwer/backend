@@ -1,6 +1,7 @@
 package co.kr.compig.api.domain.patient;
 
 import java.lang.reflect.Type;
+import java.time.LocalDate;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -57,20 +58,20 @@ public class Patient {
 	private Long id;
 
 	@Column(length = 50)
-	private String patientNm;    // 환자 이름
+	private String name;    // 환자 이름
 
 	@Column(length = 1)
 	@Enumerated(EnumType.STRING)
 	private GenderCode gender;    // 환자 성별
 
 	@Column
-	private Integer patientAge; // 환자 나이
+	private LocalDate birthDate; // 환자 나이
 
 	@Column
-	private Integer patientHeight; // 환자 신장
+	private Integer height; // 환자 신장
 
 	@Column
-	private Integer patientWeight; // 환자 몸무게
+	private Integer weight; // 환자 몸무게
 
 	@Column(columnDefinition = "jsonb")
 	private String diseaseNm; // 진단명
@@ -96,7 +97,7 @@ public class Patient {
 	private IsYn covid19Test; // 코로나 검사 필요 여부
 
 	@Column
-	private String requestedTerm; // 요청 사항
+	private String patientRequest; // 요청 사항
 
 	@Column
 	@Enumerated(EnumType.STRING)
@@ -132,16 +133,16 @@ public class Patient {
 	public PatientDetailResponse toPatientDetailResponse() {
 		return PatientDetailResponse.builder()
 			.id(this.id)
-			.patientNm(this.patientNm)
+			.name(this.name)
 			.gender(this.gender)
-			.patientAge(this.patientAge)
-			.patientHeight(this.patientHeight)
-			.patientWeight(this.patientWeight)
+			.birthDate(this.birthDate)
+			.height(this.height)
+			.weight(this.weight)
 			.diseaseNm(convertJsonStringToList(this.diseaseNm))
 			.selfToiletAvailability(this.selfToiletAvailability)
 			.genderPreference(this.genderPreference)
 			.covid19Test(this.covid19Test)
-			.requestedTerm(this.requestedTerm)
+			.patientRequest(this.patientRequest)
 			.locationType(this.locationType)
 			.addressCd(this.addressCd)
 			.address1(this.address1)
@@ -158,16 +159,16 @@ public class Patient {
 	}
 
 	public void update(PatientUpdateRequest patientUpdateRequest) {
-		this.patientNm = patientUpdateRequest.getPatientNm();
+		this.name = patientUpdateRequest.getName();
 		this.gender = patientUpdateRequest.getGender();
-		this.patientAge = patientUpdateRequest.getPatientAge();
-		this.patientHeight = patientUpdateRequest.getPatientHeight();
-		this.patientWeight = patientUpdateRequest.getPatientWeight();
+		this.birthDate = patientUpdateRequest.getBirthDate();
+		this.height = patientUpdateRequest.getHeight();
+		this.weight = patientUpdateRequest.getWeight();
 		this.diseaseNm = patientUpdateRequest.getDiseaseNm();
 		this.selfToiletAvailability = patientUpdateRequest.getSelfToiletAvailability();
 		this.genderPreference = patientUpdateRequest.getGenderPreference();
 		this.covid19Test = patientUpdateRequest.getCovid19Test();
-		this.requestedTerm = patientUpdateRequest.getRequestedTerm();
+		this.patientRequest = patientUpdateRequest.getPatientRequest();
 		this.addressCd = patientUpdateRequest.getAddressCd();
 		this.address1 = patientUpdateRequest.getAddress1();
 		this.address2 = patientUpdateRequest.getAddress2();
@@ -176,7 +177,7 @@ public class Patient {
 	public PatientResponse toPatientResponse() {
 		return PatientResponse.builder()
 			.id(this.id)
-			.patientNm(this.patientNm)
+			.name(this.name)
 			.build();
 	}
 }

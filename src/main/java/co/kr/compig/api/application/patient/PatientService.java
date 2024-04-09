@@ -8,8 +8,8 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import co.kr.compig.api.application.member.MemberService;
 import co.kr.compig.api.domain.member.Member;
-import co.kr.compig.api.domain.member.MemberRepository;
 import co.kr.compig.api.domain.patient.Patient;
 import co.kr.compig.api.domain.patient.PatientRepository;
 import co.kr.compig.api.domain.patient.PatientRepositoryCustom;
@@ -31,23 +31,19 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 public class PatientService {
 
+	private final MemberService memberService;
 	private final PatientRepository patientRepository;
 	private final PatientRepositoryCustom patientRepositoryCustom;
-	private final MemberRepository memberRepository;
 
-	public Long createPatientAdmin(AdminPatientCreateRequest patientCreateRequest) {
-		Member member = memberRepository.findById(patientCreateRequest.getMemberId())
-			.orElseThrow(NotExistDataException::new);
-		if (patientRepository.existsByMemberAndPatientNm(member, patientCreateRequest.getPatientNm())) {
-			throw new BizException("이미 존재하는 환자입니다.");
-		}
-		Patient patient = patientCreateRequest.converterEntity(member);
+	public Long createPatientAdmin(AdminPatientCreateRequest adminPatientCreateRequest) {
+		Member member = memberService.getMemberById(adminPatientCreateRequest.getMemberId());
+
+		Patient patient = adminPatientCreateRequest.converterEntity(member);
 		return patientRepository.save(patient).getId();
 	}
 
 	public Long createPatientUser(PatientCreateRequest patientCreateRequest) {
-		Member member = memberRepository.findById(SecurityUtil.getMemberId())
-			.orElseThrow(NotExistDataException::new);
+		Member member = memberService.getMemberById(SecurityUtil.getMemberId());
 		Patient patient = patientCreateRequest.converterEntity(member);
 		return patientRepository.save(patient).getId();
 	}
@@ -76,9 +72,7 @@ public class PatientService {
 	public List<PatientResponse> getPatients(String memberId) {
 		if (memberId == null)
 			throw new BizException("memberId가 없습니다.");
-		Member member = memberRepository.findById(memberId)
-			.orElseThrow(NotExistDataException::new);
-
+		Member member = memberService.getMemberById(memberId);
 		return patientRepository.findAllByMember(member).stream()
 			.map(Patient::toPatientResponse)
 			.collect(Collectors.toList());

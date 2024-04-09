@@ -14,5 +14,5 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 public class PatientResponse extends BaseAudit {
 	private Long id; // 환자ID
-	private String patientNm;    // 환자 이름
+	private String name;    // 환자 이름
 }

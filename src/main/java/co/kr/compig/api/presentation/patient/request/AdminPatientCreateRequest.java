@@ -1,5 +1,6 @@
 package co.kr.compig.api.presentation.patient.request;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.hibernate.validator.constraints.Length;
@@ -34,22 +35,21 @@ public class AdminPatientCreateRequest {
 	@NotBlank
 	@Pattern(regexp = "^[\\sㄱ-ㅎ가-힣A-Za-z0-9_-]{2,100}$")
 	@Length(min = 2, max = 50)
-	private String patientNm; // 환자 이름
+	private String name; // 환자 이름
 
 	@NotNull
 	private GenderCode gender; // 환자 성별
 
 	@NotNull
-	@Min(0)
-	private Integer patientAge; // 환자 나이
+	private LocalDate birthDate; // 환자 나이
 
 	@NotNull
 	@Min(0)
-	private Integer patientHeight; // 환자 키
+	private Integer height; // 환자 키
 
 	@NotNull
 	@Min(0)
-	private Integer patientWeight; // 환자 체중
+	private Integer weight; // 환자 체중
 
 	@NotNull
 	private LocationType locationType; // 간병 장소 종류
@@ -75,20 +75,20 @@ public class AdminPatientCreateRequest {
 	@NotNull
 	private IsYn covid19Test; // 코로나 검사 필요 여부
 
-	private String requestedTerm; // 요청 사항
+	private String patientRequest; // 요청 사항
 
 	public Patient converterEntity(Member member) {
 		return Patient.builder()
-			.patientNm(this.patientNm)
+			.name(this.name)
 			.gender(this.gender)
-			.patientAge(this.patientAge)
-			.patientHeight(this.patientHeight)
-			.patientWeight(this.patientWeight)
+			.birthDate(this.birthDate)
+			.height(this.height)
+			.weight(this.weight)
 			.diseaseNm(new Gson().toJson(this.diseaseNm))
 			.selfToiletAvailability(this.selfToiletAvailability)
 			.genderPreference(this.genderPreference)
 			.covid19Test(this.covid19Test)
-			.requestedTerm(this.requestedTerm)
+			.patientRequest(this.patientRequest)
 			.locationType(this.locationType)
 			.addressCd(this.addressCd)
 			.address1(this.address1)

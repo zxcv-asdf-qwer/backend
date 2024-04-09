@@ -54,4 +54,9 @@ public class OrderPatientService {
 			.orElseThrow(NotExistDataException::new);
 		orderPatientRepository.delete(orderPatient);
 	}
+
+	public OrderPatient getOrderPatientByOrderPatientId(Long orderPatientId) {
+		return orderPatientRepository.findById(orderPatientId)
+			.orElseThrow(NotExistDataException::new);
+	}
 }

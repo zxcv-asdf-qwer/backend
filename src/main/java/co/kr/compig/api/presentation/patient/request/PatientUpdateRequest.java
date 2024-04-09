@@ -1,5 +1,7 @@
 package co.kr.compig.api.presentation.patient.request;
 
+import java.time.LocalDate;
+
 import org.hibernate.validator.constraints.Length;
 
 import co.kr.compig.api.domain.code.GenderCode;
@@ -24,22 +26,21 @@ public class PatientUpdateRequest {
 	@NotBlank
 	@Pattern(regexp = "^[\\sㄱ-ㅎ가-힣A-Za-z0-9_-]{2,100}$")
 	@Length(min = 2, max = 50)
-	private String patientNm; // 환자 이름
+	private String name; // 환자 이름
 
 	@NotNull
 	private GenderCode gender; // 환자 성별
 
 	@NotNull
-	@Min(0)
-	private Integer patientAge; // 환자 나이
+	private LocalDate birthDate; // 환자 나이
 
 	@NotNull
 	@Min(0)
-	private Integer patientHeight; // 환자 키
+	private Integer height; // 환자 키
 
 	@NotNull
 	@Min(0)
-	private Integer patientWeight; // 환자 체중
+	private Integer weight; // 환자 체중
 
 	@NotNull
 	private LocationType locationType; // 간병 장소 종류
@@ -65,5 +66,5 @@ public class PatientUpdateRequest {
 	@NotNull
 	private IsYn covid19Test; // 코로나 검사 필요 여부
 
-	private String requestedTerm; // 요청 사항
+	private String patientRequest; // 요청 사항
 }

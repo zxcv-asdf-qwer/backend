@@ -9,7 +9,7 @@ import co.kr.compig.api.domain.member.Member;
 
 public interface PatientRepository extends JpaRepository<Patient, Long>,
 	QuerydslPredicateExecutor<Patient> {
-	Boolean existsByMemberAndPatientNm(Member member, String patientNm);
+	Boolean existsByMemberAndName(Member member, String name);
 
 	List<Patient> findAllByMember(Member member);
 }

@@ -1,5 +1,7 @@
 package co.kr.compig.api.presentation.patient.request;
 
+import java.time.LocalDate;
+
 import org.hibernate.validator.constraints.Length;
 
 import co.kr.compig.api.domain.code.GenderCode;
@@ -22,19 +24,19 @@ import lombok.NoArgsConstructor;
 public class OrderPatientCreateRequest {
 	@NotBlank
 	@Length(min = 2, max = 50)
-	private String patientNm; // 환자 이름
+	private String name; // 환자 이름
 
 	@NotNull
 	private GenderCode gender; // 환자 성별
 
 	@NotNull
-	private Integer patientAge; // 환자 나이
+	private LocalDate birthDate; // 환자 나이
 
 	@NotNull
-	private Integer patientHeight; // 환자 신장
+	private Integer height; // 환자 신장
 
 	@NotNull
-	private Integer patientWeight; // 환자 몸무게
+	private Integer weight; // 환자 몸무게
 
 	@NotBlank
 	private String diseaseNm; // 진단명
@@ -54,7 +56,7 @@ public class OrderPatientCreateRequest {
 	@NotNull
 	private IsYn covid19Test; // 코로나 검사 필요 여부
 
-	private String requestedTerm; // 요청 사항
+	private String patientRequest; // 요청 사항
 
 	@NotNull
 	private LocationType locationType; // 간병 장소 종류
@@ -70,18 +72,18 @@ public class OrderPatientCreateRequest {
 
 	public OrderPatient converterEntity(Member member) {
 		return OrderPatient.builder()
-			.patientNm(this.patientNm)
+			.name(this.name)
 			.gender(this.gender)
-			.patientAge(this.patientAge)
-			.patientHeight(this.patientHeight)
-			.patientWeight(this.patientWeight)
+			.birthDate(this.birthDate)
+			.height(this.height)
+			.weight(this.weight)
 			.diseaseNm(this.diseaseNm)
 			.selfToiletAvailability(this.selfToiletAvailability)
 			.moveAvailability(this.moveAvailability)
 			.mealAvailability(this.mealAvailability)
 			.genderPreference(this.genderPreference)
 			.covid19Test(this.covid19Test)
-			.requestedTerm(this.requestedTerm)
+			.patientRequest(this.patientRequest)
 			.locationType(this.locationType)
 			.addressCd(this.addressCd)
 			.address1(this.address1)
