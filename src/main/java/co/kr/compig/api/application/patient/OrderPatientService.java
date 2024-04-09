@@ -3,8 +3,8 @@ package co.kr.compig.api.application.patient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import co.kr.compig.api.application.member.MemberService;
 import co.kr.compig.api.domain.member.Member;
-import co.kr.compig.api.domain.member.MemberRepository;
 import co.kr.compig.api.domain.patient.OrderPatient;
 import co.kr.compig.api.domain.patient.OrderPatientRepository;
 import co.kr.compig.api.presentation.patient.request.AdminOrderPatientCreateRequest;
@@ -19,19 +19,17 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional
 public class OrderPatientService {
+	private final MemberService memberService;
 	private final OrderPatientRepository orderPatientRepository;
-	private final MemberRepository memberRepository;
 
 	public Long createOrderPatientAdmin(AdminOrderPatientCreateRequest adminOrderPatientCreateRequest) {
-		Member member = memberRepository.findById(adminOrderPatientCreateRequest.getMemberId())
-			.orElseThrow(NotExistDataException::new);
+		Member member = memberService.getMemberById(adminOrderPatientCreateRequest.getMemberId());
 		OrderPatient orderPatient = adminOrderPatientCreateRequest.converterEntity(member);
 		return orderPatientRepository.save(orderPatient).getId();
 	}
 
 	public Long createOrderPatientUser(OrderPatientCreateRequest orderPatientCreateRequest) {
-		Member member = memberRepository.findById(SecurityUtil.getMemberId())
-			.orElseThrow(NotExistDataException::new);
+		Member member = memberService.getMemberById(SecurityUtil.getMemberId());
 		OrderPatient orderPatient = orderPatientCreateRequest.converterEntity(member);
 		return orderPatientRepository.save(orderPatient).getId();
 	}

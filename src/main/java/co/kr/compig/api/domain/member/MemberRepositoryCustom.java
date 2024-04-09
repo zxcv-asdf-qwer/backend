@@ -22,5 +22,4 @@ public interface MemberRepositoryCustom {
 
 	Page<GuardianMemberResponse> getGuardianPage(MemberSearchRequest memberSearchRequest, Pageable pageable);
 
-	Member getMemberInfo(String id);
 }

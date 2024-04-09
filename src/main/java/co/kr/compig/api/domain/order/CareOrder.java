@@ -113,11 +113,8 @@ public class CareOrder {
 	@OneToOne(fetch = FetchType.LAZY)
 	private OrderPatient orderPatient = new OrderPatient();
 
-	public CareOrderDetailResponse toCareOrderDetailResponse(Member member
-		, OrderPatient orderPatient
-		, Set<Apply> applies
-	) {
-		Set<ApplyCareOrderResponse> applyResponses = applies.stream()
+	public CareOrderDetailResponse toCareOrderDetailResponse() {
+		Set<ApplyCareOrderResponse> applyResponses = applys.stream()
 			.map(Apply::toApplyCareOrderResponse) // Apply 객체를 ApplyDetailResponse 객체로 매핑
 			.collect(Collectors.toSet());
 

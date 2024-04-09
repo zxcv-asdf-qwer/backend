@@ -1,7 +1,6 @@
 package co.kr.compig.api.domain.member;
 
 import static co.kr.compig.api.domain.member.QMember.*;
-import static co.kr.compig.api.domain.member.QMemberGroup.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -69,15 +68,6 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 		}
 
 		return new SliceImpl<>(responses, pageable, hasNext);
-	}
-
-	@Override
-	public Member getMemberInfo(String id) {
-		return jpaQueryFactory
-			.selectFrom(member)
-			.leftJoin(member.groups, memberGroup).fetchJoin()
-			.where(member.id.eq(id))
-			.fetchOne();
 	}
 
 	private JPAQuery<?> createBaseQuery(BooleanExpression predicate) {

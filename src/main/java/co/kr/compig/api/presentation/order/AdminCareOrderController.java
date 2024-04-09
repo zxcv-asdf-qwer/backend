@@ -3,17 +3,16 @@ package co.kr.compig.api.presentation.order;
 import java.util.Map;
 
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.order.CareOrderService;
@@ -44,7 +43,7 @@ public class AdminCareOrderController {
 	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createCareOrder(
-		@ParameterObject @ModelAttribute @Valid AdminCareOrderCreateRequest adminCareOrderCreateRequest
+		@ParameterObject @RequestBody @Valid AdminCareOrderCreateRequest adminCareOrderCreateRequest
 	) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("careOrderId", careOrderService.createCareOrderAdmin(adminCareOrderCreateRequest)))
@@ -54,12 +53,10 @@ public class AdminCareOrderController {
 	@Operation(summary = "조회")
 	@GetMapping
 	public ResponseEntity<PageResponse<CareOrderResponse>> pageListCareOrder(
-		@ParameterObject @ModelAttribute @Valid CareOrderSearchRequest careOrderSearchRequest, Pageable pageable
+		@ParameterObject @RequestParam(required = false) @Valid CareOrderSearchRequest careOrderSearchRequest,
+		@ParameterObject Pageable pageable
 	) {
-		Page<CareOrderResponse> page = careOrderService.pageListCareOrder(careOrderSearchRequest, pageable);
-		PageResponse<CareOrderResponse> pageResponse = new PageResponse<>(page.getContent(), pageable,
-			page.getTotalElements());
-		return ResponseEntity.ok(pageResponse);
+		return ResponseEntity.ok(careOrderService.pageListCareOrder(careOrderSearchRequest, pageable));
 	}
 
 	@Operation(summary = "상세 조회")
