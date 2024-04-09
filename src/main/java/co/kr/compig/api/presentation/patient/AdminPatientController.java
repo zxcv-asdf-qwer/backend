@@ -3,11 +3,9 @@ package co.kr.compig.api.presentation.patient;
 import java.util.List;
 import java.util.Map;
 
-import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -33,21 +31,21 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/admin/patient", produces = "application/json")
+@RequestMapping(path = "/admin/patients", produces = "application/json")
 public class AdminPatientController {
 	private final PatientService patientService;
 
 	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createPatient(
-		@ParameterObject @ModelAttribute @Valid AdminPatientCreateRequest adminPatientCreateRequest) {
+		@RequestBody @Valid AdminPatientCreateRequest adminPatientCreateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("patientId", patientService.createPatientAdmin(adminPatientCreateRequest)))
 			.build());
 	}
 
-	@Operation(summary = "조회")
-	@GetMapping(path = "member/{memberId}")
+	@Operation(summary = "환자 프로필 수정 화면 환자 선택 셀렉트 박스 조회")
+	@GetMapping(path = "/members/{memberId}")
 	public ResponseEntity<Response<List<PatientResponse>>> getPatients(
 		@PathVariable(name = "memberId") String memberId
 	) {

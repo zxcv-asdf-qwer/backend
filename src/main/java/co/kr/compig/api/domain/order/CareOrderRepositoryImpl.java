@@ -98,8 +98,8 @@ public class CareOrderRepositoryImpl implements CareOrderRepositoryCustom {
 
 	private BooleanExpression createPredicate(CareOrderSearchRequest request) {
 		BooleanExpression predicate = Expressions.asBoolean(true).isTrue();
-		if (request.getNewStatus() != null) {
-			predicate = predicate.and(careOrder.newStatus.eq(request.getNewStatus()));
+		if (request.getPublishYn() != null) {
+			predicate = predicate.and(careOrder.publishYn.eq(request.getPublishYn()));
 		}
 		if (request.getPeriodType() != null) {
 			predicate = predicate.and(careOrder.periodType.eq(request.getPeriodType()));

@@ -37,7 +37,7 @@ public class CareOrderCreateRequest {
 
 	@NotNull
 	@Enumerated(EnumType.STRING)
-	private IsYn newStatus; // 신규 여부
+	private IsYn publishYn; // 신규 여부
 
 	@NotNull
 	private PeriodType periodType; // 시간제, 기간제
@@ -53,7 +53,7 @@ public class CareOrderCreateRequest {
 			.startDateTime(this.startDateTime)
 			.endDateTime(this.endDateTime)
 			.orderRequest(this.orderRequest)
-			.newStatus(this.newStatus)
+			.publishYn(this.publishYn)
 			.periodType(this.periodType)
 			.careOrderRegisterType(CareOrderRegisterType.AUTO)
 			.member(member)

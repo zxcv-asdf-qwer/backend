@@ -31,10 +31,13 @@ public class AdminCareOrderCreateRequest {
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
 	private LocalDateTime endDateTime; // 종료 날짜
 
+	@NotBlank
+	private String title; // 제목
+
 	private String orderRequest; // 요청 사항
 
 	@NotNull
-	private IsYn newStatus; // 신규 여부
+	private IsYn publishYn; // 게시 여부
 
 	@NotNull
 	private PeriodType periodType; // 시간제, 기간제
@@ -45,14 +48,18 @@ public class AdminCareOrderCreateRequest {
 	@NotNull
 	private Long orderPatientId; // 간병공고 등록시 환자 정보 ID
 
+	@NotNull
+	private CareOrderRegisterType careOrderRegisterType; // 등록 구분
+
 	public CareOrder converterEntity(Member member, OrderPatient orderPatient) {
 		return CareOrder.builder()
 			.startDateTime(this.startDateTime)
 			.endDateTime(this.endDateTime)
+			.title(this.title)
 			.orderRequest(this.orderRequest)
-			.newStatus(this.newStatus)
+			.publishYn(this.publishYn)
 			.periodType(this.periodType)
-			.careOrderRegisterType(CareOrderRegisterType.MANUAL)
+			.careOrderRegisterType(this.careOrderRegisterType)
 			.member(member)
 			.orderPatient(orderPatient)
 			.build();

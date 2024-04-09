@@ -34,7 +34,7 @@ public class PatientRepositoryImpl implements PatientRepositoryCustom {
 		JPAQuery<PatientResponse> query = createBaseQuery(predicate)
 			.select(Projections.constructor(PatientResponse.class,
 				patient.id,
-				patient.patientNm
+				patient.name
 			));
 
 		applySorting(query, pageable);
