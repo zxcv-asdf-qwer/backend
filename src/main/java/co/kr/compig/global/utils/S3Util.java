@@ -40,6 +40,9 @@ public class S3Util {
 	@Value("${cloud.aws.s3.folder}")
 	private String folder;
 
+	@Value("${cloud.aws.cloudfront.url}")
+	private String cloudfront;
+
 	public String upload(MultipartFile multipartFile) {
 		if (multipartFile == null || multipartFile.isEmpty())
 			return null;
@@ -125,8 +128,7 @@ public class S3Util {
 	}
 
 	public String generateUnsignedUrl(String objectKey) {
-		String baseUrl = "https://d1qy21g8owbgj0.cloudfront.net/";
-		return baseUrl + objectKey;
+		return cloudfront + objectKey;
 	}
 
 	////////////////////////////////////////
