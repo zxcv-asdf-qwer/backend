@@ -20,8 +20,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PatientUpdateRequest {
-	@NotBlank
-	private String memberId; // 멤버 ID
 
 	@NotBlank
 	@Pattern(regexp = "^[\\sㄱ-ㅎ가-힣A-Za-z0-9_-]{2,100}$")
