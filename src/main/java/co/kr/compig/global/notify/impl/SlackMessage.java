@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -137,7 +136,7 @@ public class SlackMessage implements NotifyMessage {
 	}
 
 	private void post(Payload payload) {
-		if (Objects.equals(getActiveProfile(), "local")) {
+		if (getActiveProfile().contains("local")) {
 			// local 프로필에서는 로그를 남기지 않음
 			return;
 		}
