@@ -1,6 +1,5 @@
 package co.kr.compig.api.presentation.terms;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springdoc.core.annotations.ParameterObject;
@@ -58,14 +57,6 @@ public class AdminTermsController {
 		@ParameterObject Pageable pageable
 	) {
 		return ResponseEntity.ok(termsService.getTermsPage(termsSearchRequest, pageable));
-	}
-
-	@Operation(summary = "조회", description = "리스트")
-	@GetMapping(path = "/list")
-	public ResponseEntity<List<TermsResponse>> getTermsList(
-		@ParameterObject @RequestParam(required = false) @Valid TermsSearchRequest termsSearchRequest
-	) {
-		return ResponseEntity.ok(termsService.getTermsList(termsSearchRequest));
 	}
 
 	@Operation(summary = "상세 조회")

@@ -1,5 +1,7 @@
 package co.kr.compig.api.presentation.terms;
 
+import java.util.List;
+
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -7,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.terms.TermsService;
@@ -37,6 +40,14 @@ public class PartnerTermsController {
 		@ParameterObject Pageable pageable
 	) {
 		return ResponseEntity.ok(termsService.pageListTerms(termsSearchRequest, pageable));
+	}
+
+	@Operation(summary = "조회", description = "리스트")
+	@GetMapping(path = "/list")
+	public ResponseEntity<List<TermsResponse>> getTermsList(
+		@ParameterObject @RequestParam(required = false) @Valid TermsSearchRequest termsSearchRequest
+	) {
+		return ResponseEntity.ok(termsService.getTermsList(termsSearchRequest));
 	}
 
 	@Operation(summary = "상세 조회")
