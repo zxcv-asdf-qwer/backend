@@ -60,8 +60,8 @@ public class TermsService {
 	}
 
 	@Transactional(readOnly = true)
-	public SliceResponse<TermsResponse> pageListTerms(TermsSearchRequest termsSearchRequest, Pageable pageable) {
-		Slice<TermsResponse> slice = termsRepositoryCustom.pageListTerms(termsSearchRequest, pageable);
+	public SliceResponse<TermsResponse> getTermsSlice(TermsSearchRequest termsSearchRequest, Pageable pageable) {
+		Slice<TermsResponse> slice = termsRepositoryCustom.getTermsSlice(termsSearchRequest, pageable);
 		return new SliceResponse<>(slice.getContent(), pageable, slice.hasNext());
 	}
 

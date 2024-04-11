@@ -49,9 +49,9 @@ public class PaymentService {
 	}
 
 	@Transactional(readOnly = true)
-	public SliceResponse<PaymentResponse> pageListPaymentCursor(PaymentSearchRequest paymentSearchRequest,
+	public SliceResponse<PaymentResponse> getPaymentSlice(PaymentSearchRequest paymentSearchRequest,
 		Pageable pageable) {
-		Slice<PaymentResponse> slice = paymentRepositoryCustom.findAllByCondition(paymentSearchRequest, pageable);
+		Slice<PaymentResponse> slice = paymentRepositoryCustom.getPaymentSlice(paymentSearchRequest, pageable);
 		return new SliceResponse<>(slice.getContent(), pageable, slice.hasNext());
 	}
 

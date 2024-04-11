@@ -12,6 +12,6 @@ import co.kr.compig.api.presentation.payment.response.PaymentCancelResponse;
 public interface PaymentCancelRepositoryCustom {
 	Page<PaymentCancelResponse> findPage(PaymentCancelSearchRequest paymentCancelSearchRequest, Pageable pageable);
 
-	Slice<PaymentCancelResponse> findAllByCondition(PaymentCancelSearchRequest paymentCancelSearchRequest,
+	Slice<PaymentCancelResponse> getPaymentCancelSlice(PaymentCancelSearchRequest paymentCancelSearchRequest,
 		Pageable pageable);
 }

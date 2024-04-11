@@ -57,7 +57,7 @@ public class ApplyRepositoryImpl implements ApplyRepositoryCustom {
 	}
 
 	@Override
-	public Slice<ApplyResponse> findAllByCondition(ApplySearchRequest applySearchRequest, Pageable pageable) {
+	public Slice<ApplyResponse> getApplySlice(ApplySearchRequest applySearchRequest, Pageable pageable) {
 		BooleanExpression predicate = createPredicate(applySearchRequest);
 
 		JPAQuery<ApplyResponse> query = createBaseQuery(predicate)

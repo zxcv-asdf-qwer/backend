@@ -111,9 +111,9 @@ public class BoardService {
 	}
 
 	@Transactional(readOnly = true)
-	public SliceResponse<BoardResponse> pageListBoardCursor(@Valid BoardSearchRequest boardSearchRequest,
+	public SliceResponse<BoardResponse> getBoardSlice(@Valid BoardSearchRequest boardSearchRequest,
 		Pageable pageable) {
-		Slice<BoardResponse> slice = boardRepositoryCustom.findAllByCondition(boardSearchRequest, pageable);
+		Slice<BoardResponse> slice = boardRepositoryCustom.getBoardSlice(boardSearchRequest, pageable);
 		return new SliceResponse<>(slice.getContent(), pageable, slice.hasNext());
 	}
 }

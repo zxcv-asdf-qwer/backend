@@ -10,7 +10,7 @@ import co.kr.compig.api.presentation.payment.response.PaymentResponse;
 
 @Repository
 public interface PaymentRepositoryCustom {
-	Slice<PaymentResponse> findAllByCondition(PaymentSearchRequest paymentSearchRequest, Pageable pageable);
+	Slice<PaymentResponse> getPaymentSlice(PaymentSearchRequest paymentSearchRequest, Pageable pageable);
 
 	Page<PaymentResponse> findPage(PaymentSearchRequest paymentSearchRequest, Pageable pageable);
 }

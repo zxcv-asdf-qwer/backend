@@ -50,10 +50,10 @@ public class PartnerApplyController {
 
 	@Operation(summary = "조회")
 	@GetMapping
-	public ResponseEntity<SliceResponse<ApplyResponse>> pageListApply(
+	public ResponseEntity<SliceResponse<ApplyResponse>> getApplySlice(
 		@ParameterObject @ModelAttribute @Valid ApplySearchRequest applySearchRequest,
 		@ParameterObject Pageable pageable) {
-		return ResponseEntity.ok(applyService.pageListApplyCursor(applySearchRequest, pageable));
+		return ResponseEntity.ok(applyService.getApplySlice(applySearchRequest, pageable));
 	}
 
 	@Operation(summary = "상세 조회")

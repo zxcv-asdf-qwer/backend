@@ -54,7 +54,7 @@ public class PaymentCancelRepositoryImpl implements PaymentCancelRepositoryCusto
 	}
 
 	@Override
-	public Slice<PaymentCancelResponse> findAllByCondition(PaymentCancelSearchRequest paymentCancelSearchRequest,
+	public Slice<PaymentCancelResponse> getPaymentCancelSlice(PaymentCancelSearchRequest paymentCancelSearchRequest,
 		Pageable pageable) {
 		BooleanExpression predicate = createPredicate(paymentCancelSearchRequest);
 		JPAQuery<PaymentCancelResponse> query = createBaseQuery(predicate)

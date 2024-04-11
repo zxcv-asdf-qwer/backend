@@ -35,11 +35,11 @@ public class PartnerTermsController {
 
 	@Operation(summary = "조회")
 	@GetMapping
-	public ResponseEntity<SliceResponse<TermsResponse>> pageListTerms(
+	public ResponseEntity<SliceResponse<TermsResponse>> getTermsSlice(
 		@ParameterObject @ModelAttribute @Valid TermsSearchRequest termsSearchRequest,
 		@ParameterObject Pageable pageable
 	) {
-		return ResponseEntity.ok(termsService.pageListTerms(termsSearchRequest, pageable));
+		return ResponseEntity.ok(termsService.getTermsSlice(termsSearchRequest, pageable));
 	}
 
 	@Operation(summary = "조회", description = "리스트")

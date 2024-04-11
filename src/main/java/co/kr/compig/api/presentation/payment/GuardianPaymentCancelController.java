@@ -48,11 +48,11 @@ public class GuardianPaymentCancelController {
 
 	@Operation(summary = "조회")
 	@GetMapping
-	public ResponseEntity<SliceResponse<PaymentCancelResponse>> pageListPayment(
+	public ResponseEntity<SliceResponse<PaymentCancelResponse>> getPaymentCancelSlice(
 		@ParameterObject @ModelAttribute @Valid PaymentCancelSearchRequest paymentCancelSearchRequest,
 		@ParameterObject Pageable pageable) {
 		return ResponseEntity.ok(
-			paymentCancelService.pageListPaymentCancelCursor(paymentCancelSearchRequest, pageable));
+			paymentCancelService.getPaymentCancelSlice(paymentCancelSearchRequest, pageable));
 	}
 
 	@Operation(summary = "상세 조회")

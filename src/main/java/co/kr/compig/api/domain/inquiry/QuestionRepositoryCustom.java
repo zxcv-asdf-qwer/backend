@@ -10,7 +10,7 @@ import co.kr.compig.api.presentation.inquiry.response.QuestionResponse;
 
 @Repository
 public interface QuestionRepositoryCustom {
-	Page<QuestionResponse> findPage(QuestionSearchRequest questionSearchRequest, Pageable pageable);
+	Page<QuestionResponse> getQuestionPage(QuestionSearchRequest questionSearchRequest, Pageable pageable);
 
-	Slice<QuestionResponse> findAllByCondition(QuestionSearchRequest questionSearchRequest, Pageable pageable);
+	Slice<QuestionResponse> getQuestionSlice(QuestionSearchRequest questionSearchRequest, Pageable pageable);
 }

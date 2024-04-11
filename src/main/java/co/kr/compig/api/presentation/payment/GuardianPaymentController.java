@@ -48,10 +48,10 @@ public class GuardianPaymentController {
 
 	@Operation(summary = "조회")
 	@GetMapping
-	public ResponseEntity<SliceResponse<PaymentResponse>> pageListPayment(
+	public ResponseEntity<SliceResponse<PaymentResponse>> getPaymentSlice(
 		@ParameterObject @ModelAttribute @Valid PaymentSearchRequest paymentSearchRequest,
 		@ParameterObject Pageable pageable) {
-		return ResponseEntity.ok(paymentService.pageListPaymentCursor(paymentSearchRequest, pageable));
+		return ResponseEntity.ok(paymentService.getPaymentSlice(paymentSearchRequest, pageable));
 	}
 
 	@Operation(summary = "상세 조회")

@@ -66,9 +66,9 @@ public class PaymentCancelService {
 	}
 
 	@Transactional(readOnly = true)
-	public SliceResponse<PaymentCancelResponse> pageListPaymentCancelCursor(
+	public SliceResponse<PaymentCancelResponse> getPaymentCancelSlice(
 		PaymentCancelSearchRequest paymentCancelSearchRequest, Pageable pageable) {
-		Slice<PaymentCancelResponse> slice = paymentCancelRepositoryCustom.findAllByCondition(
+		Slice<PaymentCancelResponse> slice = paymentCancelRepositoryCustom.getPaymentCancelSlice(
 			paymentCancelSearchRequest, pageable);
 		return new SliceResponse<>(slice.getContent(), pageable, slice.hasNext());
 	}

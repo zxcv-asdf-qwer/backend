@@ -14,7 +14,7 @@ import co.kr.compig.api.presentation.terms.response.TermsResponse;
 public interface TermsRepositoryCustom {
 	Page<TermsResponse> getTermsPage(TermsSearchRequest termsSearchRequest, Pageable pageable);
 
-	Slice<TermsResponse> pageListTerms(TermsSearchRequest termsSearchRequest, Pageable pageable);
+	Slice<TermsResponse> getTermsSlice(TermsSearchRequest termsSearchRequest, Pageable pageable);
 
 	List<TermsResponse> getTermsList(TermsSearchRequest termsSearchRequest);
 }

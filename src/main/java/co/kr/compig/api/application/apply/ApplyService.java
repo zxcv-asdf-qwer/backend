@@ -68,8 +68,8 @@ public class ApplyService {
 		applyRepository.delete(apply);
 	}
 
-	public SliceResponse<ApplyResponse> pageListApplyCursor(ApplySearchRequest applySearchRequest, Pageable pageable) {
-		Slice<ApplyResponse> slice = applyRepositoryCustom.findAllByCondition(applySearchRequest, pageable);
+	public SliceResponse<ApplyResponse> getApplySlice(ApplySearchRequest applySearchRequest, Pageable pageable) {
+		Slice<ApplyResponse> slice = applyRepositoryCustom.getApplySlice(applySearchRequest, pageable);
 		return new SliceResponse<>(slice.getContent(), pageable, slice.hasNext());
 	}
 }

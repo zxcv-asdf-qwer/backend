@@ -52,7 +52,7 @@ public class PaymentRepositoryImpl implements PaymentRepositoryCustom {
 	}
 
 	@Override
-	public Slice<PaymentResponse> findAllByCondition(PaymentSearchRequest paymentSearchRequest, Pageable pageable) {
+	public Slice<PaymentResponse> getPaymentSlice(PaymentSearchRequest paymentSearchRequest, Pageable pageable) {
 		BooleanExpression predicate = createPredicate(paymentSearchRequest);
 		JPAQuery<PaymentResponse> query = createBaseQuery(predicate)
 			.select(Projections.constructor(PaymentResponse.class,

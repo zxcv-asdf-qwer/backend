@@ -31,7 +31,7 @@ public class QuestionRepositoryImpl implements QuestionRepositoryCustom {
 	private final JPAQueryFactory jpaQueryFactory;
 
 	@Override
-	public Page<QuestionResponse> findPage(QuestionSearchRequest questionSearchRequest, Pageable pageable) {
+	public Page<QuestionResponse> getQuestionPage(QuestionSearchRequest questionSearchRequest, Pageable pageable) {
 		BooleanExpression predicate = createPredicate(questionSearchRequest);
 
 		JPAQuery<QuestionResponse> query = createBaseQuery(predicate)
@@ -58,7 +58,7 @@ public class QuestionRepositoryImpl implements QuestionRepositoryCustom {
 	}
 
 	@Override
-	public Slice<QuestionResponse> findAllByCondition(QuestionSearchRequest questionSearchRequest, Pageable pageable) {
+	public Slice<QuestionResponse> getQuestionSlice(QuestionSearchRequest questionSearchRequest, Pageable pageable) {
 		BooleanExpression predicate = createPredicate(questionSearchRequest);
 
 		JPAQuery<QuestionResponse> query = createBaseQuery(predicate)

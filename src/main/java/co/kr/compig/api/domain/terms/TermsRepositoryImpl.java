@@ -55,7 +55,7 @@ public class TermsRepositoryImpl implements TermsRepositoryCustom {
 	}
 
 	@Override
-	public Slice<TermsResponse> pageListTerms(TermsSearchRequest termsSearchRequest, Pageable pageable) {
+	public Slice<TermsResponse> getTermsSlice(TermsSearchRequest termsSearchRequest, Pageable pageable) {
 		BooleanExpression predicate = createPredicate(termsSearchRequest);
 
 		JPAQuery<TermsResponse> query = createBaseQuery(predicate)

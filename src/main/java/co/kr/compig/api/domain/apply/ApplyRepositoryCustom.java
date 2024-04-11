@@ -12,5 +12,5 @@ import co.kr.compig.api.presentation.apply.response.ApplyResponse;
 public interface ApplyRepositoryCustom {
 	Page<ApplyResponse> getApplyPage(ApplySearchRequest applySearchRequest, Pageable pageable);
 
-	Slice<ApplyResponse> findAllByCondition(ApplySearchRequest applySearchRequest, Pageable pageable);
+	Slice<ApplyResponse> getApplySlice(ApplySearchRequest applySearchRequest, Pageable pageable);
 }

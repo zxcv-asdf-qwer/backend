@@ -14,5 +14,5 @@ public interface BoardRepositoryCustom {
 	//TODO pb에 Slice pv에 Page
 	Page<BoardResponse> getBoardPage(BoardSearchRequest boardSearchRequest, Pageable pageable);
 
-	Slice<BoardResponse> findAllByCondition(BoardSearchRequest boardSearchRequest, Pageable pageable);
+	Slice<BoardResponse> getBoardSlice(BoardSearchRequest boardSearchRequest, Pageable pageable);
 }

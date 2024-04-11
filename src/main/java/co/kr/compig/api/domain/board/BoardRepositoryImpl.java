@@ -107,7 +107,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
 
 	// cursor paging
 	@Override
-	public Slice<BoardResponse> findAllByCondition(
+	public Slice<BoardResponse> getBoardSlice(
 		BoardSearchRequest boardSearchRequest, Pageable pageable) {
 		BooleanExpression predicate = createPredicate(boardSearchRequest);
 		JPAQuery<BoardResponse> query = createBaseQuery(predicate)

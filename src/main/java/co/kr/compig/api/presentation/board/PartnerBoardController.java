@@ -31,10 +31,10 @@ public class PartnerBoardController {
 
 	@Operation(summary = "조회")
 	@GetMapping
-	public ResponseEntity<SliceResponse<BoardResponse>> pageListBoard(
+	public ResponseEntity<SliceResponse<BoardResponse>> getBoardSlice(
 		@ParameterObject @ModelAttribute @Valid BoardSearchRequest boardSearchRequest,
 		@ParameterObject Pageable pageable) {
-		return ResponseEntity.ok(boardService.pageListBoardCursor(boardSearchRequest, pageable));
+		return ResponseEntity.ok(boardService.getBoardSlice(boardSearchRequest, pageable));
 	}
 
 	@Operation(summary = "상세 조회")
