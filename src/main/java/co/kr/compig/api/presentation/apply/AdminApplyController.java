@@ -3,7 +3,6 @@ package co.kr.compig.api.presentation.apply;
 import java.util.Map;
 
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,10 +13,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.apply.ApplyService;
 import co.kr.compig.api.presentation.apply.request.ApplyCreateRequest;
+import co.kr.compig.api.presentation.apply.request.ApplySearchRequest;
 import co.kr.compig.api.presentation.apply.request.ApplyUpdateRequest;
 import co.kr.compig.api.presentation.apply.response.ApplyDetailResponse;
 import co.kr.compig.api.presentation.apply.response.ApplyResponse;
@@ -49,14 +50,12 @@ public class AdminApplyController {
 			.build());
 	}
 
-	@Operation(summary = "조회")
+	@Operation(summary = "조회", description = "페이징")
 	@GetMapping
-	public ResponseEntity<PageResponse<ApplyResponse>> pageListCareOrder(
-		Pageable pageable) {
-		Page<ApplyResponse> page = applyService.pageListApply(pageable);
-		PageResponse<ApplyResponse> pageResponse = new PageResponse<>(page.getContent(), pageable,
-			page.getTotalElements());
-		return ResponseEntity.ok(pageResponse);
+	public ResponseEntity<PageResponse<ApplyResponse>> getApplyPage(
+		@ParameterObject @RequestParam(required = false) @Valid ApplySearchRequest applySearchRequest,
+		@ParameterObject Pageable pageable) {
+		return ResponseEntity.ok(applyService.getApplyPage(applySearchRequest, pageable));
 	}
 
 	@Operation(summary = "상세 조회")

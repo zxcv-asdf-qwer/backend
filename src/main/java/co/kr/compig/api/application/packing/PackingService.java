@@ -5,8 +5,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import co.kr.compig.api.application.order.CareOrderService;
 import co.kr.compig.api.domain.order.CareOrder;
-import co.kr.compig.api.domain.order.CareOrderRepository;
 import co.kr.compig.api.domain.packing.Packing;
 import co.kr.compig.api.domain.packing.PackingRepository;
 import co.kr.compig.api.domain.packing.PackingRepositoryCustom;
@@ -17,6 +17,7 @@ import co.kr.compig.api.presentation.packing.request.PackingSearchRequest;
 import co.kr.compig.api.presentation.packing.request.PackingUpdateRequest;
 import co.kr.compig.api.presentation.packing.response.PackingDetailResponse;
 import co.kr.compig.api.presentation.packing.response.PackingResponse;
+import co.kr.compig.global.dto.pagination.PageResponse;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,12 +30,11 @@ public class PackingService {
 
 	private final PackingRepository packingRepository;
 	private final PackingRepositoryCustom packingRepositoryCustom;
-	private final CareOrderRepository careOrderRepository;
 	private final SettleGroupRepository settleGroupRepository;
+	private final CareOrderService careOrderService;
 
 	public Long createPacking(PackingCreateRequest packingCreateRequest) {
-		CareOrder careOrder = careOrderRepository.findById(packingCreateRequest.getCareOrderId()).orElseThrow(
-			NotExistDataException::new);
+		CareOrder careOrder = careOrderService.getCareOrderById(packingCreateRequest.getCareOrderId());
 		SettleGroup settleGroup = settleGroupRepository.findById(packingCreateRequest.getSettleGroupId())
 			.orElseThrow(NotExistDataException::new);
 		Packing packing = packingCreateRequest.converterEntity(careOrder, settleGroup);
@@ -42,10 +42,12 @@ public class PackingService {
 	}
 
 	@Transactional(readOnly = true)
-	public Page<PackingResponse> pageListPacking(PackingSearchRequest packingSearchRequest, Pageable pageable) {
-		return packingRepositoryCustom.findPage(packingSearchRequest, pageable);
+	public PageResponse<PackingResponse> getPackingPage(PackingSearchRequest packingSearchRequest, Pageable pageable) {
+		Page<PackingResponse> page = packingRepositoryCustom.findPage(packingSearchRequest, pageable);
+		return new PageResponse<>(page.getContent(), pageable, page.getTotalElements());
 	}
 
+	@Transactional(readOnly = true)
 	public PackingDetailResponse getPacking(Long packingId) {
 		Packing packing = packingRepository.findById(packingId).orElseThrow(NotExistDataException::new);
 		return packing.toPackingDetailResponse();
@@ -60,5 +62,10 @@ public class PackingService {
 	public void deletePacking(Long packingId) {
 		Packing packing = packingRepository.findById(packingId).orElseThrow(NotExistDataException::new);
 		packingRepository.delete(packing);
+	}
+
+	@Transactional(readOnly = true)
+	public Packing getPackingById(Long packingId) {
+		return packingRepository.findById(packingId).orElseThrow(NotExistDataException::new);
 	}
 }

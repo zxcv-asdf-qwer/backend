@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -48,22 +47,20 @@ public class AdminBoardController {
 	@Operation(summary = "생성하기")
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Response<?>> createBoard(
-		@RequestPart(value = "boardCreateRequest") @Valid BoardCreateRequest boardCreateRequest,
+		@RequestPart(value = "boardCreateRequest") @ModelAttribute @Valid BoardCreateRequest boardCreateRequest,
 		@RequestPart(value = "file", required = false) List<MultipartFile> files) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("boardId", boardService.createBoard(boardCreateRequest, files)))
 			.build());
 	}
 
-	@Operation(summary = "조회")
+	@Operation(summary = "조회", description = "페이징")
 	@GetMapping
-	public ResponseEntity<PageResponse<BoardResponse>> pageListBoard(
+	public ResponseEntity<PageResponse<BoardResponse>> getBoardPage(
 		@ParameterObject @ModelAttribute @Valid BoardSearchRequest boardSearchRequest,
-		Pageable pageable) {
-		Page<BoardResponse> page = boardService.pageListBoard(boardSearchRequest, pageable);
-		PageResponse<BoardResponse> pageResponse = new PageResponse<>(page.getContent(), pageable,
-			page.getTotalElements());
-		return ResponseEntity.ok(pageResponse);
+		@ParameterObject Pageable pageable) {
+		;
+		return ResponseEntity.ok(boardService.getBoardPage(boardSearchRequest, pageable));
 	}
 
 	@Operation(summary = "상세 조회")

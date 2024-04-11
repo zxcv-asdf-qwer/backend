@@ -36,11 +36,13 @@ public class TermsService {
 		return termsRepository.save(terms).getId();
 	}
 
+	@Transactional(readOnly = true)
 	public PageResponse<TermsResponse> getTermsPage(TermsSearchRequest termsSearchRequest, Pageable pageable) {
 		Page<TermsResponse> page = termsRepositoryCustom.getTermsPage(termsSearchRequest, pageable);
 		return new PageResponse<>(page.getContent(), pageable, page.getTotalElements());
 	}
 
+	@Transactional(readOnly = true)
 	public TermsDetailResponse getTerms(Long termsId) {
 		Terms terms = termsRepository.findById(termsId).orElseThrow(NotExistDataException::new);
 		return terms.toTermsDetailResponse();
@@ -57,11 +59,13 @@ public class TermsService {
 		termsRepository.delete(terms);
 	}
 
+	@Transactional(readOnly = true)
 	public SliceResponse<TermsResponse> pageListTerms(TermsSearchRequest termsSearchRequest, Pageable pageable) {
 		Slice<TermsResponse> slice = termsRepositoryCustom.pageListTerms(termsSearchRequest, pageable);
 		return new SliceResponse<>(slice.getContent(), pageable, slice.hasNext());
 	}
 
+	@Transactional(readOnly = true)
 	public List<TermsResponse> getTermsList(TermsSearchRequest termsSearchRequest) {
 		return termsRepositoryCustom.getTermsList(termsSearchRequest);
 	}

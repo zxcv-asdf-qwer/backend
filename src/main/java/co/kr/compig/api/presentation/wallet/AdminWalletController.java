@@ -3,7 +3,6 @@ package co.kr.compig.api.presentation.wallet;
 import java.util.Map;
 
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -52,13 +51,10 @@ public class AdminWalletController {
 
 	@Operation(summary = "조회")
 	@GetMapping
-	public ResponseEntity<PageResponse<WalletResponse>> pageListWallet(
+	public ResponseEntity<PageResponse<WalletResponse>> getWalletPage(
 		@ParameterObject @ModelAttribute @Valid WalletSearchRequest walletSearchRequest,
 		Pageable pageable) {
-		Page<WalletResponse> page = walletService.pageListWallet(walletSearchRequest, pageable);
-		PageResponse<WalletResponse> pageResponse = new PageResponse<>(page.getContent(), pageable,
-			page.getTotalElements());
-		return ResponseEntity.ok(pageResponse);
+		return ResponseEntity.ok(walletService.getWalletPage(walletSearchRequest, pageable));
 	}
 
 	@Operation(summary = "상세 조회")

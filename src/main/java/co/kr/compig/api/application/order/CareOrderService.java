@@ -69,6 +69,11 @@ public class CareOrderService {
 		return careOrder.toCareOrderDetailResponse();
 	}
 
+	@Transactional(readOnly = true)
+	public CareOrder getCareOrderById(Long careOrderId) {
+		return careOrderRepository.findById(careOrderId).orElseThrow(NotExistDataException::new);
+	}
+
 	public Long updateCareOrder(Long careOrderId, CareOrderUpdateRequest careOrderUpdateRequest) {
 		CareOrder careOrder = careOrderRepository.findById(careOrderId).orElseThrow(NotExistDataException::new);
 		careOrder.update(careOrderUpdateRequest);

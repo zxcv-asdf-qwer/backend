@@ -21,6 +21,7 @@ import co.kr.compig.api.presentation.board.request.BoardUpdateRequest;
 import co.kr.compig.api.presentation.board.response.BoardDetailResponse;
 import co.kr.compig.api.presentation.board.response.BoardResponse;
 import co.kr.compig.api.presentation.board.response.SystemFileResponse;
+import co.kr.compig.global.dto.pagination.PageResponse;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import co.kr.compig.global.utils.S3Util;
 import jakarta.validation.Valid;
@@ -55,9 +56,10 @@ public class BoardService {
 	}
 
 	@Transactional(readOnly = true)
-	public Page<BoardResponse> pageListBoard(BoardSearchRequest boardSearchRequest,
+	public PageResponse<BoardResponse> getBoardPage(BoardSearchRequest boardSearchRequest,
 		Pageable pageable) {
-		return boardRepositoryCustom.findPage(boardSearchRequest, pageable);
+		Page<BoardResponse> page = boardRepositoryCustom.getBoardPage(boardSearchRequest, pageable);
+		return new PageResponse<>(page.getContent(), pageable, page.getTotalElements());
 	}
 
 	public Long updateBoard(Long boardId, BoardUpdateRequest boardUpdateRequest) {

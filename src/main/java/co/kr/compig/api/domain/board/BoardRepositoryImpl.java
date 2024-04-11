@@ -31,7 +31,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
 	private final JPAQueryFactory jpaQueryFactory;
 
 	@Override
-	public Page<BoardResponse> findPage(BoardSearchRequest boardSearchRequest, Pageable pageable) {
+	public Page<BoardResponse> getBoardPage(BoardSearchRequest boardSearchRequest, Pageable pageable) {
 		BooleanExpression predicate = createPredicate(boardSearchRequest);
 
 		JPAQuery<BoardResponse> query = createBaseQuery(predicate)

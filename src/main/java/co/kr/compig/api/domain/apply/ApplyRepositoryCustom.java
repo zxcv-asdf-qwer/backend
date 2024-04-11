@@ -10,7 +10,7 @@ import co.kr.compig.api.presentation.apply.response.ApplyResponse;
 
 @Repository
 public interface ApplyRepositoryCustom {
-	Page<ApplyResponse> findPage(Pageable pageable);
+	Page<ApplyResponse> getApplyPage(ApplySearchRequest applySearchRequest, Pageable pageable);
 
 	Slice<ApplyResponse> findAllByCondition(ApplySearchRequest applySearchRequest, Pageable pageable);
 }

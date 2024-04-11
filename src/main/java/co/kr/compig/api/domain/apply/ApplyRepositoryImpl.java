@@ -31,8 +31,8 @@ public class ApplyRepositoryImpl implements ApplyRepositoryCustom {
 	private final JPAQueryFactory jpaQueryFactory;
 
 	@Override
-	public Page<ApplyResponse> findPage(Pageable pageable) {
-		BooleanExpression predicate = Expressions.asBoolean(true).isTrue();
+	public Page<ApplyResponse> getApplyPage(ApplySearchRequest applySearchRequest, Pageable pageable) {
+		BooleanExpression predicate = createPredicate(applySearchRequest);
 
 		JPAQuery<ApplyResponse> query = createBaseQuery(predicate)
 			.select(Projections.constructor(ApplyResponse.class,
@@ -91,6 +91,9 @@ public class ApplyRepositoryImpl implements ApplyRepositoryCustom {
 
 		if (request.getMemberId() != null) {
 			predicate = predicate.and(apply.member.id.eq(request.getMemberId()));
+		}
+		if (request.getCareOrderId() != null) {
+			predicate = predicate.and(apply.careOrder.id.eq(request.getCareOrderId()));
 		}
 		return predicate;
 	}

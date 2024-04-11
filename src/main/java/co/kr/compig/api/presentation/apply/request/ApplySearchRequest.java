@@ -14,4 +14,5 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 public class ApplySearchRequest extends PageableRequest {
 	private String memberId;
+	private Long careOrderId;
 }

@@ -74,4 +74,9 @@ public class MenuService {
 		Menu menu = menuRepository.findById(menuId).orElseThrow(NotExistDataException::new);
 		menuRepository.delete(menu);
 	}
+
+	@Transactional(readOnly = true)
+	public Menu getMenuById(Long menuId) {
+		return menuRepository.findById(menuId).orElseThrow(NotExistDataException::new);
+	}
 }

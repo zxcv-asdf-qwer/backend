@@ -12,7 +12,7 @@ import co.kr.compig.api.presentation.board.response.BoardResponse;
 public interface BoardRepositoryCustom {
 
 	//TODO pb에 Slice pv에 Page
-	Page<BoardResponse> findPage(BoardSearchRequest boardSearchRequest, Pageable pageable);
+	Page<BoardResponse> getBoardPage(BoardSearchRequest boardSearchRequest, Pageable pageable);
 
 	Slice<BoardResponse> findAllByCondition(BoardSearchRequest boardSearchRequest, Pageable pageable);
 }

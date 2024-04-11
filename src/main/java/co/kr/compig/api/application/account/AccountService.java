@@ -6,11 +6,11 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import co.kr.compig.api.application.member.MemberService;
 import co.kr.compig.api.domain.account.Account;
 import co.kr.compig.api.domain.account.AccountRepository;
 import co.kr.compig.api.domain.code.EncryptTarget;
 import co.kr.compig.api.domain.member.Member;
-import co.kr.compig.api.domain.member.MemberRepository;
 import co.kr.compig.api.domain.system.EncryptKey;
 import co.kr.compig.api.domain.system.EncryptKeyRepository;
 import co.kr.compig.api.presentation.account.request.AccountCreateRequest;
@@ -30,9 +30,9 @@ import lombok.extern.slf4j.Slf4j;
 public class AccountService {
 
 	private final AccountRepository accountRepository;
-	private final MemberRepository memberRepository;
 	private final EncryptKeyRepository encryptKeyRepository;
 	private final S3Util s3Util;
+	private final MemberService memberService;
 
 	public Long createAccount(AccountCreateRequest accountCreateRequest, Map<String, String> files) {
 		EncryptKey encryptKey = encryptKeyRepository.findByEncryptTarget(EncryptTarget.ACCOUNT)
@@ -48,8 +48,7 @@ public class AccountService {
 			throw new RuntimeException("AES256 암호화 중 예외발생");
 		}
 
-		Member member = memberRepository.findById(accountCreateRequest.getMemberId()).orElseThrow(
-			NotExistDataException::new);
+		Member member = memberService.getMemberById(accountCreateRequest.getMemberId());
 		if (accountRepository.existsByMember(member)) {
 			throw new RuntimeException("이미 계좌가 존재합니다.");
 		}
@@ -63,18 +62,21 @@ public class AccountService {
 		return account.getId();
 	}
 
+	@Transactional(readOnly = true)
 	public AccountDetailResponse getAccountByAccountId(Long accountId) {
 		Account account = accountRepository.findById(accountId).orElseThrow(NotExistDataException::new);
 		return accountToAccountDetailResponse(account);
 	}
 
+	@Transactional(readOnly = true)
 	public AccountDetailResponse getAccountByMemberId(String memberId) {
-		Member member = memberRepository.findById(memberId).orElseThrow(NotExistDataException::new);
+		Member member = memberService.getMemberById(memberId);
 		Account account = accountRepository.findByMember(member)
 			.orElseThrow(NotExistDataException::new);
 		return accountToAccountDetailResponse(account);
 	}
 
+	@Transactional(readOnly = true)
 	public AccountDetailResponse accountToAccountDetailResponse(Account account) {
 		EncryptKey encryptKey = encryptKeyRepository.findByEncryptTarget(EncryptTarget.ACCOUNT)
 			.orElseThrow(NotExistDataException::new);
@@ -112,7 +114,7 @@ public class AccountService {
 	}
 
 	public Boolean getAccountCheck(String memberId) {
-		Member member = memberRepository.findById(memberId).orElseThrow(NotExistDataException::new);
+		Member member = memberService.getMemberById(memberId);
 		return accountRepository.existsByMember(member);
 	}
 }

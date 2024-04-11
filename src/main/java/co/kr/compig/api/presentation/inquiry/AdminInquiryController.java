@@ -3,7 +3,6 @@ package co.kr.compig.api.presentation.inquiry;
 import java.util.Map;
 
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -52,15 +51,12 @@ public class AdminInquiryController {
 			.build());
 	}
 
-	@Operation(summary = "질문 조회")
+	@Operation(summary = "질문 조회", description = "페이징")
 	@GetMapping(path = "/question")
-	public ResponseEntity<PageResponse<QuestionResponse>> pageListQuestion(
+	public ResponseEntity<PageResponse<QuestionResponse>> getQuestionPage(
 		@ParameterObject @ModelAttribute @Valid QuestionSearchRequest questionSearchRequest,
-		Pageable pageable) {
-		Page<QuestionResponse> page = inquiryService.pageListQuestionPage(questionSearchRequest, pageable);
-		PageResponse<QuestionResponse> pageResponse = new PageResponse<>(page.getContent(), pageable,
-			page.getTotalElements());
-		return ResponseEntity.ok(pageResponse);
+		@ParameterObject Pageable pageable) {
+		return ResponseEntity.ok(inquiryService.getQuestionPage(questionSearchRequest, pageable));
 	}
 
 	@Operation(summary = "질문 상세 조회")

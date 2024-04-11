@@ -16,6 +16,7 @@ import co.kr.compig.api.presentation.payment.request.PaymentCancelSearchRequest;
 import co.kr.compig.api.presentation.payment.request.PaymentCancelUpdateRequest;
 import co.kr.compig.api.presentation.payment.response.PaymentCancelDetailResponse;
 import co.kr.compig.api.presentation.payment.response.PaymentCancelResponse;
+import co.kr.compig.global.dto.pagination.PageResponse;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import lombok.RequiredArgsConstructor;
 
@@ -27,19 +28,23 @@ public class PaymentCancelService {
 	private final PaymentCancelRepository paymentCancelRepository;
 	private final PaymentRepository paymentRepository;
 	private final PaymentCancelRepositoryCustom paymentCancelRepositoryCustom;
+	private final PaymentService paymentService;
 
 	public Long createPaymentCancel(PaymentCancelCreateRequest paymentCancelCreateRequest) {
-		Payment payment = paymentRepository.findById(paymentCancelCreateRequest.getPaymentId()).orElseThrow(
-			NotExistDataException::new);
+		Payment payment = paymentService.getPaymentById(paymentCancelCreateRequest.getPaymentId());
 		PaymentCancel paymentCancel = paymentCancelCreateRequest.converterEntity(payment);
 		return paymentCancelRepository.save(paymentCancel).getId();
 	}
 
-	public Page<PaymentCancelResponse> pageListPaymentCancel(PaymentCancelSearchRequest paymentCancelSearchRequest,
+	@Transactional(readOnly = true)
+	public PageResponse<PaymentCancelResponse> getPaymentCancelPage(
+		PaymentCancelSearchRequest paymentCancelSearchRequest,
 		Pageable pageable) {
-		return paymentCancelRepositoryCustom.findPage(paymentCancelSearchRequest, pageable);
+		Page<PaymentCancelResponse> page = paymentCancelRepositoryCustom.findPage(paymentCancelSearchRequest, pageable);
+		return new PageResponse<>(page.getContent(), pageable, page.getTotalElements());
 	}
 
+	@Transactional(readOnly = true)
 	public PaymentCancelDetailResponse getPaymentCancel(Long paymentCancelId) {
 		PaymentCancel paymentCancel = paymentCancelRepository.findById(paymentCancelId)
 			.orElseThrow(NotExistDataException::new);
@@ -59,6 +64,7 @@ public class PaymentCancelService {
 		paymentCancelRepository.delete(paymentCancel);
 	}
 
+	@Transactional(readOnly = true)
 	public Slice<PaymentCancelResponse> pageListPaymentCancelCursor(
 		PaymentCancelSearchRequest paymentCancelSearchRequest, Pageable pageable) {
 		return paymentCancelRepositoryCustom.findAllByCondition(paymentCancelSearchRequest, pageable);
