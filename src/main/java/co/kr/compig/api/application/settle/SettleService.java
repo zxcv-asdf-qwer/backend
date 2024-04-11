@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import co.kr.compig.api.domain.settle.Settle;
-import co.kr.compig.api.domain.settle.SettleGroup;
-import co.kr.compig.api.domain.settle.SettleGroupRepository;
 import co.kr.compig.api.domain.settle.SettleRepository;
 import co.kr.compig.api.presentation.settle.request.SettleCreateRequest;
 import co.kr.compig.api.presentation.settle.response.SettleResponse;
@@ -22,14 +20,12 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 public class SettleService {
 	private final SettleRepository settleRepository;
-	private final SettleGroupRepository settleGroupRepository;
 
 	public Long createSettle(List<SettleCreateRequest> settleCreateRequests) {
-		SettleGroup settleGroup = settleGroupRepository.save(new SettleGroup());
 		settleCreateRequests.stream()
-			.map(settleCreateRequest -> settleCreateRequest.converterEntity(settleGroup))
+			.map(SettleCreateRequest::converterEntity)
 			.forEach(settleRepository::save);
-		return settleGroup.getId();
+		return settleCreateRequests.get(0).getSettleGroupId();
 	}
 
 	@Transactional(readOnly = true)

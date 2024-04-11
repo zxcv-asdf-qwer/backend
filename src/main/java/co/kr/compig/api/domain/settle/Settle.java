@@ -8,13 +8,9 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -44,6 +40,9 @@ public class Settle {
 	private Long id;
 
 	@Column
+	private Long settleGroupId; // 간병 요소 그룹 ID
+
+	@Column
 	private String element; // 요소명
 
 	@Column
@@ -57,10 +56,10 @@ public class Settle {
 	/* =================================================================
 	* Domain mapping
 	================================================================= */
-	@Builder.Default
-	@JoinColumn(name = "settle_group_id", nullable = false, foreignKey = @ForeignKey(name = "fk01_settle"))
-	@ManyToOne(fetch = FetchType.LAZY)
-	private SettleGroup settleGroup = new SettleGroup();
+	// @Builder.Default
+	// @JoinColumn(name = "settle_group_id", nullable = false, foreignKey = @ForeignKey(name = "fk01_settle"))
+	// @ManyToOne(fetch = FetchType.LAZY)
+	// private SettleGroup settleGroup = new SettleGroup();
 
 	/* =================================================================
 	* Relation method
@@ -70,7 +69,7 @@ public class Settle {
 			.settleId(this.id)
 			.element(this.element)
 			.amount(this.amount)
-			.settleGroupId(this.settleGroup.getId())
+			.settleGroupId(this.settleGroupId)
 			.useYn(this.useYn)
 			.build();
 	}
