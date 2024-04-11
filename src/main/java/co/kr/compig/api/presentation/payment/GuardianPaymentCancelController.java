@@ -4,7 +4,6 @@ import java.util.Map;
 
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,12 +50,9 @@ public class GuardianPaymentCancelController {
 	@GetMapping
 	public ResponseEntity<SliceResponse<PaymentCancelResponse>> pageListPayment(
 		@ParameterObject @ModelAttribute @Valid PaymentCancelSearchRequest paymentCancelSearchRequest,
-		Pageable pageable) {
-		Slice<PaymentCancelResponse> slice = paymentCancelService.pageListPaymentCancelCursor(
-			paymentCancelSearchRequest, pageable);
-		SliceResponse<PaymentCancelResponse> sliceResponse = new SliceResponse<>(slice.getContent(), pageable,
-			slice.hasNext());
-		return ResponseEntity.ok(sliceResponse);
+		@ParameterObject Pageable pageable) {
+		return ResponseEntity.ok(
+			paymentCancelService.pageListPaymentCancelCursor(paymentCancelSearchRequest, pageable));
 	}
 
 	@Operation(summary = "상세 조회")

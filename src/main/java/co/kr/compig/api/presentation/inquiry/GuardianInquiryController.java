@@ -4,7 +4,6 @@ import java.util.Map;
 
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,11 +53,8 @@ public class GuardianInquiryController {
 	@GetMapping(path = "/question")
 	public ResponseEntity<SliceResponse<QuestionResponse>> pageListQuestion(
 		@ParameterObject @ModelAttribute @Valid QuestionSearchRequest questionSearchRequest,
-		Pageable pageable) {
-		Slice<QuestionResponse> slice = questionService.pageListCursor(questionSearchRequest, pageable);
-		SliceResponse<QuestionResponse> sliceResponse = new SliceResponse<>(slice.getContent(), pageable,
-			slice.hasNext());
-		return ResponseEntity.ok(sliceResponse);
+		@ParameterObject Pageable pageable) {
+		return ResponseEntity.ok(questionService.pageListCursor(questionSearchRequest, pageable));
 	}
 
 	@Operation(summary = "질문 상세 조회")

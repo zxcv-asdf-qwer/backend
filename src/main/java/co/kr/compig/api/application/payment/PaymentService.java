@@ -16,6 +16,7 @@ import co.kr.compig.api.presentation.payment.request.PaymentSearchRequest;
 import co.kr.compig.api.presentation.payment.response.PaymentDetailResponse;
 import co.kr.compig.api.presentation.payment.response.PaymentResponse;
 import co.kr.compig.global.dto.pagination.PageResponse;
+import co.kr.compig.global.dto.pagination.SliceResponse;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,8 +49,10 @@ public class PaymentService {
 	}
 
 	@Transactional(readOnly = true)
-	public Slice<PaymentResponse> pageListPaymentCursor(PaymentSearchRequest paymentSearchRequest, Pageable pageable) {
-		return paymentRepositoryCustom.findAllByCondition(paymentSearchRequest, pageable);
+	public SliceResponse<PaymentResponse> pageListPaymentCursor(PaymentSearchRequest paymentSearchRequest,
+		Pageable pageable) {
+		Slice<PaymentResponse> slice = paymentRepositoryCustom.findAllByCondition(paymentSearchRequest, pageable);
+		return new SliceResponse<>(slice.getContent(), pageable, slice.hasNext());
 	}
 
 	@Transactional(readOnly = true)

@@ -20,6 +20,7 @@ import co.kr.compig.api.presentation.inquiry.request.QuestionUpdateRequest;
 import co.kr.compig.api.presentation.inquiry.response.QuestionDetailResponse;
 import co.kr.compig.api.presentation.inquiry.response.QuestionResponse;
 import co.kr.compig.global.dto.pagination.PageResponse;
+import co.kr.compig.global.dto.pagination.SliceResponse;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -71,8 +72,10 @@ public class InquiryService {
 	}
 
 	@Transactional(readOnly = true)
-	public Slice<QuestionResponse> pageListCursor(QuestionSearchRequest questionSearchRequest, Pageable pageable) {
-		return questionRepositoryCustom.findAllByCondition(questionSearchRequest, pageable);
+	public SliceResponse<QuestionResponse> pageListCursor(QuestionSearchRequest questionSearchRequest,
+		Pageable pageable) {
+		Slice<QuestionResponse> slice = questionRepositoryCustom.findAllByCondition(questionSearchRequest, pageable);
+		return new SliceResponse<>(slice.getContent(), pageable, slice.hasNext());
 	}
 
 	public Long createAnswer(Long questionId, AnswerCreateRequest answerCreateRequest) {

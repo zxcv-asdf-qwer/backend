@@ -19,6 +19,7 @@ import co.kr.compig.api.presentation.apply.request.ApplyUpdateRequest;
 import co.kr.compig.api.presentation.apply.response.ApplyDetailResponse;
 import co.kr.compig.api.presentation.apply.response.ApplyResponse;
 import co.kr.compig.global.dto.pagination.PageResponse;
+import co.kr.compig.global.dto.pagination.SliceResponse;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import co.kr.compig.global.utils.SecurityUtil;
 import lombok.RequiredArgsConstructor;
@@ -67,7 +68,8 @@ public class ApplyService {
 		applyRepository.delete(apply);
 	}
 
-	public Slice<ApplyResponse> pageListApplyCursor(ApplySearchRequest applySearchRequest, Pageable pageable) {
-		return applyRepositoryCustom.findAllByCondition(applySearchRequest, pageable);
+	public SliceResponse<ApplyResponse> pageListApplyCursor(ApplySearchRequest applySearchRequest, Pageable pageable) {
+		Slice<ApplyResponse> slice = applyRepositoryCustom.findAllByCondition(applySearchRequest, pageable);
+		return new SliceResponse<>(slice.getContent(), pageable, slice.hasNext());
 	}
 }

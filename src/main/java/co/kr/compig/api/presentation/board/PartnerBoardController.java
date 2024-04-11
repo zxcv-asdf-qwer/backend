@@ -2,7 +2,6 @@ package co.kr.compig.api.presentation.board;
 
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -34,10 +33,8 @@ public class PartnerBoardController {
 	@GetMapping
 	public ResponseEntity<SliceResponse<BoardResponse>> pageListBoard(
 		@ParameterObject @ModelAttribute @Valid BoardSearchRequest boardSearchRequest,
-		Pageable pageable) {
-		Slice<BoardResponse> slice = boardService.pageListBoardCursor(boardSearchRequest, pageable);
-		SliceResponse<BoardResponse> sliceResponse = new SliceResponse<>(slice.getContent(), pageable, slice.hasNext());
-		return ResponseEntity.ok(sliceResponse);
+		@ParameterObject Pageable pageable) {
+		return ResponseEntity.ok(boardService.pageListBoardCursor(boardSearchRequest, pageable));
 	}
 
 	@Operation(summary = "상세 조회")

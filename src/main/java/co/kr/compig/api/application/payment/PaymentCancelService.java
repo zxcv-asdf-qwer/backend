@@ -17,6 +17,7 @@ import co.kr.compig.api.presentation.payment.request.PaymentCancelUpdateRequest;
 import co.kr.compig.api.presentation.payment.response.PaymentCancelDetailResponse;
 import co.kr.compig.api.presentation.payment.response.PaymentCancelResponse;
 import co.kr.compig.global.dto.pagination.PageResponse;
+import co.kr.compig.global.dto.pagination.SliceResponse;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import lombok.RequiredArgsConstructor;
 
@@ -65,8 +66,10 @@ public class PaymentCancelService {
 	}
 
 	@Transactional(readOnly = true)
-	public Slice<PaymentCancelResponse> pageListPaymentCancelCursor(
+	public SliceResponse<PaymentCancelResponse> pageListPaymentCancelCursor(
 		PaymentCancelSearchRequest paymentCancelSearchRequest, Pageable pageable) {
-		return paymentCancelRepositoryCustom.findAllByCondition(paymentCancelSearchRequest, pageable);
+		Slice<PaymentCancelResponse> slice = paymentCancelRepositoryCustom.findAllByCondition(
+			paymentCancelSearchRequest, pageable);
+		return new SliceResponse<>(slice.getContent(), pageable, slice.hasNext());
 	}
 }

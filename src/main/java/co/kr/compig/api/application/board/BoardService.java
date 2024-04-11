@@ -22,6 +22,7 @@ import co.kr.compig.api.presentation.board.response.BoardDetailResponse;
 import co.kr.compig.api.presentation.board.response.BoardResponse;
 import co.kr.compig.api.presentation.board.response.SystemFileResponse;
 import co.kr.compig.global.dto.pagination.PageResponse;
+import co.kr.compig.global.dto.pagination.SliceResponse;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import co.kr.compig.global.utils.S3Util;
 import jakarta.validation.Valid;
@@ -110,8 +111,9 @@ public class BoardService {
 	}
 
 	@Transactional(readOnly = true)
-	public Slice<BoardResponse> pageListBoardCursor(@Valid BoardSearchRequest boardSearchRequest,
+	public SliceResponse<BoardResponse> pageListBoardCursor(@Valid BoardSearchRequest boardSearchRequest,
 		Pageable pageable) {
-		return boardRepositoryCustom.findAllByCondition(boardSearchRequest, pageable);
+		Slice<BoardResponse> slice = boardRepositoryCustom.findAllByCondition(boardSearchRequest, pageable);
+		return new SliceResponse<>(slice.getContent(), pageable, slice.hasNext());
 	}
 }

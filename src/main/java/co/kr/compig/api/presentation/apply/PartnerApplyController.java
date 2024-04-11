@@ -4,7 +4,6 @@ import java.util.Map;
 
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,10 +51,9 @@ public class PartnerApplyController {
 	@Operation(summary = "조회")
 	@GetMapping
 	public ResponseEntity<SliceResponse<ApplyResponse>> pageListApply(
-		@ParameterObject @ModelAttribute @Valid ApplySearchRequest applySearchRequest, Pageable pageable) {
-		Slice<ApplyResponse> slice = applyService.pageListApplyCursor(applySearchRequest, pageable);
-		SliceResponse<ApplyResponse> sliceResponse = new SliceResponse<>(slice.getContent(), pageable, slice.hasNext());
-		return ResponseEntity.ok(sliceResponse);
+		@ParameterObject @ModelAttribute @Valid ApplySearchRequest applySearchRequest,
+		@ParameterObject Pageable pageable) {
+		return ResponseEntity.ok(applyService.pageListApplyCursor(applySearchRequest, pageable));
 	}
 
 	@Operation(summary = "상세 조회")
