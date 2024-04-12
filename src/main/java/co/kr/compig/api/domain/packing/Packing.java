@@ -5,7 +5,7 @@ import java.util.Set;
 
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.domain.payment.Payment;
-import co.kr.compig.api.domain.settle.SettleGroup;
+import co.kr.compig.api.domain.settle.Settle;
 import co.kr.compig.api.domain.wallet.Wallet;
 import co.kr.compig.api.presentation.packing.request.PackingUpdateRequest;
 import co.kr.compig.api.presentation.packing.response.PackingDetailResponse;
@@ -57,9 +57,9 @@ public class Packing {
 	private CareOrder careOrder = new CareOrder();
 
 	@Builder.Default
-	@JoinColumn(name = "settle_group_id", nullable = false, foreignKey = @ForeignKey(name = "fk03_packing"))
+	@JoinColumn(name = "settle_id", nullable = false, foreignKey = @ForeignKey(name = "fk03_packing"))
 	@ManyToOne(fetch = FetchType.LAZY)
-	private SettleGroup settleGroup = new SettleGroup();
+	private Settle settle = new Settle();
 
 	@Builder.Default
 	@OneToMany(
@@ -75,7 +75,6 @@ public class Packing {
 		return PackingDetailResponse.builder()
 			.packingId(this.id)
 			.careOrderId(this.careOrder.getId())
-			.settleGroupId(this.settleGroup.getId())
 			.build();
 	}
 

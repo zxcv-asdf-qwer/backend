@@ -15,8 +15,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 public class SettleResponse extends BaseAudit {
 	private Long settleId; // 간병금액정책 id
-	private String element; // 요소명
-	private Integer amount; // 금액
-	private Long settleGroupId; // 간병금액정책 그룹 id
+	private Integer guardianFees; // 보호자 수수료
+	private Integer partnerFees; // 간병인 수수료
 	private UseYn useYn; // 사용 유무
 }

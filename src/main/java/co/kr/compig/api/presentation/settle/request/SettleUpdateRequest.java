@@ -1,7 +1,6 @@
 package co.kr.compig.api.presentation.settle.request;
 
 import co.kr.compig.api.domain.code.UseYn;
-import co.kr.compig.api.domain.settle.Settle;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,19 +11,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SettleCreateRequest {
+public class SettleUpdateRequest {
 	@NotNull
 	private Integer guardianFees; // 보호자 수수료
 	@NotNull
 	private Integer partnerFees; // 간병인 수수료
 	@NotNull
 	private UseYn useYn; // 사용 유무
-
-	public Settle converterEntity() {
-		return Settle.builder()
-			.guardianFees(this.guardianFees)
-			.partnerFees(this.partnerFees)
-			.useYn(this.useYn)
-			.build();
-	}
 }

@@ -1,6 +1,7 @@
 package co.kr.compig.api.domain.settle;
 
 import co.kr.compig.api.domain.code.UseYn;
+import co.kr.compig.api.presentation.settle.request.SettleUpdateRequest;
 import co.kr.compig.api.presentation.settle.response.SettleResponse;
 import co.kr.compig.global.embedded.Created;
 import jakarta.persistence.Column;
@@ -40,26 +41,18 @@ public class Settle {
 	private Long id;
 
 	@Column
-	private Long settleGroupId; // 간병 요소 그룹 ID
+	private Integer guardianFees; // 보호자 수수료 (%)
 
 	@Column
-	private String element; // 요소명
-
-	@Column
-	private Integer amount; // 금액
+	private Integer partnerFees; // 간병인 수수료 (원)
 
 	@Column
 	@Enumerated(EnumType.STRING)
 	@Builder.Default
 	private UseYn useYn = UseYn.Y;
-
 	/* =================================================================
 	* Domain mapping
 	================================================================= */
-	// @Builder.Default
-	// @JoinColumn(name = "settle_group_id", nullable = false, foreignKey = @ForeignKey(name = "fk01_settle"))
-	// @ManyToOne(fetch = FetchType.LAZY)
-	// private SettleGroup settleGroup = new SettleGroup();
 
 	/* =================================================================
 	* Relation method
@@ -67,9 +60,8 @@ public class Settle {
 	public SettleResponse toSettleResponse() {
 		return SettleResponse.builder()
 			.settleId(this.id)
-			.element(this.element)
-			.amount(this.amount)
-			.settleGroupId(this.settleGroupId)
+			.guardianFees(this.guardianFees)
+			.partnerFees(this.partnerFees)
 			.useYn(this.useYn)
 			.build();
 	}
@@ -81,7 +73,17 @@ public class Settle {
 	@Builder.Default
 	private Created createdAndModified = new Created();
 
-	public void setUseYn() {
-		this.useYn = UseYn.N;
+	public void update(SettleUpdateRequest settleUpdateRequest) {
+		if (settleUpdateRequest.getGuardianFees() != null) {
+			this.guardianFees = settleUpdateRequest.getGuardianFees();
+		}
+
+		if (settleUpdateRequest.getPartnerFees() != null) {
+			this.partnerFees = settleUpdateRequest.getPartnerFees();
+		}
+
+		if (settleUpdateRequest.getUseYn() != null) {
+			this.useYn = settleUpdateRequest.getUseYn();
+		}
 	}
 }

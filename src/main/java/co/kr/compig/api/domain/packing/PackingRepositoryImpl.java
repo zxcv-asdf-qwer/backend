@@ -35,8 +35,7 @@ public class PackingRepositoryImpl implements PackingRepositoryCustom {
 		JPAQuery<PackingResponse> query = createBaseQuery(predicate)
 			.select(Projections.constructor(PackingResponse.class,
 				packing.id,
-				packing.careOrder.id,
-				packing.settleGroup.id
+				packing.careOrder.id
 			));
 
 		applySorting(query, pageable);
@@ -57,9 +56,7 @@ public class PackingRepositoryImpl implements PackingRepositoryCustom {
 		if (request.getCareOrderId() != null) {
 			predicate = predicate.and(packing.careOrder.id.eq(request.getCareOrderId()));
 		}
-		if (request.getSettleGroupId() != null) {
-			predicate = predicate.and(packing.settleGroup.id.eq(request.getSettleGroupId()));
-		}
+
 		return predicate;
 	}
 

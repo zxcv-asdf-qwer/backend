@@ -10,8 +10,6 @@ import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.domain.packing.Packing;
 import co.kr.compig.api.domain.packing.PackingRepository;
 import co.kr.compig.api.domain.packing.PackingRepositoryCustom;
-import co.kr.compig.api.domain.settle.SettleGroup;
-import co.kr.compig.api.domain.settle.SettleGroupRepository;
 import co.kr.compig.api.presentation.packing.request.PackingCreateRequest;
 import co.kr.compig.api.presentation.packing.request.PackingSearchRequest;
 import co.kr.compig.api.presentation.packing.request.PackingUpdateRequest;
@@ -30,14 +28,11 @@ public class PackingService {
 
 	private final PackingRepository packingRepository;
 	private final PackingRepositoryCustom packingRepositoryCustom;
-	private final SettleGroupRepository settleGroupRepository;
 	private final CareOrderService careOrderService;
 
 	public Long createPacking(PackingCreateRequest packingCreateRequest) {
 		CareOrder careOrder = careOrderService.getCareOrderById(packingCreateRequest.getCareOrderId());
-		SettleGroup settleGroup = settleGroupRepository.findById(packingCreateRequest.getSettleGroupId())
-			.orElseThrow(NotExistDataException::new);
-		Packing packing = packingCreateRequest.converterEntity(careOrder, settleGroup);
+		Packing packing = packingCreateRequest.converterEntity(careOrder);
 		return packingRepository.save(packing).getId();
 	}
 

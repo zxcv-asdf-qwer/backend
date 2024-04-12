@@ -15,5 +15,4 @@ public class PackingResponse {
 
 	private Long packingId;
 	private Long careOrderId;
-	private Long settleGroupId;
 }
