@@ -1,7 +1,10 @@
 package co.kr.compig.api.domain.packing;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.domain.payment.Payment;
@@ -48,13 +51,20 @@ public class Packing {
 	@Column(name = "packing_id")
 	private Long id;
 
+	@Column
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+	private LocalDateTime startDateTime; // 시작 날짜
+
+	@Column
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+	private LocalDateTime endDateTime; // 종료 날짜
+
 	/* =================================================================
 	 * Domain mapping
 	   ================================================================= */
-	@Builder.Default
+	@ManyToOne
 	@JoinColumn(name = "care_order_id", nullable = false, foreignKey = @ForeignKey(name = "fk01_packing"))
-	@ManyToOne(fetch = FetchType.LAZY)
-	private CareOrder careOrder = new CareOrder();
+	private CareOrder careOrder;
 
 	@Builder.Default
 	@JoinColumn(name = "settle_id", nullable = false, foreignKey = @ForeignKey(name = "fk03_packing"))
@@ -70,6 +80,13 @@ public class Packing {
 	@OneToMany(
 		mappedBy = "packing", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Wallet> wallets = new HashSet<>();
+
+	/* =================================================================
+	* Relation method
+	================================================================= */
+	public void setCareOrder(CareOrder careOrder) {
+		this.careOrder = careOrder;
+	}
 
 	public PackingDetailResponse toPackingDetailResponse() {
 		return PackingDetailResponse.builder()

@@ -1,5 +1,8 @@
 package co.kr.compig.api.application.order;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -13,6 +16,7 @@ import co.kr.compig.api.domain.member.MemberRepositoryCustom;
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.domain.order.CareOrderRepository;
 import co.kr.compig.api.domain.order.CareOrderRepositoryCustom;
+import co.kr.compig.api.domain.packing.Packing;
 import co.kr.compig.api.domain.patient.OrderPatient;
 import co.kr.compig.api.presentation.order.request.AdminCareOrderCreateRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderCreateRequest;
@@ -43,6 +47,19 @@ public class CareOrderService {
 			adminCareOrderCreateRequest.getOrderPatientId());
 
 		CareOrder careOrder = adminCareOrderCreateRequest.converterEntity(member, orderPatient);
+		// 종료 날짜(2024-04-17 10:00:00) - 시작 날짜(2024-04-12 10:00:00)
+		// 시작 날짜부터 종료 날짜까지 5일 Packing 객체 생성
+		long daysBetween = ChronoUnit.DAYS.between(careOrder.getStartDateTime(), careOrder.getEndDateTime());
+		for (int i = 0; i <= daysBetween; i++) {
+			LocalDateTime startDateTime = careOrder.getStartDateTime().plusDays(i);
+			LocalDateTime endDateTime = startDateTime.plusDays(1);
+			Packing build = Packing.builder()
+				.careOrder(careOrder)
+				.startDateTime(startDateTime)
+				.endDateTime(endDateTime)
+				.build();
+			careOrder.addPacking(build);
+		}
 		return careOrderRepository.save(careOrder).getId();
 	}
 

@@ -1,17 +1,18 @@
 package co.kr.compig.api.domain.patient;
 
-import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
+import co.kr.compig.api.domain.code.DiseaseCode;
 import co.kr.compig.api.domain.code.GenderCode;
 import co.kr.compig.api.domain.code.IsYn;
 import co.kr.compig.api.domain.code.LocationType;
 import co.kr.compig.api.domain.code.ToiletType;
-import co.kr.compig.api.domain.code.converter.ToiletTypeConverter;
+import co.kr.compig.api.domain.code.converter.DiseaseCodeListConverter;
+import co.kr.compig.api.domain.code.converter.ToiletTypeListConverter;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.presentation.patient.request.PatientUpdateRequest;
 import co.kr.compig.api.presentation.patient.response.PatientDetailResponse;
@@ -74,11 +75,14 @@ public class Patient {
 	private Integer weight; // 환자 몸무게
 
 	@Column(columnDefinition = "jsonb")
-	private String diseaseNm; // 진단명
+	@JdbcTypeCode(SqlTypes.JSON)
+	@Convert(converter = DiseaseCodeListConverter.class)
+	private List<DiseaseCode> diseaseNms; // 진단명 리스트
 
-	@Column(length = 10)
-	@Convert(converter = ToiletTypeConverter.class)
-	private ToiletType selfToiletAvailability; // 대소변 해결 여부
+	@Column(columnDefinition = "jsonb")
+	@JdbcTypeCode(SqlTypes.JSON)
+	@Convert(converter = ToiletTypeListConverter.class)
+	private List<ToiletType> selfToiletAvailabilities; // 대소변 해결 여부
 
 	@Column(length = 1)
 	@Enumerated(EnumType.STRING)
@@ -138,8 +142,8 @@ public class Patient {
 			.birthDate(this.birthDate)
 			.height(this.height)
 			.weight(this.weight)
-			.diseaseNm(convertJsonStringToList(this.diseaseNm))
-			.selfToiletAvailability(this.selfToiletAvailability)
+			.diseaseNms(this.diseaseNms)
+			.selfToiletAvailabilities(this.selfToiletAvailabilities)
 			.genderPreference(this.genderPreference)
 			.covid19Test(this.covid19Test)
 			.patientRequest(this.patientRequest)
@@ -151,21 +155,14 @@ public class Patient {
 			.build();
 	}
 
-	private static List<String> convertJsonStringToList(String json) {
-		Gson gson = new Gson();
-		Type listType = new TypeToken<List<String>>() {
-		}.getType();
-		return gson.fromJson(json, listType);
-	}
-
 	public void update(PatientUpdateRequest patientUpdateRequest) {
 		this.name = patientUpdateRequest.getName();
 		this.gender = patientUpdateRequest.getGender();
 		this.birthDate = patientUpdateRequest.getBirthDate();
 		this.height = patientUpdateRequest.getHeight();
 		this.weight = patientUpdateRequest.getWeight();
-		this.diseaseNm = patientUpdateRequest.getDiseaseNm();
-		this.selfToiletAvailability = patientUpdateRequest.getSelfToiletAvailability();
+		this.diseaseNms = patientUpdateRequest.getDiseaseNms();
+		this.selfToiletAvailabilities = patientUpdateRequest.getSelfToiletAvailabilities();
 		this.genderPreference = patientUpdateRequest.getGenderPreference();
 		this.covid19Test = patientUpdateRequest.getCovid19Test();
 		this.patientRequest = patientUpdateRequest.getPatientRequest();

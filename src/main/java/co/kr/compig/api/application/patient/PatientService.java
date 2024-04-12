@@ -50,7 +50,7 @@ public class PatientService {
 
 	@Transactional(readOnly = true)
 	public PatientDetailResponse getPatient(Long patientId) {
-		Patient patient = patientRepository.findById(patientId).orElseThrow(NoClassDefFoundError::new);
+		Patient patient = patientRepository.findById(patientId).orElseThrow(NotExistDataException::new);
 		return patient.toPatientDetailResponse();
 	}
 

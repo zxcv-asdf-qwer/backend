@@ -1,9 +1,11 @@
 package co.kr.compig.api.presentation.patient.request;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.hibernate.validator.constraints.Length;
 
+import co.kr.compig.api.domain.code.DiseaseCode;
 import co.kr.compig.api.domain.code.GenderCode;
 import co.kr.compig.api.domain.code.IsYn;
 import co.kr.compig.api.domain.code.LocationType;
@@ -53,10 +55,10 @@ public class PatientUpdateRequest {
 	private String address2; // 간병 장소 상세 주소
 
 	@NotBlank
-	private String diseaseNm; // 질환
+	private List<DiseaseCode> diseaseNms; // 질환
 
 	@NotNull
-	private ToiletType selfToiletAvailability; // 대소변 해결 여부
+	private List<ToiletType> selfToiletAvailabilities; // 대소변 해결 여부
 
 	@NotNull
 	private GenderCode genderPreference; // 선호 성별

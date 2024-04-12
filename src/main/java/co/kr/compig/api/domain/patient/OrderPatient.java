@@ -1,12 +1,17 @@
 package co.kr.compig.api.domain.patient;
 
 import java.time.LocalDate;
+import java.util.List;
 
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+import co.kr.compig.api.domain.code.DiseaseCode;
 import co.kr.compig.api.domain.code.GenderCode;
 import co.kr.compig.api.domain.code.IsYn;
 import co.kr.compig.api.domain.code.LocationType;
 import co.kr.compig.api.domain.code.ToiletType;
-import co.kr.compig.api.domain.code.converter.ToiletTypeConverter;
+import co.kr.compig.api.domain.code.converter.ToiletTypeListConverter;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.presentation.patient.request.OrderPatientUpdateRequest;
@@ -68,12 +73,14 @@ public class OrderPatient {
 	@Column
 	private Integer weight; // 환자 몸무게
 
-	@Column(length = 50)
-	private String diseaseNm; // 진단명
+	@Column(columnDefinition = "jsonb")
+	@JdbcTypeCode(SqlTypes.JSON)
+	private List<DiseaseCode> diseaseNms; // 진단명 리스트
 
-	@Column(length = 10)
-	@Convert(converter = ToiletTypeConverter.class)
-	private ToiletType selfToiletAvailability; // 대소변 해결 여부
+	@Column(columnDefinition = "jsonb")
+	@JdbcTypeCode(SqlTypes.JSON)
+	@Convert(converter = ToiletTypeListConverter.class)
+	private List<ToiletType> selfToiletAvailabilities; // 대소변 해결 여부
 
 	@Column(length = 1)
 	@Enumerated(EnumType.STRING)
@@ -126,8 +133,8 @@ public class OrderPatient {
 			.birthDate(this.birthDate)
 			.height(this.height)
 			.weight(this.weight)
-			.diseaseNm(this.diseaseNm)
-			.selfToiletAvailability(this.selfToiletAvailability)
+			.diseaseNms(this.diseaseNms)
+			.selfToiletAvailabilities(this.selfToiletAvailabilities)
 			.moveAvailability(this.moveAvailability)
 			.mealAvailability(this.mealAvailability)
 			.genderPreference(this.genderPreference)
@@ -147,8 +154,8 @@ public class OrderPatient {
 		this.birthDate = orderPatientUpdateRequest.getBirthDate();
 		this.height = orderPatientUpdateRequest.getHeight();
 		this.weight = orderPatientUpdateRequest.getWeight();
-		this.diseaseNm = orderPatientUpdateRequest.getDiseaseNm();
-		this.selfToiletAvailability = orderPatientUpdateRequest.getSelfToiletAvailability();
+		this.diseaseNms = orderPatientUpdateRequest.getDiseaseNms();
+		this.selfToiletAvailabilities = orderPatientUpdateRequest.getSelfToiletAvailabilities();
 		this.moveAvailability = orderPatientUpdateRequest.getMoveAvailability();
 		this.mealAvailability = orderPatientUpdateRequest.getMealAvailability();
 		this.genderPreference = orderPatientUpdateRequest.getGenderPreference();

@@ -2,9 +2,11 @@ package co.kr.compig.api.presentation.order.response;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 import co.kr.compig.api.domain.code.CareOrderRegisterType;
+import co.kr.compig.api.domain.code.DiseaseCode;
 import co.kr.compig.api.domain.code.GenderCode;
 import co.kr.compig.api.domain.code.IsYn;
 import co.kr.compig.api.domain.code.LocationType;
@@ -40,8 +42,8 @@ public class CareOrderDetailResponse {
 	private LocalDate birthDate; // 환자 나이
 	private Integer height; // 환자 신장
 	private Integer weight; // 환자 몸무게
-	private String diseaseNm; // 진단명
-	private ToiletType selfToiletAvailability; // 대소변 해결 여부
+	private List<DiseaseCode> diseaseNms; // 진단명
+	private List<ToiletType> selfToiletAvailabilities; // 대소변 해결 여부
 	private IsYn moveAvailability; // 거동 가능 여부
 	private IsYn mealAvailability; // 식사 가능 여부
 	private GenderCode genderPreference; // 선호 성별

@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.hibernate.validator.constraints.Length;
 
-import com.google.gson.Gson;
-
 import co.kr.compig.api.domain.code.DiseaseCode;
 import co.kr.compig.api.domain.code.GenderCode;
 import co.kr.compig.api.domain.code.IsYn;
@@ -64,10 +62,10 @@ public class AdminPatientCreateRequest {
 	private String address2; // 간병 장소 상세 주소
 
 	@NotNull
-	private List<DiseaseCode> diseaseNm; // 질환
+	private List<DiseaseCode> diseaseNms; // 질환
 
 	@NotNull
-	private ToiletType selfToiletAvailability; // 대소변 해결 여부
+	private List<ToiletType> selfToiletAvailabilities; // 대소변 해결 여부
 
 	@NotNull
 	private GenderCode genderPreference; // 선호 성별
@@ -84,8 +82,8 @@ public class AdminPatientCreateRequest {
 			.birthDate(this.birthDate)
 			.height(this.height)
 			.weight(this.weight)
-			.diseaseNm(new Gson().toJson(this.diseaseNm))
-			.selfToiletAvailability(this.selfToiletAvailability)
+			.diseaseNms(this.diseaseNms)
+			.selfToiletAvailabilities(this.selfToiletAvailabilities)
 			.genderPreference(this.genderPreference)
 			.covid19Test(this.covid19Test)
 			.patientRequest(this.patientRequest)

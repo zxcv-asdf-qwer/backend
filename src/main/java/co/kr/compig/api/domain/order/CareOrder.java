@@ -16,6 +16,7 @@ import co.kr.compig.api.domain.code.converter.CareOrderRegisterTypeConverter;
 import co.kr.compig.api.domain.code.converter.OrderStatusCodeConverter;
 import co.kr.compig.api.domain.code.converter.PeriodTypeConverter;
 import co.kr.compig.api.domain.member.Member;
+import co.kr.compig.api.domain.packing.Packing;
 import co.kr.compig.api.domain.patient.OrderPatient;
 import co.kr.compig.api.presentation.apply.response.ApplyCareOrderResponse;
 import co.kr.compig.api.presentation.order.request.CareOrderUpdateRequest;
@@ -113,6 +114,23 @@ public class CareOrder {
 	@OneToOne(fetch = FetchType.LAZY)
 	private OrderPatient orderPatient = new OrderPatient();
 
+	@OneToMany(mappedBy = "careOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+	@Builder.Default
+	private final Set<Packing> packages = new HashSet<>();
+
+	/* =================================================================
+	 * Relation method
+	   ================================================================= */
+
+	public void addPacking(Packing packing) {
+		this.packages.add(packing);
+		packing.setCareOrder(this);
+	}
+
+	/* =================================================================
+	 * Business
+	   ================================================================= */
+
 	public CareOrderDetailResponse toCareOrderDetailResponse() {
 		Set<ApplyCareOrderResponse> applyResponses = applys.stream()
 			.map(Apply::toApplyCareOrderResponse) // Apply 객체를 ApplyDetailResponse 객체로 매핑
@@ -134,8 +152,8 @@ public class CareOrder {
 			.birthDate(orderPatient.getBirthDate())
 			.height(orderPatient.getHeight())
 			.weight(orderPatient.getWeight())
-			.diseaseNm(orderPatient.getDiseaseNm())
-			.selfToiletAvailability(orderPatient.getSelfToiletAvailability())
+			.diseaseNms(orderPatient.getDiseaseNms())
+			.selfToiletAvailabilities(orderPatient.getSelfToiletAvailabilities())
 			.moveAvailability(orderPatient.getMoveAvailability())
 			.mealAvailability(orderPatient.getMealAvailability())
 			.genderPreference(orderPatient.getGenderPreference())

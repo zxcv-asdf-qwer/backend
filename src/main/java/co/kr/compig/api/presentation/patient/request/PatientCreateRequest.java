@@ -1,9 +1,11 @@
 package co.kr.compig.api.presentation.patient.request;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.hibernate.validator.constraints.Length;
 
+import co.kr.compig.api.domain.code.DiseaseCode;
 import co.kr.compig.api.domain.code.GenderCode;
 import co.kr.compig.api.domain.code.IsYn;
 import co.kr.compig.api.domain.code.LocationType;
@@ -40,10 +42,10 @@ public class PatientCreateRequest {
 	private Integer weight; // 환자 몸무게
 
 	@NotBlank
-	private String diseaseNm; // 진단명
+	private List<DiseaseCode> diseaseNms; // 진단명
 
 	@NotNull
-	private ToiletType selfToiletAvailability; // 대소변 해결 여부
+	private List<ToiletType> selfToiletAvailabilities; // 대소변 해결 여부
 
 	@NotNull
 	private IsYn moveAvailability; // 거동 가능 여부
@@ -78,8 +80,8 @@ public class PatientCreateRequest {
 			.birthDate(this.birthDate)
 			.height(this.height)
 			.weight(this.weight)
-			.diseaseNm(this.diseaseNm)
-			.selfToiletAvailability(this.selfToiletAvailability)
+			.diseaseNms(this.diseaseNms)
+			.selfToiletAvailabilities(this.selfToiletAvailabilities)
 			.moveAvailability(this.moveAvailability)
 			.mealAvailability(this.mealAvailability)
 			.genderPreference(this.genderPreference)
