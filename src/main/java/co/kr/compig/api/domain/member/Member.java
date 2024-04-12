@@ -17,6 +17,8 @@ import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.FederatedIdentityRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import co.kr.compig.api.domain.account.Account;
 import co.kr.compig.api.domain.code.CareerCode;
 import co.kr.compig.api.domain.code.DeptCode;
@@ -180,10 +182,12 @@ public class Member {
 	@Builder.Default
 	@OneToMany(
 		mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference //연관관계 주인 반대 Entity 에 선언, 정상적으로 직렬화 수행
 	private Set<MemberGroup> groups = new HashSet<>();
 
 	@Builder.Default
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonManagedReference //연관관계 주인 반대 Entity 에 선언, 정상적으로 직렬화 수행
 	private Set<MenuPermission> menuPermissions = new HashSet<>();
 
 	@OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
@@ -191,18 +195,22 @@ public class Member {
 
 	@Builder.Default
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonManagedReference //연관관계 주인 반대 Entity 에 선언, 정상적으로 직렬화 수행
 	private Set<Patient> patients = new HashSet<>();
 
 	@Builder.Default
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonManagedReference //연관관계 주인 반대 Entity 에 선언, 정상적으로 직렬화 수행
 	private Set<OrderPatient> orderPatients = new HashSet<>();
 
 	@Builder.Default
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonManagedReference //연관관계 주인 반대 Entity 에 선언, 정상적으로 직렬화 수행
 	private Set<Wallet> wallets = new HashSet<>();
 
 	@Builder.Default
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonManagedReference //연관관계 주인 반대 Entity 에 선언, 정상적으로 직렬화 수행
 	private Set<CareOrder> careOrders = new HashSet<>();
 
 	/* =================================================================

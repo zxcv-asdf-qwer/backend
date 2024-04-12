@@ -66,7 +66,7 @@ public class SettleRepositoryImpl implements SettleRepositoryCustom {
 
 		if (request.getToCreatedOn() != null) {
 			predicate = predicate.and(
-				settle.createdAndModified.createdOn.loe(request.getToCreatedOn()));
+				settle.created.createdOn.loe(request.getToCreatedOn()));
 		}
 		return predicate;
 	}

@@ -1,5 +1,7 @@
 package co.kr.compig.api.domain.apply;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import co.kr.compig.api.domain.code.ApplyStatusCode;
 import co.kr.compig.api.domain.code.converter.ApplyStatusConverter;
 import co.kr.compig.api.domain.member.Member;
@@ -56,11 +58,13 @@ public class Apply {
 	@Builder.Default
 	@JoinColumn(name = "care_order_id", nullable = false, foreignKey = @ForeignKey(name = "fk01_apply"))
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonBackReference//연관관계의 주인 Entity 에 선언, 직렬화가 되지 않도록 수행
 	private CareOrder careOrder = new CareOrder();
 
 	@Builder.Default
 	@JoinColumn(name = "member_id", nullable = false, foreignKey = @ForeignKey(name = "fk02_apply"))
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonBackReference//연관관계의 주인 Entity 에 선언, 직렬화가 되지 않도록 수행
 	private Member member = new Member();
 
 	public ApplyDetailResponse toApplyDetailResponse(Member member, CareOrder careOrder) {

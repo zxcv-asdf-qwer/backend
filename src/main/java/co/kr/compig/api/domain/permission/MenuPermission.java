@@ -1,5 +1,7 @@
 package co.kr.compig.api.domain.permission;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.menu.Menu;
 import co.kr.compig.api.presentation.permission.request.MenuPermissionUpdateRequest;
@@ -50,10 +52,12 @@ public class MenuPermission {
 
 	@JoinColumn(name = "member_id", foreignKey = @ForeignKey(name = "fk01_menu_permission"))
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonBackReference//연관관계의 주인 Entity 에 선언, 직렬화가 되지 않도록 수행
 	private Member member; // Member id
 
 	@JoinColumn(name = "menu_id", foreignKey = @ForeignKey(name = "fk02_menu_permission"))
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonBackReference//연관관계의 주인 Entity 에 선언, 직렬화가 되지 않도록 수행
 	private Menu menu; // Member
 
   /* =================================================================

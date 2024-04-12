@@ -53,8 +53,7 @@ public class OrderPatientService {
 		orderPatientRepository.delete(orderPatient);
 	}
 
-	public OrderPatient getOrderPatientByOrderPatientId(Long orderPatientId) {
-		return orderPatientRepository.findById(orderPatientId)
-			.orElseThrow(NotExistDataException::new);
+	public OrderPatient save(OrderPatient orderPatient) {
+		return orderPatientRepository.save(orderPatient);
 	}
 }

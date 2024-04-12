@@ -71,7 +71,7 @@ public class Settle {
 	================================================================= */
 	@Embedded
 	@Builder.Default
-	private Created createdAndModified = new Created();
+	private Created created = new Created();
 
 	public void update(SettleUpdateRequest settleUpdateRequest) {
 		if (settleUpdateRequest.getGuardianFees() != null) {

@@ -77,4 +77,9 @@ public class PatientService {
 			.map(Patient::toPatientResponse)
 			.collect(Collectors.toList());
 	}
+
+	public Patient getOrderPatientByOrderPatientId(Long orderPatientId) {
+		return patientRepository.findById(orderPatientId)
+			.orElseThrow(NotExistDataException::new);
+	}
 }

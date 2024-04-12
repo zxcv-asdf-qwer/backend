@@ -1,5 +1,7 @@
 package co.kr.compig.api.domain.wallet;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.packing.Packing;
 import co.kr.compig.api.presentation.wallet.response.WalletDetailResponse;
@@ -42,6 +44,7 @@ public class Wallet {
 	@Builder.Default
 	@JoinColumn(name = "member_id", nullable = false, foreignKey = @ForeignKey(name = "fk01_wallet"))
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonBackReference//연관관계의 주인 Entity 에 선언, 직렬화가 되지 않도록 수행
 	private Member member = new Member(); // Member id
 
 	@Builder.Default

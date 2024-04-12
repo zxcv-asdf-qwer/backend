@@ -6,6 +6,9 @@ import java.util.Set;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.domain.payment.Payment;
 import co.kr.compig.api.domain.settle.Settle;
@@ -64,21 +67,25 @@ public class Packing {
 	   ================================================================= */
 	@ManyToOne
 	@JoinColumn(name = "care_order_id", nullable = false, foreignKey = @ForeignKey(name = "fk01_packing"))
+	@JsonBackReference//연관관계의 주인 Entity 에 선언, 직렬화가 되지 않도록 수행
 	private CareOrder careOrder;
 
 	@Builder.Default
-	@JoinColumn(name = "settle_id", nullable = false, foreignKey = @ForeignKey(name = "fk03_packing"))
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "settle_id", nullable = false, foreignKey = @ForeignKey(name = "fk03_packing"))
+	@JsonBackReference//연관관계의 주인 Entity 에 선언, 직렬화가 되지 않도록 수행
 	private Settle settle = new Settle();
 
 	@Builder.Default
 	@OneToMany(
 		mappedBy = "packing", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference //연관관계 주인 반대 Entity 에 선언, 정상적으로 직렬화 수행
 	private Set<Payment> payments = new HashSet<>();
 
 	@Builder.Default
 	@OneToMany(
 		mappedBy = "packing", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference //연관관계 주인 반대 Entity 에 선언, 정상적으로 직렬화 수행
 	private Set<Wallet> wallets = new HashSet<>();
 
 	/* =================================================================

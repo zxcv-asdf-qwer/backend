@@ -11,13 +11,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import co.kr.compig.api.application.member.MemberService;
 import co.kr.compig.api.application.patient.OrderPatientService;
+import co.kr.compig.api.application.settle.SettleService;
 import co.kr.compig.api.domain.member.Member;
-import co.kr.compig.api.domain.member.MemberRepositoryCustom;
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.domain.order.CareOrderRepository;
 import co.kr.compig.api.domain.order.CareOrderRepositoryCustom;
 import co.kr.compig.api.domain.packing.Packing;
 import co.kr.compig.api.domain.patient.OrderPatient;
+import co.kr.compig.api.domain.patient.Patient;
+import co.kr.compig.api.domain.settle.Settle;
 import co.kr.compig.api.presentation.order.request.AdminCareOrderCreateRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderCreateRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderSearchRequest;
@@ -36,17 +38,26 @@ import lombok.extern.slf4j.Slf4j;
 public class CareOrderService {
 
 	private final MemberService memberService;
-	private final MemberRepositoryCustom memberRepositoryCustom;
+	private final SettleService settleService;
 	private final OrderPatientService orderPatientService;
 	private final CareOrderRepository careOrderRepository;
 	private final CareOrderRepositoryCustom careOrderRepositoryCustom;
 
 	public Long createCareOrderAdmin(AdminCareOrderCreateRequest adminCareOrderCreateRequest) {
 		Member member = memberService.getMemberById(adminCareOrderCreateRequest.getMemberId());
-		OrderPatient orderPatient = orderPatientService.getOrderPatientByOrderPatientId(
-			adminCareOrderCreateRequest.getOrderPatientId());
+		Patient patientById = member.getPatients()
+			.stream()
+			.filter(patient -> patient.getId().equals(adminCareOrderCreateRequest.getOrderPatientId()))
+			.findFirst()
+			.orElseThrow(NotExistDataException::new);
 
-		CareOrder careOrder = adminCareOrderCreateRequest.converterEntity(member, orderPatient);
+		OrderPatient orderPatient = orderPatientService.save(patientById.toOrderPatient());
+
+		CareOrder careOrder = careOrderRepository.save(
+			adminCareOrderCreateRequest.converterEntity(member, orderPatient));
+
+		Settle recentSettle = settleService.getRecentSettle();
+
 		// 종료 날짜(2024-04-17 10:00:00) - 시작 날짜(2024-04-12 10:00:00)
 		// 시작 날짜부터 종료 날짜까지 5일 Packing 객체 생성
 		long daysBetween = ChronoUnit.DAYS.between(careOrder.getStartDateTime(), careOrder.getEndDateTime());
@@ -55,21 +66,45 @@ public class CareOrderService {
 			LocalDateTime endDateTime = startDateTime.plusDays(1);
 			Packing build = Packing.builder()
 				.careOrder(careOrder)
+				.settle(recentSettle)
 				.startDateTime(startDateTime)
 				.endDateTime(endDateTime)
 				.build();
 			careOrder.addPacking(build);
 		}
-		return careOrderRepository.save(careOrder).getId();
+		return careOrder.getId();
 	}
 
 	public Long createCareOrderUser(CareOrderCreateRequest careOrderCreateRequest) {
 		Member member = memberService.getMemberById(careOrderCreateRequest.getMemberId());
-		OrderPatient orderPatient = orderPatientService.getOrderPatientByOrderPatientId(
-			careOrderCreateRequest.getOrderPatientId());
+		Patient patientById = member.getPatients()
+			.stream()
+			.filter(patient -> patient.getId().equals(careOrderCreateRequest.getOrderPatientId()))
+			.findFirst()
+			.orElseThrow(NotExistDataException::new);
 
-		CareOrder careOrder = careOrderCreateRequest.converterEntity(member, orderPatient);
-		return careOrderRepository.save(careOrder).getId();
+		OrderPatient orderPatient = orderPatientService.save(patientById.toOrderPatient());
+
+		CareOrder careOrder = careOrderRepository.save(
+			careOrderCreateRequest.converterEntity(member, orderPatient));
+
+		Settle recentSettle = settleService.getRecentSettle();
+
+		// 종료 날짜(2024-04-17 10:00:00) - 시작 날짜(2024-04-12 10:00:00)
+		// 시작 날짜부터 종료 날짜까지 5일 Packing 객체 생성
+		long daysBetween = ChronoUnit.DAYS.between(careOrder.getStartDateTime(), careOrder.getEndDateTime());
+		for (int i = 0; i <= daysBetween; i++) {
+			LocalDateTime startDateTime = careOrder.getStartDateTime().plusDays(i);
+			LocalDateTime endDateTime = startDateTime.plusDays(1);
+			Packing build = Packing.builder()
+				.careOrder(careOrder)
+				.settle(recentSettle)
+				.startDateTime(startDateTime)
+				.endDateTime(endDateTime)
+				.build();
+			careOrder.addPacking(build);
+		}
+		return careOrder.getId();
 	}
 
 	@Transactional(readOnly = true)

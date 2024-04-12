@@ -6,6 +6,8 @@ import java.util.List;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import co.kr.compig.api.domain.code.DiseaseCode;
 import co.kr.compig.api.domain.code.GenderCode;
 import co.kr.compig.api.domain.code.IsYn;
@@ -120,6 +122,7 @@ public class OrderPatient {
 	@Builder.Default
 	@JoinColumn(name = "member_id", nullable = false, foreignKey = @ForeignKey(name = "fk01_order_patient"))
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonBackReference//연관관계의 주인 Entity 에 선언, 직렬화가 되지 않도록 수행
 	private Member member = new Member(); // Member id
 
 	@OneToOne(mappedBy = "orderPatient", fetch = FetchType.LAZY)

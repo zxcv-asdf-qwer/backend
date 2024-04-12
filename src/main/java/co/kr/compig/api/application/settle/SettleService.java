@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import co.kr.compig.api.domain.code.UseYn;
 import co.kr.compig.api.domain.settle.Settle;
 import co.kr.compig.api.domain.settle.SettleRepository;
 import co.kr.compig.api.domain.settle.SettleRepositoryCustom;
@@ -33,6 +34,12 @@ public class SettleService {
 	public PageResponse<SettleResponse> getSettlePage(SettleSearchRequest settleSearchRequest, Pageable pageable) {
 		Page<SettleResponse> page = settleRepositoryCustom.getPage(settleSearchRequest, pageable);
 		return new PageResponse<>(page.getContent(), pageable, page.getTotalElements());
+	}
+
+	@Transactional(readOnly = true)
+	public Settle getRecentSettle() {
+		return settleRepository.findTopByUseYnOrderByCreated_CreatedOnDesc(UseYn.Y)
+			.orElseThrow(NotExistDataException::new);
 	}
 
 	public Long update(Long settleId, SettleUpdateRequest settleUpdateRequest) {

@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import co.kr.compig.api.domain.code.MenuDivCode;
 import co.kr.compig.api.domain.code.MenuTypeCode;
 import co.kr.compig.api.domain.code.UseYn;
@@ -91,6 +93,7 @@ public class Menu {
 
 	@Builder.Default
 	@OneToMany(mappedBy = "menu", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonManagedReference //연관관계 주인 반대 Entity 에 선언, 정상적으로 직렬화 수행
 	private Set<MenuPermission> menuPermissions = new HashSet<>();
 
 	/* =================================================================

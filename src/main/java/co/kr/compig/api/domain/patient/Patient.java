@@ -6,6 +6,8 @@ import java.util.List;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import co.kr.compig.api.domain.code.DiseaseCode;
 import co.kr.compig.api.domain.code.GenderCode;
 import co.kr.compig.api.domain.code.IsYn;
@@ -120,8 +122,9 @@ public class Patient {
 	* Domain mapping
 	================================================================= */
 	@Builder.Default
-	@JoinColumn(name = "member_id", nullable = false, foreignKey = @ForeignKey(name = "fk01_patient"))
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "member_id", nullable = false, foreignKey = @ForeignKey(name = "fk01_patient"))
+	@JsonBackReference//연관관계의 주인 Entity 에 선언, 직렬화가 되지 않도록 수행
 	private Member member = new Member(); // Member id
 	/* =================================================================
 	* Relation method
@@ -175,6 +178,28 @@ public class Patient {
 		return PatientResponse.builder()
 			.id(this.id)
 			.name(this.name)
+			.build();
+	}
+
+	public OrderPatient toOrderPatient() {
+		return OrderPatient.builder()
+			.name(this.name) // 환자 이름
+			.gender(this.gender) // 환자 성별
+			.birthDate(this.birthDate) // 환자 나이 (실제로는 생년월일이지만 나이를 계산할 수 있음)
+			.height(this.height) // 환자 신장
+			.weight(this.weight) // 환자 몸무게
+			.diseaseNms(this.diseaseNms) // 진단명 리스트
+			.selfToiletAvailabilities(this.selfToiletAvailabilities) // 대소변 해결 여부
+			.moveAvailability(this.moveAvailability) // 거동 가능 여부
+			.mealAvailability(this.mealAvailability) // 식사 가능 여부
+			.genderPreference(this.genderPreference) // 선호 성별
+			.covid19Test(this.covid19Test) // 코로나 검사 필요 여부
+			.patientRequest(this.patientRequest) // 요청 사항
+			.locationType(this.locationType) // 간병 장소 종류
+			.addressCd(this.addressCd) // 간병 장소 우편 번호
+			.address1(this.address1) // 간병 장소 주소
+			.address2(this.address2) // 간병 장소 상세 주소
+			.member(this.member)
 			.build();
 	}
 }

@@ -7,6 +7,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import co.kr.compig.api.domain.apply.Apply;
 import co.kr.compig.api.domain.code.CareOrderRegisterType;
 import co.kr.compig.api.domain.code.IsYn;
@@ -102,11 +105,13 @@ public class CareOrder {
 	@Builder.Default
 	@OneToMany(
 		mappedBy = "careOrder", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference //연관관계 주인 반대 Entity 에 선언, 정상적으로 직렬화 수행
 	private Set<Apply> applys = new HashSet<>();
 
 	@Builder.Default
 	@JoinColumn(name = "member_id", nullable = false, foreignKey = @ForeignKey(name = "fk01_care_order"))
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonBackReference//연관관계의 주인 Entity 에 선언, 직렬화가 되지 않도록 수행
 	private Member member = new Member(); // Member id
 
 	@Builder.Default
@@ -114,8 +119,9 @@ public class CareOrder {
 	@OneToOne(fetch = FetchType.LAZY)
 	private OrderPatient orderPatient = new OrderPatient();
 
-	@OneToMany(mappedBy = "careOrder", cascade = CascadeType.ALL, orphanRemoval = true)
 	@Builder.Default
+	@OneToMany(mappedBy = "careOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference //연관관계 주인 반대 Entity 에 선언, 정상적으로 직렬화 수행
 	private final Set<Packing> packages = new HashSet<>();
 
 	/* =================================================================
@@ -127,6 +133,9 @@ public class CareOrder {
 		packing.setCareOrder(this);
 	}
 
+	public void setOrderPatient(OrderPatient orderPatient) {
+		this.orderPatient = orderPatient;
+	}
 	/* =================================================================
 	 * Business
 	   ================================================================= */
