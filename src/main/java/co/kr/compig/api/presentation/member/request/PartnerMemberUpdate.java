@@ -1,5 +1,7 @@
 package co.kr.compig.api.presentation.member.request;
 
+import java.util.List;
+
 import co.kr.compig.api.domain.code.CareerCode;
 import co.kr.compig.api.domain.code.DomesticForeignCode;
 import co.kr.compig.api.domain.code.GenderCode;
@@ -60,5 +62,6 @@ public class PartnerMemberUpdate {
 	@NotNull
 	@Parameter(description = "[간병인&&보호자]회원 공통")
 	private boolean marketingSms; // 문자 수신동의
-
+	@NotNull
+	private List<String> groupKeys;
 }

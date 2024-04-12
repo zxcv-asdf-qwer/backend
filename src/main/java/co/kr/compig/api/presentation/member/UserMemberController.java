@@ -36,14 +36,14 @@ public class UserMemberController {
 	public ResponseEntity<Response<?>> userUpdate(
 		@RequestBody MemberUpdateRequest memberUpdateRequest) {
 		memberService.updateMember(memberUpdateRequest);
-		return ResponseEntity.created(URI.create("/pb/members")).build();
+		return ResponseEntity.created(URI.create("/user/members")).build();
 	}
 
 	@Operation(summary = "조회")
 	@GetMapping
 	public ResponseEntity<Response<MemberResponse>> getUser() {
 		return ResponseEntity.ok(Response.<MemberResponse>builder()
-			.data(memberService.getMemberById(SecurityUtil.getMemberId()).toResponse())
+			.data(memberService.getMemberResponseByMemberId(SecurityUtil.getMemberId()))
 			.build());
 	}
 

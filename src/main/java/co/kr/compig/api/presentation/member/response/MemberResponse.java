@@ -1,5 +1,7 @@
 package co.kr.compig.api.presentation.member.response;
 
+import java.util.Set;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import co.kr.compig.api.domain.code.CareerCode;
@@ -10,6 +12,7 @@ import co.kr.compig.api.domain.code.IsYn;
 import co.kr.compig.api.domain.code.MemberRegisterType;
 import co.kr.compig.api.domain.code.UseYn;
 import co.kr.compig.api.domain.code.UserType;
+import co.kr.compig.api.presentation.member.model.GroupDto;
 import co.kr.compig.global.dto.BaseAudit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -46,4 +49,6 @@ public class MemberResponse extends BaseAudit {
 	private boolean marketingKakao; // 알림톡 수신동의
 	private boolean marketingSms; // 문자 수신동의
 	private IsYn realNameYn; // 실명 확인 여부
+
+	private Set<GroupDto> groups;
 }

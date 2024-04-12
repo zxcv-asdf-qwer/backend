@@ -54,7 +54,7 @@ public class PartnerMemberController {
 	@GetMapping
 	public ResponseEntity<Response<MemberResponse>> getUser() {
 		return ResponseEntity.ok(Response.<MemberResponse>builder()
-			.data(memberService.getMemberById(SecurityUtil.getMemberId()).toResponse())
+			.data(memberService.getMemberResponseByMemberId(SecurityUtil.getMemberId()))
 			.build());
 	}
 

@@ -1,5 +1,7 @@
 package co.kr.compig.api.presentation.member.request;
 
+import java.util.List;
+
 import org.hibernate.validator.constraints.Length;
 
 import co.kr.compig.api.domain.code.CareerCode;
@@ -37,21 +39,16 @@ public class MemberUpdateRequest {
 
 	@NotNull
 	private GenderCode gender; // 성별
-
-	@Builder.Default
-	private UseYn useYn = UseYn.Y; // 사용유무
-
+	@NotNull
+	private UseYn useYn; // 사용유무
+	@NotNull
 	private UserType userType; //사용자 타입
-
 	@NotBlank
 	private String address1; //주소
-
 	@NotBlank
 	private String address2; //주소
-
 	@NotNull
 	private DomesticForeignCode domesticForeignCode; //외국인 내국인
-
 	@NotNull
 	private CareerCode careerCode; //신입 경력
 
@@ -63,4 +60,7 @@ public class MemberUpdateRequest {
 	private boolean marketingAppPush; // 앱 푸시알림 수신동의
 	private boolean marketingKakao; // 알림톡 수신동의
 	private boolean marketingSms; // 문자 수신동의
+
+	@NotNull
+	private List<String> groupKeys;
 }

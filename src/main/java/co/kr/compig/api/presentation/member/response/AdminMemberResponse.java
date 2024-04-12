@@ -1,6 +1,9 @@
 package co.kr.compig.api.presentation.member.response;
 
+import java.util.Set;
+
 import co.kr.compig.api.domain.code.DeptCode;
+import co.kr.compig.api.presentation.member.model.GroupDto;
 import co.kr.compig.global.dto.BaseAudit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,4 +24,6 @@ public class AdminMemberResponse extends BaseAudit {
 	private DeptCode deptCode; //부서 코드
 	private String email; // 이메일
 	private String telNo; // 연락처
+
+	private Set<GroupDto> groups;
 }

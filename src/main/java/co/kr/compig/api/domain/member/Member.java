@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -37,7 +38,6 @@ import co.kr.compig.api.presentation.member.request.AdminMemberUpdate;
 import co.kr.compig.api.presentation.member.request.GuardianMemberUpdate;
 import co.kr.compig.api.presentation.member.request.MemberUpdateRequest;
 import co.kr.compig.api.presentation.member.request.PartnerMemberUpdate;
-import co.kr.compig.api.presentation.member.response.AdminMemberResponse;
 import co.kr.compig.api.presentation.member.response.GuardianMemberResponse;
 import co.kr.compig.api.presentation.member.response.MemberResponse;
 import co.kr.compig.api.presentation.member.response.PartnerMemberResponse;
@@ -228,6 +228,9 @@ public class Member {
 	}
 
 	private void removeAllGroups(Set<MemberGroup> MemberGroups) {
+		if (MemberGroups == null) {
+			throw new BizException("group key 가 없습니다.");
+		}
 		this.groups.removeAll(MemberGroups);
 	}
 
@@ -353,6 +356,24 @@ public class Member {
 		this.marketingAppPushDate = marketingDate(memberUpdateRequest.isMarketingAppPush());
 		this.marketingKakaoDate = marketingDate(memberUpdateRequest.isMarketingKakao());
 		this.marketingSmsDate = marketingDate(memberUpdateRequest.isMarketingSms());
+		this.removeAllGroups(
+			this.groups.stream()
+				.filter(
+					memberGroup ->
+						memberUpdateRequest.getGroupKeys().stream()
+							.filter(memberGroup::equalsGroupKey)
+							.findAny()
+							.isEmpty())
+				.collect(Collectors.toSet()));
+
+		for (String groupKey : memberUpdateRequest.getGroupKeys()) {
+			Optional<MemberGroup> optional =
+				this.groups.stream().filter(g -> g.getGroupKey().equals(groupKey)).findFirst();
+
+			if (optional.isEmpty()) {
+				this.addGroups(MemberGroup.builder().groupKey(groupKey).build());
+			}
+		}
 	}
 
 	public LocalDate marketingDate(boolean isMarketing) {
@@ -360,7 +381,7 @@ public class Member {
 	}
 
 	public MemberResponse toResponse() {
-		return MemberResponse.builder()
+		MemberResponse memberResponse = MemberResponse.builder()
 			.memberId(this.id)
 			.userId(this.userId)
 			.userNm(this.userNm)
@@ -388,17 +409,10 @@ public class Member {
 			.realNameYn(this.realNameYn)
 			.build();
 
-	}
+		memberResponse.setGroups(
+			this.groups.stream().map(MemberGroup::converterDto).collect(Collectors.toSet()));
 
-	public AdminMemberResponse toAdminMemberResponse() {
-		return AdminMemberResponse.builder()
-			.memberId(this.id)
-			.userNm(this.userNm)
-			.userId(this.userId)
-			.deptCode(this.deptCode)
-			.email(this.email)
-			.telNo(this.telNo)
-			.build();
+		return memberResponse;
 	}
 
 	public PartnerMemberResponse toPartnerMemberResponse() {
@@ -470,6 +484,25 @@ public class Member {
 		this.userType =
 			adminMemberUpdate.getDeptCode().equals(DeptCode.DEVELOPER) ? UserType.SYS_ADMIN : UserType.SYS_USER;
 		this.deptCode = adminMemberUpdate.getDeptCode();
+
+		this.removeAllGroups(
+			this.groups.stream()
+				.filter(
+					memberGroup ->
+						adminMemberUpdate.getGroupKeys().stream()
+							.filter(memberGroup::equalsGroupKey)
+							.findAny()
+							.isEmpty())
+				.collect(Collectors.toSet()));
+
+		for (String groupKey : adminMemberUpdate.getGroupKeys()) {
+			Optional<MemberGroup> optional =
+				this.groups.stream().filter(g -> g.getGroupKey().equals(groupKey)).findFirst();
+
+			if (optional.isEmpty()) {
+				this.addGroups(MemberGroup.builder().groupKey(groupKey).build());
+			}
+		}
 	}
 
 	public void updatePartnerMember(PartnerMemberUpdate partnerMemberUpdate) {
@@ -498,6 +531,25 @@ public class Member {
 			partnerMemberUpdate.isMarketingAppPush(),
 			partnerMemberUpdate.isMarketingKakao(),
 			partnerMemberUpdate.isMarketingSms());
+
+		this.removeAllGroups(
+			this.groups.stream()
+				.filter(
+					memberGroup ->
+						partnerMemberUpdate.getGroupKeys().stream()
+							.filter(memberGroup::equalsGroupKey)
+							.findAny()
+							.isEmpty())
+				.collect(Collectors.toSet()));
+
+		for (String groupKey : partnerMemberUpdate.getGroupKeys()) {
+			Optional<MemberGroup> optional =
+				this.groups.stream().filter(g -> g.getGroupKey().equals(groupKey)).findFirst();
+
+			if (optional.isEmpty()) {
+				this.addGroups(MemberGroup.builder().groupKey(groupKey).build());
+			}
+		}
 	}
 
 	public void updateGuardianMember(GuardianMemberUpdate guardianMemberUpdate) {

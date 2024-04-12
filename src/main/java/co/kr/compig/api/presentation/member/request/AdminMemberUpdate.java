@@ -1,5 +1,7 @@
 package co.kr.compig.api.presentation.member.request;
 
+import java.util.List;
+
 import co.kr.compig.api.domain.code.DeptCode;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.constraints.NotBlank;
@@ -27,5 +29,6 @@ public class AdminMemberUpdate {
 	@NotNull
 	@Parameter(description = "관리자 DEVELOPER, OPERATION")
 	private DeptCode deptCode; //부서코드
-
+	@NotNull
+	private List<String> groupKeys;
 }

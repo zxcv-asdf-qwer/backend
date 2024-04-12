@@ -26,6 +26,7 @@ import co.kr.compig.api.presentation.member.request.PartnerMemberCreate;
 import co.kr.compig.api.presentation.member.request.PartnerMemberUpdate;
 import co.kr.compig.api.presentation.member.response.AdminMemberResponse;
 import co.kr.compig.api.presentation.member.response.GuardianMemberResponse;
+import co.kr.compig.api.presentation.member.response.MemberResponse;
 import co.kr.compig.api.presentation.member.response.PartnerMemberResponse;
 import co.kr.compig.api.presentation.member.response.UserMainSearchResponse;
 import co.kr.compig.global.dto.Response;
@@ -84,8 +85,8 @@ public class AdminMemberController {
 
 	@Operation(summary = "관리자 memberId 조회")
 	@GetMapping("/{memberId}")
-	public ResponseEntity<AdminMemberResponse> getAdminByMemberId(@PathVariable String memberId) {
-		return ResponseEntity.ok(memberService.getMemberById(memberId).toAdminMemberResponse());
+	public ResponseEntity<MemberResponse> getAdminByMemberId(@PathVariable String memberId) {
+		return ResponseEntity.ok(memberService.getMemberResponseByMemberId(memberId));
 	}
 
 	@Operation(summary = "보호자 리스트", description = "페이징")
@@ -98,8 +99,8 @@ public class AdminMemberController {
 
 	@Operation(summary = "보호자 memberId 조회")
 	@GetMapping("/guardians/{memberId}")
-	public ResponseEntity<GuardianMemberResponse> getGuardianByMemberId(@PathVariable String memberId) {
-		return ResponseEntity.ok(memberService.getMemberById(memberId).toGuardianMemberResponse());
+	public ResponseEntity<MemberResponse> getGuardianByMemberId(@PathVariable String memberId) {
+		return ResponseEntity.ok(memberService.getMemberResponseByMemberId(memberId));
 	}
 
 	@Operation(summary = "간병인 리스트", description = "페이징")
@@ -112,8 +113,8 @@ public class AdminMemberController {
 
 	@Operation(summary = "간병인 memberId 조회")
 	@GetMapping("/partners/{memberId}")
-	public ResponseEntity<PartnerMemberResponse> getPartnerByMemberId(@PathVariable String memberId) {
-		return ResponseEntity.ok(memberService.getMemberById(memberId).toPartnerMemberResponse());
+	public ResponseEntity<MemberResponse> getPartnerByMemberId(@PathVariable String memberId) {
+		return ResponseEntity.ok(memberService.getMemberResponseByMemberId(memberId));
 	}
 
 	@Operation(summary = "[보호자 && 간병인] 이름 || 전화번호로 검색 후 리스트 보여주기")

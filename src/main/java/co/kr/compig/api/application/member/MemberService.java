@@ -44,6 +44,7 @@ import co.kr.compig.api.presentation.member.request.PartnerMemberUpdate;
 import co.kr.compig.api.presentation.member.response.AdminMemberResponse;
 import co.kr.compig.api.presentation.member.response.GuardianMemberResponse;
 import co.kr.compig.api.presentation.member.response.MemberPageResponse;
+import co.kr.compig.api.presentation.member.response.MemberResponse;
 import co.kr.compig.api.presentation.member.response.PartnerMemberResponse;
 import co.kr.compig.api.presentation.member.response.UserMainSearchResponse;
 import co.kr.compig.api.presentation.social.request.SocialCreateRequest;
@@ -280,8 +281,15 @@ public class MemberService {
 
 	@Transactional(readOnly = true)
 	public Member getMemberById(String memberId) {
-		return memberRepository.findById(memberId).orElseThrow(
+		Member member = memberRepository.findById(memberId).orElseThrow(
 			NotExistDataException::new);
+		return member;
+	}
+
+	@Transactional(readOnly = true)
+	public MemberResponse getMemberResponseByMemberId(String memberId) {
+		Member member = this.getMemberById(memberId);
+		return member.toResponse();
 	}
 
 	@Transactional(readOnly = true)

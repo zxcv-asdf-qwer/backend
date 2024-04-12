@@ -1,5 +1,6 @@
 package co.kr.compig.api.domain.member;
 
+import co.kr.compig.api.presentation.member.model.GroupDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -71,5 +72,19 @@ public class MemberGroup {
 		this.groupKey = groupKey;
 		this.groupNm = groupNm;
 		this.groupPath = groupPath;
+	}
+
+	public GroupDto converterDto() {
+		GroupDto groupDto = new GroupDto();
+
+		groupDto.setGroupNm(this.groupNm);
+		groupDto.setGroupKey(this.groupKey);
+		groupDto.setGroupPath(this.groupPath);
+
+		return groupDto;
+	}
+
+	public boolean equalsGroupKey(String groupKey) {
+		return this.groupKey != null && this.groupKey.equals(groupKey);
 	}
 }
