@@ -549,7 +549,7 @@ public class Member {
 
 	public void passUpdate(PassSaveRequest passSaveRequest) {
 		this.userNm = passSaveRequest.getName();
-		this.jumin1 = passSaveRequest.getBirthdate();
+		this.jumin1 = passSaveRequest.getBirthdate().substring(2); //951011
 		// gender 값이 0이면 "여성", 1이면 "남성"으로 변경
 		if ("0".equals(passSaveRequest.getGender())) {
 			this.gender = GenderCode.F;
