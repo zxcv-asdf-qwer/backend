@@ -35,7 +35,7 @@ public class PaymentRepositoryImpl implements PaymentRepositoryCustom {
 		JPAQuery<PaymentResponse> query = createBaseQuery(predicate)
 			.select(Projections.constructor(PaymentResponse.class,
 				payment.id,
-				payment.packing.id
+				payment.careOrder.id
 			));
 
 		applySorting(query, pageable);
@@ -57,7 +57,7 @@ public class PaymentRepositoryImpl implements PaymentRepositoryCustom {
 		JPAQuery<PaymentResponse> query = createBaseQuery(predicate)
 			.select(Projections.constructor(PaymentResponse.class,
 				payment.id,
-				payment.packing.id
+				payment.careOrder.id
 			));
 
 		applySorting(query, pageable);
@@ -76,7 +76,7 @@ public class PaymentRepositoryImpl implements PaymentRepositoryCustom {
 	private BooleanExpression createPredicate(PaymentSearchRequest request) {
 		BooleanExpression predicate = Expressions.asBoolean(true).isTrue();
 		if (request.getPackingId() != null) {
-			predicate = predicate.and(payment.packing.id.eq(request.getPackingId()));
+			predicate = predicate.and(payment.careOrder.id.eq(request.getPackingId()));
 		}
 		return predicate;
 	}

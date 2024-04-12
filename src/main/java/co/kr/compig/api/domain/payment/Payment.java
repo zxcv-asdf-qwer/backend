@@ -3,7 +3,7 @@ package co.kr.compig.api.domain.payment;
 import java.util.HashSet;
 import java.util.Set;
 
-import co.kr.compig.api.domain.packing.Packing;
+import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.presentation.payment.response.PaymentDetailResponse;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -48,19 +48,26 @@ public class Payment {
 	 * Domain mapping
 	   ================================================================= */
 	@Builder.Default
-	@JoinColumn(name = "packing_id", nullable = false, foreignKey = @ForeignKey(name = "fk01_payment"))
+	@JoinColumn(name = "order_id", nullable = false, foreignKey = @ForeignKey(name = "fk01_payment"))
 	@ManyToOne(fetch = FetchType.LAZY)
-	private Packing packing = new Packing();
+	private CareOrder careOrder = new CareOrder();
 
 	@Builder.Default
 	@OneToMany(
 		mappedBy = "payment", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<PaymentCancel> paymentCancels = new HashSet<>();
 
+	/* =================================================================
+	* Relation method
+	================================================================= */
+	public void setCareOrder(CareOrder careOrder) {
+		this.careOrder = careOrder;
+	}
+
 	public PaymentDetailResponse toPaymentDetailResponse() {
 		return PaymentDetailResponse.builder()
 			.id(this.id)
-			.packingId(this.packing.getId())
+			.careOrderId(this.careOrder.getId())
 			.build();
 	}
 }

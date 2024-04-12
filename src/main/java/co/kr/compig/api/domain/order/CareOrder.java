@@ -21,6 +21,7 @@ import co.kr.compig.api.domain.code.converter.PeriodTypeConverter;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.packing.Packing;
 import co.kr.compig.api.domain.patient.OrderPatient;
+import co.kr.compig.api.domain.payment.Payment;
 import co.kr.compig.api.presentation.apply.response.ApplyCareOrderResponse;
 import co.kr.compig.api.presentation.order.request.CareOrderUpdateRequest;
 import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
@@ -124,6 +125,12 @@ public class CareOrder {
 	@JsonManagedReference //연관관계 주인 반대 Entity 에 선언, 정상적으로 직렬화 수행
 	private final Set<Packing> packages = new HashSet<>();
 
+	@Builder.Default
+	@OneToMany(
+		mappedBy = "careOrder", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference //연관관계 주인 반대 Entity 에 선언, 정상적으로 직렬화 수행
+	private Set<Payment> payments = new HashSet<>();
+
 	/* =================================================================
 	 * Relation method
 	   ================================================================= */
@@ -131,6 +138,11 @@ public class CareOrder {
 	public void addPacking(Packing packing) {
 		this.packages.add(packing);
 		packing.setCareOrder(this);
+	}
+
+	public void addPayment(Payment payment) {
+		this.payments.add(payment);
+		payment.setCareOrder(this);
 	}
 
 	public void setOrderPatient(OrderPatient orderPatient) {

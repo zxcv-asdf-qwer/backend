@@ -6,8 +6,8 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import co.kr.compig.api.application.packing.PackingService;
-import co.kr.compig.api.domain.packing.Packing;
+import co.kr.compig.api.application.order.CareOrderService;
+import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.domain.payment.Payment;
 import co.kr.compig.api.domain.payment.PaymentRepository;
 import co.kr.compig.api.domain.payment.PaymentRepositoryCustom;
@@ -29,11 +29,11 @@ public class PaymentService {
 
 	private final PaymentRepository paymentRepository;
 	private final PaymentRepositoryCustom paymentRepositoryCustom;
-	private final PackingService packingService;
+	private final CareOrderService careOrderService;
 
 	public Long createPayment(PaymentCreateRequest paymentCreateRequest) {
-		Packing packing = packingService.getPackingById(paymentCreateRequest.getPackingId());
-		Payment payment = paymentCreateRequest.converterEntity(packing);
+		CareOrder careOrderById = careOrderService.getCareOrderById(paymentCreateRequest.getOrderId());
+		Payment payment = paymentCreateRequest.converterEntity(careOrderById);
 		return paymentRepository.save(payment).getId();
 	}
 

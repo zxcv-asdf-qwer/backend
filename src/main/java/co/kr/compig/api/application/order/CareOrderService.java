@@ -19,6 +19,7 @@ import co.kr.compig.api.domain.order.CareOrderRepositoryCustom;
 import co.kr.compig.api.domain.packing.Packing;
 import co.kr.compig.api.domain.patient.OrderPatient;
 import co.kr.compig.api.domain.patient.Patient;
+import co.kr.compig.api.domain.payment.Payment;
 import co.kr.compig.api.domain.settle.Settle;
 import co.kr.compig.api.presentation.order.request.AdminCareOrderCreateRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderCreateRequest;
@@ -71,7 +72,10 @@ public class CareOrderService {
 				.endDateTime(endDateTime)
 				.build();
 			careOrder.addPacking(build);
+
 		}
+		careOrder.addPayment(Payment.builder()
+			.build());
 		return careOrder.getId();
 	}
 

@@ -13,5 +13,5 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 public class PaymentDetailResponse {
 	private Long id; // 결제 ID
-	private Long packingId; // 패킹 ID
+	private Long careOrderId; // 패킹 ID
 }
