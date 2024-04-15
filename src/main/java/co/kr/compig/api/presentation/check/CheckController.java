@@ -1,15 +1,18 @@
 package co.kr.compig.api.presentation.check;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import java.util.Map;
 
-import co.kr.compig.api.presentation.check.response.CheckResponse;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import co.kr.compig.api.presentation.check.request.CheckNameRequest;
+import co.kr.compig.global.error.exception.BizException;
+import co.kr.compig.global.notify.NotifyMessage;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import niceid.namecheck.RNCheck;
@@ -30,13 +33,12 @@ public class CheckController {
 	@Value("${api.check.site-password.outer}")
 	private String NAME_CHECK_SITE_PASSWORD_OUTER;
 
-	@GetMapping(value = "/test")
-	public String getCheckTest() {
-		return "check_test";
-	}
+	private final NotifyMessage notifyMessage;
 
-	@RequestMapping(value = "/success", method = {RequestMethod.GET, RequestMethod.POST})
-	public String checkSuccess(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+	@GetMapping(value = "/name")
+	public ResponseEntity<?> checkName(
+		@ModelAttribute @Valid CheckNameRequest checkNameRequest
+	) {
 		String sSiteCode = "";
 		String sSitePw = "";
 
@@ -53,10 +55,10 @@ public class CheckController {
 		RNCheck ncClient = new RNCheck();
 
 		// 입력 페이지에서 전달된 입력값 취득
-		String sJumin1 = request.getParameter("jumin1");
-		String sJumin2 = request.getParameter("jumin2");
+		String sJumin1 = checkNameRequest.getJumin1();
+		String sJumin2 = checkNameRequest.getJumin2();
 		String sJumin = sJumin1 + sJumin2;
-		String sName = request.getParameter("sName");
+		String sName = checkNameRequest.getName();
 
 		if (sJumin2.charAt(0) == '0' || sJumin2.charAt(0) == '1' ||
 			sJumin2.charAt(0) == '2' || sJumin2.charAt(0) == '3' || sJumin2.charAt(0) == '4') {
@@ -125,16 +127,23 @@ public class CheckController {
 			sRtnMsg = "기타 오류: 리턴코드 문서에 기재된 내용을 확인해주십시오."
 				+ "<br>코드가 문서에 기재되어 있지 않은 경우 NICE 전산담당자에게 문의해주십시오.";
 		}
-		CheckResponse checkResponse = CheckResponse.builder()
-			.jumin1(sJumin1)
-			.jumin2(sJumin2)
-			.name(sName)
-			.iRtn(String.valueOf(iRtn))
-			.Rtn(Rtn)
-			.sRtnMsg(sRtnMsg)
-			.build();
 
-		modelMap.addAttribute("dto", checkResponse);
-		return "check_success";
+		StringBuilder stringBuilder = new StringBuilder();
+		if (!Rtn.equals("1")) {
+			try {
+				stringBuilder.append(
+						"##################################### 실명 인증 오류 #####################################")
+					.append("\n");
+				stringBuilder.append(String.format("sRtnMsg : %s", sRtnMsg)).append("\n");
+				stringBuilder.append(
+					"##################################### 실명 인증 오류 #####################################");
+				throw new BizException(stringBuilder.toString());
+			} catch (BizException e) {
+				log.error(stringBuilder.toString());
+				notifyMessage.sendErrorMessage(e);
+			}
+			return ResponseEntity.badRequest().body(Map.of("msg", sRtnMsg));
+		}
+		return ResponseEntity.ok(Map.of("msg", "인증성공"));
 	}
 }
