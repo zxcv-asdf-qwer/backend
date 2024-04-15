@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>본인인증 결과</title>
+</head>
+<body>
+
+<div>
+    <p th:text="${'주민앞번호 : ' + dto.jumin1}"></p>
+    <p th:text="${'주민뒷번호 : ' + dto.jumin2}"></p>
+    <p th:text="${'이름: ' + dto.name}"></p>
+    <p th:text="${'처리코드 : ' + dto.iRtn}"></p>
+    <p th:text="${'인증결과코드 : ' + dto.rtn}"></p>
+    <p th:text="${'인증결과코드메시지 : ' + dto.sRtnMsg}"></p>
+</div>
+
+</body>
+</html>
