@@ -1,6 +1,6 @@
 package co.kr.compig.api.presentation.apply.response;
 
-import co.kr.compig.api.domain.code.ApplyStatusCode;
+import co.kr.compig.api.domain.code.ApplyStatus;
 import co.kr.compig.global.dto.BaseAudit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,5 +16,5 @@ import lombok.experimental.SuperBuilder;
 public class ApplyCareOrderResponse extends BaseAudit {
 
 	private Long applyId; // 지원 ID
-	private ApplyStatusCode applyStatusCode; // 지원 상태
+	private ApplyStatus applyStatus; // 지원 상태
 }

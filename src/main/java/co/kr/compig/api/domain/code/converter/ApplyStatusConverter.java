@@ -4,21 +4,21 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.MappedJdbcTypes;
 import org.apache.ibatis.type.MappedTypes;
 
-import co.kr.compig.api.domain.code.ApplyStatusCode;
+import co.kr.compig.api.domain.code.ApplyStatus;
 import jakarta.persistence.Converter;
 
 @Converter(autoApply = true)
-@MappedTypes(ApplyStatusCode.class)
+@MappedTypes(ApplyStatus.class)
 @MappedJdbcTypes(value = JdbcType.VARCHAR)
-public class ApplyStatusConverter extends AbstractBaseEnumConverter<ApplyStatusCode, String> {
+public class ApplyStatusConverter extends AbstractBaseEnumConverter<ApplyStatus, String> {
 
 	@Override
 	protected String getEnumName() {
-		return "MatchingStatus";
+		return "ApplyStatus";
 	}
 
 	@Override
-	protected ApplyStatusCode[] getValueList() {
-		return ApplyStatusCode.values();
+	protected ApplyStatus[] getValueList() {
+		return ApplyStatus.values();
 	}
 }

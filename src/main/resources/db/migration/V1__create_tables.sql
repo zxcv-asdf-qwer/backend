@@ -1,3 +1,267 @@
+create sequence if not exists access_key_seq start with 1 increment by 1;
+create table if not exists access_key
+(
+    access_key_id       bigint       not null,
+    system_service_type varchar(255) not null,
+    service_name        varchar(255) not null,
+    access_key          varchar(255),
+    expired             timestamp(6),
+    created_by          varchar(50),
+    created_on          timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by          varchar(50),
+    updated_on          timestamp(6) default CURRENT_TIMESTAMP,
+    primary key (access_key_id)
+);
+comment on table access_key is 'api access key 테이블';
+comment on column access_key.access_key_id is 'ID';
+comment on column access_key.system_service_type is '서비스 타입';
+comment on column access_key.service_name is '서비스 업체 명';
+comment on column access_key.access_key is '서비스 업체 키';
+comment on column access_key.expired is '토큰 만료 시점';
+
+create sequence if not exists account_seq start with 1 increment by 1;
+create table if not exists account
+(
+    account_id     bigint       not null primary key,
+    member_id      varchar(255) not null unique,
+    account_name   varchar(255) not null,
+    account_number varchar(255) not null,
+    bank_name      varchar(255) not null,
+    pass_book_url  varchar(255),
+    iv             varchar(255) not null,
+    created_by     varchar(50),
+    created_on     timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by     varchar(50),
+    updated_on     timestamp(6) default CURRENT_TIMESTAMP
+);
+comment on table account is '메뉴 권한 테이블';
+comment on column account.account_id is 'ID';
+comment on column account.member_id is 'keycloak ID';
+comment on column account.account_name is '계좌 번호';
+comment on column account.account_number is '예금주';
+comment on column account.bank_name is '은행 이름';
+comment on column account.iv is 'initial vector';
+
+create sequence if not exists answer_seq start with 1 increment by 1;
+create table if not exists answer
+(
+    answer_id      bigint not null primary key,
+    question_id    bigint not null unique,
+    answer_title   varchar(255),
+    answer_content varchar(255),
+    use_yn         char(1),
+    created_by     varchar(50),
+    created_on     timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by     varchar(50),
+    updated_on     timestamp(6) default CURRENT_TIMESTAMP
+);
+
+comment on table answer is '1:1 문의 답변 테이블';
+comment on column answer.answer_id is 'ID';
+comment on column answer.question_id is '질문 ID';
+comment on column answer.answer_title is '답변 타이틀';
+comment on column answer.answer_content is '답변 내용';
+comment on column answer.use_yn is '답변 상태';
+
+create sequence if not exists app_version_seq start with 1 increment by 1;
+
+create table if not exists app_version
+(
+    app_version_id bigint      not null primary key,
+    force_update   char(1)      default 'N',
+    last_ver       varchar(50) not null,
+    min_ver        varchar(50) not null,
+    os_code        varchar(20) not null,
+    last_ver_nm    varchar(50) not null,
+    min_ver_nm     varchar(50) not null,
+    created_by     varchar(50),
+    created_on     timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by     varchar(50),
+    updated_on     timestamp(6) default CURRENT_TIMESTAMP,
+    constraint uk01_app_version unique (os_code, last_ver, min_ver)
+);
+
+comment on table app_version is '앱 버전 체크';
+comment on column app_version.app_version_id is 'ID';
+comment on column app_version.os_code is '요청된 디바이스 os 이름';
+comment on column app_version.last_ver is '앱 사용 가능한 최신 버전 정보';
+comment on column app_version.last_ver_nm is '앱 사용 가능한 최신 버전 이름';
+comment on column app_version.min_ver is '앱 사용 가능한 최소 버전 정보';
+comment on column app_version.min_ver_nm is '앱 사용 가능한 최소 버전 이름';
+comment on column app_version.force_update is '강제 업데이트 여부';
+
+create sequence if not exists apply_seq start with 1 increment by 1;
+create table if not exists apply
+(
+    apply_id      bigint       not null,
+    care_order_id bigint       not null,
+    apply_status  varchar(10),
+    member_id     varchar(255) not null,
+    created_by    varchar(50),
+    created_on    timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by    varchar(50),
+    updated_on    timestamp(6) default CURRENT_TIMESTAMP,
+    primary key (apply_id)
+);
+
+comment on table apply is '지원한 간병인';
+comment on column apply.apply_id is 'ID';
+comment on column apply.care_order_id is '공고 ID';
+comment on column apply.apply_status is '지원 상태';
+comment on column apply.member_id is '앱 사용 가능한 최신 버전 이름';
+
+create sequence if not exists public.board_seq INCREMENT BY 1 START WITH 1;
+create table if not exists board
+(
+    board_id            bigint not null primary key,
+    board_type          varchar(10),
+    contents_type       varchar(10),
+    title               varchar(100),
+    small_title         varchar(255),
+    contents            varchar(255),
+    view_count          integer      default 0,
+    use_yn              char(1),
+    pin_yn              char(1),
+    start_date          timestamp(6),
+    end_date            timestamp(6),
+    thumbnail_image_url varchar(255),
+    created_by          varchar(50),
+    created_on          timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by          varchar(50),
+    updated_on          timestamp(6) default CURRENT_TIMESTAMP
+);
+
+comment on table board is '게시판 테이블';
+comment on column board.board_id is 'ID';
+comment on column board.board_type is '게시판 종류';
+comment on column board.contents_type is '컨텐츠 유형';
+comment on column board.title is '게시글 제목';
+comment on column board.small_title is '소제목';
+comment on column board.contents is '게시글 내용';
+comment on column board.view_count is '조회수';
+comment on column board.use_yn is '게시글 상태';
+comment on column board.pin_yn is '상단 고정 여부';
+comment on column board.start_date is '시작일';
+comment on column board.end_date is '종료일';
+comment on column board.thumbnail_image_url is '썸네일 이미지 url';
+
+create sequence if not exists care_order_seq start with 1 increment by 1;
+create table if not exists care_order
+(
+    care_order_id           bigint not null primary key,
+    end_date_time           timestamp(6),
+    order_patient_id        bigint not null,
+    start_date_time         timestamp(6),
+    care_order_process_type varchar(255),
+    member_id               varchar(255),
+    no_member_id            bigint,
+    order_request           TEXT,
+    order_status            varchar(255),
+    publish_yn              varchar(255),
+    title                   varchar(255),
+    created_by              varchar(50),
+    created_on              timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by              varchar(50),
+    updated_on              timestamp(6) default CURRENT_TIMESTAMP
+);
+
+create sequence if not exists encrypt_seq start with 1 increment by 1;
+create table if not exists encrypt_key
+(
+    encrypt_id     bigint       not null primary key,
+    encrypt_type   varchar(20)  not null,
+    encrypt_key    varchar(255) not null,
+    encrypt_target varchar(20)  not null,
+    created_by     varchar(50),
+    created_on     timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by     varchar(50),
+    updated_on     timestamp(6) default CURRENT_TIMESTAMP
+);
+comment on table encrypt_key is '암호화 키 테이블';
+comment on column encrypt_key.encrypt_id is 'ID';
+comment on column encrypt_key.encrypt_type is 'encrypt key type';
+comment on column encrypt_key.encrypt_key is 'encrypt key';
+comment on column encrypt_key.encrypt_target is 'encrypt target';
+
+create sequence if not exists public.hospital_seq INCREMENT BY 1 START WITH 1;
+create table if not exists hospital
+(
+    hospital_id              bigint not null primary key,
+    hospital_nm              varchar(100),
+    hospital_code            varchar(10),
+    hospital_address1        varchar(200),
+    hospital_address2        varchar(200),
+    hospital_tel_no          varchar(100),
+    hospital_operation_hours varchar(255),
+    created_by               varchar(50),
+    created_on               timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by               varchar(50),
+    updated_on               timestamp(6) default CURRENT_TIMESTAMP
+);
+
+comment on table hospital is '병원정보 테이블';
+comment on column hospital.hospital_id is 'ID';
+comment on column hospital.hospital_nm is '병원 명';
+comment on column hospital.hospital_code is '병원 우편번호';
+comment on column hospital.hospital_address1 is '병원 주소';
+comment on column hospital.hospital_address2 is '병원 상세 주소';
+comment on column hospital.hospital_tel_no is '병원 전화번호';
+comment on column hospital.hospital_operation_hours is '병원 운영 시간';
+
+create sequence if not exists inbound_api_seq start with 1 increment by 1;
+create table if not exists public.inbound_api
+(
+    inbound_api_id bigint       not null primary key,
+    log_type       varchar(10),
+    trace_id       varchar(100) not null,
+    span_id        varchar(100) not null,
+    process_time   bigint       not null,
+    service        varchar(50)  not null,
+    path           text         not null,
+    method         varchar(6)   not null,
+    request_param  text,
+    request_data   text,
+    response_data  text,
+    error          text,
+    user_id        varchar(255),
+    remote_address varchar(20)  not null,
+    agent          varchar(10),
+    created_on     timestamp(6) default CURRENT_TIMESTAMP
+);
+
+comment on table inbound_api is 'api 로그';
+comment on column inbound_api.inbound_api_id is 'ID';
+comment on column inbound_api.log_type is 'log type';
+comment on column inbound_api.trace_id is 'trace id';
+comment on column inbound_api.span_id is 'span id';
+comment on column inbound_api.process_time is 'process time';
+comment on column inbound_api.service is 'service';
+comment on column inbound_api.path is 'path';
+comment on column inbound_api.method is 'method';
+comment on column inbound_api.request_param is 'request param';
+comment on column inbound_api.request_data is 'request data';
+comment on column inbound_api.response_data is 'response data';
+comment on column inbound_api.error is 'error';
+comment on column inbound_api.user_id is 'user id';
+comment on column inbound_api.remote_address is 'Ip address';
+comment on column inbound_api.agent is 'agent';
+
+create sequence if not exists public.member_group_seq INCREMENT BY 1 START WITH 1;
+create table if not exists member_group
+(
+    member_group_id bigint       not null primary key,
+    group_key       varchar(50)  not null,
+    group_nm        varchar(150) not null,
+    group_path      varchar(250) not null,
+    member_id       varchar(255) not null,
+    constraint uk01_member_group unique (group_key, member_id)
+);
+
+comment on table member_group is '회원 그룹 테이블';
+comment on column member_group.group_key is 'Keycloak 의 group ID';
+comment on column member_group.member_id is '회원 ID';
+
+create sequence if not exists member_seq start with 1 increment by 1;
 create table if not exists member
 (
     member_id               varchar(255) not null primary key,
@@ -67,76 +331,24 @@ comment on column member.dept_code is '부서코드';
 comment on column member.ci is 'ci';
 comment on column member.di is 'di';
 
-create sequence if not exists public.board_seq INCREMENT BY 1 START WITH 1;
-create table if not exists board
+create sequence if not exists public.menu_permission_seq INCREMENT BY 1 START WITH 1;
+create table if not exists menu_permission
 (
-    board_id            bigint not null primary key,
-    board_type          varchar(10),
-    contents_type       varchar(10),
-    title               varchar(100),
-    small_title         varchar(255),
-    contents            varchar(255),
-    view_count          integer      default 0,
-    use_yn              char(1),
-    pin_yn              char(1),
-    start_date          timestamp(6),
-    end_date            timestamp(6),
-    thumbnail_image_url varchar(255),
-    created_by          varchar(50),
-    created_on          timestamp(6) default CURRENT_TIMESTAMP,
-    updated_by          varchar(50),
-    updated_on          timestamp(6) default CURRENT_TIMESTAMP
+    menu_permission_id bigint not null primary key,
+    menu_id            bigint,
+    member_id          varchar(255),
+    group_key          varchar(50),
+    created_by         varchar(50),
+    created_on         timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by         varchar(50),
+    updated_on         timestamp(6) default CURRENT_TIMESTAMP
 );
 
-comment on table board is '게시판 테이블';
-comment on column board.board_id is 'ID';
-comment on column board.board_type is '게시판 종류';
-comment on column board.contents_type is '컨텐츠 유형';
-comment on column board.title is '게시글 제목';
-comment on column board.small_title is '소제목';
-comment on column board.contents is '게시글 내용';
-comment on column board.view_count is '조회수';
-comment on column board.use_yn is '게시글 상태';
-comment on column board.pin_yn is '상단 고정 여부';
-comment on column board.start_date is '시작일';
-comment on column board.end_date is '종료일';
-comment on column board.thumbnail_image_url is '썸네일 이미지 url';
-
-create sequence if not exists public.hospital_seq INCREMENT BY 1 START WITH 1;
-create table if not exists hospital
-(
-    hospital_id              bigint not null primary key,
-    hospital_nm              varchar(100),
-    hospital_code            varchar(10),
-    hospital_address1        varchar(200),
-    hospital_address2        varchar(200),
-    hospital_tel_no          varchar(100),
-    hospital_operation_hours varchar(255)
-);
-
-comment on table hospital is '병원정보 테이블';
-comment on column hospital.hospital_id is 'ID';
-comment on column hospital.hospital_nm is '병원 명';
-comment on column hospital.hospital_code is '병원 우편번호';
-comment on column hospital.hospital_address1 is '병원 주소';
-comment on column hospital.hospital_address2 is '병원 상세 주소';
-comment on column hospital.hospital_tel_no is '병원 전화번호';
-comment on column hospital.hospital_operation_hours is '병원 운영 시간';
-
-create sequence if not exists public.member_group_seq INCREMENT BY 1 START WITH 1;
-create table if not exists member_group
-(
-    member_group_id bigint       not null primary key,
-    group_key       varchar(50)  not null,
-    group_nm        varchar(150) not null,
-    group_path      varchar(250) not null,
-    member_id       varchar(255) not null,
-    constraint uk01_member_group unique (group_key, member_id)
-);
-
-comment on table member_group is '회원 그룹 테이블';
-comment on column member_group.group_key is 'Keycloak 의 group ID';
-comment on column member_group.member_id is '회원 ID';
+comment on table menu_permission is '메뉴 권한 테이블';
+comment on column menu_permission.menu_permission_id is 'ID';
+comment on column menu_permission.menu_id is '메뉴 ID';
+comment on column menu_permission.member_id is '회원 ID';
+comment on column menu_permission.group_key is '그룹 ID';
 
 create sequence if not exists public.menu_seq INCREMENT BY 1 START WITH 1;
 create table if not exists menu
@@ -165,110 +377,141 @@ comment on column menu.menu_type is '메뉴 타입';
 comment on column menu.use_yn is '사용유무';
 comment on column menu.parent_id is '상위 메뉴';
 
-create sequence if not exists public.menu_permission_seq INCREMENT BY 1 START WITH 1;
-create table if not exists menu_permission
+create sequence if not exists order_patient_seq start with 1 increment by 1;
+create table if not exists order_patient
 (
-    menu_permission_id bigint not null primary key,
-    menu_id            bigint,
-    member_id          varchar(255),
-    group_key          varchar(50),
-    created_by         varchar(50),
-    created_on         timestamp(6) default CURRENT_TIMESTAMP,
-    updated_by         varchar(50),
-    updated_on         timestamp(6) default CURRENT_TIMESTAMP
+    order_patient_id           bigint not null,
+    birth_date                 date,
+    covid19test                char(1),
+    gender                     char(1),
+    gender_preference          char(1),
+    height                     integer,
+    move_availability          char(1),
+    weight                     integer,
+    address_cd                 varchar(10),
+    meal_availability          varchar(10),
+    name                       varchar(50),
+    address1                   varchar(200),
+    address2                   varchar(200),
+    location_type              varchar(255),
+    member_id                  varchar(255),
+    no_member_id               bigint,
+    patient_request            varchar(255),
+    disease_nms                json,
+    self_toilet_availabilities json,
+    created_by                 varchar(50),
+    created_on                 timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by                 varchar(50),
+    updated_on                 timestamp(6) default CURRENT_TIMESTAMP,
+    primary key (order_patient_id)
 );
 
-comment on table menu_permission is '메뉴 권한 테이블';
-comment on column menu_permission.menu_permission_id is 'ID';
-comment on column menu_permission.menu_id is '메뉴 ID';
-comment on column menu_permission.member_id is '회원 ID';
-comment on column menu_permission.group_key is '그룹 ID';
-
-create sequence if not exists public.system_file_seq INCREMENT BY 1 START WITH 1;
-create table if not exists system_file
+create sequence if not exists packing_seq start with 1 increment by 1;
+create table if not exists packing
 (
-    system_file_id bigint not null primary key,
-    file_path      varchar(255),
-    file_nm        varchar(255),
-    file_type      varchar(10),
-    file_extension varchar(255),
-    latest_yn      char(1),
-    use_yn         char(1),
-    board_id       bigint,
-    created_by     varchar(50),
-    created_on     timestamp(6) default CURRENT_TIMESTAMP,
-    updated_by     varchar(50),
-    updated_on     timestamp(6) default CURRENT_TIMESTAMP
+    packing_id      bigint  not null,
+    amount          integer not null,
+    care_order_id   bigint  not null,
+    end_date_time   timestamp(6),
+    settle_id       bigint  not null,
+    start_date_time timestamp(6),
+    period_type     varchar(255),
+    created_by      varchar(50),
+    created_on      timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by      varchar(50),
+    updated_on      timestamp(6) default CURRENT_TIMESTAMP,
+    primary key (packing_id)
 );
 
-comment on table system_file is '메뉴 권한 테이블';
-comment on column system_file.system_file_id is 'ID';
-comment on column system_file.file_path is '파일 경로';
-comment on column system_file.file_nm is '파일 이름';
-comment on column system_file.file_type is '파일 타입';
-comment on column system_file.file_extension is '파일 확장자명';
-comment on column system_file.latest_yn is '최신 여부';
-comment on column system_file.use_yn is '사용 여부';
-comment on column system_file.board_id is '게시판 ID';
-
-create sequence if not exists account_seq start with 1 increment by 1;
-create table if not exists account
+create sequence if not exists patient_seq start with 1 increment by 1;
+create table if not exists patient
 (
-    account_id     bigint       not null primary key,
-    member_id      varchar(255) not null unique,
-    account_name   varchar(255) not null,
-    account_number varchar(255) not null,
-    bank_name      varchar(255) not null,
-    pass_book_url  varchar(255),
-    created_by     varchar(50),
-    created_on     timestamp(6) default CURRENT_TIMESTAMP,
-    updated_by     varchar(50),
-    updated_on     timestamp(6) default CURRENT_TIMESTAMP
+    patient_id                 bigint not null,
+    birth_date                 date,
+    covid19test                char(1),
+    gender                     char(1),
+    gender_preference          char(1),
+    height                     integer,
+    move_availability          char(1),
+    weight                     integer,
+    address_cd                 varchar(10),
+    meal_availability          varchar(10),
+    name                       varchar(50),
+    address1                   varchar(200),
+    address2                   varchar(200),
+    location_type              varchar(255),
+    member_id                  varchar(255),
+    no_member_id               bigint,
+    patient_request            varchar(255),
+    disease_nms                json,
+    self_toilet_availabilities json,
+    created_by                 varchar(50),
+    created_on                 timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by                 varchar(50),
+    updated_on                 timestamp(6) default CURRENT_TIMESTAMP,
+    primary key (patient_id)
 );
-comment on table account is '메뉴 권한 테이블';
-comment on column account.account_id is 'ID';
-comment on column account.member_id is 'keycloak ID';
-comment on column account.account_name is '계좌 번호';
-comment on column account.account_number is '예금주';
-comment on column account.bank_name is '은행 이름';
 
-create sequence if not exists encrypt_seq start with 1 increment by 1;
-create table if not exists encrypt_key
+create sequence if not exists payment_cancel_seq start with 1 increment by 1;
+create table if not exists payment_cancel
 (
-    encrypt_id     bigint       not null primary key,
-    encrypt_type   varchar(20)  not null,
-    encrypt_key    varchar(255) not null,
-    encrypt_target varchar(20)  not null,
-    created_by     varchar(50),
-    created_on     timestamp(6) default CURRENT_TIMESTAMP,
-    updated_by     varchar(50),
-    updated_on     timestamp(6) default CURRENT_TIMESTAMP
+    payment_cancel_id bigint not null,
+    payment_id        bigint not null,
+    created_by        varchar(50),
+    created_on        timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by        varchar(50),
+    updated_on        timestamp(6) default CURRENT_TIMESTAMP,
+    primary key (payment_cancel_id)
 );
-comment on table encrypt_key is '암호화 키 테이블';
-comment on column encrypt_key.encrypt_id is 'ID';
-comment on column encrypt_key.encrypt_type is 'encrypt key type';
-comment on column encrypt_key.encrypt_key is 'encrypt key';
-comment on column encrypt_key.encrypt_target is 'encrypt target';
 
-create sequence if not exists access_key_seq start with 1 increment by 1;
-create table if not exists access_key
+create sequence if not exists payment_seq start with 1 increment by 1;
+create table if not exists payment
 (
-    access_key_id       bigint       not null primary key,
-    system_service_type varchar(255) not null,
-    service_name        varchar(255) not null,
-    access_key          varchar(255),
-    expired             timestamp(6),
-    created_by          varchar(50),
-    created_on          timestamp(6) default CURRENT_TIMESTAMP,
-    updated_by          varchar(50),
-    updated_on          timestamp(6) default CURRENT_TIMESTAMP
+    payment_id bigint  not null,
+    price      integer not null,
+    order_id   bigint  not null,
+    moid       varchar(255),
+    created_by varchar(50),
+    created_on timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by varchar(50),
+    updated_on timestamp(6) default CURRENT_TIMESTAMP,
+    primary key (payment_id)
 );
-comment on table access_key is 'api access key 테이블';
-comment on column access_key.access_key_id is 'ID';
-comment on column access_key.system_service_type is '서비스 타입';
-comment on column access_key.service_name is '서비스 업체 명';
-comment on column access_key.access_key is '서비스 업체 키';
-comment on column access_key.expired is '토큰 만료 시점';
+
+create sequence if not exists question_seq start with 1 increment by 1;
+create table if not exists question
+(
+    question_id      bigint not null primary key,
+    question_type    varchar(255),
+    question_title   varchar(255),
+    question_content varchar(255),
+    is_answer        char(1),
+    use_yn           char(1),
+    created_by       varchar(50),
+    created_on       timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by       varchar(50),
+    updated_on       timestamp(6) default CURRENT_TIMESTAMP
+);
+
+comment on table question is '1:1 문의 질문 테이블';
+comment on column question.question_id is 'ID';
+comment on column question.question_type is '질문 유형';
+comment on column question.question_title is '질문 타이틀';
+comment on column question.question_content is '질문 내용';
+comment on column question.is_answer is '답변 유무';
+comment on column question.use_yn is '질문 상태';
+
+create sequence if not exists settle_seq start with 1 increment by 1;
+create table if not exists settle
+(
+    settle_id     bigint not null,
+    guardian_fees integer,
+    partner_fees  integer,
+    use_yn        varchar(255),
+    created_by    varchar(50),
+    created_on    timestamp(6) default CURRENT_TIMESTAMP,
+    primary key (settle_id)
+);
 
 create sequence if not exists sms_seq start with 1 increment by 1;
 create table if not exists sms
@@ -319,82 +562,183 @@ comment on column sms_template.sms_template_type is 'SMS 템플릿 종류';
 comment on column sms_template.at_template_code is '알림톡 템플릿 코드';
 comment on column sms_template.contents is '내용';
 
-create sequence if not exists answer_seq start with 1 increment by 1;
-create table if not exists answer
+create sequence if not exists public.system_file_seq INCREMENT BY 1 START WITH 1;
+create table if not exists system_file
 (
-    answer_id      bigint not null primary key,
-    question_id    bigint not null unique,
-    answer_title   varchar(255),
-    answer_content varchar(255),
+    system_file_id bigint not null primary key,
+    file_path      varchar(255),
+    file_nm        varchar(255),
+    file_type      varchar(10),
+    file_extension varchar(255),
+    latest_yn      char(1),
     use_yn         char(1),
+    board_id       bigint,
     created_by     varchar(50),
     created_on     timestamp(6) default CURRENT_TIMESTAMP,
     updated_by     varchar(50),
     updated_on     timestamp(6) default CURRENT_TIMESTAMP
 );
 
-comment on table answer is '1:1 문의 답변 테이블';
-comment on column answer.answer_id is 'ID';
-comment on column answer.question_id is '질문 ID';
-comment on column answer.answer_title is '답변 타이틀';
-comment on column answer.answer_content is '답변 내용';
-comment on column answer.use_yn is '답변 상태';
+comment on table system_file is '메뉴 권한 테이블';
+comment on column system_file.system_file_id is 'ID';
+comment on column system_file.file_path is '파일 경로';
+comment on column system_file.file_nm is '파일 이름';
+comment on column system_file.file_type is '파일 타입';
+comment on column system_file.file_extension is '파일 확장자명';
+comment on column system_file.latest_yn is '최신 여부';
+comment on column system_file.use_yn is '사용 여부';
+comment on column system_file.board_id is '게시판 ID';
 
-create sequence if not exists question_seq start with 1 increment by 1;
-create table if not exists question
+create sequence if not exists terms_seq start with 1 increment by 1;
+create table if not exists terms
 (
-    question_id      bigint not null primary key,
-    question_type    varchar(255),
-    question_title   varchar(255),
-    question_content varchar(255),
-    use_yn           char(1),
-    created_by       varchar(50),
-    created_on       timestamp(6) default CURRENT_TIMESTAMP,
-    updated_by       varchar(50),
-    updated_on       timestamp(6) default CURRENT_TIMESTAMP
+    terms_id   bigint not null,
+    terms_type varchar(10),
+    contents   varchar(255),
+    created_by varchar(50),
+    created_on timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by varchar(50),
+    updated_on timestamp(6) default CURRENT_TIMESTAMP,
+    primary key (terms_id)
 );
 
-comment on table question is '1:1 문의 질문 테이블';
-comment on column question.question_id is 'ID';
-comment on column question.question_type is '질문 유형';
-comment on column question.question_title is '질문 타이틀';
-comment on column question.question_content is '질문 내용';
-comment on column question.use_yn is '질문 상태';
+create sequence if not exists wallet_seq start with 1 increment by 1;
+create table if not exists wallet
+(
+    wallet_id  bigint       not null,
+    packing_id bigint       not null,
+    member_id  varchar(255) not null,
+    created_by varchar(50),
+    created_on timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by varchar(50),
+    updated_on timestamp(6) default CURRENT_TIMESTAMP,
+    primary key (wallet_id)
+);
 
-alter table if exists answer
-    add constraint f01_answer
-        foreign key (question_id)
-            references question;
-
-alter table if exists system_file
-    add constraint fk01_system_file
-        foreign key (board_id)
-            references board;
-
-alter table if exists member_group
-    add constraint fk01_member_group
-        foreign key (member_id)
-            references member;
-alter table if exists menu
-    add constraint fk01_menu
-        foreign key (parent_id)
-            references menu;
-
-alter table if exists menu_permission
-    add constraint fk01_menu_permission
-        foreign key (member_id)
-            references member;
-alter table if exists menu_permission
-    add constraint fk02_menu_permission
-        foreign key (menu_id)
-            references menu;
+create sequence if not exists no_member_seq start with 1 increment by 1;
+create table if not exists no_member
+(
+    no_member_id bigint not null,
+    tel_no       varchar(100),
+    user_nm      varchar(100),
+    created_by   varchar(50),
+    created_on   timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by   varchar(50),
+    updated_on   timestamp(6) default CURRENT_TIMESTAMP,
+    primary key (no_member_id)
+);
 
 alter table if exists account
     add constraint fk01_account
         foreign key (member_id)
-            references member;
-
+            references member
+;
+alter table if exists answer
+    add constraint f01_answer
+        foreign key (question_id)
+            references question
+;
+alter table if exists apply
+    add constraint fk01_apply
+        foreign key (care_order_id)
+            references care_order
+;
+alter table if exists apply
+    add constraint fk02_apply
+        foreign key (member_id)
+            references member
+;
+alter table if exists care_order
+    add constraint fk01_care_order
+        foreign key (member_id)
+            references member
+;
+alter table if exists care_order
+    add constraint fk02_care_order
+        foreign key (no_member_id)
+            references no_member
+;
+alter table if exists care_order
+    add constraint fk03_care_order
+        foreign key (order_patient_id)
+            references order_patient
+;
+alter table if exists member_group
+    add constraint fk01_member_group
+        foreign key (member_id)
+            references member
+;
+alter table if exists menu
+    add constraint fk01_menu
+        foreign key (parent_id)
+            references menu
+;
+alter table if exists menu_permission
+    add constraint fk01_menu_permission
+        foreign key (member_id)
+            references member
+;
+alter table if exists menu_permission
+    add constraint fk02_menu_permission
+        foreign key (menu_id)
+            references menu
+;
+alter table if exists order_patient
+    add constraint fk01_order_patient
+        foreign key (member_id)
+            references member
+;
+alter table if exists order_patient
+    add constraint fk02_order_patient
+        foreign key (no_member_id)
+            references no_member
+;
+alter table if exists packing
+    add constraint fk01_packing
+        foreign key (care_order_id)
+            references care_order
+;
+alter table if exists packing
+    add constraint fk02_packing
+        foreign key (settle_id)
+            references settle
+;
+alter table if exists patient
+    add constraint fk01_patient
+        foreign key (member_id)
+            references member
+;
+alter table if exists patient
+    add constraint fk02_patient
+        foreign key (no_member_id)
+            references no_member
+;
+alter table if exists payment
+    add constraint fk01_payment
+        foreign key (order_id)
+            references care_order
+;
+alter table if exists payment_cancel
+    add constraint fk01_payment_cancel
+        foreign key (payment_id)
+            references payment
+;
 alter table if exists sms
     add constraint fk01_sms
         foreign key (sms_template_id)
-            references sms_template;
+            references sms_template
+;
+alter table if exists system_file
+    add constraint fk01_system_file
+        foreign key (board_id)
+            references board
+;
+alter table if exists wallet
+    add constraint fk01_wallet
+        foreign key (member_id)
+            references member
+;
+alter table if exists wallet
+    add constraint fk02_wallet
+        foreign key (packing_id)
+            references packing

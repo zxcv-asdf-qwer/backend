@@ -281,9 +281,8 @@ public class MemberService {
 
 	@Transactional(readOnly = true)
 	public Member getMemberById(String memberId) {
-		Member member = memberRepository.findById(memberId).orElseThrow(
+		return memberRepository.findById(memberId).orElseThrow(
 			NotExistDataException::new);
-		return member;
 	}
 
 	@Transactional(readOnly = true)

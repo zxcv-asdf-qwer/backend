@@ -5,13 +5,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
-import co.kr.compig.api.domain.code.CareOrderRegisterType;
+import co.kr.compig.api.domain.code.CareOrderProcessType;
 import co.kr.compig.api.domain.code.DiseaseCode;
 import co.kr.compig.api.domain.code.GenderCode;
 import co.kr.compig.api.domain.code.IsYn;
 import co.kr.compig.api.domain.code.LocationType;
-import co.kr.compig.api.domain.code.OrderStatusCode;
-import co.kr.compig.api.domain.code.PeriodType;
+import co.kr.compig.api.domain.code.OrderStatus;
 import co.kr.compig.api.domain.code.ToiletType;
 import co.kr.compig.api.presentation.apply.response.ApplyCareOrderResponse;
 import lombok.AllArgsConstructor;
@@ -30,10 +29,9 @@ public class CareOrderDetailResponse {
 	private Long id; // 공고 ID
 	private LocalDateTime startDateTime; // 시작 날짜
 	private LocalDateTime endDateTime; // 종료 날짜
-	private OrderStatusCode orderStatusCode; // 공고 상태
+	private OrderStatus orderStatus; // 공고 상태
 	private IsYn publishYn; // 게시 여부
-	private PeriodType periodType; // 시간제, 기간제
-	private CareOrderRegisterType careOrderRegisterType; // 등록 구분
+	private CareOrderProcessType careOrderProcessType; // 매칭 구분
 	private String orderRequest; // 요청사항
 	private String userNm; // 보호자명
 	private String telNo; // 보호자번호

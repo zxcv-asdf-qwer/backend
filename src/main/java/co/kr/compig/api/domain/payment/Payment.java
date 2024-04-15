@@ -44,6 +44,12 @@ public class Payment {
 	@Column(name = "payment_id")
 	private Long id;
 
+	@Column(nullable = false)
+	private Integer price; // 결제금액
+
+	@Column
+	private String moid;
+
 	/* =================================================================
 	 * Domain mapping
 	   ================================================================= */

@@ -36,6 +36,14 @@ public class ApplyService {
 	private final CareOrderService careOrderService;
 	private final MemberService memberService;
 
+	public Long createApplyByAdmin(ApplyCreateRequest applyCreateRequest) {
+		Member member = memberService.getMemberById(applyCreateRequest.getMemberId());
+		CareOrder careOrder = careOrderService.getCareOrderById(applyCreateRequest.getCareOrderId());
+		Apply apply = applyCreateRequest.converterEntity(member, careOrder);
+
+		return applyRepository.save(apply).getId();
+	}
+
 	public Long createApply(ApplyCreateRequest applyCreateRequest) {
 		Member member = memberService.getMemberById(SecurityUtil.getMemberId());
 		CareOrder careOrder = careOrderService.getCareOrderById(applyCreateRequest.getCareOrderId());

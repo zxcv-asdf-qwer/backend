@@ -39,7 +39,7 @@ public class ApplyRepositoryImpl implements ApplyRepositoryCustom {
 					apply.id,
 					apply.member.id,
 					apply.careOrder.id,
-					apply.applyStatusCode
+					apply.applyStatus
 				)
 			);
 
@@ -65,7 +65,7 @@ public class ApplyRepositoryImpl implements ApplyRepositoryCustom {
 					apply.id,
 					apply.member.id,
 					apply.careOrder.id,
-					apply.applyStatusCode
+					apply.applyStatus
 				)
 			);
 

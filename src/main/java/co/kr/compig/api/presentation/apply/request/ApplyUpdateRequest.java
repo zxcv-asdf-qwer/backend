@@ -1,6 +1,6 @@
 package co.kr.compig.api.presentation.apply.request;
 
-import co.kr.compig.api.domain.code.ApplyStatusCode;
+import co.kr.compig.api.domain.code.ApplyStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApplyUpdateRequest {
-	private ApplyStatusCode applyStatusCode;
+	private ApplyStatus applyStatus;
 }

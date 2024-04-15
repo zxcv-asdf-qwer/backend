@@ -39,7 +39,7 @@ public class CareOrderRepositoryImpl implements CareOrderRepositoryCustom {
 			.select(Projections.constructor(CareOrderResponse.class,
 				careOrder.id,
 				careOrder.member.userType,
-				careOrder.careOrderRegisterType,
+				careOrder.careOrderProcessType,
 				careOrder.member.userNm,
 				careOrder.member.telNo,
 				careOrder.orderPatient.locationType,
@@ -67,7 +67,7 @@ public class CareOrderRepositoryImpl implements CareOrderRepositoryCustom {
 			.select(Projections.constructor(CareOrderResponse.class,
 				careOrder.id,
 				careOrder.member.userType,
-				careOrder.careOrderRegisterType,
+				careOrder.careOrderProcessType,
 				careOrder.member.userNm,
 				careOrder.member.telNo,
 				careOrder.orderPatient.locationType,
@@ -98,17 +98,28 @@ public class CareOrderRepositoryImpl implements CareOrderRepositoryCustom {
 
 	private BooleanExpression createPredicate(CareOrderSearchRequest request) {
 		BooleanExpression predicate = Expressions.asBoolean(true).isTrue();
+		if (request == null) {
+			return predicate;
+		}
 		if (request.getPublishYn() != null) {
 			predicate = predicate.and(careOrder.publishYn.eq(request.getPublishYn()));
-		}
-		if (request.getPeriodType() != null) {
-			predicate = predicate.and(careOrder.periodType.eq(request.getPeriodType()));
 		}
 		if (request.getUserNm() != null) {
 			predicate = predicate.and(careOrder.member.userNm.eq(request.getUserNm()));
 		}
 		if (request.getTelNo() != null) {
 			predicate = predicate.and(careOrder.member.telNo.eq(request.getTelNo()));
+		}
+		if (request.getOrderStatus() != null) {
+			predicate = predicate.and(careOrder.orderStatus.eq(request.getOrderStatus()));
+		}
+		if (request.getFromCreatedOn() != null) {
+			predicate = predicate.and(
+				careOrder.createdAndModified.createdOn.goe(request.getFromCreatedOn())); //크거나 같고(.goe)
+		}
+		if (request.getToCreatedOn() != null) {
+			predicate = predicate.and(
+				careOrder.createdAndModified.createdOn.loe(request.getToCreatedOn())); //작거나 같은(.loe)
 		}
 
 		return predicate;

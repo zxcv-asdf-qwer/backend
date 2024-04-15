@@ -2,7 +2,7 @@ package co.kr.compig.api.domain.apply;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import co.kr.compig.api.domain.code.ApplyStatusCode;
+import co.kr.compig.api.domain.code.ApplyStatus;
 import co.kr.compig.api.domain.code.converter.ApplyStatusConverter;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.order.CareOrder;
@@ -50,7 +50,7 @@ public class Apply {
 	@Column(length = 10)
 	@Convert(converter = ApplyStatusConverter.class)
 	@Builder.Default
-	private ApplyStatusCode applyStatusCode = ApplyStatusCode.MATCHING_WAIT;
+	private ApplyStatus applyStatus = ApplyStatus.MATCHING_WAIT;
 
 	/* =================================================================
 	 * Domain mapping
@@ -76,13 +76,13 @@ public class Apply {
 	}
 
 	public void update(ApplyUpdateRequest applyUpdateRequest) {
-		this.applyStatusCode = applyUpdateRequest.getApplyStatusCode();
+		this.applyStatus = applyUpdateRequest.getApplyStatus();
 	}
 
 	public ApplyCareOrderResponse toApplyCareOrderResponse() {
 		return ApplyCareOrderResponse.builder()
 			.applyId(this.id)
-			.applyStatusCode(this.applyStatusCode)
+			.applyStatus(this.applyStatus)
 			.build();
 	}
 }

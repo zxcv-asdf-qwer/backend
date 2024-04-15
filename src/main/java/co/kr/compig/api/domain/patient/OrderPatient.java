@@ -1,24 +1,30 @@
 package co.kr.compig.api.domain.patient;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import co.kr.compig.api.domain.code.DiseaseCode;
 import co.kr.compig.api.domain.code.GenderCode;
 import co.kr.compig.api.domain.code.IsYn;
 import co.kr.compig.api.domain.code.LocationType;
 import co.kr.compig.api.domain.code.ToiletType;
+import co.kr.compig.api.domain.code.converter.DiseaseCodeListConverter;
 import co.kr.compig.api.domain.code.converter.ToiletTypeListConverter;
 import co.kr.compig.api.domain.member.Member;
+import co.kr.compig.api.domain.member.NoMember;
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.presentation.patient.request.OrderPatientUpdateRequest;
 import co.kr.compig.api.presentation.patient.response.OrderPatientDetailResponse;
 import co.kr.compig.global.utils.SecurityUtil;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -31,7 +37,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -75,11 +81,12 @@ public class OrderPatient {
 	@Column
 	private Integer weight; // 환자 몸무게
 
-	@Column(columnDefinition = "jsonb")
+	@Column(columnDefinition = "json")
 	@JdbcTypeCode(SqlTypes.JSON)
+	@Convert(converter = DiseaseCodeListConverter.class)
 	private List<DiseaseCode> diseaseNms; // 진단명 리스트
 
-	@Column(columnDefinition = "jsonb")
+	@Column(columnDefinition = "json")
 	@JdbcTypeCode(SqlTypes.JSON)
 	@Convert(converter = ToiletTypeListConverter.class)
 	private List<ToiletType> selfToiletAvailabilities; // 대소변 해결 여부
@@ -120,13 +127,21 @@ public class OrderPatient {
 	* Domain mapping
 	================================================================= */
 	@Builder.Default
-	@JoinColumn(name = "member_id", nullable = false, foreignKey = @ForeignKey(name = "fk01_order_patient"))
+	@JoinColumn(name = "member_id", foreignKey = @ForeignKey(name = "fk01_order_patient"))
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonBackReference//연관관계의 주인 Entity 에 선언, 직렬화가 되지 않도록 수행
 	private Member member = new Member(); // Member id
 
-	@OneToOne(mappedBy = "orderPatient", fetch = FetchType.LAZY)
-	private CareOrder careOrder;
+	@Builder.Default
+	@JoinColumn(name = "no_member_id", foreignKey = @ForeignKey(name = "fk02_order_patient"))
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonBackReference//연관관계의 주인 Entity 에 선언, 직렬화가 되지 않도록 수행
+	private NoMember noMember = new NoMember(); // Member id
+
+	@Builder.Default
+	@OneToMany(mappedBy = "orderPatient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonManagedReference //연관관계 주인 반대 Entity 에 선언, 정상적으로 직렬화 수행
+	private Set<CareOrder> careOrders = new HashSet<>();
 
 	public OrderPatientDetailResponse toOrderPatientDetailResponse() {
 		return OrderPatientDetailResponse.builder()

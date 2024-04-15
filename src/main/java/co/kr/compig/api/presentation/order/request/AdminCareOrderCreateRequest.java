@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import co.kr.compig.api.domain.code.CareOrderRegisterType;
 import co.kr.compig.api.domain.code.IsYn;
+import co.kr.compig.api.domain.code.MemberType;
 import co.kr.compig.api.domain.code.PeriodType;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.order.CareOrder;
@@ -40,16 +40,19 @@ public class AdminCareOrderCreateRequest {
 	private IsYn publishYn; // 게시 여부
 
 	@NotNull
-	private PeriodType periodType; // 시간제, 기간제
+	private PeriodType periodType;  // 시간제, 기간제
+
+	@NotNull
+	private Integer amount; //금액 //보호자들이 입력한 금액, 수수료 계산전
 
 	@NotBlank
 	private String memberId; // 멤버 ID
 
 	@NotNull
-	private Long orderPatientId; // 간병공고 등록시 환자 정보 ID
+	private MemberType memberType; // 비회원/회원
 
 	@NotNull
-	private CareOrderRegisterType careOrderRegisterType; // 등록 구분
+	private Long orderPatientId; // 간병공고 등록시 환자 정보 ID
 
 	public CareOrder converterEntity(Member member, OrderPatient orderPatient) {
 		return CareOrder.builder()
@@ -58,8 +61,6 @@ public class AdminCareOrderCreateRequest {
 			.title(this.title)
 			.orderRequest(this.orderRequest)
 			.publishYn(this.publishYn)
-			.periodType(this.periodType)
-			.careOrderRegisterType(this.careOrderRegisterType)
 			.member(member)
 			.orderPatient(orderPatient)
 			.build();

@@ -1,24 +1,23 @@
 package co.kr.compig.api.domain.code;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 
-@Getter
 @AllArgsConstructor
-public enum PeriodType implements BaseEnumCode<String> {
-	PART_TIME("PAR", "시간제"), // 시간제
-	PERIOD("PER", "기간제"); // 기간제
+public enum MemberType implements BaseEnumCode<String> {
+	NO_MEMBER("NOM", "비회원"), // 비회원
+	MEMBER("MEM", "회원"); // 회원
 
 	private final String code;
 	private final String desc;
 
 	@Override
 	public String getCode() {
-		return this.code;
+		return code;
 	}
 
 	@Override
 	public String getDesc() {
-		return this.desc;
+		return desc;
 	}
+
 }

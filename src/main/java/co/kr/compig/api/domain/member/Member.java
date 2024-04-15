@@ -26,7 +26,7 @@ import co.kr.compig.api.domain.code.DomesticForeignCode;
 import co.kr.compig.api.domain.code.GenderCode;
 import co.kr.compig.api.domain.code.IsYn;
 import co.kr.compig.api.domain.code.MemberRegisterType;
-import co.kr.compig.api.domain.code.OrderStatusCode;
+import co.kr.compig.api.domain.code.OrderStatus;
 import co.kr.compig.api.domain.code.UseYn;
 import co.kr.compig.api.domain.code.UserType;
 import co.kr.compig.api.domain.code.converter.DeptCodeConverter;
@@ -77,7 +77,7 @@ import lombok.extern.slf4j.Slf4j;
 @Entity
 @Table(
 	uniqueConstraints = {
-		@UniqueConstraint(name = "uk01_member", columnNames = {"userId"})
+		@UniqueConstraint(name = "uk01_member", columnNames = {"userId"}),
 	})
 public class Member {
 
@@ -436,7 +436,7 @@ public class Member {
 			.picture(this.picture)
 			.career(calculateYearsFromStartYear(this.careStartYear))
 			.matchingCount((int)this.careOrders.stream()
-				.filter(order -> order.getOrderStatus() == OrderStatusCode.ORDER_COMPLETE)
+				.filter(order -> order.getOrderStatus() == OrderStatus.ORDER_COMPLETE)
 				.count())
 			.starAverage(this.id) //TODO 리뷰 생기면 계산 로직 추가
 			.address1(this.address1)

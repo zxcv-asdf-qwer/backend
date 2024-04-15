@@ -17,6 +17,7 @@ public class ApplyCreateRequest {
 
 	@NotNull
 	private Long careOrderId; // 공고 ID
+	private String memberId; //회원 ID
 
 	public Apply converterEntity(Member member, CareOrder careOrder) {
 		return Apply.builder()

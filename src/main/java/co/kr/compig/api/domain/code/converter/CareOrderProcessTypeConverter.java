@@ -4,21 +4,21 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.MappedJdbcTypes;
 import org.apache.ibatis.type.MappedTypes;
 
-import co.kr.compig.api.domain.code.CareOrderRegisterType;
+import co.kr.compig.api.domain.code.CareOrderProcessType;
 import jakarta.persistence.Converter;
 
 @Converter(autoApply = true)
-@MappedTypes(CareOrderRegisterType.class)
+@MappedTypes(CareOrderProcessType.class)
 @MappedJdbcTypes(value = JdbcType.VARCHAR)
-public class CareOrderRegisterTypeConverter extends AbstractBaseEnumConverter<CareOrderRegisterType, String> {
+public class CareOrderProcessTypeConverter extends AbstractBaseEnumConverter<CareOrderProcessType, String> {
 
 	@Override
 	protected String getEnumName() {
-		return "CareOrderRegisterType";
+		return "CareOrderProcessType";
 	}
 
 	@Override
-	protected CareOrderRegisterType[] getValueList() {
-		return CareOrderRegisterType.values();
+	protected CareOrderProcessType[] getValueList() {
+		return CareOrderProcessType.values();
 	}
 }

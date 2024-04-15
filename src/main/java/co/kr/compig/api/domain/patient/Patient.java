@@ -16,6 +16,7 @@ import co.kr.compig.api.domain.code.ToiletType;
 import co.kr.compig.api.domain.code.converter.DiseaseCodeListConverter;
 import co.kr.compig.api.domain.code.converter.ToiletTypeListConverter;
 import co.kr.compig.api.domain.member.Member;
+import co.kr.compig.api.domain.member.NoMember;
 import co.kr.compig.api.presentation.patient.request.PatientUpdateRequest;
 import co.kr.compig.api.presentation.patient.response.PatientDetailResponse;
 import co.kr.compig.api.presentation.patient.response.PatientResponse;
@@ -76,12 +77,12 @@ public class Patient {
 	@Column
 	private Integer weight; // 환자 몸무게
 
-	@Column(columnDefinition = "jsonb")
+	@Column(columnDefinition = "json")
 	@JdbcTypeCode(SqlTypes.JSON)
 	@Convert(converter = DiseaseCodeListConverter.class)
 	private List<DiseaseCode> diseaseNms; // 진단명 리스트
 
-	@Column(columnDefinition = "jsonb")
+	@Column(columnDefinition = "json")
 	@JdbcTypeCode(SqlTypes.JSON)
 	@Convert(converter = ToiletTypeListConverter.class)
 	private List<ToiletType> selfToiletAvailabilities; // 대소변 해결 여부
@@ -123,9 +124,15 @@ public class Patient {
 	================================================================= */
 	@Builder.Default
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "member_id", nullable = false, foreignKey = @ForeignKey(name = "fk01_patient"))
+	@JoinColumn(name = "member_id", foreignKey = @ForeignKey(name = "fk01_patient"))
 	@JsonBackReference//연관관계의 주인 Entity 에 선언, 직렬화가 되지 않도록 수행
 	private Member member = new Member(); // Member id
+
+	@Builder.Default
+	@JoinColumn(name = "no_member_id", foreignKey = @ForeignKey(name = "fk02_patient"))
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonBackReference//연관관계의 주인 Entity 에 선언, 직렬화가 되지 않도록 수행
+	private NoMember noMember = new NoMember(); // Member id
 	/* =================================================================
 	* Relation method
 	================================================================= */

@@ -11,23 +11,24 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import co.kr.compig.api.domain.apply.Apply;
-import co.kr.compig.api.domain.code.CareOrderRegisterType;
+import co.kr.compig.api.domain.code.CareOrderProcessType;
 import co.kr.compig.api.domain.code.IsYn;
-import co.kr.compig.api.domain.code.OrderStatusCode;
-import co.kr.compig.api.domain.code.PeriodType;
-import co.kr.compig.api.domain.code.converter.CareOrderRegisterTypeConverter;
-import co.kr.compig.api.domain.code.converter.OrderStatusCodeConverter;
-import co.kr.compig.api.domain.code.converter.PeriodTypeConverter;
+import co.kr.compig.api.domain.code.OrderStatus;
+import co.kr.compig.api.domain.code.converter.CareOrderProcessTypeConverter;
+import co.kr.compig.api.domain.code.converter.OrderStatusConverter;
 import co.kr.compig.api.domain.member.Member;
+import co.kr.compig.api.domain.member.NoMember;
 import co.kr.compig.api.domain.packing.Packing;
 import co.kr.compig.api.domain.patient.OrderPatient;
 import co.kr.compig.api.domain.payment.Payment;
 import co.kr.compig.api.presentation.apply.response.ApplyCareOrderResponse;
 import co.kr.compig.api.presentation.order.request.CareOrderUpdateRequest;
 import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
+import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -39,7 +40,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -78,16 +78,12 @@ public class CareOrder {
 
 	@Column
 	@Builder.Default
-	@Convert(converter = OrderStatusCodeConverter.class)
-	private OrderStatusCode orderStatus = OrderStatusCode.MATCHING_WAITING; // 공고 상태
+	@Convert(converter = OrderStatusConverter.class)
+	private OrderStatus orderStatus = OrderStatus.MATCHING_WAITING; // 공고 상태
 
 	@Column
 	@Enumerated(EnumType.STRING)
 	private IsYn publishYn; // 게시 여부
-
-	@Column
-	@Convert(converter = PeriodTypeConverter.class)
-	private PeriodType periodType; // 시간제, 기간제
 
 	@Column
 	private String title; // 제목
@@ -96,8 +92,8 @@ public class CareOrder {
 	private String orderRequest; // 요청사항
 
 	@Column
-	@Convert(converter = CareOrderRegisterTypeConverter.class)
-	private CareOrderRegisterType careOrderRegisterType; // 등록 구분
+	@Convert(converter = CareOrderProcessTypeConverter.class)
+	private CareOrderProcessType careOrderProcessType; // 매칭 구분
 
   /* =================================================================
    * Domain mapping
@@ -110,14 +106,21 @@ public class CareOrder {
 	private Set<Apply> applys = new HashSet<>();
 
 	@Builder.Default
-	@JoinColumn(name = "member_id", nullable = false, foreignKey = @ForeignKey(name = "fk01_care_order"))
+	@JoinColumn(name = "member_id", foreignKey = @ForeignKey(name = "fk01_care_order"))
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonBackReference//연관관계의 주인 Entity 에 선언, 직렬화가 되지 않도록 수행
 	private Member member = new Member(); // Member id
 
 	@Builder.Default
-	@JoinColumn(name = "order_patient_id", nullable = false, foreignKey = @ForeignKey(name = "fk02_care_order"))
-	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "no_member_id", foreignKey = @ForeignKey(name = "fk02_care_order"))
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonBackReference//연관관계의 주인 Entity 에 선언, 직렬화가 되지 않도록 수행
+	private NoMember noMember = new NoMember(); // Member id
+
+	@Builder.Default
+	@JoinColumn(name = "order_patient_id", nullable = false, foreignKey = @ForeignKey(name = "fk03_care_order"))
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonBackReference//연관관계의 주인 Entity 에 선언, 직렬화가 되지 않도록 수행
 	private OrderPatient orderPatient = new OrderPatient();
 
 	@Builder.Default
@@ -145,9 +148,13 @@ public class CareOrder {
 		payment.setCareOrder(this);
 	}
 
-	public void setOrderPatient(OrderPatient orderPatient) {
-		this.orderPatient = orderPatient;
-	}
+	/* =================================================================
+	 * Default columns
+	   ================================================================= */
+	@Embedded
+	@Builder.Default
+	private CreatedAndUpdated createdAndModified = new CreatedAndUpdated();
+
 	/* =================================================================
 	 * Business
 	   ================================================================= */
@@ -161,10 +168,9 @@ public class CareOrder {
 			.id(this.id)
 			.startDateTime(this.startDateTime)
 			.endDateTime(this.endDateTime)
-			.orderStatusCode(this.orderStatus)
+			.orderStatus(this.orderStatus)
 			.publishYn(this.publishYn)
-			.periodType(this.periodType)
-			.careOrderRegisterType(this.careOrderRegisterType)
+			.careOrderProcessType(this.careOrderProcessType)
 			.orderRequest(this.orderRequest)
 			.userNm(member.getUserNm())
 			.telNo(member.getTelNo())
