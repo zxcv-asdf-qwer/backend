@@ -24,9 +24,9 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import co.kr.compig.api.domain.code.UserType;
 import co.kr.compig.api.presentation.member.request.MemberSearchRequest;
-import co.kr.compig.api.presentation.member.response.AdminMemberResponse;
 import co.kr.compig.api.presentation.member.response.GuardianMemberResponse;
 import co.kr.compig.api.presentation.member.response.MemberPageResponse;
+import co.kr.compig.api.presentation.member.response.MemberResponse;
 import co.kr.compig.api.presentation.member.response.PartnerMemberResponse;
 import lombok.RequiredArgsConstructor;
 
@@ -120,29 +120,26 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 	}
 
 	@Override
-	public Page<AdminMemberResponse> getAdminPage(MemberSearchRequest request, Pageable pageable) {
+	public Page<MemberResponse> getAdminPage(MemberSearchRequest request, Pageable pageable) {
 		BooleanExpression predicate = createPredicate(request);
 
-		JPAQuery<AdminMemberResponse> query = createBaseQuery(predicate)
-			.select(Projections.constructor(AdminMemberResponse.class,
-					member.id,
-					member.userNm,
-					member.userId,
-					member.deptCode,
-					member.email,
-					member.telNo
-				)
-			).where(member.userType.eq(UserType.SYS_ADMIN)
+		JPAQuery<Member> query = jpaQueryFactory
+			.selectFrom(member)
+			.where(member.userType.eq(UserType.SYS_ADMIN)
 				.or(member.userType.eq(UserType.SYS_USER))
 			);
 
 		//정렬
 		applySorting(query, pageable);
 
-		List<AdminMemberResponse> responses = query
+		List<Member> members = query
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize()) // 페이징
 			.fetch();
+
+		List<MemberResponse> responses = members.stream()
+			.map(Member::toResponse)
+			.collect(Collectors.toList());
 
 		JPAQuery<Long> countQuery = createBaseQuery(predicate)
 			.select(member.count());

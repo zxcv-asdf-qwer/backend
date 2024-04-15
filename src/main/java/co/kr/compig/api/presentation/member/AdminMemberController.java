@@ -26,7 +26,6 @@ import co.kr.compig.api.presentation.member.request.MemberSearchRequest;
 import co.kr.compig.api.presentation.member.request.NoMemberCreate;
 import co.kr.compig.api.presentation.member.request.PartnerMemberCreate;
 import co.kr.compig.api.presentation.member.request.PartnerMemberUpdate;
-import co.kr.compig.api.presentation.member.response.AdminMemberResponse;
 import co.kr.compig.api.presentation.member.response.GuardianMemberResponse;
 import co.kr.compig.api.presentation.member.response.MemberResponse;
 import co.kr.compig.api.presentation.member.response.PartnerMemberResponse;
@@ -88,7 +87,7 @@ public class AdminMemberController {
 
 	@Operation(summary = "관리자 리스트", description = "페이징")
 	@GetMapping
-	public ResponseEntity<PageResponse<AdminMemberResponse>> getAdminPage(
+	public ResponseEntity<PageResponse<MemberResponse>> getAdminPage(
 		@ParameterObject @RequestParam(required = false) @Valid MemberSearchRequest memberSearchRequest,
 		@ParameterObject Pageable pageable) {
 		return ResponseEntity.ok(memberService.getAdminPage(memberSearchRequest, pageable));

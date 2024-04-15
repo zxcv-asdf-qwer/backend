@@ -41,7 +41,6 @@ import co.kr.compig.api.presentation.member.request.MemberSearchRequest;
 import co.kr.compig.api.presentation.member.request.MemberUpdateRequest;
 import co.kr.compig.api.presentation.member.request.PartnerMemberCreate;
 import co.kr.compig.api.presentation.member.request.PartnerMemberUpdate;
-import co.kr.compig.api.presentation.member.response.AdminMemberResponse;
 import co.kr.compig.api.presentation.member.response.GuardianMemberResponse;
 import co.kr.compig.api.presentation.member.response.MemberPageResponse;
 import co.kr.compig.api.presentation.member.response.MemberResponse;
@@ -256,10 +255,10 @@ public class MemberService {
 	}
 
 	@Transactional(readOnly = true)
-	public PageResponse<AdminMemberResponse> getAdminPage(@Valid MemberSearchRequest memberSearchRequest,
+	public PageResponse<MemberResponse> getAdminPage(@Valid MemberSearchRequest memberSearchRequest,
 		Pageable pageable) {
 
-		Page<AdminMemberResponse> page = memberRepositoryCustom.getAdminPage(memberSearchRequest, pageable);
+		Page<MemberResponse> page = memberRepositoryCustom.getAdminPage(memberSearchRequest, pageable);
 		return new PageResponse<>(page.getContent(), pageable, page.getTotalElements());
 	}
 
