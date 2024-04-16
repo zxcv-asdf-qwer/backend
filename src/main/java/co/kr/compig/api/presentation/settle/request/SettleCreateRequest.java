@@ -24,7 +24,6 @@ public class SettleCreateRequest {
 		return Settle.builder()
 			.guardianFees(this.guardianFees)
 			.partnerFees(this.partnerFees)
-			.useYn(this.useYn)
 			.build();
 	}
 }
