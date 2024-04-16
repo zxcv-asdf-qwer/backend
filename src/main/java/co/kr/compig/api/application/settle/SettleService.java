@@ -5,13 +5,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import co.kr.compig.api.domain.code.UseYn;
 import co.kr.compig.api.domain.settle.Settle;
 import co.kr.compig.api.domain.settle.SettleRepository;
 import co.kr.compig.api.domain.settle.SettleRepositoryCustom;
 import co.kr.compig.api.presentation.settle.request.SettleCreateRequest;
 import co.kr.compig.api.presentation.settle.request.SettleSearchRequest;
-import co.kr.compig.api.presentation.settle.request.SettleUpdateRequest;
 import co.kr.compig.api.presentation.settle.response.SettleResponse;
 import co.kr.compig.global.dto.pagination.PageResponse;
 import co.kr.compig.global.error.exception.NotExistDataException;
@@ -38,13 +36,8 @@ public class SettleService {
 
 	@Transactional(readOnly = true)
 	public Settle getRecentSettle() {
-		return settleRepository.findTopByUseYnOrderByCreated_CreatedOnDesc(UseYn.Y)
+		return settleRepository.findTopByOrderByCreated_CreatedOnDesc()
 			.orElseThrow(NotExistDataException::new);
 	}
 
-	public Long update(Long settleId, SettleUpdateRequest settleUpdateRequest) {
-		Settle settle = settleRepository.findById(settleId).orElseThrow(NotExistDataException::new);
-		settle.update(settleUpdateRequest);
-		return settle.getId();
-	}
 }

@@ -36,8 +36,7 @@ public class SettleRepositoryImpl implements SettleRepositoryCustom {
 			.select(Projections.constructor(SettleResponse.class,
 					settle.id,
 					settle.guardianFees,
-					settle.partnerFees,
-					settle.useYn
+					settle.partnerFees
 				)
 			);
 
@@ -63,7 +62,9 @@ public class SettleRepositoryImpl implements SettleRepositoryCustom {
 
 	private BooleanExpression createPredicate(SettleSearchRequest request) {
 		BooleanExpression predicate = Expressions.asBoolean(true).isTrue();
-
+		if (request == null) {
+			return predicate;
+		}
 		if (request.getToCreatedOn() != null) {
 			predicate = predicate.and(
 				settle.created.createdOn.loe(request.getToCreatedOn()));

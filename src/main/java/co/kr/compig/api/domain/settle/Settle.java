@@ -1,14 +1,10 @@
 package co.kr.compig.api.domain.settle;
 
-import co.kr.compig.api.domain.code.UseYn;
-import co.kr.compig.api.presentation.settle.request.SettleUpdateRequest;
 import co.kr.compig.api.presentation.settle.response.SettleResponse;
 import co.kr.compig.global.embedded.Created;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -46,10 +42,7 @@ public class Settle {
 	@Column
 	private Integer partnerFees; // 간병인 수수료 (원)
 
-	@Column
-	@Enumerated(EnumType.STRING)
-	@Builder.Default
-	private UseYn useYn = UseYn.Y;
+
 	/* =================================================================
 	* Domain mapping
 	================================================================= */
@@ -62,7 +55,6 @@ public class Settle {
 			.settleId(this.id)
 			.guardianFees(this.guardianFees)
 			.partnerFees(this.partnerFees)
-			.useYn(this.useYn)
 			.build();
 	}
 
@@ -72,18 +64,4 @@ public class Settle {
 	@Embedded
 	@Builder.Default
 	private Created created = new Created();
-
-	public void update(SettleUpdateRequest settleUpdateRequest) {
-		if (settleUpdateRequest.getGuardianFees() != null) {
-			this.guardianFees = settleUpdateRequest.getGuardianFees();
-		}
-
-		if (settleUpdateRequest.getPartnerFees() != null) {
-			this.partnerFees = settleUpdateRequest.getPartnerFees();
-		}
-
-		if (settleUpdateRequest.getUseYn() != null) {
-			this.useYn = settleUpdateRequest.getUseYn();
-		}
-	}
 }
