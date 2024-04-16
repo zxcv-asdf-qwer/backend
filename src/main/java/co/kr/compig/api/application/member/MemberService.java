@@ -46,6 +46,7 @@ import co.kr.compig.api.presentation.member.response.MemberPageResponse;
 import co.kr.compig.api.presentation.member.response.MemberResponse;
 import co.kr.compig.api.presentation.member.response.PartnerMemberResponse;
 import co.kr.compig.api.presentation.member.response.UserMainSearchResponse;
+import co.kr.compig.api.presentation.pass.request.PassSaveRequest;
 import co.kr.compig.api.presentation.social.request.SocialCreateRequest;
 import co.kr.compig.api.presentation.social.request.SocialLoginRequest;
 import co.kr.compig.api.presentation.social.response.SocialLoginResponse;
@@ -349,4 +350,9 @@ public class MemberService {
 		}
 	}
 
+	public String passUpdate(PassSaveRequest passSaveRequest) {
+		Member memberById = this.getMemberById(SecurityUtil.getMemberId());
+		memberById.passUpdate(passSaveRequest);
+		return memberById.getId();
+	}
 }

@@ -19,13 +19,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import NiceID.Check.CPClient;
 import co.kr.compig.api.application.member.MemberService;
-import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.presentation.pass.request.PassSaveRequest;
 import co.kr.compig.api.presentation.pass.response.PassResponse;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.error.exception.BizException;
 import co.kr.compig.global.notify.NotifyMessage;
-import co.kr.compig.global.utils.SecurityUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -491,12 +489,12 @@ public class PassController {
 		return ResponseEntity.status(HttpStatus.FOUND).header(HttpHeaders.LOCATION, redirectUrlWithParams).build();
 	}
 
+	@Operation(summary = "pass 정보 저장", hidden = true)
 	@PutMapping(value = "/pass")
 	public ResponseEntity<Response<Map<String, String>>> pass(@RequestBody @Valid PassSaveRequest passSaveRequest) {
-
-		Member memberById = memberService.getMemberById(SecurityUtil.getMemberId());
-		memberById.passUpdate(passSaveRequest);
 		return ResponseEntity.ok()
-			.body(Response.<Map<String, String>>builder().data(Map.of("memberId", memberById.getId())).build());
+			.body(Response.<Map<String, String>>builder()
+				.data(Map.of("memberId", memberService.passUpdate(passSaveRequest)))
+				.build());
 	}
 }

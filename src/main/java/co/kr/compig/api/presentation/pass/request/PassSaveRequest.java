@@ -12,18 +12,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PassSaveRequest {
 
+	private String memberId;
 	@NotBlank
-	String name;
+	private String name;
 	@NotBlank
-	String birthdate;
+	private String birthdate;
 	@NotBlank
-	String gender; //0 여성, 1 남성
+	private String gender; //0 여성, 1 남성
 	@NotBlank
-	String nationalInfo; //0 내국인, 1 외국인
+	private String nationalInfo; //0 내국인, 1 외국인
 	@NotBlank
-	String mobile;
+	private String mobile;
 	@NotBlank
-	String dupInfo;
+	private String dupInfo;
 	@NotBlank
-	String connInfo;
+	private String connInfo;
 }
