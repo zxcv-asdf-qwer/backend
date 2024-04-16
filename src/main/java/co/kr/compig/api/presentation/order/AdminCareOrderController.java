@@ -51,7 +51,7 @@ public class AdminCareOrderController {
 	}
 
 	@Operation(summary = "간병 리스트 보여주기")
-	@GetMapping
+	@GetMapping("/pages")
 	public ResponseEntity<PageResponse<CareOrderResponse>> pageListCareOrder(
 		@ParameterObject @RequestParam(required = false) @Valid CareOrderSearchRequest careOrderSearchRequest,
 		@ParameterObject Pageable pageable

@@ -37,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AdminPatientController {
 	private final PatientService patientService;
 
-	@Operation(summary = "생성하기")
+	@Operation(summary = "환자 프로필 등록")
 	@PostMapping
 	public ResponseEntity<Response<?>> createPatient(
 		@RequestBody @Valid AdminPatientCreateRequest adminPatientCreateRequest) {
@@ -56,7 +56,7 @@ public class AdminPatientController {
 			.build());
 	}
 
-	@Operation(summary = "상세 조회")
+	@Operation(summary = "환자 상세 조회")
 	@GetMapping(path = "/{patientId}")
 	public ResponseEntity<Response<PatientDetailResponse>> getPatient(
 		@PathVariable(name = "patientId") Long patientId) {
@@ -65,7 +65,7 @@ public class AdminPatientController {
 			.build());
 	}
 
-	@Operation(summary = "정보 수정하기")
+	@Operation(summary = "환자 정보 수정")
 	@PutMapping(path = "/{patientId}")
 	public ResponseEntity<Response<?>> updatePatient(
 		@PathVariable(name = "patientId") Long patientId,
@@ -75,7 +75,7 @@ public class AdminPatientController {
 			.build());
 	}
 
-	@Operation(summary = "삭제")
+	@Operation(summary = "환자 정보 삭제")
 	@DeleteMapping(path = "/{patientId}")
 	public ResponseEntity<Response<?>> deletePatient(
 		@PathVariable(name = "patientId") Long patientId) {

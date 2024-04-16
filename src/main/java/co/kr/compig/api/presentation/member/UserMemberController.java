@@ -39,7 +39,7 @@ public class UserMemberController {
 		return ResponseEntity.created(URI.create("/user/members")).build();
 	}
 
-	@Operation(summary = "로그인 한 사람 조회")
+	@Operation(summary = "로그인한 사람 조회")
 	@GetMapping
 	public ResponseEntity<Response<MemberResponse>> getUser() {
 		return ResponseEntity.ok(Response.<MemberResponse>builder()

@@ -47,7 +47,7 @@ public class AdminSettleController {
 	}
 
 	@Operation(summary = "페이지 조회")
-	@GetMapping
+	@GetMapping("/pages")
 	public ResponseEntity<PageResponse<SettleResponse>> pageListSettle(
 		@Parameter @RequestParam(required = false) SettleSearchRequest settleSearchRequest,
 		@Parameter Pageable pageable) {
