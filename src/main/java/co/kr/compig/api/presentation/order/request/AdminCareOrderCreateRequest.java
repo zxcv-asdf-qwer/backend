@@ -53,7 +53,7 @@ public class AdminCareOrderCreateRequest {
 	private MemberType memberType; // 비회원/회원
 
 	@NotNull
-	private Long orderPatientId; // 간병공고 등록시 환자 정보 ID
+	private Long patientId; // 간병공고 등록시 환자 정보 ID
 
 	public CareOrder converterEntity(Member member, OrderPatient orderPatient) {
 		return CareOrder.builder()

@@ -126,17 +126,16 @@ public class OrderPatient {
 	/* =================================================================
 	* Domain mapping
 	================================================================= */
-	@Builder.Default
-	@JoinColumn(name = "member_id", foreignKey = @ForeignKey(name = "fk01_order_patient"))
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JsonBackReference//연관관계의 주인 Entity 에 선언, 직렬화가 되지 않도록 수행
-	private Member member = new Member(); // Member id
 
-	@Builder.Default
-	@JoinColumn(name = "no_member_id", foreignKey = @ForeignKey(name = "fk02_order_patient"))
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "member_id", foreignKey = @ForeignKey(name = "fk01_order_patient"))
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonBackReference//연관관계의 주인 Entity 에 선언, 직렬화가 되지 않도록 수행
-	private NoMember noMember = new NoMember(); // Member id
+	private Member member; // Member id
+
+	@JoinColumn(name = "no_member_id", foreignKey = @ForeignKey(name = "fk02_order_patient"))
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonBackReference//연관관계의 주인 Entity 에 선언, 직렬화가 되지 않도록 수행
+	private NoMember noMember; // Member id
 
 	@Builder.Default
 	@OneToMany(mappedBy = "orderPatient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

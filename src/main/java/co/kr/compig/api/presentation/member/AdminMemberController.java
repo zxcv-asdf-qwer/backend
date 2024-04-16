@@ -28,6 +28,7 @@ import co.kr.compig.api.presentation.member.request.PartnerMemberCreate;
 import co.kr.compig.api.presentation.member.request.PartnerMemberUpdate;
 import co.kr.compig.api.presentation.member.response.GuardianMemberResponse;
 import co.kr.compig.api.presentation.member.response.MemberResponse;
+import co.kr.compig.api.presentation.member.response.NoMemberResponse;
 import co.kr.compig.api.presentation.member.response.PartnerMemberResponse;
 import co.kr.compig.api.presentation.member.response.UserMainSearchResponse;
 import co.kr.compig.global.dto.Response;
@@ -49,6 +50,15 @@ public class AdminMemberController {
 
 	private final MemberService memberService;
 	private final NoMemberService noMemberService;
+
+	@Operation(summary = "비회원 목록 조회")
+	@GetMapping("/no")
+	public ResponseEntity<PageResponse<NoMemberResponse>> getNoMemberPage(
+		@ParameterObject @RequestParam(required = false) @Valid MemberSearchRequest memberSearchRequest,
+		@ParameterObject Pageable pageable) {
+		return ResponseEntity.ok(noMemberService.getNoMemberPage(memberSearchRequest, pageable));
+
+	}
 
 	@Operation(summary = "비회원 회원가입")
 	@PostMapping("/no")

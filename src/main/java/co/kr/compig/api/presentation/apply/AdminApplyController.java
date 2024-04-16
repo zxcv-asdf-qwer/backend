@@ -8,7 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import co.kr.compig.api.application.apply.ApplyService;
 import co.kr.compig.api.presentation.apply.request.ApplyCreateRequest;
 import co.kr.compig.api.presentation.apply.request.ApplySearchRequest;
-import co.kr.compig.api.presentation.apply.request.ApplyUpdateRequest;
 import co.kr.compig.api.presentation.apply.response.ApplyDetailResponse;
 import co.kr.compig.api.presentation.apply.response.ApplyResponse;
 import co.kr.compig.global.dto.Response;
@@ -37,33 +35,33 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/admin/apply", produces = "application/json")
+@RequestMapping(path = "/admin/applys", produces = "application/json")
 public class AdminApplyController {
 
 	private final ApplyService applyService;
 
-	@Operation(summary = "생성하기")
-	@PostMapping
-	public ResponseEntity<Response<?>> createApply(
-		@ParameterObject @ModelAttribute @Valid ApplyCreateRequest applyCreateRequest) {
+	@Operation(summary = "간병인 지원 시키기")
+	@PostMapping("/orders/{orderId}")
+	public ResponseEntity<Response<?>> createApply(@PathVariable Long orderId,
+		@ParameterObject @RequestBody @Valid ApplyCreateRequest applyCreateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-			.data(Map.of("applyId", applyService.createApplyByAdmin(applyCreateRequest)))
+			.data(Map.of("applyId", applyService.createApplyByAdmin(orderId, applyCreateRequest)))
 			.build());
 	}
 
-	@Operation(summary = "조회", description = "페이징 없이")
-	@GetMapping
-	public ResponseEntity<List<ApplyResponse>> getApplies(
+	@Operation(summary = "orderId 로 간병인 지원 목록 조회", description = "페이징 없이")
+	@GetMapping("/orders/{orderId}")
+	public ResponseEntity<List<ApplyResponse>> getApplies(@PathVariable Long orderId,
 		@ParameterObject @RequestParam(required = false) @Valid ApplySearchRequest applySearchRequest) {
-		return ResponseEntity.ok(applyService.getApplies(applySearchRequest));
+		return ResponseEntity.ok(applyService.getApplies(orderId, applySearchRequest));
 	}
 
-	@Operation(summary = "조회", description = "페이징")
-	@GetMapping
-	public ResponseEntity<PageResponse<ApplyResponse>> getApplyPage(
+	@Operation(summary = "orderId 로 간병인 지원 목록 조회", description = "페이징")
+	@GetMapping("/orders/{orderId}/pages")
+	public ResponseEntity<PageResponse<ApplyResponse>> getApplyPage(@PathVariable Long orderId,
 		@ParameterObject @RequestParam(required = false) @Valid ApplySearchRequest applySearchRequest,
 		@ParameterObject Pageable pageable) {
-		return ResponseEntity.ok(applyService.getApplyPage(applySearchRequest, pageable));
+		return ResponseEntity.ok(applyService.getApplyPage(orderId, applySearchRequest, pageable));
 	}
 
 	@Operation(summary = "상세 조회")
@@ -75,17 +73,23 @@ public class AdminApplyController {
 			.build());
 	}
 
-	@Operation(summary = "정보 수정하기")
-	@PutMapping(path = "/{applyId}")
-	public ResponseEntity<Response<?>> updateApply(
-		@PathVariable(name = "applyId") Long applyId,
-		@RequestBody @Valid ApplyUpdateRequest applyUpdateRequest) {
-		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-			.data(Map.of("applyId", applyService.updateApply(applyId, applyUpdateRequest)))
-			.build());
+	@Operation(summary = "매칭완료")
+	@PutMapping(path = "/matching-complete/{applyId}")
+	public ResponseEntity<Response<?>> updateMatchingComplete(
+		@PathVariable(name = "applyId") Long applyId) {
+		applyService.updateMatchingComplete(applyId);
+		return ResponseEntity.ok().build();
 	}
 
-	@Operation(summary = "삭제")
+	@Operation(summary = "매칭대기")
+	@PutMapping(path = "/matching-wait/{applyId}")
+	public ResponseEntity<Response<?>> updateMatchingWait(
+		@PathVariable(name = "applyId") Long applyId) {
+		applyService.updateMatchingWait(applyId);
+		return ResponseEntity.ok().build();
+	}
+
+	@Operation(summary = "지원 취소 시키기")
 	@DeleteMapping(path = "/{applyId}")
 	public ResponseEntity<Response<?>> deleteApply(
 		@PathVariable(name = "applyId") Long applyId) {

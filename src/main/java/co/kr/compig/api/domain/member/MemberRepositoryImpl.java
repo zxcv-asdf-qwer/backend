@@ -142,7 +142,9 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 			.collect(Collectors.toList());
 
 		JPAQuery<Long> countQuery = createBaseQuery(predicate)
-			.select(member.count());
+			.select(member.count())
+			.where(member.userType.eq(UserType.SYS_ADMIN)
+				.or(member.userType.eq(UserType.SYS_USER)));
 
 		return PageableExecutionUtils.getPage(responses, pageable, countQuery::fetchOne);
 	}
@@ -168,7 +170,8 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 			.collect(Collectors.toList());
 
 		JPAQuery<Long> countQuery = createBaseQuery(predicate)
-			.select(member.count());
+			.select(member.count())
+			.where(predicate.and(member.userType.eq(UserType.PARTNER)));
 
 		return PageableExecutionUtils.getPage(responses, pageable, countQuery::fetchOne);
 	}
@@ -194,7 +197,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 			.collect(Collectors.toList());
 
 		JPAQuery<Long> countQuery = createBaseQuery(predicate)
-			.select(member.count());
+			.select(member.count()).where(predicate.and(member.userType.eq(UserType.GUARDIAN)));
 
 		return PageableExecutionUtils.getPage(responses, pageable, countQuery::fetchOne);
 	}

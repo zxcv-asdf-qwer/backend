@@ -31,8 +31,8 @@ public class ApplyRepositoryImpl implements ApplyRepositoryCustom {
 	private final JPAQueryFactory jpaQueryFactory;
 
 	@Override
-	public Page<ApplyResponse> getApplyPage(ApplySearchRequest applySearchRequest, Pageable pageable) {
-		BooleanExpression predicate = createPredicate(applySearchRequest);
+	public Page<ApplyResponse> getApplyPage(Long orderId, ApplySearchRequest applySearchRequest, Pageable pageable) {
+		BooleanExpression predicate = createPredicate(orderId, applySearchRequest);
 
 		JPAQuery<ApplyResponse> query = createBaseQuery(predicate)
 			.select(Projections.constructor(ApplyResponse.class,
@@ -57,8 +57,8 @@ public class ApplyRepositoryImpl implements ApplyRepositoryCustom {
 	}
 
 	@Override
-	public Slice<ApplyResponse> getApplySlice(ApplySearchRequest applySearchRequest, Pageable pageable) {
-		BooleanExpression predicate = createPredicate(applySearchRequest);
+	public Slice<ApplyResponse> getApplySlice(Long orderId, ApplySearchRequest applySearchRequest, Pageable pageable) {
+		BooleanExpression predicate = createPredicate(orderId, applySearchRequest);
 
 		JPAQuery<ApplyResponse> query = createBaseQuery(predicate)
 			.select(Projections.constructor(ApplyResponse.class,
@@ -86,15 +86,13 @@ public class ApplyRepositoryImpl implements ApplyRepositoryCustom {
 		return new SliceImpl<>(applies, pageable, hasNext);
 	}
 
-	private BooleanExpression createPredicate(ApplySearchRequest request) {
+	private BooleanExpression createPredicate(Long orderId, ApplySearchRequest request) {
 		BooleanExpression predicate = Expressions.asBoolean(true).isTrue();
 
 		if (request.getMemberId() != null) {
 			predicate = predicate.and(apply.member.id.eq(request.getMemberId()));
 		}
-		if (request.getCareOrderId() != null) {
-			predicate = predicate.and(apply.careOrder.id.eq(request.getCareOrderId()));
-		}
+		predicate = predicate.and(apply.careOrder.id.eq(orderId));
 		return predicate;
 	}
 

@@ -1,24 +1,16 @@
 package co.kr.compig.api.presentation.apply;
 
-import java.util.Map;
-
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.apply.ApplyService;
-import co.kr.compig.api.presentation.apply.request.ApplyCreateRequest;
 import co.kr.compig.api.presentation.apply.request.ApplySearchRequest;
-import co.kr.compig.api.presentation.apply.request.ApplyUpdateRequest;
 import co.kr.compig.api.presentation.apply.response.ApplyDetailResponse;
 import co.kr.compig.api.presentation.apply.response.ApplyResponse;
 import co.kr.compig.global.dto.Response;
@@ -35,25 +27,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/guardian/apply", produces = "application/json")
+@RequestMapping(path = "/guardian/applys", produces = "application/json")
 public class GuardianApplyController {
 	private final ApplyService applyService;
 
-	@Operation(summary = "생성하기")
-	@PostMapping
-	public ResponseEntity<Response<?>> createApply(
-		@ParameterObject @ModelAttribute @Valid ApplyCreateRequest applyCreateRequest) {
-		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-			.data(Map.of("applyId", applyService.createApply(applyCreateRequest)))
-			.build());
-	}
-
-	@Operation(summary = "조회")
-	@GetMapping
-	public ResponseEntity<SliceResponse<ApplyResponse>> getApplySlice(
+	@Operation(summary = "목록 조회(커서)")
+	@GetMapping("/orders/{orderId}")
+	public ResponseEntity<SliceResponse<ApplyResponse>> getApplySlice(@PathVariable Long orderId,
 		@ParameterObject @ModelAttribute @Valid ApplySearchRequest applySearchRequest,
 		@ParameterObject Pageable pageable) {
-		return ResponseEntity.ok(applyService.getApplySlice(applySearchRequest, pageable));
+		return ResponseEntity.ok(applyService.getApplySlice(orderId, applySearchRequest, pageable));
 	}
 
 	@Operation(summary = "상세 조회")
@@ -63,22 +46,6 @@ public class GuardianApplyController {
 		return ResponseEntity.ok(Response.<ApplyDetailResponse>builder()
 			.data(applyService.getApply(applyId))
 			.build());
-	}
-
-	@Operation(summary = "정보 수정하기")
-	@PutMapping(path = "/{applyId}")
-	public ResponseEntity<Response<?>> updateApply(@PathVariable(name = "applyId") Long applyId,
-		@RequestBody @Valid ApplyUpdateRequest applyUpdateRequest) {
-		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-			.data(Map.of("applyId", applyService.updateApply(applyId, applyUpdateRequest)))
-			.build());
-	}
-
-	@Operation(summary = "삭제")
-	@DeleteMapping(path = "/{applyId}")
-	public ResponseEntity<Response<?>> deleteApply(@PathVariable(name = "applyId") Long applyId) {
-		applyService.deleteApply(applyId);
-		return ResponseEntity.ok().build();
 	}
 
 }

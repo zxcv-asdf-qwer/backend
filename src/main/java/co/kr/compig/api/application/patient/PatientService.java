@@ -9,7 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import co.kr.compig.api.application.member.MemberService;
+import co.kr.compig.api.application.member.NoMemberService;
+import co.kr.compig.api.domain.code.MemberType;
 import co.kr.compig.api.domain.member.Member;
+import co.kr.compig.api.domain.member.NoMember;
 import co.kr.compig.api.domain.patient.Patient;
 import co.kr.compig.api.domain.patient.PatientRepository;
 import co.kr.compig.api.domain.patient.PatientRepositoryCustom;
@@ -32,13 +35,21 @@ import lombok.extern.slf4j.Slf4j;
 public class PatientService {
 
 	private final MemberService memberService;
+	private final NoMemberService noMemberService;
+
 	private final PatientRepository patientRepository;
 	private final PatientRepositoryCustom patientRepositoryCustom;
 
 	public Long createPatientAdmin(AdminPatientCreateRequest adminPatientCreateRequest) {
-		Member member = memberService.getMemberById(adminPatientCreateRequest.getMemberId());
+		Patient patient;
+		if (adminPatientCreateRequest.getMemberType().equals(MemberType.MEMBER)) {
+			Member member = memberService.getMemberById(adminPatientCreateRequest.getMemberId());
+			patient = adminPatientCreateRequest.converterEntity(member);
+		} else {
+			NoMember noMember = noMemberService.getNoMemberById(adminPatientCreateRequest.getMemberId());
+			patient = adminPatientCreateRequest.converterEntity(noMember);
+		}
 
-		Patient patient = adminPatientCreateRequest.converterEntity(member);
 		return patientRepository.save(patient).getId();
 	}
 
@@ -69,13 +80,21 @@ public class PatientService {
 		return patientRepositoryCustom.findAllByCondition(patientSearchRequest, pageable);
 	}
 
-	public List<PatientResponse> getPatients(String memberId) {
-		if (memberId == null)
+	public List<PatientResponse> getPatients(String memberId, MemberType memberType) {
+		if (memberId == null) {
 			throw new BizException("memberId가 없습니다.");
-		Member member = memberService.getMemberById(memberId);
-		return patientRepository.findAllByMember(member).stream()
-			.map(Patient::toPatientResponse)
-			.collect(Collectors.toList());
+		}
+		if (memberType.equals(MemberType.MEMBER)) {
+			Member member = memberService.getMemberById(memberId);
+			return patientRepository.findAllByMember(member).stream()
+				.map(Patient::toPatientResponse)
+				.collect(Collectors.toList());
+		} else {
+			NoMember noMember = noMemberService.getNoMemberById(memberId);
+			return patientRepository.findAllByNoMember(noMember).stream()
+				.map(Patient::toPatientResponse)
+				.collect(Collectors.toList());
+		}
 	}
 
 	public Patient getOrderPatientByOrderPatientId(Long orderPatientId) {

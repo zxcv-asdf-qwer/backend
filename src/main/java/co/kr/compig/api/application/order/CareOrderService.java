@@ -55,7 +55,7 @@ public class CareOrderService {
 			Member member = memberService.getMemberById(adminCareOrderCreateRequest.getMemberId());
 			Patient patientById = member.getPatients()
 				.stream()
-				.filter(patient -> patient.getId().equals(adminCareOrderCreateRequest.getOrderPatientId()))
+				.filter(patient -> patient.getId().equals(adminCareOrderCreateRequest.getPatientId()))
 				.findFirst()
 				.orElseThrow(NotExistDataException::new);
 			// ModelMapper modelMapper = new ModelMapper();
@@ -93,7 +93,7 @@ public class CareOrderService {
 			NoMember noMember = noMemberService.getNoMemberById(adminCareOrderCreateRequest.getMemberId());
 			Patient patientById = noMember.getPatients()
 				.stream()
-				.filter(patient -> patient.getId().equals(adminCareOrderCreateRequest.getOrderPatientId()))
+				.filter(patient -> patient.getId().equals(adminCareOrderCreateRequest.getPatientId()))
 				.findFirst()
 				.orElseThrow(NotExistDataException::new);
 			// ModelMapper modelMapper = new ModelMapper();

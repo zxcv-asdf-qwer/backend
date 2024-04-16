@@ -14,11 +14,11 @@ import co.kr.compig.api.application.order.CareOrderService;
 import co.kr.compig.api.domain.apply.Apply;
 import co.kr.compig.api.domain.apply.ApplyRepository;
 import co.kr.compig.api.domain.apply.ApplyRepositoryCustom;
+import co.kr.compig.api.domain.code.ApplyStatus;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.presentation.apply.request.ApplyCreateRequest;
 import co.kr.compig.api.presentation.apply.request.ApplySearchRequest;
-import co.kr.compig.api.presentation.apply.request.ApplyUpdateRequest;
 import co.kr.compig.api.presentation.apply.response.ApplyDetailResponse;
 import co.kr.compig.api.presentation.apply.response.ApplyResponse;
 import co.kr.compig.global.dto.pagination.PageResponse;
@@ -39,32 +39,39 @@ public class ApplyService {
 	private final CareOrderService careOrderService;
 	private final MemberService memberService;
 
-	public Long createApplyByAdmin(ApplyCreateRequest applyCreateRequest) {
+	public Long createApplyByAdmin(Long orderId, ApplyCreateRequest applyCreateRequest) {
 		Member member = memberService.getMemberById(applyCreateRequest.getMemberId());
-		CareOrder careOrder = careOrderService.getCareOrderById(applyCreateRequest.getCareOrderId());
-		Apply apply = applyCreateRequest.converterEntity(member, careOrder);
-
-		return applyRepository.save(apply).getId();
+		CareOrder careOrder = careOrderService.getCareOrderById(orderId);
+		return applyRepository.findByMemberAndCareOrder(member, careOrder)
+			.map(Apply::getId)
+			.orElseGet(() -> {
+				Apply apply = applyCreateRequest.converterEntity(member, careOrder);
+				return applyRepository.save(apply).getId();
+			});
 	}
 
-	public Long createApply(ApplyCreateRequest applyCreateRequest) {
+	public Long createApply(Long orderId, ApplyCreateRequest applyCreateRequest) {
 		Member member = memberService.getMemberById(SecurityUtil.getMemberId());
-		CareOrder careOrder = careOrderService.getCareOrderById(applyCreateRequest.getCareOrderId());
-		Apply apply = applyCreateRequest.converterEntity(member, careOrder);
-		return applyRepository.save(apply).getId();
+		CareOrder careOrder = careOrderService.getCareOrderById(orderId);
+		return applyRepository.findByMemberAndCareOrder(member, careOrder)
+			.map(Apply::getId)
+			.orElseGet(() -> {
+				Apply apply = applyCreateRequest.converterEntity(member, careOrder);
+				return applyRepository.save(apply).getId();
+			});
 	}
 
 	@Transactional(readOnly = true)
-	public List<ApplyResponse> getApplies(ApplySearchRequest searchRequest) {
-		return applyRepository.findAllByMemberId(searchRequest.getMemberId())
-			.stream()
+	public List<ApplyResponse> getApplies(Long orderId, ApplySearchRequest searchRequest) {
+		CareOrder careOrderById = careOrderService.getCareOrderById(orderId);
+		return careOrderById.getApplys().stream()
 			.map(Apply::toApplyResponse)
 			.collect(Collectors.toList());
 	}
 
 	@Transactional(readOnly = true)
-	public PageResponse<ApplyResponse> getApplyPage(ApplySearchRequest searchRequest, Pageable pageable) {
-		Page<ApplyResponse> page = applyRepositoryCustom.getApplyPage(searchRequest, pageable);
+	public PageResponse<ApplyResponse> getApplyPage(Long orderId, ApplySearchRequest searchRequest, Pageable pageable) {
+		Page<ApplyResponse> page = applyRepositoryCustom.getApplyPage(orderId, searchRequest, pageable);
 		return new PageResponse<>(page.getContent(), pageable, page.getTotalElements());
 	}
 
@@ -76,19 +83,26 @@ public class ApplyService {
 		return apply.toApplyDetailResponse(member, careOrder);
 	}
 
-	public Long updateApply(Long applyId, ApplyUpdateRequest applyUpdateRequest) {
-		Apply apply = applyRepository.findById(applyId).orElseThrow(NotExistDataException::new);
-		apply.update(applyUpdateRequest);
-		return apply.getId();
-	}
-
 	public void deleteApply(Long applyId) {
 		Apply apply = applyRepository.findById(applyId).orElseThrow(NotExistDataException::new);
 		applyRepository.delete(apply);
 	}
 
-	public SliceResponse<ApplyResponse> getApplySlice(ApplySearchRequest applySearchRequest, Pageable pageable) {
-		Slice<ApplyResponse> slice = applyRepositoryCustom.getApplySlice(applySearchRequest, pageable);
+	public SliceResponse<ApplyResponse> getApplySlice(Long orderId, ApplySearchRequest applySearchRequest,
+		Pageable pageable) {
+		Slice<ApplyResponse> slice = applyRepositoryCustom.getApplySlice(orderId, applySearchRequest, pageable);
 		return new SliceResponse<>(slice.getContent(), pageable, slice.hasNext());
+	}
+
+	public void updateMatchingComplete(Long applyId) {
+		Apply apply = applyRepository.findById(applyId).orElseThrow(NotExistDataException::new);
+		//TODO 간병인이 간병중인지
+		//TODO 간병인이 해야할 간병 중에 기간이 겹치는게 있는지
+		apply.setApplyStatus(ApplyStatus.MATCHING_COMPLETE);
+	}
+
+	public void updateMatchingWait(Long applyId) {
+		Apply apply = applyRepository.findById(applyId).orElseThrow(NotExistDataException::new);
+		apply.setApplyStatus(ApplyStatus.MATCHING_WAIT);
 	}
 }

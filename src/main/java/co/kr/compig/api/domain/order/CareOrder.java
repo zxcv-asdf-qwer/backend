@@ -105,17 +105,15 @@ public class CareOrder {
 	@JsonManagedReference //연관관계 주인 반대 Entity 에 선언, 정상적으로 직렬화 수행
 	private Set<Apply> applys = new HashSet<>();
 
-	@Builder.Default
-	@JoinColumn(name = "member_id", foreignKey = @ForeignKey(name = "fk01_care_order"))
+	@JoinColumn(name = "member_id", foreignKey = @ForeignKey(name = "fk01_order_patient"))
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonBackReference//연관관계의 주인 Entity 에 선언, 직렬화가 되지 않도록 수행
-	private Member member = new Member(); // Member id
+	private Member member; // Member id
 
-	@Builder.Default
-	@JoinColumn(name = "no_member_id", foreignKey = @ForeignKey(name = "fk02_care_order"))
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "no_member_id", foreignKey = @ForeignKey(name = "fk02_order_patient"))
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonBackReference//연관관계의 주인 Entity 에 선언, 직렬화가 되지 않도록 수행
-	private NoMember noMember = new NoMember(); // Member id
+	private NoMember noMember; // Member id
 
 	@Builder.Default
 	@JoinColumn(name = "order_patient_id", nullable = false, foreignKey = @ForeignKey(name = "fk03_care_order"))

@@ -95,5 +95,9 @@ public class Apply {
 			.applyStatus(this.applyStatus)
 			.build();
 	}
+
+	public void setApplyStatus(ApplyStatus applyStatus) {
+		this.applyStatus = applyStatus;
+	}
 }
 

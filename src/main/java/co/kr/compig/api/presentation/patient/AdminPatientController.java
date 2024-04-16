@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.patient.PatientService;
+import co.kr.compig.api.domain.code.MemberType;
 import co.kr.compig.api.presentation.patient.request.AdminPatientCreateRequest;
 import co.kr.compig.api.presentation.patient.request.PatientUpdateRequest;
 import co.kr.compig.api.presentation.patient.response.PatientDetailResponse;
@@ -47,10 +49,10 @@ public class AdminPatientController {
 	@Operation(summary = "환자 프로필 수정 화면 환자 선택 셀렉트 박스 조회")
 	@GetMapping(path = "/members/{memberId}")
 	public ResponseEntity<Response<List<PatientResponse>>> getPatients(
-		@PathVariable(name = "memberId") String memberId
+		@PathVariable(name = "memberId") String memberId, @RequestParam MemberType memberType
 	) {
 		return ResponseEntity.ok(Response.<List<PatientResponse>>builder()
-			.data(patientService.getPatients(memberId))
+			.data(patientService.getPatients(memberId, memberType))
 			.build());
 	}
 

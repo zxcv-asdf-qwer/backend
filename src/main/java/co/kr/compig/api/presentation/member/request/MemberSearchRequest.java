@@ -13,4 +13,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 public class MemberSearchRequest extends PageableRequest {
 	private UserType userType;
+	private String userNm;
+	private String telNo;
+
 }

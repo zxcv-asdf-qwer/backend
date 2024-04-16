@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 public enum UserType implements BaseEnumCode<String> {
 	SYS_ADMIN("SYS_ADMIN", "슈퍼관리자", null),
 	SYS_USER("SYS_USER", "내부사용자", null),
-	NO_USER("NO_USER", "비회원", null),
 	GUARDIAN("GUARDIAN", "보호자/환자", null),
 	PARTNER("PARTNER", "케어매니저", null),
 	PARTNER_MASTER("PARTNER", "케어매니저", PARTNER),
