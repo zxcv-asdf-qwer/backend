@@ -1,5 +1,7 @@
 package co.kr.compig.api.application.app;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,6 +12,7 @@ import co.kr.compig.api.domain.code.AppOsType;
 import co.kr.compig.api.presentation.app.request.AppVersionCreateRequest;
 import co.kr.compig.api.presentation.app.request.AppVersionUpdateRequest;
 import co.kr.compig.api.presentation.app.response.AppVersionResponse;
+import co.kr.compig.global.dto.pagination.PageResponse;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import co.kr.compig.global.error.model.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -90,5 +93,13 @@ public class AppVersionService {
 		AppVersion appVersion = appVersionRepository.findById(appId)
 			.orElseThrow(() -> new NotExistDataException(ErrorCode.INVALID_NOT_EXIST_DATA));
 		appVersionRepository.delete(appVersion);
+	}
+
+	@Transactional(readOnly = true)
+	public PageResponse<AppVersionResponse> getAppVersionPage(
+		Pageable pageable) {
+
+		Page<AppVersionResponse> page = appVersionRepositoryCustom.getAppVersionPage(pageable);
+		return new PageResponse<>(page.getContent(), pageable, page.getTotalElements());
 	}
 }
