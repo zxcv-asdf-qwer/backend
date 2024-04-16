@@ -1,5 +1,6 @@
 package co.kr.compig.api.presentation.apply;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springdoc.core.annotations.ParameterObject;
@@ -48,6 +49,13 @@ public class AdminApplyController {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("applyId", applyService.createApplyByAdmin(applyCreateRequest)))
 			.build());
+	}
+
+	@Operation(summary = "조회", description = "페이징 없이")
+	@GetMapping
+	public ResponseEntity<List<ApplyResponse>> getApplies(
+		@ParameterObject @RequestParam(required = false) @Valid ApplySearchRequest applySearchRequest) {
+		return ResponseEntity.ok(applyService.getApplies(applySearchRequest));
 	}
 
 	@Operation(summary = "조회", description = "페이징")

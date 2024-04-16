@@ -8,6 +8,7 @@ import co.kr.compig.api.domain.code.IsYn;
 import co.kr.compig.api.domain.code.MemberType;
 import co.kr.compig.api.domain.code.PeriodType;
 import co.kr.compig.api.domain.member.Member;
+import co.kr.compig.api.domain.member.NoMember;
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.domain.patient.OrderPatient;
 import jakarta.validation.constraints.NotBlank;
@@ -62,6 +63,18 @@ public class AdminCareOrderCreateRequest {
 			.orderRequest(this.orderRequest)
 			.publishYn(this.publishYn)
 			.member(member)
+			.orderPatient(orderPatient)
+			.build();
+	}
+
+	public CareOrder converterEntity(NoMember noMember, OrderPatient orderPatient) {
+		return CareOrder.builder()
+			.startDateTime(this.startDateTime)
+			.endDateTime(this.endDateTime)
+			.title(this.title)
+			.orderRequest(this.orderRequest)
+			.publishYn(this.publishYn)
+			.noMember(noMember)
 			.orderPatient(orderPatient)
 			.build();
 	}

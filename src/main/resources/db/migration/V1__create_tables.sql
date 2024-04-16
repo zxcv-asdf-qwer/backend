@@ -625,7 +625,8 @@ create table if not exists no_member
     created_on   timestamp(6) default CURRENT_TIMESTAMP,
     updated_by   varchar(50),
     updated_on   timestamp(6) default CURRENT_TIMESTAMP,
-    primary key (no_member_id)
+    primary key (no_member_id),
+    constraint uk01_no_member unique (user_nm, tel_no)
 );
 
 alter table if exists account

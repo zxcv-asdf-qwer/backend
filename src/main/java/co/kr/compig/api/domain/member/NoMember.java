@@ -20,6 +20,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,7 +33,11 @@ import lombok.extern.slf4j.Slf4j;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table
+@Table(
+	uniqueConstraints = {
+		@UniqueConstraint(name = "uk01_no_member", columnNames = {"userNm", "telNo"})
+	}
+)
 @SequenceGenerator(
 	name = "no_member_seq_gen", //시퀀스 제너레이터 이름
 	sequenceName = "no_member_seq", //시퀀스 이름

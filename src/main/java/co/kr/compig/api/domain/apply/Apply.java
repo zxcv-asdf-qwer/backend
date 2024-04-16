@@ -9,6 +9,7 @@ import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.presentation.apply.request.ApplyUpdateRequest;
 import co.kr.compig.api.presentation.apply.response.ApplyCareOrderResponse;
 import co.kr.compig.api.presentation.apply.response.ApplyDetailResponse;
+import co.kr.compig.api.presentation.apply.response.ApplyResponse;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -82,6 +83,15 @@ public class Apply {
 	public ApplyCareOrderResponse toApplyCareOrderResponse() {
 		return ApplyCareOrderResponse.builder()
 			.applyId(this.id)
+			.applyStatus(this.applyStatus)
+			.build();
+	}
+
+	public ApplyResponse toApplyResponse() {
+		return ApplyResponse.builder()
+			.applyId(this.id)
+			.memberId(this.member.getId())
+			.careOrderId(this.careOrder.getId())
 			.applyStatus(this.applyStatus)
 			.build();
 	}

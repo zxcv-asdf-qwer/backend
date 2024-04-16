@@ -1,5 +1,8 @@
 package co.kr.compig.api.application.apply;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -49,6 +52,14 @@ public class ApplyService {
 		CareOrder careOrder = careOrderService.getCareOrderById(applyCreateRequest.getCareOrderId());
 		Apply apply = applyCreateRequest.converterEntity(member, careOrder);
 		return applyRepository.save(apply).getId();
+	}
+
+	@Transactional(readOnly = true)
+	public List<ApplyResponse> getApplies(ApplySearchRequest searchRequest) {
+		return applyRepository.findAllByMemberId(searchRequest.getMemberId())
+			.stream()
+			.map(Apply::toApplyResponse)
+			.collect(Collectors.toList());
 	}
 
 	@Transactional(readOnly = true)

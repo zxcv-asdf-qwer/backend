@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import co.kr.compig.api.domain.member.NoMember;
 import co.kr.compig.api.domain.member.NoMemberRepository;
 import co.kr.compig.api.presentation.member.request.NoMemberCreate;
+import co.kr.compig.global.error.exception.NotExistDataException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,4 +23,9 @@ public class NoMemberService {
 		return noMemberRepository.save(noMember).getId();
 	}
 
+	@Transactional(readOnly = true)
+	public NoMember getNoMemberById(String memberId) {
+		return noMemberRepository.findById(memberId).orElseThrow(
+			NotExistDataException::new);
+	}
 }
