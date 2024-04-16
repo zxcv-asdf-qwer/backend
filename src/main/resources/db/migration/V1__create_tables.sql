@@ -629,6 +629,23 @@ create table if not exists no_member
     constraint uk01_no_member unique (user_nm, tel_no)
 );
 
+create sequence facking_seq start with 1 increment by 1;
+create table facking
+(
+    amount          integer not null,
+    care_order_id   bigint  not null,
+    created_on      timestamp(6) default CURRENT_TIMESTAMP,
+    end_date_time   timestamp(6),
+    facking_id      bigint  not null,
+    settle_id       bigint  not null,
+    start_date_time timestamp(6),
+    updated_on      timestamp(6) default CURRENT_TIMESTAMP,
+    created_by      varchar(50),
+    updated_by      varchar(50),
+    period_type     varchar(255),
+    primary key (facking_id)
+);
+
 alter table if exists account
     add constraint fk01_account
         foreign key (member_id)
@@ -742,4 +759,13 @@ alter table if exists wallet
 alter table if exists wallet
     add constraint fk02_wallet
         foreign key (packing_id)
-            references packing
+            references packing;
+alter table if exists facking
+    add constraint fk01_facking
+        foreign key (care_order_id)
+            references care_order
+;
+alter table if exists facking
+    add constraint fk02_facking
+        foreign key (settle_id)
+            references settle;
