@@ -42,7 +42,7 @@ public class CareOrderCreateRequest {
 	private Integer amount; //금액 //보호자들이 입력한 금액, 수수료 계산전
 
 	@NotNull
-	private Long orderPatientId; // 간병공고 등록시 환자 정보 ID
+	private Long patientId; // 간병공고 등록시 환자 정보 ID
 
 	public CareOrder converterEntity(Member member, OrderPatient orderPatient) {
 		return CareOrder.builder()

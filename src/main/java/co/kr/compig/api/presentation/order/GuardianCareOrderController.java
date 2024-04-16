@@ -36,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/guardian/care-order", produces = "application/json")
+@RequestMapping(path = "/guardian/orders", produces = "application/json")
 public class GuardianCareOrderController {
 
 	private final CareOrderService careOrderService;
@@ -47,7 +47,7 @@ public class GuardianCareOrderController {
 		@ParameterObject @ModelAttribute @Valid CareOrderCreateRequest careOrderCreateRequest
 	) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-			.data(Map.of("careOrderId", careOrderService.createCareOrderUser(careOrderCreateRequest)))
+			.data(Map.of("careOrderId", careOrderService.createCareOrderGuardian(careOrderCreateRequest)))
 			.build());
 	}
 
@@ -83,11 +83,11 @@ public class GuardianCareOrderController {
 			.build());
 	}
 
-	@Operation(summary = "삭제")
+	@Operation(summary = "간병 취소하기")
 	@DeleteMapping(path = "/{careOrderId}")
-	public ResponseEntity<Response<?>> deleteCareOrder(
+	public ResponseEntity<Response<?>> cancelCareOrder(
 		@PathVariable(name = "careOrderId") Long careOrderId) {
-		careOrderService.deleteCareOrder(careOrderId);
+		careOrderService.cancelCareOrder(careOrderId);
 		return ResponseEntity.ok().build();
 	}
 }

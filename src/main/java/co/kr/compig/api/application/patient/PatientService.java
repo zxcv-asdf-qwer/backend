@@ -41,16 +41,16 @@ public class PatientService {
 	private final PatientRepositoryCustom patientRepositoryCustom;
 
 	public Long createPatientAdmin(AdminPatientCreateRequest adminPatientCreateRequest) {
-		Patient patient;
 		if (adminPatientCreateRequest.getMemberType().equals(MemberType.MEMBER)) {
 			Member member = memberService.getMemberById(adminPatientCreateRequest.getMemberId());
-			patient = adminPatientCreateRequest.converterEntity(member);
+			Patient patient = adminPatientCreateRequest.converterEntity(member);
+			return patientRepository.save(patient).getId();
 		} else {
 			NoMember noMember = noMemberService.getNoMemberById(adminPatientCreateRequest.getMemberId());
-			patient = adminPatientCreateRequest.converterEntity(noMember);
+			Patient patient = adminPatientCreateRequest.converterEntity(noMember);
+			return patientRepository.save(patient).getId();
 		}
 
-		return patientRepository.save(patient).getId();
 	}
 
 	public Long createPatientUser(PatientCreateRequest patientCreateRequest) {

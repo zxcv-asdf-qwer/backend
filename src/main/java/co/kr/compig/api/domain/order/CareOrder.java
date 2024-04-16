@@ -1,5 +1,7 @@
 package co.kr.compig.api.domain.order;
 
+import static co.kr.compig.api.domain.code.OrderStatus.*;
+
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,6 +26,7 @@ import co.kr.compig.api.domain.payment.Payment;
 import co.kr.compig.api.presentation.apply.response.ApplyCareOrderResponse;
 import co.kr.compig.api.presentation.order.request.CareOrderUpdateRequest;
 import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
+import co.kr.compig.api.presentation.patient.response.OrderPatientDetailResponse;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -161,33 +164,19 @@ public class CareOrder {
 		Set<ApplyCareOrderResponse> applyResponses = applys.stream()
 			.map(Apply::toApplyCareOrderResponse) // Apply 객체를 ApplyDetailResponse 객체로 매핑
 			.collect(Collectors.toSet());
-
+		OrderPatientDetailResponse orderPatientDetailResponse = orderPatient.toOrderPatientDetailResponse();
 		return CareOrderDetailResponse.builder()
-			.id(this.id)
+			.orderId(this.id)
 			.startDateTime(this.startDateTime)
 			.endDateTime(this.endDateTime)
 			.orderStatus(this.orderStatus)
 			.publishYn(this.publishYn)
 			.careOrderProcessType(this.careOrderProcessType)
 			.orderRequest(this.orderRequest)
-			.userNm(member.getUserNm())
-			.telNo(member.getTelNo())
-			.name(orderPatient.getName())
-			.gender(orderPatient.getGender())
-			.birthDate(orderPatient.getBirthDate())
-			.height(orderPatient.getHeight())
-			.weight(orderPatient.getWeight())
-			.diseaseNms(orderPatient.getDiseaseNms())
-			.selfToiletAvailabilities(orderPatient.getSelfToiletAvailabilities())
-			.moveAvailability(orderPatient.getMoveAvailability())
-			.mealAvailability(orderPatient.getMealAvailability())
-			.genderPreference(orderPatient.getGenderPreference())
-			.covid19Test(orderPatient.getCovid19Test())
-			.patientRequest(orderPatient.getPatientRequest())
-			.locationType(orderPatient.getLocationType())
-			.addressCd(orderPatient.getAddressCd())
-			.address1(orderPatient.getAddress1())
-			.address2(orderPatient.getAddress2())
+			.memberId(this.member != null ? this.member.getId() : String.valueOf(this.noMember.getId()))
+			.userNm(this.member != null ? this.member.getUserNm() : this.noMember.getUserNm())
+			.telNo(this.member != null ? this.member.getTelNo() : this.noMember.getTelNo())
+			.orderPatient(orderPatientDetailResponse)
 			.applies(applyResponses)
 			.build();
 	}
@@ -195,5 +184,13 @@ public class CareOrder {
 	public void update(CareOrderUpdateRequest careOrderUpdateRequest) {
 		this.startDateTime = careOrderUpdateRequest.getStartDateTime();
 		this.endDateTime = careOrderUpdateRequest.getEndDateTime();
+	}
+
+	public void cancelOrder() {
+		this.orderStatus = ORDER_CANCEL;
+	}
+
+	public boolean isPayment() {
+		return this.payments != null;
 	}
 }

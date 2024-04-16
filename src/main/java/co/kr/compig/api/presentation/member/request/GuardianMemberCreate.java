@@ -44,6 +44,7 @@ public class GuardianMemberCreate {
 
 	public Member convertEntity() {
 		return Member.builder()
+			.userId(this.email)
 			.userNm(this.userNm)
 			.userPw(this.userPw)
 			.telNo(this.telNo)

@@ -40,17 +40,17 @@ public class AdminCareOrderController {
 
 	private final CareOrderService careOrderService;
 
-	@Operation(summary = "생성하기")
+	@Operation(summary = "간병 공고 등록")
 	@PostMapping
 	public ResponseEntity<Response<?>> createCareOrder(
 		@ParameterObject @RequestBody @Valid AdminCareOrderCreateRequest adminCareOrderCreateRequest
 	) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-			.data(Map.of("careOrderId", careOrderService.createCareOrderAdmin(adminCareOrderCreateRequest)))
+			.data(Map.of("orderId", careOrderService.createCareOrderAdmin(adminCareOrderCreateRequest)))
 			.build());
 	}
 
-	@Operation(summary = "조회")
+	@Operation(summary = "간병 리스트 보여주기")
 	@GetMapping
 	public ResponseEntity<PageResponse<CareOrderResponse>> pageListCareOrder(
 		@ParameterObject @RequestParam(required = false) @Valid CareOrderSearchRequest careOrderSearchRequest,
@@ -59,31 +59,31 @@ public class AdminCareOrderController {
 		return ResponseEntity.ok(careOrderService.pageListCareOrder(careOrderSearchRequest, pageable));
 	}
 
-	@Operation(summary = "상세 조회")
-	@GetMapping(path = "/{careOrderId}")
+	@Operation(summary = "간병 공고 상세 조회")
+	@GetMapping(path = "/{orderId}")
 	public ResponseEntity<Response<CareOrderDetailResponse>> getCareOrder(
-		@PathVariable(name = "careOrderId") Long careOrderId
+		@PathVariable(name = "orderId") Long orderId
 	) {
 		return ResponseEntity.ok(Response.<CareOrderDetailResponse>builder()
-			.data(careOrderService.getCareOrder(careOrderId))
+			.data(careOrderService.getCareOrder(orderId))
 			.build());
 	}
 
-	@Operation(summary = "정보 수정하기")
-	@PutMapping(path = "/{careOrderId}")
+	@Operation(summary = "간병 공고 정보 수정하기")
+	@PutMapping(path = "/{orderId}")
 	public ResponseEntity<Response<?>> updateCareOrder(
-		@PathVariable(name = "careOrderId") Long careOrderId,
+		@PathVariable(name = "orderId") Long orderId,
 		@RequestBody @Valid CareOrderUpdateRequest careOrderUpdateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-			.data(Map.of("careOrderId", careOrderService.updateCareOrder(careOrderId, careOrderUpdateRequest)))
+			.data(Map.of("orderId", careOrderService.updateCareOrder(orderId, careOrderUpdateRequest)))
 			.build());
 	}
 
-	@Operation(summary = "삭제")
-	@DeleteMapping(path = "/{careOrderId}")
-	public ResponseEntity<Response<?>> deleteCareOrder(
-		@PathVariable(name = "careOrderId") Long careOrderId) {
-		careOrderService.deleteCareOrder(careOrderId);
+	@Operation(summary = "간병 취소하기")
+	@DeleteMapping(path = "/{orderId}")
+	public ResponseEntity<Response<?>> cancelCareOrder(
+		@PathVariable(name = "orderId") Long orderId) {
+		careOrderService.cancelCareOrder(orderId);
 		return ResponseEntity.ok().build();
 	}
 }

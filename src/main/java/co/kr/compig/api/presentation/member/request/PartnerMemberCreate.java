@@ -70,6 +70,7 @@ public class PartnerMemberCreate {
 
 	public Member convertEntity() {
 		return Member.builder()
+			.userId(this.email)
 			.userNm(this.userNm)
 			.email(this.email)
 			.userPw(this.userPw)
