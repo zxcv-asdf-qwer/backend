@@ -31,7 +31,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Tag(name = "관리자 지원", description = "지원 관련 API")
+@Tag(name = "관리자 간병인 지원", description = "지원 관련 API")
 @SecurityRequirement(name = "Bearer Authentication")
 @Slf4j
 @RequiredArgsConstructor
@@ -46,7 +46,7 @@ public class AdminApplyController {
 	public ResponseEntity<Response<?>> createApply(
 		@ParameterObject @ModelAttribute @Valid ApplyCreateRequest applyCreateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-			.data(Map.of("applyId", applyService.createApply(applyCreateRequest)))
+			.data(Map.of("applyId", applyService.createApplyByAdmin(applyCreateRequest)))
 			.build());
 	}
 

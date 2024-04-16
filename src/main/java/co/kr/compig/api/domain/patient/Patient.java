@@ -21,6 +21,7 @@ import co.kr.compig.api.presentation.patient.request.PatientUpdateRequest;
 import co.kr.compig.api.presentation.patient.response.PatientDetailResponse;
 import co.kr.compig.api.presentation.patient.response.PatientResponse;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Embedded;
@@ -123,14 +124,14 @@ public class Patient {
 	* Domain mapping
 	================================================================= */
 	@Builder.Default
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "member_id", foreignKey = @ForeignKey(name = "fk01_patient"))
 	@JsonBackReference//연관관계의 주인 Entity 에 선언, 직렬화가 되지 않도록 수행
 	private Member member = new Member(); // Member id
 
 	@Builder.Default
 	@JoinColumn(name = "no_member_id", foreignKey = @ForeignKey(name = "fk02_patient"))
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JsonBackReference//연관관계의 주인 Entity 에 선언, 직렬화가 되지 않도록 수행
 	private NoMember noMember = new NoMember(); // Member id
 	/* =================================================================

@@ -113,13 +113,13 @@ public class CareOrder {
 
 	@Builder.Default
 	@JoinColumn(name = "no_member_id", foreignKey = @ForeignKey(name = "fk02_care_order"))
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JsonBackReference//연관관계의 주인 Entity 에 선언, 직렬화가 되지 않도록 수행
 	private NoMember noMember = new NoMember(); // Member id
 
 	@Builder.Default
 	@JoinColumn(name = "order_patient_id", nullable = false, foreignKey = @ForeignKey(name = "fk03_care_order"))
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JsonBackReference//연관관계의 주인 Entity 에 선언, 직렬화가 되지 않도록 수행
 	private OrderPatient orderPatient = new OrderPatient();
 
