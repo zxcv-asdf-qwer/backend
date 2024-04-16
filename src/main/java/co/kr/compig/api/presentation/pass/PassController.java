@@ -26,12 +26,17 @@ import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.error.exception.BizException;
 import co.kr.compig.global.notify.NotifyMessage;
 import co.kr.compig.global.utils.SecurityUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Tag(name = "PASS", description = "PASS 관련 API")
+@SecurityRequirement(name = "Bearer Authentication")
 @Slf4j
 @Controller
 @RequestMapping("/pass")
@@ -47,6 +52,7 @@ public class PassController {
 	private final MemberService memberService;
 	private final NotifyMessage notifyMessage;
 
+	@Operation(summary = "테스트 페이지", hidden = true)
 	@GetMapping(value = "/test")
 	public String getPassTestPage1(HttpServletRequest request, HttpServletResponse response,
 		ModelMap modelMap) {
@@ -109,6 +115,7 @@ public class PassController {
 		return "pass_test";
 	}
 
+	@Operation(summary = "테스트 페이지", hidden = true)
 	@RequestMapping(value = "/test/success", method = {RequestMethod.GET, RequestMethod.POST})
 	public String passSuccess1(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		CPClient niceCheck = new CPClient();
@@ -185,6 +192,7 @@ public class PassController {
 		return "pass_success";
 	}
 
+	@Operation(summary = "테스트 페이지", hidden = true)
 	@RequestMapping(value = "/test/fail", method = {RequestMethod.GET, RequestMethod.POST})
 	public String passFail1(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		CPClient niceCheck = new CPClient();
@@ -239,6 +247,7 @@ public class PassController {
 		return "pass_fail";
 	}
 
+	@Operation(summary = "url 만들기")
 	@GetMapping
 	public ResponseEntity<Response<?>> getPassTestPage(HttpServletRequest request, HttpServletResponse response,
 		ModelMap modelMap) {
@@ -314,6 +323,7 @@ public class PassController {
 		// return "pass_test";
 	}
 
+	@Operation(summary = "본인인증 성공", hidden = true)
 	@RequestMapping(value = "/success", method = {RequestMethod.GET, RequestMethod.POST})
 	public ResponseEntity<?> passSuccess(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		CPClient niceCheck = new CPClient();
@@ -412,6 +422,7 @@ public class PassController {
 
 	}
 
+	@Operation(summary = "본인인증 실패", hidden = true)
 	@RequestMapping(value = "/fail", method = {RequestMethod.GET, RequestMethod.POST})
 	public ResponseEntity<?> passFail(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		CPClient niceCheck = new CPClient();
