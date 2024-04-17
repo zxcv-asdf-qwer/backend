@@ -51,14 +51,4 @@ public class AdminMemoController {
 	) {
 		return ResponseEntity.ok(memoService.getMemoList(orderId));
 	}
-
-	@Operation(summary = "갯수 조회")
-	@GetMapping("/count/{orderId}")
-	public ResponseEntity<?> getMemoCount(
-		@PathVariable(name = "orderId") Long orderId
-	) {
-		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-			.data(Map.of("memoCount", memoService.getMemoCount(orderId)))
-			.build());
-	}
 }

@@ -10,5 +10,4 @@ import co.kr.compig.api.presentation.memo.response.MemoResponse;
 public interface MemoRepositoryCustom {
 	List<MemoResponse> getMemoList(Long orderId);
 
-	Long getMemoCount(Long orderId);
 }

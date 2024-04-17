@@ -44,7 +44,4 @@ public class MemoService {
 		return memoResponseList;
 	}
 
-	public Long getMemoCount(Long orderId) {
-		return memoRepositoryCustom.getMemoCount(orderId);
-	}
 }

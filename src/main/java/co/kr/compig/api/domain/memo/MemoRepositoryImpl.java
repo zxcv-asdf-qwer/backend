@@ -31,12 +31,4 @@ public class MemoRepositoryImpl implements MemoRepositoryCustom {
 		return query.fetch();
 	}
 
-	@Override
-	public Long getMemoCount(Long orderId) {
-		JPAQuery<Long> query = jpaQueryFactory
-			.select(memo.count())
-			.from(memo)
-			.where(memo.careOrder.id.eq(orderId));
-		return query.fetchOne();
-	}
 }
