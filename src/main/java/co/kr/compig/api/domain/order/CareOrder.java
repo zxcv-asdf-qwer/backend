@@ -13,13 +13,10 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import co.kr.compig.api.domain.apply.Apply;
-import co.kr.compig.global.code.CareOrderProcessType;
-import co.kr.compig.global.code.IsYn;
-import co.kr.compig.global.code.OrderStatus;
-import co.kr.compig.global.code.converter.CareOrderProcessTypeConverter;
-import co.kr.compig.global.code.converter.OrderStatusConverter;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.member.NoMember;
+import co.kr.compig.api.domain.memo.Memo;
+import co.kr.compig.api.domain.packing.Facking;
 import co.kr.compig.api.domain.packing.Packing;
 import co.kr.compig.api.domain.patient.OrderPatient;
 import co.kr.compig.api.domain.payment.Payment;
@@ -27,6 +24,11 @@ import co.kr.compig.api.presentation.apply.response.ApplyCareOrderResponse;
 import co.kr.compig.api.presentation.order.request.CareOrderUpdateRequest;
 import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
 import co.kr.compig.api.presentation.patient.response.OrderPatientDetailResponse;
+import co.kr.compig.global.code.CareOrderProcessType;
+import co.kr.compig.global.code.IsYn;
+import co.kr.compig.global.code.OrderStatus;
+import co.kr.compig.global.code.converter.CareOrderProcessTypeConverter;
+import co.kr.compig.global.code.converter.OrderStatusConverter;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -130,11 +132,20 @@ public class CareOrder {
 	private final Set<Packing> packages = new HashSet<>();
 
 	@Builder.Default
+	@OneToMany(mappedBy = "careOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference //연관관계 주인 반대 Entity 에 선언, 정상적으로 직렬화 수행
+	private final Set<Facking> fackages = new HashSet<>();
+
+	@Builder.Default
 	@OneToMany(
 		mappedBy = "careOrder", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonManagedReference //연관관계 주인 반대 Entity 에 선언, 정상적으로 직렬화 수행
 	private Set<Payment> payments = new HashSet<>();
 
+	@Builder.Default
+	@OneToMany(mappedBy = "careOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference //연관관계 주인 반대 Entity 에 선언, 정상적으로 직렬화 수행
+	private final Set<Memo> memos = new HashSet<>();
 	/* =================================================================
 	 * Relation method
 	   ================================================================= */
@@ -142,6 +153,11 @@ public class CareOrder {
 	public void addPacking(Packing packing) {
 		this.packages.add(packing);
 		packing.setCareOrder(this);
+	}
+
+	public void addFacking(Facking facking) {
+		this.fackages.add(facking);
+		facking.setCareOrder(this);
 	}
 
 	public void addPayment(Payment payment) {

@@ -629,22 +629,36 @@ create table if not exists no_member
     constraint uk01_no_member unique (user_nm, tel_no)
 );
 
-create sequence facking_seq start with 1 increment by 1;
-create table facking
+create sequence if not exists facking_seq start with 1 increment by 1;
+create table if not exists facking
 (
+    facking_id      bigint  not null,
     amount          integer not null,
     care_order_id   bigint  not null,
-    created_on      timestamp(6) default CURRENT_TIMESTAMP,
     end_date_time   timestamp(6),
-    facking_id      bigint  not null,
     settle_id       bigint  not null,
     start_date_time timestamp(6),
-    updated_on      timestamp(6) default CURRENT_TIMESTAMP,
-    created_by      varchar(50),
-    updated_by      varchar(50),
     period_type     varchar(255),
+    created_by      varchar(50),
+    created_on      timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by      varchar(50),
+    updated_on      timestamp(6) default CURRENT_TIMESTAMP,
     primary key (facking_id)
 );
+
+create sequence if not exists memo_seq start with 1 increment by 1;
+create table if not exists memo
+(
+    care_order_id bigint not null,
+    memo_id       bigint not null,
+    contents      TEXT,
+    created_by    varchar(50),
+    created_on    timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by    varchar(50),
+    updated_on    timestamp(6) default CURRENT_TIMESTAMP,
+    primary key (memo_id)
+);
+
 
 alter table if exists account
     add constraint fk01_account
@@ -769,3 +783,8 @@ alter table if exists facking
     add constraint fk02_facking
         foreign key (settle_id)
             references settle;
+
+alter table if exists memo
+    add constraint fk01_memo
+        foreign key (care_order_id)
+            references care_order;
