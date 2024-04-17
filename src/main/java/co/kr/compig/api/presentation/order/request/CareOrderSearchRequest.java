@@ -1,7 +1,7 @@
 package co.kr.compig.api.presentation.order.request;
 
-import co.kr.compig.api.domain.code.IsYn;
-import co.kr.compig.api.domain.code.OrderStatus;
+import co.kr.compig.global.code.IsYn;
+import co.kr.compig.global.code.OrderStatus;
 import co.kr.compig.global.dto.pagination.PageableRequest;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.AllArgsConstructor;

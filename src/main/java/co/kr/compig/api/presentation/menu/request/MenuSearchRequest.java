@@ -1,7 +1,7 @@
 package co.kr.compig.api.presentation.menu.request;
 
-import co.kr.compig.api.domain.code.MenuDivCode;
-import co.kr.compig.api.domain.code.MenuTypeCode;
+import co.kr.compig.global.code.MenuDivCode;
+import co.kr.compig.global.code.MenuTypeCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

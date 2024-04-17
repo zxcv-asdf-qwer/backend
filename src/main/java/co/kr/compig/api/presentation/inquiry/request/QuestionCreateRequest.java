@@ -2,7 +2,7 @@ package co.kr.compig.api.presentation.inquiry.request;
 
 import org.hibernate.validator.constraints.Length;
 
-import co.kr.compig.api.domain.code.QuestionType;
+import co.kr.compig.global.code.QuestionType;
 import co.kr.compig.api.domain.inquiry.Question;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

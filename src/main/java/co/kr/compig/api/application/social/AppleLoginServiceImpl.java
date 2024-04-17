@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import co.kr.compig.api.domain.code.MemberRegisterType;
+import co.kr.compig.global.code.MemberRegisterType;
 import co.kr.compig.api.infrastructure.auth.social.apple.model.AppleIdTokenPayload;
 import co.kr.compig.api.infrastructure.auth.social.apple.model.AppleSocialTokenResponse;
 import co.kr.compig.api.presentation.member.request.LeaveRequest;

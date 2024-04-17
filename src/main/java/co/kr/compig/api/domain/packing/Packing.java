@@ -1,6 +1,6 @@
 package co.kr.compig.api.domain.packing;
 
-import static co.kr.compig.api.domain.code.PeriodType.*;
+import static co.kr.compig.global.code.PeriodType.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -12,8 +12,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import co.kr.compig.api.domain.code.PeriodType;
-import co.kr.compig.api.domain.code.converter.PeriodTypeConverter;
+import co.kr.compig.global.code.PeriodType;
+import co.kr.compig.global.code.converter.PeriodTypeConverter;
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.domain.settle.Settle;
 import co.kr.compig.api.domain.wallet.Wallet;

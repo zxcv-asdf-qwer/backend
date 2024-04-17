@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
-import co.kr.compig.api.domain.code.UseYn;
+import co.kr.compig.global.code.UseYn;
 
 public interface MemberRepository extends JpaRepository<Member, String>,
 	QuerydslPredicateExecutor<Member> {

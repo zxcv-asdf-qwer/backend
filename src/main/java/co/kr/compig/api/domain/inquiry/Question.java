@@ -1,9 +1,9 @@
 package co.kr.compig.api.domain.inquiry;
 
-import co.kr.compig.api.domain.code.IsYn;
-import co.kr.compig.api.domain.code.QuestionType;
-import co.kr.compig.api.domain.code.UseYn;
-import co.kr.compig.api.domain.code.converter.QuestionTypeConverter;
+import co.kr.compig.global.code.IsYn;
+import co.kr.compig.global.code.QuestionType;
+import co.kr.compig.global.code.UseYn;
+import co.kr.compig.global.code.converter.QuestionTypeConverter;
 import co.kr.compig.api.presentation.inquiry.request.QuestionUpdateRequest;
 import co.kr.compig.api.presentation.inquiry.response.QuestionDetailResponse;
 import co.kr.compig.global.embedded.CreatedAndUpdated;

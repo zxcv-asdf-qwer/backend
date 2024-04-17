@@ -1,10 +1,10 @@
 package co.kr.compig.api.domain.file;
 
 import co.kr.compig.api.domain.board.Board;
-import co.kr.compig.api.domain.code.FileType;
-import co.kr.compig.api.domain.code.IsYn;
-import co.kr.compig.api.domain.code.UseYn;
-import co.kr.compig.api.domain.code.converter.FileTypeConverter;
+import co.kr.compig.global.code.FileType;
+import co.kr.compig.global.code.IsYn;
+import co.kr.compig.global.code.UseYn;
+import co.kr.compig.global.code.converter.FileTypeConverter;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;

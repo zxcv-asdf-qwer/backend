@@ -12,7 +12,7 @@ import org.springframework.web.client.UnknownHttpStatusCodeException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import co.kr.compig.api.domain.code.MemberRegisterType;
+import co.kr.compig.global.code.MemberRegisterType;
 import co.kr.compig.api.infrastructure.auth.social.kakao.KakaoAuthApi;
 import co.kr.compig.api.infrastructure.auth.social.kakao.KakaoUserApi;
 import co.kr.compig.api.infrastructure.auth.social.kakao.model.KaKaoLoginResponse;

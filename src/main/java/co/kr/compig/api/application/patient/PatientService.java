@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import co.kr.compig.api.application.member.MemberService;
 import co.kr.compig.api.application.member.NoMemberService;
-import co.kr.compig.api.domain.code.MemberType;
+import co.kr.compig.global.code.MemberType;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.member.NoMember;
 import co.kr.compig.api.domain.patient.Patient;

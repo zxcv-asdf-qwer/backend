@@ -2,8 +2,8 @@ package co.kr.compig.api.domain.apply;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import co.kr.compig.api.domain.code.ApplyStatus;
-import co.kr.compig.api.domain.code.converter.ApplyStatusConverter;
+import co.kr.compig.global.code.ApplyStatus;
+import co.kr.compig.global.code.converter.ApplyStatusConverter;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.presentation.apply.request.ApplyUpdateRequest;

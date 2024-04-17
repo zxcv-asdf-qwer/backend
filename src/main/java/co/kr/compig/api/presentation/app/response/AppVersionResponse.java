@@ -1,7 +1,7 @@
 package co.kr.compig.api.presentation.app.response;
 
-import co.kr.compig.api.domain.code.AppOsType;
-import co.kr.compig.api.domain.code.IsYn;
+import co.kr.compig.global.code.AppOsType;
+import co.kr.compig.global.code.IsYn;
 import co.kr.compig.global.dto.BaseAudit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

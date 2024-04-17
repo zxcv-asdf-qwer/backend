@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.patient.PatientService;
-import co.kr.compig.api.domain.code.MemberType;
+import co.kr.compig.global.code.MemberType;
 import co.kr.compig.api.presentation.patient.request.AdminPatientCreateRequest;
 import co.kr.compig.api.presentation.patient.request.PatientUpdateRequest;
 import co.kr.compig.api.presentation.patient.response.PatientDetailResponse;

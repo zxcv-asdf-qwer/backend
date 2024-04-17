@@ -2,8 +2,8 @@ package co.kr.compig.api.domain.system;
 
 import java.time.LocalDateTime;
 
-import co.kr.compig.api.domain.code.SystemServiceType;
-import co.kr.compig.api.domain.code.converter.SystemServiceTypeConverter;
+import co.kr.compig.global.code.SystemServiceType;
+import co.kr.compig.global.code.converter.SystemServiceTypeConverter;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;

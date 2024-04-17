@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import co.kr.compig.api.domain.code.AgentCode;
+import co.kr.compig.global.code.AgentCode;
 import jakarta.servlet.http.HttpServletRequest;
 
 public class WebUtil {

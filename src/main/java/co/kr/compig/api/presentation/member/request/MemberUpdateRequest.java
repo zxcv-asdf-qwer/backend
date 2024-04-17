@@ -4,11 +4,11 @@ import java.util.List;
 
 import org.hibernate.validator.constraints.Length;
 
-import co.kr.compig.api.domain.code.CareerCode;
-import co.kr.compig.api.domain.code.DomesticForeignCode;
-import co.kr.compig.api.domain.code.GenderCode;
-import co.kr.compig.api.domain.code.UseYn;
-import co.kr.compig.api.domain.code.UserType;
+import co.kr.compig.global.code.CareerCode;
+import co.kr.compig.global.code.DomesticForeignCode;
+import co.kr.compig.global.code.GenderCode;
+import co.kr.compig.global.code.UseYn;
+import co.kr.compig.global.code.UserType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;

@@ -22,7 +22,7 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
-import co.kr.compig.api.domain.code.UserType;
+import co.kr.compig.global.code.UserType;
 import co.kr.compig.api.presentation.member.request.MemberSearchRequest;
 import co.kr.compig.api.presentation.member.response.GuardianMemberResponse;
 import co.kr.compig.api.presentation.member.response.MemberPageResponse;

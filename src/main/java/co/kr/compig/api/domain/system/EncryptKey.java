@@ -1,9 +1,9 @@
 package co.kr.compig.api.domain.system;
 
-import co.kr.compig.api.domain.code.EncryptTarget;
-import co.kr.compig.api.domain.code.EncryptType;
-import co.kr.compig.api.domain.code.converter.EncryptTargetConverter;
-import co.kr.compig.api.domain.code.converter.EncryptTypeConverter;
+import co.kr.compig.global.code.EncryptTarget;
+import co.kr.compig.global.code.EncryptType;
+import co.kr.compig.global.code.converter.EncryptTargetConverter;
+import co.kr.compig.global.code.converter.EncryptTypeConverter;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;

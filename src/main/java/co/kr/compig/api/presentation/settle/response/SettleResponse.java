@@ -1,6 +1,6 @@
 package co.kr.compig.api.presentation.settle.response;
 
-import co.kr.compig.api.domain.code.UseYn;
+import co.kr.compig.global.code.UseYn;
 import co.kr.compig.global.dto.BaseAudit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

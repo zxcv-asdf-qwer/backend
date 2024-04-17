@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
 
-import co.kr.compig.api.domain.code.SystemServiceType;
+import co.kr.compig.global.code.SystemServiceType;
 import co.kr.compig.api.domain.system.AccessKey;
 import co.kr.compig.api.domain.system.AccessKeyRepository;
 import co.kr.compig.api.infrastructure.sms.BizPpurioApi;

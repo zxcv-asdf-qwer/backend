@@ -1,8 +1,8 @@
 package co.kr.compig.api.presentation.board.response;
 
-import co.kr.compig.api.domain.code.FileType;
-import co.kr.compig.api.domain.code.IsYn;
-import co.kr.compig.api.domain.code.UseYn;
+import co.kr.compig.global.code.FileType;
+import co.kr.compig.global.code.IsYn;
+import co.kr.compig.global.code.UseYn;
 import co.kr.compig.global.dto.BaseAudit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

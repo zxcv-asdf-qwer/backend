@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import co.kr.compig.api.domain.app.AppVersion;
 import co.kr.compig.api.domain.app.AppVersionRepository;
 import co.kr.compig.api.domain.app.AppVersionRepositoryCustom;
-import co.kr.compig.api.domain.code.AppOsType;
+import co.kr.compig.global.code.AppOsType;
 import co.kr.compig.api.presentation.app.request.AppVersionCreateRequest;
 import co.kr.compig.api.presentation.app.request.AppVersionUpdateRequest;
 import co.kr.compig.api.presentation.app.response.AppVersionResponse;

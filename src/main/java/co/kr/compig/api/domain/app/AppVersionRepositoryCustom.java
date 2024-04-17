@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import co.kr.compig.api.domain.code.AppOsType;
+import co.kr.compig.global.code.AppOsType;
 import co.kr.compig.api.presentation.app.response.AppVersionResponse;
 
 @Repository

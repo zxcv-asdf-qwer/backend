@@ -1,9 +1,9 @@
 package co.kr.compig.api.presentation.member.response;
 
-import co.kr.compig.api.domain.code.GenderCode;
-import co.kr.compig.api.domain.code.MemberRegisterType;
-import co.kr.compig.api.domain.code.UseYn;
-import co.kr.compig.api.domain.code.UserType;
+import co.kr.compig.global.code.GenderCode;
+import co.kr.compig.global.code.MemberRegisterType;
+import co.kr.compig.global.code.UseYn;
+import co.kr.compig.global.code.UserType;
 import co.kr.compig.global.dto.BaseAudit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -2,7 +2,7 @@ package co.kr.compig.api.presentation.member.request;
 
 import java.util.List;
 
-import co.kr.compig.api.domain.code.DeptCode;
+import co.kr.compig.global.code.DeptCode;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

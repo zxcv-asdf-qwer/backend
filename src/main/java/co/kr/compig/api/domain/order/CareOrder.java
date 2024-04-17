@@ -1,6 +1,6 @@
 package co.kr.compig.api.domain.order;
 
-import static co.kr.compig.api.domain.code.OrderStatus.*;
+import static co.kr.compig.global.code.OrderStatus.*;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -13,11 +13,11 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import co.kr.compig.api.domain.apply.Apply;
-import co.kr.compig.api.domain.code.CareOrderProcessType;
-import co.kr.compig.api.domain.code.IsYn;
-import co.kr.compig.api.domain.code.OrderStatus;
-import co.kr.compig.api.domain.code.converter.CareOrderProcessTypeConverter;
-import co.kr.compig.api.domain.code.converter.OrderStatusConverter;
+import co.kr.compig.global.code.CareOrderProcessType;
+import co.kr.compig.global.code.IsYn;
+import co.kr.compig.global.code.OrderStatus;
+import co.kr.compig.global.code.converter.CareOrderProcessTypeConverter;
+import co.kr.compig.global.code.converter.OrderStatusConverter;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.member.NoMember;
 import co.kr.compig.api.domain.packing.Packing;

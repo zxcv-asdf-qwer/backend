@@ -1,6 +1,6 @@
 package co.kr.compig.api.presentation.terms.request;
 
-import co.kr.compig.api.domain.code.TermsType;
+import co.kr.compig.global.code.TermsType;
 import co.kr.compig.api.domain.terms.Terms;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

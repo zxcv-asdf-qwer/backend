@@ -18,7 +18,7 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import co.kr.compig.api.domain.code.MemberRegisterType;
+import co.kr.compig.global.code.MemberRegisterType;
 import co.kr.compig.api.infrastructure.auth.social.google.GoogleAuthApi;
 import co.kr.compig.api.infrastructure.auth.social.google.model.GoogleLoginResponse;
 import co.kr.compig.api.infrastructure.auth.social.google.model.GoogleProperties;

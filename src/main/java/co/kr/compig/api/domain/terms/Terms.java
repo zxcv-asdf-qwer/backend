@@ -1,7 +1,7 @@
 package co.kr.compig.api.domain.terms;
 
-import co.kr.compig.api.domain.code.TermsType;
-import co.kr.compig.api.domain.code.converter.TermsTypeConverter;
+import co.kr.compig.global.code.TermsType;
+import co.kr.compig.global.code.converter.TermsTypeConverter;
 import co.kr.compig.api.presentation.board.request.TermsUpdateRequest;
 import co.kr.compig.api.presentation.terms.response.TermsDetailResponse;
 import co.kr.compig.global.embedded.CreatedAndUpdated;

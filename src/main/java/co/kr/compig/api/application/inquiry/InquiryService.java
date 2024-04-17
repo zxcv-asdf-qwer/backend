@@ -6,7 +6,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import co.kr.compig.api.domain.code.IsYn;
+import co.kr.compig.global.code.IsYn;
 import co.kr.compig.api.domain.inquiry.Answer;
 import co.kr.compig.api.domain.inquiry.AnswerRepository;
 import co.kr.compig.api.domain.inquiry.Question;

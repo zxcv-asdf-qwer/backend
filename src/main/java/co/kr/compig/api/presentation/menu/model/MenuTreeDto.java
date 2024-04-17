@@ -2,9 +2,9 @@ package co.kr.compig.api.presentation.menu.model;
 
 import java.io.Serializable;
 
-import co.kr.compig.api.domain.code.MenuDivCode;
-import co.kr.compig.api.domain.code.MenuTypeCode;
-import co.kr.compig.api.domain.code.UseYn;
+import co.kr.compig.global.code.MenuDivCode;
+import co.kr.compig.global.code.MenuTypeCode;
+import co.kr.compig.global.code.UseYn;
 import lombok.Data;
 
 @Data

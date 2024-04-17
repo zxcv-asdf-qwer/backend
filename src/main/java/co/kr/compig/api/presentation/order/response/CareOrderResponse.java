@@ -1,7 +1,7 @@
 package co.kr.compig.api.presentation.order.response;
 
-import co.kr.compig.api.domain.code.LocationType;
-import co.kr.compig.api.domain.code.UserType;
+import co.kr.compig.global.code.LocationType;
+import co.kr.compig.global.code.UserType;
 import co.kr.compig.global.dto.BaseAudit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

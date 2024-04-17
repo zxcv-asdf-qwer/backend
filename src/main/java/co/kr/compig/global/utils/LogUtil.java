@@ -3,7 +3,7 @@ package co.kr.compig.global.utils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import co.kr.compig.api.domain.code.AgentCode;
+import co.kr.compig.global.code.AgentCode;
 import jakarta.servlet.http.HttpServletRequest;
 
 /**

@@ -1,6 +1,6 @@
 package co.kr.compig.global.config;
 
-import static co.kr.compig.api.domain.code.UserType.*;
+import static co.kr.compig.global.code.UserType.*;
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.*;
 
 import java.util.ArrayList;

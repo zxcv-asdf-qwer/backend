@@ -5,7 +5,7 @@ import java.util.Base64;
 import java.util.List;
 
 import co.kr.compig.api.domain.account.Account;
-import co.kr.compig.api.domain.code.BankCode;
+import co.kr.compig.global.code.BankCode;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.presentation.board.response.SystemFileResponse;
 import jakarta.validation.constraints.NotBlank;

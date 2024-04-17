@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import co.kr.compig.api.application.member.MemberService;
 import co.kr.compig.api.domain.account.Account;
 import co.kr.compig.api.domain.account.AccountRepository;
-import co.kr.compig.api.domain.code.EncryptTarget;
+import co.kr.compig.global.code.EncryptTarget;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.system.EncryptKey;
 import co.kr.compig.api.domain.system.EncryptKeyRepository;

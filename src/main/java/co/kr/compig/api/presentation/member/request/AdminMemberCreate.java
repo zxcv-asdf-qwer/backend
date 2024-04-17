@@ -2,10 +2,10 @@ package co.kr.compig.api.presentation.member.request;
 
 import org.hibernate.validator.constraints.Length;
 
-import co.kr.compig.api.domain.code.DeptCode;
-import co.kr.compig.api.domain.code.MemberRegisterType;
-import co.kr.compig.api.domain.code.UseYn;
-import co.kr.compig.api.domain.code.UserType;
+import co.kr.compig.global.code.DeptCode;
+import co.kr.compig.global.code.MemberRegisterType;
+import co.kr.compig.global.code.UseYn;
+import co.kr.compig.global.code.UserType;
 import co.kr.compig.api.domain.member.Member;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.constraints.NotBlank;

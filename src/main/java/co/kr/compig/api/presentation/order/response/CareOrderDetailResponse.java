@@ -3,9 +3,9 @@ package co.kr.compig.api.presentation.order.response;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-import co.kr.compig.api.domain.code.CareOrderProcessType;
-import co.kr.compig.api.domain.code.IsYn;
-import co.kr.compig.api.domain.code.OrderStatus;
+import co.kr.compig.global.code.CareOrderProcessType;
+import co.kr.compig.global.code.IsYn;
+import co.kr.compig.global.code.OrderStatus;
 import co.kr.compig.api.presentation.apply.response.ApplyCareOrderResponse;
 import co.kr.compig.api.presentation.patient.response.OrderPatientDetailResponse;
 import lombok.AllArgsConstructor;

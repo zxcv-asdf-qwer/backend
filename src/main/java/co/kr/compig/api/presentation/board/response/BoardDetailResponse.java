@@ -3,8 +3,8 @@ package co.kr.compig.api.presentation.board.response;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import co.kr.compig.api.domain.code.BoardType;
-import co.kr.compig.api.domain.code.ContentsType;
+import co.kr.compig.global.code.BoardType;
+import co.kr.compig.global.code.ContentsType;
 import co.kr.compig.global.dto.BaseAudit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

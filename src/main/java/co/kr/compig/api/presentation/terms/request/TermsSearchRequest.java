@@ -2,7 +2,7 @@ package co.kr.compig.api.presentation.terms.request;
 
 import java.time.LocalDate;
 
-import co.kr.compig.api.domain.code.TermsType;
+import co.kr.compig.global.code.TermsType;
 import co.kr.compig.global.dto.pagination.PageableRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

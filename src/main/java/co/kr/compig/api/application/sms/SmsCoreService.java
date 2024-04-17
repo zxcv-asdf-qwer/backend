@@ -6,7 +6,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import co.kr.compig.api.application.system.AccessKeyService;
-import co.kr.compig.api.domain.code.SystemServiceType;
+import co.kr.compig.global.code.SystemServiceType;
 import co.kr.compig.api.infrastructure.sms.BizPpurioApi;
 import co.kr.compig.api.infrastructure.sms.model.SmsApiProperties;
 import co.kr.compig.api.infrastructure.sms.model.SmsPayload;

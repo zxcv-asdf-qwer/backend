@@ -21,10 +21,10 @@ import com.google.gson.GsonBuilder;
 
 import co.kr.compig.api.application.social.LoginServiceImpl;
 import co.kr.compig.api.application.social.SocialLoginService;
-import co.kr.compig.api.domain.code.ApplicationType;
-import co.kr.compig.api.domain.code.MemberRegisterType;
-import co.kr.compig.api.domain.code.UseYn;
-import co.kr.compig.api.domain.code.UserType;
+import co.kr.compig.global.code.ApplicationType;
+import co.kr.compig.global.code.MemberRegisterType;
+import co.kr.compig.global.code.UseYn;
+import co.kr.compig.global.code.UserType;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.member.MemberGroup;
 import co.kr.compig.api.domain.member.MemberGroupRepository;

@@ -1,6 +1,6 @@
 package co.kr.compig.api.presentation.settle.request;
 
-import co.kr.compig.api.domain.code.UseYn;
+import co.kr.compig.global.code.UseYn;
 import co.kr.compig.api.domain.settle.Settle;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

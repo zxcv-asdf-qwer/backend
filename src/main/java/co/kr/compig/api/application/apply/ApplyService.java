@@ -14,7 +14,7 @@ import co.kr.compig.api.application.order.CareOrderService;
 import co.kr.compig.api.domain.apply.Apply;
 import co.kr.compig.api.domain.apply.ApplyRepository;
 import co.kr.compig.api.domain.apply.ApplyRepositoryCustom;
-import co.kr.compig.api.domain.code.ApplyStatus;
+import co.kr.compig.global.code.ApplyStatus;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.presentation.apply.request.ApplyCreateRequest;

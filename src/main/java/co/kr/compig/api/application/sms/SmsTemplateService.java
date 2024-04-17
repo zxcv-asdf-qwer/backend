@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import co.kr.compig.api.domain.code.SmsTemplateType;
+import co.kr.compig.global.code.SmsTemplateType;
 import co.kr.compig.api.domain.sms.SmsTemplate;
 import co.kr.compig.api.domain.sms.SmsTemplateRepository;
 import co.kr.compig.api.domain.sms.SmsTemplateRepositoryCustom;

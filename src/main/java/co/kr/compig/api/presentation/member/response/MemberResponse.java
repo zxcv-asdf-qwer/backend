@@ -4,14 +4,14 @@ import java.util.Set;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import co.kr.compig.api.domain.code.CareerCode;
-import co.kr.compig.api.domain.code.DeptCode;
-import co.kr.compig.api.domain.code.DomesticForeignCode;
-import co.kr.compig.api.domain.code.GenderCode;
-import co.kr.compig.api.domain.code.IsYn;
-import co.kr.compig.api.domain.code.MemberRegisterType;
-import co.kr.compig.api.domain.code.UseYn;
-import co.kr.compig.api.domain.code.UserType;
+import co.kr.compig.global.code.CareerCode;
+import co.kr.compig.global.code.DeptCode;
+import co.kr.compig.global.code.DomesticForeignCode;
+import co.kr.compig.global.code.GenderCode;
+import co.kr.compig.global.code.IsYn;
+import co.kr.compig.global.code.MemberRegisterType;
+import co.kr.compig.global.code.UseYn;
+import co.kr.compig.global.code.UserType;
 import co.kr.compig.api.presentation.member.model.GroupDto;
 import co.kr.compig.global.dto.BaseAudit;
 import lombok.AllArgsConstructor;

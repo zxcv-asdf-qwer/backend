@@ -6,9 +6,9 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import co.kr.compig.api.domain.board.Board;
-import co.kr.compig.api.domain.code.BoardType;
-import co.kr.compig.api.domain.code.ContentsType;
-import co.kr.compig.api.domain.code.IsYn;
+import co.kr.compig.global.code.BoardType;
+import co.kr.compig.global.code.ContentsType;
+import co.kr.compig.global.code.IsYn;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

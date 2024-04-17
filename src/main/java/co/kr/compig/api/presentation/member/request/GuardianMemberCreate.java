@@ -4,9 +4,9 @@ import java.time.LocalDate;
 
 import org.hibernate.validator.constraints.Length;
 
-import co.kr.compig.api.domain.code.MemberRegisterType;
-import co.kr.compig.api.domain.code.UseYn;
-import co.kr.compig.api.domain.code.UserType;
+import co.kr.compig.global.code.MemberRegisterType;
+import co.kr.compig.global.code.UseYn;
+import co.kr.compig.global.code.UserType;
 import co.kr.compig.api.domain.member.Member;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

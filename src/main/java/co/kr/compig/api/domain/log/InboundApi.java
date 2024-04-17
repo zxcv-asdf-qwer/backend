@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.ColumnDefault;
 
-import co.kr.compig.api.domain.code.AgentCode;
-import co.kr.compig.api.domain.code.LogType;
+import co.kr.compig.global.code.AgentCode;
+import co.kr.compig.global.code.LogType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

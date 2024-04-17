@@ -6,8 +6,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import co.kr.compig.api.domain.code.PeriodType;
-import co.kr.compig.api.domain.code.converter.PeriodTypeConverter;
+import co.kr.compig.global.code.PeriodType;
+import co.kr.compig.global.code.converter.PeriodTypeConverter;
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.domain.settle.Settle;
 import co.kr.compig.api.presentation.packing.request.PackingUpdateRequest;

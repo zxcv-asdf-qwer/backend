@@ -28,7 +28,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
-import co.kr.compig.api.domain.code.BaseEnumCode;
+import co.kr.compig.global.code.BaseEnumCode;
 
 public class CustomObjectMapper {
 

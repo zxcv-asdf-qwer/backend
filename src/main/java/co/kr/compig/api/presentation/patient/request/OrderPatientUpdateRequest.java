@@ -3,11 +3,11 @@ package co.kr.compig.api.presentation.patient.request;
 import java.time.LocalDate;
 import java.util.List;
 
-import co.kr.compig.api.domain.code.DiseaseCode;
-import co.kr.compig.api.domain.code.GenderCode;
-import co.kr.compig.api.domain.code.IsYn;
-import co.kr.compig.api.domain.code.LocationType;
-import co.kr.compig.api.domain.code.ToiletType;
+import co.kr.compig.global.code.DiseaseCode;
+import co.kr.compig.global.code.GenderCode;
+import co.kr.compig.global.code.IsYn;
+import co.kr.compig.global.code.LocationType;
+import co.kr.compig.global.code.ToiletType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

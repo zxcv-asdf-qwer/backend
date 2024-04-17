@@ -2,7 +2,7 @@ package co.kr.compig.api.presentation.member.response;
 
 import java.time.LocalDate;
 
-import co.kr.compig.api.domain.code.MemberRegisterType;
+import co.kr.compig.global.code.MemberRegisterType;
 import co.kr.compig.global.dto.BaseAudit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
