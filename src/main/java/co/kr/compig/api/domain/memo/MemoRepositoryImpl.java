@@ -1,5 +1,6 @@
 package co.kr.compig.api.domain.memo;
 
+import static co.kr.compig.api.domain.member.QMember.*;
 import static co.kr.compig.api.domain.memo.QMemo.*;
 
 import java.util.List;
@@ -24,9 +25,10 @@ public class MemoRepositoryImpl implements MemoRepositoryCustom {
 			.select(Projections.constructor(MemoResponse.class,
 				memo.id,
 				memo.contents,
-				memo.createdAndModified.createdBy,
+				member.userNm,
 				memo.createdAndModified.createdOn
 			))
+			.join(member).on(memo.createdAndModified.createdBy.eq(member.id))
 			.orderBy(memo.createdAndModified.createdOn.desc());
 		return query.fetch();
 	}

@@ -35,13 +35,7 @@ public class MemoService {
 	}
 
 	public List<MemoResponse> getMemoList(Long orderId) {
-		List<MemoResponse> memoResponseList = memoRepositoryCustom.getMemoList(orderId);
-		memoResponseList.forEach(memo -> {
-			String userNm = memberService.getMemberById(memo.getCreatedBy()).getUserNm();
-			memo.setCreatedBy(userNm);
-		});
-
-		return memoResponseList;
+		return memoRepositoryCustom.getMemoList(orderId);
 	}
 
 }
