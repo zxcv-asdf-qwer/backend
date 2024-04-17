@@ -659,6 +659,34 @@ create table if not exists memo
     primary key (memo_id)
 );
 
+create sequence if not exists review_seq start with 1 increment by 1;
+create table if not exists review
+(
+    review_id     bigint       not null,
+    care_order_id bigint       not null,
+    member_id     varchar(255) not null,
+    point         integer      not null,
+    publish       char(1),
+    contents      varchar(255),
+    created_by    varchar(50),
+    created_on    timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by    varchar(50),
+    updated_on    timestamp(6) default CURRENT_TIMESTAMP,
+    primary key (review_id)
+);
+
+create sequence if not exists report_seq start with 1 increment by 1;
+create table if not exists report
+(
+    report_id  bigint not null,
+    review_id  bigint not null,
+    contents   varchar(255),
+    created_by varchar(50),
+    created_on timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by varchar(50),
+    updated_on timestamp(6) default CURRENT_TIMESTAMP,
+    primary key (report_id)
+);
 
 alter table if exists account
     add constraint fk01_account
@@ -782,9 +810,24 @@ alter table if exists facking
 alter table if exists facking
     add constraint fk02_facking
         foreign key (settle_id)
-            references settle;
-
+            references settle
+;
 alter table if exists memo
     add constraint fk01_memo
         foreign key (care_order_id)
-            references care_order;
+            references care_order
+;
+alter table if exists report
+    add constraint fk01_report
+        foreign key (review_id)
+            references review
+;
+alter table if exists review
+    add constraint fk01_review
+        foreign key (care_order_id)
+            references care_order
+;
+alter table if exists review
+    add constraint fk02_review
+        foreign key (member_id)
+            references member;
