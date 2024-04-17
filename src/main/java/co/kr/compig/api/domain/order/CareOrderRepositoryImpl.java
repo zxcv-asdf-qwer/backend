@@ -42,7 +42,8 @@ public class CareOrderRepositoryImpl implements CareOrderRepositoryCustom {
 				careOrder.member.userNm,
 				careOrder.member.telNo,
 				careOrder.orderPatient.locationType,
-				careOrder.orderPatient.address1
+				careOrder.orderPatient.address1,
+				careOrder.createdAndModified.createdOn
 			));
 
 		applySorting(query, pageable);

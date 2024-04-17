@@ -20,6 +20,7 @@ import co.kr.compig.api.application.order.CareOrderService;
 import co.kr.compig.api.presentation.order.request.CareOrderCreateRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderSearchRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderUpdateRequest;
+import co.kr.compig.api.presentation.order.request.FamilyCareOrderCreateRequest;
 import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
 import co.kr.compig.api.presentation.order.response.CareOrderResponse;
 import co.kr.compig.global.dto.Response;
@@ -41,13 +42,23 @@ public class GuardianCareOrderController {
 
 	private final CareOrderService careOrderService;
 
-	@Operation(summary = "생성하기")
+	@Operation(summary = "일반 간병공고 생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createCareOrder(
-		@ParameterObject @ModelAttribute @Valid CareOrderCreateRequest careOrderCreateRequest
+		@ParameterObject @RequestBody @Valid CareOrderCreateRequest careOrderCreateRequest
 	) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("careOrderId", careOrderService.createCareOrderGuardian(careOrderCreateRequest)))
+			.build());
+	}
+
+	@Operation(summary = "가족 간병공고 생성하기")
+	@PostMapping("/family")
+	public ResponseEntity<Response<?>> createFamilyCareOrder(
+		@ParameterObject @RequestBody @Valid FamilyCareOrderCreateRequest familyCareOrderCreateRequest
+	) {
+		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
+			.data(Map.of("careOrderId", careOrderService.createFamilyCareOrderGuardian(familyCareOrderCreateRequest)))
 			.build());
 	}
 

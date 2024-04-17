@@ -4,7 +4,8 @@ import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import co.kr.compig.global.embedded.Audit;
+import co.kr.compig.global.embedded.Created;
+import co.kr.compig.global.embedded.CreatedAndUpdated;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,12 +28,19 @@ public class BaseAudit {
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private LocalDateTime updatedOn; // 수정일시
 
-	public void setCreatedAndUpdated(Audit audit) {
-		if (audit != null) {
-			this.createdBy = audit.getCreatedBy();
-			this.createdOn = audit.getCreatedAt();
-			this.updatedBy = audit.getUpdatedBy();
-			this.updatedOn = audit.getUpdatedAt();
+	public void setCreatedAndUpdated(CreatedAndUpdated createdAndUpdated) {
+		if (createdAndUpdated != null) {
+			this.createdBy = createdAndUpdated.getCreatedBy();
+			this.createdOn = createdAndUpdated.getCreatedOn();
+			this.updatedBy = createdAndUpdated.getUpdatedBy();
+			this.updatedOn = createdAndUpdated.getUpdatedOn();
+		}
+	}
+
+	public void setCreated(Created created) {
+		if (created != null) {
+			this.createdBy = created.getCreatedBy();
+			this.createdOn = created.getCreatedOn();
 		}
 	}
 }

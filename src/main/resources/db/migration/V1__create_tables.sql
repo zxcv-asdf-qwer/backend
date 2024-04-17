@@ -633,11 +633,16 @@ create sequence if not exists facking_seq start with 1 increment by 1;
 create table if not exists facking
 (
     facking_id      bigint  not null,
-    amount          integer not null,
     care_order_id   bigint  not null,
-    end_date_time   timestamp(6),
     settle_id       bigint  not null,
+    amount          integer not null,
     start_date_time timestamp(6),
+    end_date_time   timestamp(6),
+    partner_nm      varchar(100),
+    partner_tel_no  varchar(100),
+    address_cd      varchar(10),
+    address1        varchar(200),
+    address2        varchar(200),
     period_type     varchar(255),
     created_by      varchar(50),
     created_on      timestamp(6) default CURRENT_TIMESTAMP,

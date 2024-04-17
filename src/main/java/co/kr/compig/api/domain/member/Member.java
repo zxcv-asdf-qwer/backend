@@ -20,17 +20,6 @@ import org.keycloak.representations.idm.UserRepresentation;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import co.kr.compig.api.domain.account.Account;
-import co.kr.compig.global.code.CareerCode;
-import co.kr.compig.global.code.DeptCode;
-import co.kr.compig.global.code.DomesticForeignCode;
-import co.kr.compig.global.code.GenderCode;
-import co.kr.compig.global.code.IsYn;
-import co.kr.compig.global.code.MemberRegisterType;
-import co.kr.compig.global.code.OrderStatus;
-import co.kr.compig.global.code.UseYn;
-import co.kr.compig.global.code.UserType;
-import co.kr.compig.global.code.converter.DeptCodeConverter;
-import co.kr.compig.global.code.converter.UserTypeConverter;
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.domain.patient.OrderPatient;
 import co.kr.compig.api.domain.patient.Patient;
@@ -45,6 +34,17 @@ import co.kr.compig.api.presentation.member.response.MemberResponse;
 import co.kr.compig.api.presentation.member.response.PartnerMemberResponse;
 import co.kr.compig.api.presentation.member.response.UserMainSearchResponse;
 import co.kr.compig.api.presentation.pass.request.PassSaveRequest;
+import co.kr.compig.global.code.CareerCode;
+import co.kr.compig.global.code.DeptCode;
+import co.kr.compig.global.code.DomesticForeignCode;
+import co.kr.compig.global.code.GenderCode;
+import co.kr.compig.global.code.IsYn;
+import co.kr.compig.global.code.MemberRegisterType;
+import co.kr.compig.global.code.OrderStatus;
+import co.kr.compig.global.code.UseYn;
+import co.kr.compig.global.code.UserType;
+import co.kr.compig.global.code.converter.DeptCodeConverter;
+import co.kr.compig.global.code.converter.UserTypeConverter;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import co.kr.compig.global.error.exception.BizException;
 import co.kr.compig.global.error.exception.KeyCloakRequestException;
@@ -419,7 +419,7 @@ public class Member {
 
 		memberResponse.setGroups(
 			this.groups.stream().map(MemberGroup::converterDto).collect(Collectors.toSet()));
-
+		memberResponse.setCreatedAndUpdated(this.createdAndModified);
 		return memberResponse;
 	}
 

@@ -13,23 +13,26 @@ import co.kr.compig.api.application.member.MemberService;
 import co.kr.compig.api.application.member.NoMemberService;
 import co.kr.compig.api.application.patient.OrderPatientService;
 import co.kr.compig.api.application.settle.SettleService;
-import co.kr.compig.global.code.MemberType;
-import co.kr.compig.global.code.OrderStatus;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.member.NoMember;
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.domain.order.CareOrderRepository;
 import co.kr.compig.api.domain.order.CareOrderRepositoryCustom;
+import co.kr.compig.api.domain.packing.Facking;
 import co.kr.compig.api.domain.packing.Packing;
 import co.kr.compig.api.domain.patient.OrderPatient;
 import co.kr.compig.api.domain.patient.Patient;
+import co.kr.compig.api.domain.payment.Payment;
 import co.kr.compig.api.domain.settle.Settle;
 import co.kr.compig.api.presentation.order.request.AdminCareOrderCreateRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderCreateRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderSearchRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderUpdateRequest;
+import co.kr.compig.api.presentation.order.request.FamilyCareOrderCreateRequest;
 import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
 import co.kr.compig.api.presentation.order.response.CareOrderResponse;
+import co.kr.compig.global.code.MemberType;
+import co.kr.compig.global.code.OrderStatus;
 import co.kr.compig.global.dto.pagination.PageResponse;
 import co.kr.compig.global.error.exception.BizException;
 import co.kr.compig.global.error.exception.NotExistDataException;
@@ -66,7 +69,6 @@ public class CareOrderService {
 			CareOrder careOrder = careOrderRepository.save(
 				adminCareOrderCreateRequest.converterEntity(member, orderPatient));
 			Settle recentSettle = settleService.getRecentSettle();
-			// int totalPrice = 0;
 			// 종료 날짜(2024-04-17 10:00:00) - 시작 날짜(2024-04-12 10:00:00)
 			// 시작 날짜부터 종료 날짜까지 5일 Packing 객체 생성
 			long daysBetween = ChronoUnit.DAYS.between(careOrder.getStartDateTime(), careOrder.getEndDateTime());
@@ -82,12 +84,7 @@ public class CareOrderService {
 					.endDateTime(endDateTime)
 					.build();
 				careOrder.addPacking(build);
-				// totalPrice += build.calculatePaymentPriceOneDay();
 			}
-			// //TODO 결제pg요청 프로세스
-			// careOrder.addPayment(Payment.builder()
-			// 	.price(totalPrice)//보호자 수수료 적용한 금액(보호자가 지불해야 하는 금액)(간병일 전체)
-			// 	.build());
 			return careOrder.getId();
 		} else {
 			NoMember noMember = noMemberService.getNoMemberById(adminCareOrderCreateRequest.getMemberId());
@@ -104,7 +101,6 @@ public class CareOrderService {
 			CareOrder careOrder = careOrderRepository.save(
 				adminCareOrderCreateRequest.converterEntity(noMember, orderPatient));
 			Settle recentSettle = settleService.getRecentSettle();
-			// int totalPrice = 0;
 			// 종료 날짜(2024-04-17 10:00:00) - 시작 날짜(2024-04-12 10:00:00)
 			// 시작 날짜부터 종료 날짜까지 5일 Packing 객체 생성
 			long daysBetween = ChronoUnit.DAYS.between(careOrder.getStartDateTime(), careOrder.getEndDateTime());
@@ -120,12 +116,7 @@ public class CareOrderService {
 					.endDateTime(endDateTime)
 					.build();
 				careOrder.addPacking(build);
-				// totalPrice += build.calculatePaymentPriceOneDay();
 			}
-			// //TODO 결제pg요청 프로세스
-			// careOrder.addPayment(Payment.builder()
-			// 	.price(totalPrice)//보호자 수수료 적용한 금액(보호자가 지불해야 하는 금액)(간병일 전체)
-			// 	.build());
 			return careOrder.getId();
 		}
 	}
@@ -145,7 +136,6 @@ public class CareOrderService {
 		CareOrder careOrder = careOrderRepository.save(
 			careOrderCreateRequest.converterEntity(member, orderPatient));
 		Settle recentSettle = settleService.getRecentSettle();
-		// int totalPrice = 0;
 		// 종료 날짜(2024-04-17 10:00:00) - 시작 날짜(2024-04-12 10:00:00)
 		// 시작 날짜부터 종료 날짜까지 5일 Packing 객체 생성
 		long daysBetween = ChronoUnit.DAYS.between(careOrder.getStartDateTime(), careOrder.getEndDateTime());
@@ -161,12 +151,39 @@ public class CareOrderService {
 				.endDateTime(endDateTime)
 				.build();
 			careOrder.addPacking(build);
-			// totalPrice += build.calculatePaymentPriceOneDay();
 		}
-		// //TODO 결제pg요청 프로세스
-		// careOrder.addPayment(Payment.builder()
-		// 	.price(totalPrice)//보호자 수수료 적용한 금액(보호자가 지불해야 하는 금액)(간병일 전체)
-		// 	.build());
+
+		return careOrder.getId();
+	}
+
+	public Long createFamilyCareOrderGuardian(FamilyCareOrderCreateRequest familyCareOrderCreateRequest) {
+		Member member = memberService.getMemberById(SecurityUtil.getMemberId());
+		Patient patientById = member.getPatients()
+			.stream()
+			.filter(patient -> patient.getId().equals(familyCareOrderCreateRequest.getPatientId()))
+			.findFirst()
+			.orElseThrow(NotExistDataException::new);
+		// ModelMapper modelMapper = new ModelMapper();
+		// modelMapper.getConfiguration().setFieldAccessLevel(Configuration.AccessLevel.PRIVATE).setFieldMatchingEnabled(true).setMatchingStrategy(MatchingStrategies.LOOSE);
+
+		OrderPatient orderPatient = orderPatientService.save(patientById.toOrderPatient());
+
+		CareOrder careOrder = careOrderRepository.save(
+			familyCareOrderCreateRequest.converterEntity(member, orderPatient));
+		Settle recentSettle = settleService.getRecentSettle();
+
+		int totalPrice = 0;
+
+		Facking build = familyCareOrderCreateRequest.toEntity(careOrder, recentSettle);
+
+		careOrder.addFacking(build);
+
+		totalPrice += build.calculatePaymentPriceOneDay();
+
+		// TODO 결제pg요청 프로세스
+		careOrder.addPayment(Payment.builder()
+			.price(totalPrice)//보호자 수수료 적용한 금액(보호자가 지불해야 하는 금액)(간병일 전체)
+			.build());
 		return careOrder.getId();
 	}
 
