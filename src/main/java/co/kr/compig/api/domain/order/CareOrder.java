@@ -4,6 +4,7 @@ import static co.kr.compig.global.code.OrderStatus.*;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -177,11 +178,11 @@ public class CareOrder {
 	   ================================================================= */
 
 	public CareOrderDetailResponse toCareOrderDetailResponse() {
-		Set<ApplyCareOrderResponse> applyResponses = applys.stream()
+		List<ApplyCareOrderResponse> applyResponses = this.applys.stream()
 			.map(Apply::toApplyCareOrderResponse) // Apply 객체를 ApplyDetailResponse 객체로 매핑
-			.collect(Collectors.toSet());
-		OrderPatientDetailResponse orderPatientDetailResponse = orderPatient.toOrderPatientDetailResponse();
-		return CareOrderDetailResponse.builder()
+			.collect(Collectors.toList());
+		OrderPatientDetailResponse orderPatientDetailResponse = this.orderPatient.toOrderPatientDetailResponse();
+		CareOrderDetailResponse build = CareOrderDetailResponse.builder()
 			.orderId(this.id)
 			.startDateTime(this.startDateTime)
 			.endDateTime(this.endDateTime)
@@ -192,9 +193,11 @@ public class CareOrder {
 			.memberId(this.member != null ? this.member.getId() : String.valueOf(this.noMember.getId()))
 			.userNm(this.member != null ? this.member.getUserNm() : this.noMember.getUserNm())
 			.telNo(this.member != null ? this.member.getTelNo() : this.noMember.getTelNo())
+			// .memberType(this.member != null ? MEMBER : NO_MEMBER)
 			.orderPatient(orderPatientDetailResponse)
-			.applies(applyResponses)
+			// .applies(applyResponses)
 			.build();
+		return build;
 	}
 
 	public void update(CareOrderUpdateRequest careOrderUpdateRequest) {

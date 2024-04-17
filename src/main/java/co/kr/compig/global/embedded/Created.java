@@ -28,7 +28,7 @@ public class Created {
 	@PrePersist
 	public void prePersist() {
 		if (StringUtils.isBlank(createdBy)) {
-			createdBy = SecurityUtil.getUserId();
+			createdBy = SecurityUtil.getMemberId();
 		}
 		if (createdOn == null) {
 			createdOn = LocalDateTime.now();

@@ -29,7 +29,7 @@
         </Logger>
         <Logger name="jdbc.sqltiming" level="DEBUG" additivity="false">
             <AppenderRef ref="STDOUT"/>
-            <RegexFilter regex="(?s).*insert for co.kr.compig.api.domain.log.InboundApi.*" onMatch="DENY"
+            <RegexFilter regex="(?s).*insert into inbound_api.*" onMatch="DENY"
                          onMismatch="NEUTRAL"
                          useRawMsg="true"/>
         </Logger>

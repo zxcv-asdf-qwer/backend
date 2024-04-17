@@ -26,7 +26,7 @@ public class QuerydslConfig {
 	 */
 	@Bean
 	public JPAQueryFactory jpaQueryFactory() {
-		return new JPAQueryFactory(entityManager);
+		return new JPAQueryFactory(new CustomHibernate5Templates(), entityManager);
 	}
 
 }

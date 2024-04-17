@@ -20,7 +20,6 @@ import co.kr.compig.api.presentation.order.request.AdminCareOrderCreateRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderSearchRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderUpdateRequest;
 import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
-import co.kr.compig.api.presentation.order.response.CareOrderResponse;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.dto.pagination.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -52,7 +51,7 @@ public class AdminCareOrderController {
 
 	@Operation(summary = "간병 리스트 보여주기")
 	@GetMapping("/pages")
-	public ResponseEntity<PageResponse<CareOrderResponse>> pageListCareOrder(
+	public ResponseEntity<PageResponse<CareOrderDetailResponse>> pageListCareOrder(
 		@ParameterObject @RequestParam(required = false) @Valid CareOrderSearchRequest careOrderSearchRequest,
 		@ParameterObject Pageable pageable
 	) {

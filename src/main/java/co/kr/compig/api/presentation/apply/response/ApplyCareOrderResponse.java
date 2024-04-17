@@ -15,6 +15,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 public class ApplyCareOrderResponse extends BaseAudit {
 
+	private Long orderId;
 	private Long applyId; // 지원 ID
 	private ApplyStatus applyStatus; // 지원 상태
 }
