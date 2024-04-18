@@ -8,6 +8,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.order.CareOrder;
+import co.kr.compig.api.presentation.review.request.ReviewUpdateRequest;
+import co.kr.compig.api.presentation.review.response.ReviewDetailResponse;
 import co.kr.compig.global.code.IsYn;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.CascadeType;
@@ -92,6 +94,21 @@ public class Review {
 	@Embedded
 	@Builder.Default
 	private CreatedAndUpdated createdAndModified = new CreatedAndUpdated();
+
+	public ReviewDetailResponse toReviewDetailResponse() {
+		return ReviewDetailResponse.builder()
+			.id(this.id)
+			.createdBy(this.member.getUserNm())
+			.createOn(this.createdAndModified.getCreatedOn())
+			.contents(this.contents)
+			.point(this.point)
+			.build();
+	}
+
+	public void update(ReviewUpdateRequest reviewUpdateRequest) {
+		this.contents = reviewUpdateRequest.getContents();
+		this.point = reviewUpdateRequest.getPoint();
+	}
 	/* =================================================================
  	 * Business
        ================================================================= */
