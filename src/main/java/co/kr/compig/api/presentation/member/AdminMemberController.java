@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.member.MemberService;
@@ -28,11 +25,8 @@ import co.kr.compig.api.presentation.member.request.MemberSearchRequest;
 import co.kr.compig.api.presentation.member.request.NoMemberCreate;
 import co.kr.compig.api.presentation.member.request.PartnerMemberCreate;
 import co.kr.compig.api.presentation.member.request.PartnerMemberUpdate;
-import co.kr.compig.api.presentation.member.response.GuardianMemberResponse;
 import co.kr.compig.api.presentation.member.response.MemberResponse;
-import co.kr.compig.api.presentation.member.response.NoMemberResponse;
 import co.kr.compig.api.presentation.member.response.PartnerMemberResponse;
-import co.kr.compig.api.presentation.member.response.UserMainSearchResponse;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.dto.pagination.PageResponse;
 import co.kr.compig.global.utils.SecurityUtil;
@@ -59,14 +53,6 @@ public class AdminMemberController {
 	public ResponseEntity<Response<?>> updateRecentLogin() {
 		memberService.updateRecentLogin(SecurityUtil.getMemberId());
 		return ResponseEntity.ok().build();
-	}
-
-	@Operation(summary = "비회원 목록 조회")
-	@GetMapping("/no")
-	public ResponseEntity<PageResponse> getNoMemberPage(
-		@ParameterObject @ModelAttribute MemberSearchRequest memberSearchRequest) {
-		Page<NoMemberResponse> page = noMemberService.getNoMemberPage(memberSearchRequest);
-		return PageResponse.ok(page.stream().toList(), page.getPageable().getOffset(), page.getTotalElements());
 	}
 
 	@Operation(summary = "비회원 회원가입")
@@ -108,8 +94,8 @@ public class AdminMemberController {
 	@GetMapping
 	public ResponseEntity<PageResponse> getAdminPage(
 		@ParameterObject @ModelAttribute MemberSearchRequest memberSearchRequest) {
-		Page<MemberResponse> page = memberService.getAdminPage(memberSearchRequest);
-		return PageResponse.ok(page.stream().toList(), page.getPageable().getOffset(), page.getTotalElements());
+		List<MemberResponse> page = memberService.getMemberPage(memberSearchRequest);
+		return PageResponse.ok(page);
 	}
 
 	@Operation(summary = "관리자 memberId 조회")
@@ -135,22 +121,14 @@ public class AdminMemberController {
 	@GetMapping(path = "/partners")
 	public ResponseEntity<PageResponse> getPartnerPage(
 		@ParameterObject @ModelAttribute MemberSearchRequest memberSearchRequest) {
-		Page<PartnerMemberResponse> page = memberService.getPartnerPage(memberSearchRequest);
-		return PageResponse.ok(page.stream().toList(), page.getPageable().getOffset(), page.getTotalElements());
+		List<PartnerMemberResponse> page = memberService.getPartnerPage(memberSearchRequest);
+		return PageResponse.ok(page);
 	}
 
 	@Operation(summary = "간병인 memberId 조회")
 	@GetMapping("/partners/{memberId}")
 	public ResponseEntity<MemberResponse> getPartnerByMemberId(@PathVariable String memberId) {
 		return ResponseEntity.ok(memberService.getMemberResponseByMemberId(memberId));
-	}
-
-	@Operation(summary = "[보호자(회원, 비회원) && 간병인] 이름 || 전화번호로 검색 후 리스트 보여주기")
-	@GetMapping("/search")
-	public ResponseEntity<List<UserMainSearchResponse>> getPartnerByMemberId(
-		@RequestParam(required = false) String userNm,
-		@RequestParam(required = false) String telNo) {
-		return ResponseEntity.ok(memberService.getUsersByNameAndTelNo(userNm, telNo));
 	}
 
 	@Operation(summary = "관리자 memberId 수정")
@@ -164,7 +142,7 @@ public class AdminMemberController {
 
 	@Operation(summary = "간병인 memberId 수정")
 	@PutMapping("/partners/{memberId}")
-	public ResponseEntity<Response<?>> updatePartnetById(@PathVariable String memberId,
+	public ResponseEntity<Response<?>> updatePartnerById(@PathVariable String memberId,
 		@RequestBody @Valid PartnerMemberUpdate partnerMemberUpdate) {
 		return ResponseEntity.ok().body(Response.<Map<String, String>>builder()
 			.data(Map.of("memberId", memberService.updatePartnerById(memberId, partnerMemberUpdate)))

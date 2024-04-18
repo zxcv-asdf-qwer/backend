@@ -9,6 +9,7 @@ import co.kr.compig.api.presentation.member.response.GuardianMemberResponse;
 
 @Mapper
 public interface MemberMapper {
-	List<GuardianMemberResponse> selectGuardianPaging(MemberSearchRequest request);
+	List<Member> selectMemberList(MemberSearchRequest request);
+	List<GuardianMemberResponse> selectGuardianList(MemberSearchRequest request);
 
 }

@@ -26,15 +26,14 @@ import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.domain.patient.OrderPatient;
 import co.kr.compig.api.domain.patient.Patient;
 import co.kr.compig.api.domain.permission.MenuPermission;
+import co.kr.compig.api.domain.review.Review;
 import co.kr.compig.api.domain.wallet.Wallet;
 import co.kr.compig.api.presentation.member.request.AdminMemberUpdate;
 import co.kr.compig.api.presentation.member.request.GuardianMemberUpdate;
 import co.kr.compig.api.presentation.member.request.MemberUpdateRequest;
 import co.kr.compig.api.presentation.member.request.PartnerMemberUpdate;
-import co.kr.compig.api.presentation.member.response.GuardianMemberResponse;
 import co.kr.compig.api.presentation.member.response.MemberResponse;
 import co.kr.compig.api.presentation.member.response.PartnerMemberResponse;
-import co.kr.compig.api.presentation.member.response.UserMainSearchResponse;
 import co.kr.compig.api.presentation.pass.request.PassSaveRequest;
 import co.kr.compig.global.code.CareerCode;
 import co.kr.compig.global.code.DeptCode;
@@ -219,6 +218,10 @@ public class Member {
 	@JsonManagedReference //연관관계 주인 반대 Entity 에 선언, 정상적으로 직렬화 수행
 	private Set<CareOrder> careOrders = new HashSet<>();
 
+	@Builder.Default
+	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference //연관관계 주인 반대 Entity 에 선언, 정상적으로 직렬화 수행
+	private final Set<Review> reviews = new HashSet<>();
 	/* =================================================================
 	 * Relation method
 	   ================================================================= */
@@ -439,36 +442,17 @@ public class Member {
 			.age(calculateAgeFromJumin(this.jumin1))
 			.email(this.email)
 			.memberRegisterType(this.memberRegisterType)
-			.gender(this.gender.equals(GenderCode.M) ? "남자" : "여자")
+			.gender(getGenderDescription())
 			.registerDate(this.createdAndModified.getCreatedOn().toLocalDate())
 			.picture(this.picture)
 			.career(calculateYearsFromStartYear(this.careStartYear))
 			.matchingCount((int)this.careOrders.stream()
 				.filter(order -> order.getOrderStatus() == OrderStatus.ORDER_COMPLETE)
 				.count())
-			.starAverage(this.id) //TODO 리뷰 생기면 계산 로직 추가
+			.starAverage(this.reviews.size())
 			.address1(this.address1)
 			.address2(this.address2)
 			.introduce(this.introduce)
-			.build();
-	}
-
-	public GuardianMemberResponse toGuardianMemberResponse() {
-		return GuardianMemberResponse.builder()
-			.memberId(this.id)
-			.userNm(this.userNm)
-			.telNo(this.telNo)
-			.email(this.email)
-			.memberRegisterType(this.memberRegisterType)
-			.registerDate(this.createdAndModified.getCreatedOn().toLocalDate())
-			.build();
-	}
-
-	public UserMainSearchResponse toUserMainSearchResponse() {
-		return UserMainSearchResponse.builder()
-			.memberId(this.id)
-			.userNm(this.userNm)
-			.telNo(this.telNo)
 			.build();
 	}
 
@@ -637,5 +621,16 @@ public class Member {
 	public void updateRecentLogin() {
 		this.recentLoginDate = LocalDateTime.now();
 		this.ipAddress = getUserIp();
+	}
+
+	public String getGenderDescription() {
+		if (this.gender == null) {
+			return null;
+		}
+		return switch (this.gender) {
+			case M -> "남자";
+			case F -> "여자";
+			default -> "알 수 없음";  // 예시로 추가된 경우, 실제 GenderCode에 따라 다를 수 있음
+		};
 	}
 }

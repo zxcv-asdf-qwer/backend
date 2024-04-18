@@ -4,12 +4,12 @@ import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
 
-import co.kr.compig.global.code.SystemServiceType;
 import co.kr.compig.api.domain.system.AccessKey;
 import co.kr.compig.api.domain.system.AccessKeyRepository;
 import co.kr.compig.api.infrastructure.sms.BizPpurioApi;
 import co.kr.compig.api.infrastructure.sms.model.BizPpurioTokenResponse;
 import co.kr.compig.api.infrastructure.sms.model.SmsApiProperties;
+import co.kr.compig.global.code.SystemServiceType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

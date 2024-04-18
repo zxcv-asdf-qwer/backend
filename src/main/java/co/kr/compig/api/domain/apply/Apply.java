@@ -2,14 +2,14 @@ package co.kr.compig.api.domain.apply;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import co.kr.compig.global.code.ApplyStatus;
-import co.kr.compig.global.code.converter.ApplyStatusConverter;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.presentation.apply.request.ApplyUpdateRequest;
 import co.kr.compig.api.presentation.apply.response.ApplyCareOrderResponse;
 import co.kr.compig.api.presentation.apply.response.ApplyDetailResponse;
 import co.kr.compig.api.presentation.apply.response.ApplyResponse;
+import co.kr.compig.global.code.ApplyStatus;
+import co.kr.compig.global.code.converter.ApplyStatusConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;

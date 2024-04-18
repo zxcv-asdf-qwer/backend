@@ -1,8 +1,8 @@
 package co.kr.compig.api.presentation.social.request;
 
+import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.global.code.MemberRegisterType;
 import co.kr.compig.global.code.UserType;
-import co.kr.compig.api.domain.member.Member;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

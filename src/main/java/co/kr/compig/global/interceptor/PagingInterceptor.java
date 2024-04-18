@@ -18,6 +18,7 @@ import co.kr.compig.global.dto.pagination.PagingResult;
 @Intercepts({
 	@Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class,
 		RowBounds.class, ResultHandler.class})})
+@SuppressWarnings("rawtypes")
 public class PagingInterceptor implements Interceptor {
 
 	static int MAPPED_STATEMENT_INDEX = 0;
@@ -43,6 +44,34 @@ public class PagingInterceptor implements Interceptor {
 		queryArgs[MAPPED_STATEMENT_INDEX] = newMs;
 
 		return invocation.proceed();
+	}
+
+	public String convertCamelToSnake(String input) {
+		// 결과를 저장할 StringBuilder 객체 생성
+		StringBuilder result = new StringBuilder();
+
+		// 입력 문자열을 공백으로 나누기
+		String[] words = input.split(" ");
+
+		for (String word : words) {
+			StringBuilder convertedWord = new StringBuilder();
+			for (int i = 0; i < word.length(); i++) {
+				char ch = word.charAt(i);
+				// 대문자를 만나면 앞에 _를 추가하고 소문자로 변환
+				if (Character.isUpperCase(ch)) {
+					if (i > 0)
+						convertedWord.append('_');
+					convertedWord.append(Character.toLowerCase(ch));
+				} else {
+					convertedWord.append(ch);
+				}
+			}
+			// 변환된 단어를 결과에 추가
+			result.append(convertedWord).append(" ");
+		}
+
+		// 마지막 공백 제거
+		return result.toString().trim();
 	}
 
 	private String getPage(String org, Object parameter) {

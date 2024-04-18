@@ -8,8 +8,6 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.domain.patient.OrderPatient;
 import co.kr.compig.api.domain.patient.Patient;
-import co.kr.compig.api.presentation.member.response.NoMemberResponse;
-import co.kr.compig.api.presentation.member.response.UserMainSearchResponse;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -93,20 +91,5 @@ public class NoMember {
   /* =================================================================
    * Business
      ================================================================= */
-
-	public NoMemberResponse toNoMemberResponse() {
-		return NoMemberResponse.builder()
-			.noMemberId(this.id)
-			.userNm(this.userNm)
-			.telNo(this.telNo)
-			.build();
-	}
-	public UserMainSearchResponse toUserMainSearchResponse() {
-		return UserMainSearchResponse.builder()
-			.memberId(this.id.toString())
-			.userNm(this.userNm)
-			.telNo(this.telNo)
-			.build();
-	}
 
 }

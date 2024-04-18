@@ -3,17 +3,13 @@ package co.kr.compig.api.domain.apply;
 import static co.kr.compig.api.domain.apply.QApply.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
-import org.springframework.util.CollectionUtils;
 
 import com.google.common.base.CaseFormat;
 import com.querydsl.core.types.Order;
@@ -27,40 +23,12 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import co.kr.compig.api.presentation.apply.request.ApplySearchRequest;
 import co.kr.compig.api.presentation.apply.response.ApplyResponse;
-import co.kr.compig.global.dto.pagination.PageableRequest;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class ApplyRepositoryImpl implements ApplyRepositoryCustom {
 
 	private final JPAQueryFactory jpaQueryFactory;
-
-	@Override
-	public Page<ApplyResponse> getApplyPage(Long orderId, ApplySearchRequest request) {
-		BooleanExpression predicate = createPredicate(orderId, request);
-
-		JPAQuery<ApplyResponse> query = createBaseQuery(predicate)
-			.select(Projections.constructor(ApplyResponse.class,
-					apply.id,
-					apply.member.id,
-					apply.careOrder.id,
-					apply.applyStatus
-				)
-			);
-		Pageable pageable = request.pageable();
-
-		applySorting(query, pageable);
-
-		List<ApplyResponse> applys = query
-			.offset(pageable.getOffset())
-			.limit(pageable.getPageSize())
-			.fetch();
-
-		JPAQuery<Long> countQuery = createBaseQuery(predicate)
-			.select(apply.count());
-
-		return PageableExecutionUtils.getPage(applys, pageable, countQuery::fetchOne);
-	}
 
 	@Override
 	public Slice<ApplyResponse> getApplySlice(Long orderId, ApplySearchRequest applySearchRequest, Pageable pageable) {

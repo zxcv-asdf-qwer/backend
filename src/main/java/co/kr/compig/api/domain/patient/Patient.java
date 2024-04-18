@@ -8,6 +8,11 @@ import org.hibernate.type.SqlTypes;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import co.kr.compig.api.domain.member.Member;
+import co.kr.compig.api.domain.member.NoMember;
+import co.kr.compig.api.presentation.patient.request.PatientUpdateRequest;
+import co.kr.compig.api.presentation.patient.response.PatientDetailResponse;
+import co.kr.compig.api.presentation.patient.response.PatientResponse;
 import co.kr.compig.global.code.DiseaseCode;
 import co.kr.compig.global.code.GenderCode;
 import co.kr.compig.global.code.IsYn;
@@ -15,11 +20,6 @@ import co.kr.compig.global.code.LocationType;
 import co.kr.compig.global.code.ToiletType;
 import co.kr.compig.global.code.converter.DiseaseCodeListConverter;
 import co.kr.compig.global.code.converter.ToiletTypeListConverter;
-import co.kr.compig.api.domain.member.Member;
-import co.kr.compig.api.domain.member.NoMember;
-import co.kr.compig.api.presentation.patient.request.PatientUpdateRequest;
-import co.kr.compig.api.presentation.patient.response.PatientDetailResponse;
-import co.kr.compig.api.presentation.patient.response.PatientResponse;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;

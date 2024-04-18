@@ -33,7 +33,6 @@ import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
 import co.kr.compig.api.presentation.order.response.CareOrderResponse;
 import co.kr.compig.global.code.MemberType;
 import co.kr.compig.global.code.OrderStatus;
-import co.kr.compig.global.dto.pagination.PageResponse;
 import co.kr.compig.global.error.exception.BizException;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import co.kr.compig.global.utils.SecurityUtil;

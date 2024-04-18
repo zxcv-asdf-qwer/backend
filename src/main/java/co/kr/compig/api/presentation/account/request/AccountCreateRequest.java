@@ -5,9 +5,9 @@ import java.util.Base64;
 import java.util.List;
 
 import co.kr.compig.api.domain.account.Account;
-import co.kr.compig.global.code.BankCode;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.presentation.board.response.SystemFileResponse;
+import co.kr.compig.global.code.BankCode;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

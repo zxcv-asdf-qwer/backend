@@ -25,7 +25,6 @@ import co.kr.compig.api.presentation.review.response.ReportDetailResponse;
 import co.kr.compig.api.presentation.review.response.ReportResponse;
 import co.kr.compig.api.presentation.review.response.ReviewDetailResponse;
 import co.kr.compig.api.presentation.review.response.ReviewResponse;
-import co.kr.compig.global.dto.pagination.PageResponse;
 import co.kr.compig.global.dto.pagination.SliceResponse;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import lombok.RequiredArgsConstructor;

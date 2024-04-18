@@ -7,8 +7,6 @@ import java.io.Serializable;
 import java.util.Base64;
 import java.util.Optional;
 
-import org.springframework.util.SerializationUtils;
-
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

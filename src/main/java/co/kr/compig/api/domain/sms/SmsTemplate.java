@@ -3,12 +3,12 @@ package co.kr.compig.api.domain.sms;
 import java.util.HashSet;
 import java.util.Set;
 
+import co.kr.compig.api.presentation.sms.request.SmsTemplateUpdateRequest;
+import co.kr.compig.api.presentation.sms.response.SmsTemplateResponse;
 import co.kr.compig.global.code.SmsTemplateType;
 import co.kr.compig.global.code.SmsType;
 import co.kr.compig.global.code.converter.SmsTemplateTypeConverter;
 import co.kr.compig.global.code.converter.SmsTypeConverter;
-import co.kr.compig.api.presentation.sms.request.SmsTemplateUpdateRequest;
-import co.kr.compig.api.presentation.sms.response.SmsTemplateResponse;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

@@ -3,7 +3,6 @@ package co.kr.compig.api.application.apply;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -14,14 +13,13 @@ import co.kr.compig.api.application.order.CareOrderService;
 import co.kr.compig.api.domain.apply.Apply;
 import co.kr.compig.api.domain.apply.ApplyRepository;
 import co.kr.compig.api.domain.apply.ApplyRepositoryCustom;
-import co.kr.compig.global.code.ApplyStatus;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.presentation.apply.request.ApplyCreateRequest;
 import co.kr.compig.api.presentation.apply.request.ApplySearchRequest;
 import co.kr.compig.api.presentation.apply.response.ApplyDetailResponse;
 import co.kr.compig.api.presentation.apply.response.ApplyResponse;
-import co.kr.compig.global.dto.pagination.PageResponse;
+import co.kr.compig.global.code.ApplyStatus;
 import co.kr.compig.global.dto.pagination.SliceResponse;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import co.kr.compig.global.utils.SecurityUtil;
@@ -67,11 +65,6 @@ public class ApplyService {
 		return careOrderById.getApplys().stream()
 			.map(Apply::toApplyResponse)
 			.collect(Collectors.toList());
-	}
-
-	@Transactional(readOnly = true)
-	public Page<ApplyResponse> getApplyPage(Long orderId, ApplySearchRequest searchRequest) {
-		return applyRepositoryCustom.getApplyPage(orderId, searchRequest);
 	}
 
 	@Transactional(readOnly = true)

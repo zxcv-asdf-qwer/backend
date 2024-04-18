@@ -1,7 +1,7 @@
 package co.kr.compig.api.domain.inquiry;
 
-import co.kr.compig.global.code.UseYn;
 import co.kr.compig.api.presentation.inquiry.request.AnswerUpdateRequest;
+import co.kr.compig.global.code.UseYn;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;

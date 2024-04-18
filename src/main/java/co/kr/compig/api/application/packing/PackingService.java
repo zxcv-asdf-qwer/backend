@@ -1,7 +1,6 @@
 package co.kr.compig.api.application.packing;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +14,6 @@ import co.kr.compig.api.presentation.packing.request.PackingSearchRequest;
 import co.kr.compig.api.presentation.packing.request.PackingUpdateRequest;
 import co.kr.compig.api.presentation.packing.response.PackingDetailResponse;
 import co.kr.compig.api.presentation.packing.response.PackingResponse;
-import co.kr.compig.global.dto.pagination.PageResponse;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

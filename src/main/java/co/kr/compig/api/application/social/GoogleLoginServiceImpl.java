@@ -18,7 +18,6 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import co.kr.compig.global.code.MemberRegisterType;
 import co.kr.compig.api.infrastructure.auth.social.google.GoogleAuthApi;
 import co.kr.compig.api.infrastructure.auth.social.google.model.GoogleLoginResponse;
 import co.kr.compig.api.infrastructure.auth.social.google.model.GoogleProperties;
@@ -26,6 +25,7 @@ import co.kr.compig.api.presentation.member.request.LeaveRequest;
 import co.kr.compig.api.presentation.social.request.SocialLoginRequest;
 import co.kr.compig.api.presentation.social.response.SocialAuthResponse;
 import co.kr.compig.api.presentation.social.response.SocialUserResponse;
+import co.kr.compig.global.code.MemberRegisterType;
 import co.kr.compig.global.utils.GsonLocalDateTimeAdapter;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;

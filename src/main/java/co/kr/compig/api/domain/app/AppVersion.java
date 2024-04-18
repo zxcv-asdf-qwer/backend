@@ -2,11 +2,11 @@ package co.kr.compig.api.domain.app;
 
 import org.hibernate.annotations.ColumnDefault;
 
+import co.kr.compig.api.presentation.app.request.AppVersionUpdateRequest;
+import co.kr.compig.api.presentation.app.response.AppVersionResponse;
 import co.kr.compig.global.code.AppOsType;
 import co.kr.compig.global.code.IsYn;
 import co.kr.compig.global.code.converter.AppOsTypeConverter;
-import co.kr.compig.api.presentation.app.request.AppVersionUpdateRequest;
-import co.kr.compig.api.presentation.app.response.AppVersionResponse;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;

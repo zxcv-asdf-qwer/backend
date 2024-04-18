@@ -6,7 +6,6 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import co.kr.compig.global.code.IsYn;
 import co.kr.compig.api.domain.inquiry.Answer;
 import co.kr.compig.api.domain.inquiry.AnswerRepository;
 import co.kr.compig.api.domain.inquiry.Question;
@@ -19,7 +18,7 @@ import co.kr.compig.api.presentation.inquiry.request.QuestionSearchRequest;
 import co.kr.compig.api.presentation.inquiry.request.QuestionUpdateRequest;
 import co.kr.compig.api.presentation.inquiry.response.QuestionDetailResponse;
 import co.kr.compig.api.presentation.inquiry.response.QuestionResponse;
-import co.kr.compig.global.dto.pagination.PageResponse;
+import co.kr.compig.global.code.IsYn;
 import co.kr.compig.global.dto.pagination.SliceResponse;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import lombok.RequiredArgsConstructor;

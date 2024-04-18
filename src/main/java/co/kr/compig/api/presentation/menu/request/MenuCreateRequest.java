@@ -1,9 +1,9 @@
 package co.kr.compig.api.presentation.menu.request;
 
+import co.kr.compig.api.domain.menu.Menu;
 import co.kr.compig.global.code.MenuDivCode;
 import co.kr.compig.global.code.MenuTypeCode;
 import co.kr.compig.global.code.UseYn;
-import co.kr.compig.api.domain.menu.Menu;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

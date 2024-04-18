@@ -40,14 +40,14 @@ public class PartnerMemberController {
 	public ResponseEntity<Response<?>> userUpdate(
 		@RequestBody MemberUpdateRequest memberUpdateRequest) {
 		memberService.updateMember(memberUpdateRequest);
-		return ResponseEntity.created(URI.create("/pb/members")).build();
+		return ResponseEntity.created(URI.create("/partner/members")).build();
 	}
 
 	@Operation(summary = "프로필 사진 수정")
 	@PostMapping(path = "/picture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Response<?>> userPictureUpdate(@RequestPart(name = "picture") MultipartFile picture) {
 		memberService.userPictureUpdate(picture);
-		return ResponseEntity.created(URI.create("/pb/members/picture")).build();
+		return ResponseEntity.created(URI.create("/partner/members/picture")).build();
 	}
 
 	@Operation(summary = "조회")

@@ -1,15 +1,13 @@
 package co.kr.compig.api.application.member;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.keycloak.representations.idm.GroupRepresentation;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +41,6 @@ import co.kr.compig.api.presentation.member.response.GuardianMemberResponse;
 import co.kr.compig.api.presentation.member.response.MemberPageResponse;
 import co.kr.compig.api.presentation.member.response.MemberResponse;
 import co.kr.compig.api.presentation.member.response.PartnerMemberResponse;
-import co.kr.compig.api.presentation.member.response.UserMainSearchResponse;
 import co.kr.compig.api.presentation.pass.request.PassSaveRequest;
 import co.kr.compig.api.presentation.social.request.SocialCreateRequest;
 import co.kr.compig.api.presentation.social.request.SocialLoginRequest;
@@ -53,7 +50,6 @@ import co.kr.compig.global.code.ApplicationType;
 import co.kr.compig.global.code.MemberRegisterType;
 import co.kr.compig.global.code.UseYn;
 import co.kr.compig.global.code.UserType;
-import co.kr.compig.global.dto.pagination.PageResponse;
 import co.kr.compig.global.error.exception.BizException;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import co.kr.compig.global.keycloak.KeycloakHandler;
@@ -76,7 +72,6 @@ public class MemberService {
 	private final MemberRepository memberRepository;
 	private final MemberMapper memberMapper;
 	private final MemberGroupRepository memberGroupRepository;
-	private final NoMemberService noMemberService;
 	private final KeycloakHandler keycloakHandler;
 	private final S3Util s3Util;
 	private final List<SocialLoginService> loginServices;
@@ -260,18 +255,28 @@ public class MemberService {
 	}
 
 	@Transactional(readOnly = true)
-	public Page<MemberResponse> getAdminPage(@Valid MemberSearchRequest memberSearchRequest) {
-		return memberRepositoryCustom.getAdminPage(memberSearchRequest);
-	}
-
-	@Transactional(readOnly = true)
-	public Page<PartnerMemberResponse> getPartnerPage(@Valid MemberSearchRequest memberSearchRequest) {
-		return memberRepositoryCustom.getPartnerPage(memberSearchRequest);
+	public List<MemberResponse> getMemberPage(@Valid MemberSearchRequest memberSearchRequest) {
+		List<String> ids = memberMapper.selectMemberList(memberSearchRequest)
+			.stream()
+			.map(Member::getId)
+			.collect(Collectors.toList());
+		List<Member> foundMembers = memberRepository.findAllById(ids);
+		return foundMembers.stream().map(Member::toResponse).collect(Collectors.toList());
 	}
 
 	@Transactional(readOnly = true)
 	public List<GuardianMemberResponse> getGuardianPage(MemberSearchRequest memberSearchRequest) {
-		return memberMapper.selectGuardianPaging(memberSearchRequest);
+		return memberMapper.selectGuardianList(memberSearchRequest);
+	}
+
+	@Transactional(readOnly = true)
+	public List<PartnerMemberResponse> getPartnerPage(MemberSearchRequest memberSearchRequest) {
+		List<String> ids = memberMapper.selectMemberList(memberSearchRequest)
+			.stream()
+			.map(Member::getId)
+			.collect(Collectors.toList());
+		List<Member> foundMembers = memberRepository.findAllById(ids);
+		return foundMembers.stream().map(Member::toPartnerMemberResponse).collect(Collectors.toList());
 	}
 
 	@Transactional(readOnly = true)
@@ -289,27 +294,6 @@ public class MemberService {
 	public void updateRecentLogin(String memberId) {
 		Member member = this.getMemberById(memberId);
 		member.updateRecentLogin();
-	}
-
-	@Transactional(readOnly = true)
-	public List<UserMainSearchResponse> getUsersByNameAndTelNo(String userNm, String userTel) {
-
-		// 회원 목록
-		List<UserMainSearchResponse> memberList = memberRepository.findByUserNmOrTelNo(userNm, userTel)
-			.stream()
-			.map(Member::toUserMainSearchResponse)
-			.toList();
-
-		// 비회원 목록
-		List<UserMainSearchResponse> noMembersByNameAndTelNo = noMemberService.getNoMembersByNameAndTelNo(userNm,
-			userTel);
-		//목록 합치기
-		List<UserMainSearchResponse> combinedList = new ArrayList<>();
-		combinedList.addAll(memberList);
-		combinedList.addAll(noMembersByNameAndTelNo);
-		//이름순 정렬
-		combinedList.sort(Comparator.comparing(UserMainSearchResponse::getUserNm));
-		return combinedList;
 	}
 
 	public String updateAdminById(String memberId, AdminMemberUpdate adminMemberUpdate) {

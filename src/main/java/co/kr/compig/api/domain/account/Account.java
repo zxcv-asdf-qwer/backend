@@ -2,11 +2,11 @@ package co.kr.compig.api.domain.account;
 
 import java.util.Base64;
 
-import co.kr.compig.global.code.BankCode;
-import co.kr.compig.global.code.converter.BankCodeConverter;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.presentation.account.request.AccountUpdateRequest;
 import co.kr.compig.api.presentation.account.response.AccountDetailResponse;
+import co.kr.compig.global.code.BankCode;
+import co.kr.compig.global.code.converter.BankCodeConverter;
 import co.kr.compig.global.crypt.AES256;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.Column;

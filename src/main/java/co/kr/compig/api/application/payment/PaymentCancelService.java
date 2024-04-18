@@ -16,7 +16,6 @@ import co.kr.compig.api.presentation.payment.request.PaymentCancelSearchRequest;
 import co.kr.compig.api.presentation.payment.request.PaymentCancelUpdateRequest;
 import co.kr.compig.api.presentation.payment.response.PaymentCancelDetailResponse;
 import co.kr.compig.api.presentation.payment.response.PaymentCancelResponse;
-import co.kr.compig.global.dto.pagination.PageResponse;
 import co.kr.compig.global.dto.pagination.SliceResponse;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import lombok.RequiredArgsConstructor;

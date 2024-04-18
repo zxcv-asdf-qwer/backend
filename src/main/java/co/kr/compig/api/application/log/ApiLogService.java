@@ -13,9 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 
-import co.kr.compig.global.code.LogType;
 import co.kr.compig.api.domain.log.InboundApi;
 import co.kr.compig.api.domain.log.InboundApiRepository;
+import co.kr.compig.global.code.LogType;
 import co.kr.compig.global.utils.WebUtil;
 import io.micrometer.tracing.Tracer;
 import lombok.RequiredArgsConstructor;

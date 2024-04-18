@@ -16,7 +16,6 @@ import co.kr.compig.api.presentation.terms.request.TermsCreateRequest;
 import co.kr.compig.api.presentation.terms.request.TermsSearchRequest;
 import co.kr.compig.api.presentation.terms.response.TermsDetailResponse;
 import co.kr.compig.api.presentation.terms.response.TermsResponse;
-import co.kr.compig.global.dto.pagination.PageResponse;
 import co.kr.compig.global.dto.pagination.SliceResponse;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import lombok.RequiredArgsConstructor;

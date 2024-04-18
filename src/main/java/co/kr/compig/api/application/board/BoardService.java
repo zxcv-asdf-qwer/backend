@@ -21,7 +21,6 @@ import co.kr.compig.api.presentation.board.request.BoardUpdateRequest;
 import co.kr.compig.api.presentation.board.response.BoardDetailResponse;
 import co.kr.compig.api.presentation.board.response.BoardResponse;
 import co.kr.compig.api.presentation.board.response.SystemFileResponse;
-import co.kr.compig.global.dto.pagination.PageResponse;
 import co.kr.compig.global.dto.pagination.SliceResponse;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import co.kr.compig.global.utils.S3Util;

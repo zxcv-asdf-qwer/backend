@@ -4,13 +4,13 @@ import java.time.LocalDateTime;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import co.kr.compig.global.code.IsYn;
-import co.kr.compig.global.code.MemberType;
-import co.kr.compig.global.code.PeriodType;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.member.NoMember;
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.domain.patient.OrderPatient;
+import co.kr.compig.global.code.IsYn;
+import co.kr.compig.global.code.MemberType;
+import co.kr.compig.global.code.PeriodType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

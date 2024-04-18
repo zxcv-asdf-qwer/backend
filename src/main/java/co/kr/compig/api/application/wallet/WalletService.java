@@ -1,7 +1,6 @@
 package co.kr.compig.api.application.wallet;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +16,6 @@ import co.kr.compig.api.presentation.wallet.request.WalletSearchRequest;
 import co.kr.compig.api.presentation.wallet.request.WalletUpdateRequest;
 import co.kr.compig.api.presentation.wallet.response.WalletDetailResponse;
 import co.kr.compig.api.presentation.wallet.response.WalletResponse;
-import co.kr.compig.global.dto.pagination.PageResponse;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -3,8 +3,8 @@ package co.kr.compig.api.infrastructure.sms.model;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import co.kr.compig.global.code.SystemServiceType;
 import co.kr.compig.api.domain.system.AccessKey;
+import co.kr.compig.global.code.SystemServiceType;
 import lombok.Getter;
 
 @Getter

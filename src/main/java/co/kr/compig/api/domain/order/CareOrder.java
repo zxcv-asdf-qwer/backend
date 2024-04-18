@@ -21,6 +21,7 @@ import co.kr.compig.api.domain.packing.Facking;
 import co.kr.compig.api.domain.packing.Packing;
 import co.kr.compig.api.domain.patient.OrderPatient;
 import co.kr.compig.api.domain.payment.Payment;
+import co.kr.compig.api.domain.review.Review;
 import co.kr.compig.api.presentation.apply.response.ApplyCareOrderResponse;
 import co.kr.compig.api.presentation.order.request.CareOrderUpdateRequest;
 import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
@@ -147,6 +148,11 @@ public class CareOrder {
 	@OneToMany(mappedBy = "careOrder", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonManagedReference //연관관계 주인 반대 Entity 에 선언, 정상적으로 직렬화 수행
 	private final Set<Memo> memos = new HashSet<>();
+
+	@Builder.Default
+	@OneToMany(mappedBy = "careOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference //연관관계 주인 반대 Entity 에 선언, 정상적으로 직렬화 수행
+	private final Set<Review> reviews = new HashSet<>();
 	/* =================================================================
 	 * Relation method
 	   ================================================================= */

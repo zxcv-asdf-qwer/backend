@@ -12,7 +12,6 @@ import org.springframework.web.client.UnknownHttpStatusCodeException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import co.kr.compig.global.code.MemberRegisterType;
 import co.kr.compig.api.infrastructure.auth.social.kakao.KakaoAuthApi;
 import co.kr.compig.api.infrastructure.auth.social.kakao.KakaoUserApi;
 import co.kr.compig.api.infrastructure.auth.social.kakao.model.KaKaoLoginResponse;
@@ -20,6 +19,7 @@ import co.kr.compig.api.infrastructure.auth.social.kakao.model.KakaoProperties;
 import co.kr.compig.api.presentation.member.request.LeaveRequest;
 import co.kr.compig.api.presentation.social.request.SocialLoginRequest;
 import co.kr.compig.api.presentation.social.response.SocialUserResponse;
+import co.kr.compig.global.code.MemberRegisterType;
 import co.kr.compig.global.utils.GsonLocalDateTimeAdapter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

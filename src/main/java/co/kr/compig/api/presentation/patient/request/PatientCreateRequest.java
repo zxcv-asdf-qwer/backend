@@ -5,13 +5,13 @@ import java.util.List;
 
 import org.hibernate.validator.constraints.Length;
 
+import co.kr.compig.api.domain.member.Member;
+import co.kr.compig.api.domain.patient.Patient;
 import co.kr.compig.global.code.DiseaseCode;
 import co.kr.compig.global.code.GenderCode;
 import co.kr.compig.global.code.IsYn;
 import co.kr.compig.global.code.LocationType;
 import co.kr.compig.global.code.ToiletType;
-import co.kr.compig.api.domain.member.Member;
-import co.kr.compig.api.domain.patient.Patient;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

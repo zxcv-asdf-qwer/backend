@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import co.kr.compig.global.code.IsYn;
 import co.kr.compig.global.code.QuestionType;
 import co.kr.compig.global.dto.BaseAudit;
-import co.kr.compig.global.dto.pagination.PageableRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

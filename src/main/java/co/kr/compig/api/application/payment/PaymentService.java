@@ -15,7 +15,6 @@ import co.kr.compig.api.presentation.payment.request.PaymentCreateRequest;
 import co.kr.compig.api.presentation.payment.request.PaymentSearchRequest;
 import co.kr.compig.api.presentation.payment.response.PaymentDetailResponse;
 import co.kr.compig.api.presentation.payment.response.PaymentResponse;
-import co.kr.compig.global.dto.pagination.PageResponse;
 import co.kr.compig.global.dto.pagination.SliceResponse;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import lombok.RequiredArgsConstructor;

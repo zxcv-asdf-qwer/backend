@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import co.kr.compig.api.application.member.MemberService;
 import co.kr.compig.api.application.member.NoMemberService;
-import co.kr.compig.global.code.MemberType;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.member.NoMember;
 import co.kr.compig.api.domain.patient.Patient;
@@ -22,6 +21,7 @@ import co.kr.compig.api.presentation.patient.request.PatientSearchRequest;
 import co.kr.compig.api.presentation.patient.request.PatientUpdateRequest;
 import co.kr.compig.api.presentation.patient.response.PatientDetailResponse;
 import co.kr.compig.api.presentation.patient.response.PatientResponse;
+import co.kr.compig.global.code.MemberType;
 import co.kr.compig.global.error.exception.BizException;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import co.kr.compig.global.utils.SecurityUtil;

@@ -11,7 +11,6 @@ import org.springframework.web.client.UnknownHttpStatusCodeException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import co.kr.compig.global.code.MemberRegisterType;
 import co.kr.compig.api.infrastructure.auth.social.naver.NaverAuthApi;
 import co.kr.compig.api.infrastructure.auth.social.naver.NaverUserApi;
 import co.kr.compig.api.infrastructure.auth.social.naver.model.NaverLoginResponse;
@@ -20,6 +19,7 @@ import co.kr.compig.api.presentation.member.request.LeaveRequest;
 import co.kr.compig.api.presentation.social.request.SocialLoginRequest;
 import co.kr.compig.api.presentation.social.response.SocialAuthResponse;
 import co.kr.compig.api.presentation.social.response.SocialUserResponse;
+import co.kr.compig.global.code.MemberRegisterType;
 import co.kr.compig.global.utils.GsonLocalDateTimeAdapter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,7 +1,6 @@
 package co.kr.compig.api.application.permission;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +18,6 @@ import co.kr.compig.api.presentation.permission.request.MenuPermissionSearchRequ
 import co.kr.compig.api.presentation.permission.request.MenuPermissionUpdateRequest;
 import co.kr.compig.api.presentation.permission.response.MenuPermissionDetailResponse;
 import co.kr.compig.api.presentation.permission.response.MenuPermissionResponse;
-import co.kr.compig.global.dto.pagination.PageResponse;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import lombok.RequiredArgsConstructor;
 

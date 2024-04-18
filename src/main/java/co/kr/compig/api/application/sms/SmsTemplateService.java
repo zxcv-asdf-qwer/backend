@@ -3,10 +3,8 @@ package co.kr.compig.api.application.sms;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import co.kr.compig.global.code.SmsTemplateType;
 import co.kr.compig.api.domain.sms.SmsTemplate;
 import co.kr.compig.api.domain.sms.SmsTemplateRepository;
 import co.kr.compig.api.domain.sms.SmsTemplateRepositoryCustom;
@@ -14,6 +12,7 @@ import co.kr.compig.api.presentation.sms.request.SmsTemplateCreateRequest;
 import co.kr.compig.api.presentation.sms.request.SmsTemplateSearchRequest;
 import co.kr.compig.api.presentation.sms.request.SmsTemplateUpdateRequest;
 import co.kr.compig.api.presentation.sms.response.SmsTemplateResponse;
+import co.kr.compig.global.code.SmsTemplateType;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

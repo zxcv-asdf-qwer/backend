@@ -11,8 +11,6 @@ import co.kr.compig.global.code.UseYn;
 public interface MemberRepository extends JpaRepository<Member, String>,
 	QuerydslPredicateExecutor<Member> {
 
-	Optional<Member> findByUserId(String userId);
-
 	Optional<Member> findByEmailAndUseYn(String email, UseYn useYn);
 
 	Optional<Member> findByUserNmAndTelNo(String userNm, String telNo);

@@ -2,8 +2,8 @@ package co.kr.compig.api.presentation.member.response;
 
 import java.util.Set;
 
-import co.kr.compig.global.code.DeptCode;
 import co.kr.compig.api.presentation.member.model.GroupDto;
+import co.kr.compig.global.code.DeptCode;
 import co.kr.compig.global.dto.BaseAudit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
