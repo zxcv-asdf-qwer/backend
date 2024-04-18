@@ -421,6 +421,8 @@ public class Member {
 			.marketingSms(
 				this.marketingSmsDate != null && this.marketingSmsDate.isBefore(LocalDate.now()))
 			.realNameYn(this.realNameYn)
+			.recentLoginDate(this.recentLoginDate)
+			.ipAddress(this.ipAddress)
 			.build();
 
 		memberResponse.setGroups(

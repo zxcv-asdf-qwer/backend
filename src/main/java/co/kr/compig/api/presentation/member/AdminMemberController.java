@@ -7,6 +7,7 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -62,7 +63,7 @@ public class AdminMemberController {
 	@Operation(summary = "비회원 목록 조회")
 	@GetMapping("/no")
 	public ResponseEntity<PageResponse<NoMemberResponse>> getNoMemberPage(
-		@ParameterObject @RequestParam(required = false) @Valid MemberSearchRequest memberSearchRequest,
+		@ParameterObject @ModelAttribute @Valid MemberSearchRequest memberSearchRequest,
 		@ParameterObject Pageable pageable) {
 		return ResponseEntity.ok(noMemberService.getNoMemberPage(memberSearchRequest, pageable));
 
@@ -106,7 +107,7 @@ public class AdminMemberController {
 	@Operation(summary = "관리자 리스트", description = "페이징")
 	@GetMapping
 	public ResponseEntity<PageResponse<MemberResponse>> getAdminPage(
-		@ParameterObject @RequestParam(required = false) @Valid MemberSearchRequest memberSearchRequest,
+		@ParameterObject @ModelAttribute @Valid MemberSearchRequest memberSearchRequest,
 		@ParameterObject Pageable pageable) {
 		return ResponseEntity.ok(memberService.getAdminPage(memberSearchRequest, pageable));
 	}
@@ -120,7 +121,7 @@ public class AdminMemberController {
 	@Operation(summary = "보호자 리스트", description = "페이징")
 	@GetMapping(path = "/guardians")
 	public ResponseEntity<PageResponse<GuardianMemberResponse>> getGuardianPage(
-		@ParameterObject @RequestParam(required = false) @Valid MemberSearchRequest memberSearchRequest,
+		@ParameterObject @ModelAttribute @Valid MemberSearchRequest memberSearchRequest,
 		@ParameterObject Pageable pageable) {
 		return ResponseEntity.ok(memberService.getGuardianPage(memberSearchRequest, pageable));
 	}
@@ -134,7 +135,7 @@ public class AdminMemberController {
 	@Operation(summary = "간병인 리스트", description = "페이징")
 	@GetMapping(path = "/partners")
 	public ResponseEntity<PageResponse<PartnerMemberResponse>> getPartnerPage(
-		@ParameterObject @RequestParam(required = false) @Valid MemberSearchRequest memberSearchRequest,
+		@ParameterObject @ModelAttribute @Valid MemberSearchRequest memberSearchRequest,
 		@ParameterObject Pageable pageable) {
 		return ResponseEntity.ok(memberService.getPartnerPage(memberSearchRequest, pageable));
 	}

@@ -78,15 +78,9 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 
 	private BooleanExpression createPredicate(MemberSearchRequest request) {
 		BooleanExpression predicate = Expressions.asBoolean(true).isTrue();
-		if (request == null) {
-			return predicate;
-		}
-		if (request.getKeyword() != null) {
-			predicate = predicate.and(member.userNm.eq(request.getKeyword()));
-		}
 
-		if (request.getUserType() != null) {
-			predicate = predicate.and(member.userType.eq(request.getUserType()));
+		if (request.getUserNm() != null) {
+			predicate = predicate.and(member.userNm.eq(request.getUserNm()));
 		}
 
 		if (request.getFromCreatedOn() != null) {
@@ -123,8 +117,8 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 	public Page<MemberResponse> getAdminPage(MemberSearchRequest request, Pageable pageable) {
 		BooleanExpression predicate = createPredicate(request);
 
-		JPAQuery<Member> query = jpaQueryFactory
-			.selectFrom(member)
+		JPAQuery<Member> query = createBaseQuery(predicate)
+			.select(member)
 			.where(member.userType.eq(UserType.SYS_ADMIN)
 				.or(member.userType.eq(UserType.SYS_USER))
 			);
@@ -153,8 +147,8 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 	public Page<PartnerMemberResponse> getPartnerPage(MemberSearchRequest request, Pageable pageable) {
 		BooleanExpression predicate = createPredicate(request);
 
-		JPAQuery<Member> query = jpaQueryFactory
-			.selectFrom(member)
+		JPAQuery<Member> query = createBaseQuery(predicate)
+			.select(member)
 			.where(predicate.and(member.userType.eq(UserType.PARTNER)));
 
 		//정렬
@@ -180,8 +174,8 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 	public Page<GuardianMemberResponse> getGuardianPage(MemberSearchRequest request, Pageable pageable) {
 		BooleanExpression predicate = createPredicate(request);
 
-		JPAQuery<Member> query = jpaQueryFactory
-			.selectFrom(member)
+		JPAQuery<Member> query = createBaseQuery(predicate)
+			.select(member)
 			.where(predicate.and(member.userType.eq(UserType.GUARDIAN)));
 
 		//정렬
