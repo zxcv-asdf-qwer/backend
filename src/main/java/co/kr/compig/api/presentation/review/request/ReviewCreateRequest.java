@@ -25,6 +25,9 @@ public class ReviewCreateRequest {
 
 	private IsYn publish = IsYn.Y; //게시 여부
 
+	@NotBlank
+	private String memberId;
+
 	@NotNull
 	private Long careOrderId; // 공고 ID
 
