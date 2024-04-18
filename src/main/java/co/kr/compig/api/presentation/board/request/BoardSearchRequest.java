@@ -8,16 +8,16 @@ import co.kr.compig.global.code.BoardType;
 import co.kr.compig.global.code.ContentsType;
 import co.kr.compig.global.dto.pagination.PageableRequest;
 import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Getter
+@SuperBuilder
 @AllArgsConstructor
-@NoArgsConstructor
-@Setter
-@SuperBuilder(toBuilder = true)
 public class BoardSearchRequest extends PageableRequest {
 	private BoardType boardType; // 게시판 유형
 	private ContentsType contentsType; // 콘텐츠 유형
