@@ -33,6 +33,7 @@ import co.kr.compig.api.presentation.member.response.PartnerMemberResponse;
 import co.kr.compig.api.presentation.member.response.UserMainSearchResponse;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.dto.pagination.PageResponse;
+import co.kr.compig.global.utils.SecurityUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -50,6 +51,13 @@ public class AdminMemberController {
 
 	private final MemberService memberService;
 	private final NoMemberService noMemberService;
+
+	@Operation(summary = "최종 접속 일시, 접속 ip 업데이트")
+	@PutMapping("/recent-login")
+	public ResponseEntity<Response<?>> updateRecentLogin() {
+		memberService.updateRecentLogin(SecurityUtil.getMemberId());
+		return ResponseEntity.ok().build();
+	}
 
 	@Operation(summary = "비회원 목록 조회")
 	@GetMapping("/no")

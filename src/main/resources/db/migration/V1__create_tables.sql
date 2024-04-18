@@ -293,6 +293,8 @@ create table if not exists member
     dept_code               varchar(35),
     ci                      varchar(255),
     di                      varchar(255),
+    recent_login_date       timestamp(6),
+    ip_address              varchar(255),
     created_by              varchar(50),
     created_on              timestamp(6) default CURRENT_TIMESTAMP,
     updated_by              varchar(50),
@@ -330,6 +332,8 @@ comment on column member.real_name_yn is '실명 확인 여부';
 comment on column member.dept_code is '부서코드';
 comment on column member.ci is 'ci';
 comment on column member.di is 'di';
+comment on column member.recent_login_date is '최종 접속 일시';
+comment on column member.ip_address is '접속 ip';
 
 create sequence if not exists public.menu_permission_seq INCREMENT BY 1 START WITH 1;
 create table if not exists menu_permission

@@ -21,10 +21,6 @@ import com.google.gson.GsonBuilder;
 
 import co.kr.compig.api.application.social.LoginServiceImpl;
 import co.kr.compig.api.application.social.SocialLoginService;
-import co.kr.compig.global.code.ApplicationType;
-import co.kr.compig.global.code.MemberRegisterType;
-import co.kr.compig.global.code.UseYn;
-import co.kr.compig.global.code.UserType;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.member.MemberGroup;
 import co.kr.compig.api.domain.member.MemberGroupRepository;
@@ -51,6 +47,10 @@ import co.kr.compig.api.presentation.social.request.SocialCreateRequest;
 import co.kr.compig.api.presentation.social.request.SocialLoginRequest;
 import co.kr.compig.api.presentation.social.response.SocialLoginResponse;
 import co.kr.compig.api.presentation.social.response.SocialUserResponse;
+import co.kr.compig.global.code.ApplicationType;
+import co.kr.compig.global.code.MemberRegisterType;
+import co.kr.compig.global.code.UseYn;
+import co.kr.compig.global.code.UserType;
 import co.kr.compig.global.dto.pagination.PageResponse;
 import co.kr.compig.global.error.exception.BizException;
 import co.kr.compig.global.error.exception.NotExistDataException;
@@ -289,6 +289,11 @@ public class MemberService {
 	public MemberResponse getMemberResponseByMemberId(String memberId) {
 		Member member = this.getMemberById(memberId);
 		return member.toResponse();
+	}
+
+	public void updateRecentLogin(String memberId) {
+		Member member = this.getMemberById(memberId);
+		member.updateRecentLogin();
 	}
 
 	@Transactional(readOnly = true)

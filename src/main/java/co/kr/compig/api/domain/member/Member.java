@@ -1,9 +1,11 @@
 package co.kr.compig.api.domain.member;
 
 import static co.kr.compig.global.utils.CalculateUtil.*;
+import static co.kr.compig.global.utils.LogUtil.*;
 import static co.kr.compig.global.utils.PasswordValidation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -176,6 +178,10 @@ public class Member {
 	@Column
 	private String ci; //나이스 본인인증 CI 값
 
+	@Column
+	private LocalDateTime recentLoginDate; //최종 접속 일시
+	@Column
+	private String ipAddress; //접속 IP
 	/* =================================================================
 	 * Domain mapping
 	   ================================================================= */
@@ -624,5 +630,10 @@ public class Member {
 		}
 		this.di = passSaveRequest.getDupInfo();
 		this.ci = passSaveRequest.getConnInfo();
+	}
+
+	public void updateRecentLogin() {
+		this.recentLoginDate = LocalDateTime.now();
+		this.ipAddress = getUserIp();
 	}
 }
