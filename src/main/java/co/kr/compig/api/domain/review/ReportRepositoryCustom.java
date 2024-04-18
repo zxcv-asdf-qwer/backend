@@ -9,5 +9,5 @@ import co.kr.compig.api.presentation.review.response.ReportResponse;
 
 @Repository
 public interface ReportRepositoryCustom {
-	Page<ReportResponse> getReportPage(ReportSearchRequest reportSearchRequest, Pageable pageable);
+	Page<ReportResponse> getReportPage(ReportSearchRequest reportSearchRequest);
 }

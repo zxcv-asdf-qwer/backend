@@ -1,6 +1,7 @@
 package co.kr.compig.api.presentation.review;
 
 import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -44,11 +45,12 @@ public class AdminReviewController {
 
 	@Operation(summary = "신고 조회", description = "페이징")
 	@GetMapping("/report")
-	public ResponseEntity<PageResponse<ReportResponse>> getReportPage(
-		@ParameterObject @ModelAttribute @Valid ReportSearchRequest reportSearchRequest,
-		@ParameterObject Pageable pageable
+	public ResponseEntity<PageResponse> getReportPage(
+		@ParameterObject @ModelAttribute @Valid ReportSearchRequest reportSearchRequest
 	) {
-		return ResponseEntity.ok(reviewService.getReportPage(reportSearchRequest, pageable));
+		Page<ReportResponse> page = reviewService.getReportPage(reportSearchRequest);
+		return PageResponse.ok(page.stream().toList(), page.getPageable().getOffset(), page.getTotalElements());
+
 	}
 
 	//리뷰 자세히 보기

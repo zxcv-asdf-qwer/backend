@@ -80,9 +80,8 @@ public class ReviewService {
 		return reportRepository.save(report).getId();
 	}
 
-	public PageResponse<ReportResponse> getReportPage(ReportSearchRequest reportSearchRequest, Pageable pageable) {
-		Page<ReportResponse> page = reportRepositoryCustom.getReportPage(reportSearchRequest, pageable);
-		return new PageResponse<>(page.getContent(), pageable, page.getTotalElements());
+	public Page<ReportResponse> getReportPage(ReportSearchRequest reportSearchRequest) {
+		return reportRepositoryCustom.getReportPage(reportSearchRequest);
 	}
 
 	public ReportDetailResponse getReport(Long reportId) {

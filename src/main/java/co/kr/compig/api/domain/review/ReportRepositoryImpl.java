@@ -30,8 +30,8 @@ public class ReportRepositoryImpl implements ReportRepositoryCustom {
 	private final JPAQueryFactory jpaQueryFactory;
 
 	@Override
-	public Page<ReportResponse> getReportPage(ReportSearchRequest reportSearchRequest, Pageable pageable) {
-		BooleanExpression predicate = createPredicate(reportSearchRequest);
+	public Page<ReportResponse> getReportPage(ReportSearchRequest request) {
+		BooleanExpression predicate = createPredicate(request);
 
 		JPAQuery<ReportResponse> query = createBaseQuery(predicate)
 			.select(Projections.constructor(ReportResponse.class,
@@ -43,6 +43,7 @@ public class ReportRepositoryImpl implements ReportRepositoryCustom {
 				)
 			)
 			.join(member).on(report.createdAndModified.createdBy.eq(member.id));
+		Pageable pageable = request.pageable();
 
 		applySorting(query, pageable);
 
