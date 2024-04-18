@@ -1,5 +1,7 @@
 package co.kr.compig.api.application.member;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -11,6 +13,7 @@ import co.kr.compig.api.domain.member.NoMemberRepositoryCustom;
 import co.kr.compig.api.presentation.member.request.MemberSearchRequest;
 import co.kr.compig.api.presentation.member.request.NoMemberCreate;
 import co.kr.compig.api.presentation.member.response.NoMemberResponse;
+import co.kr.compig.api.presentation.member.response.UserMainSearchResponse;
 import co.kr.compig.global.dto.pagination.PageResponse;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import jakarta.validation.Valid;
@@ -43,5 +46,13 @@ public class NoMemberService {
 
 		Page<NoMemberResponse> page = noMemberRepositoryCustom.getNoMemberPage(memberSearchRequest, pageable);
 		return new PageResponse<>(page.getContent(), pageable, page.getTotalElements());
+	}
+
+	@Transactional(readOnly = true)
+	public List<UserMainSearchResponse> getNoMembersByNameAndTelNo(String userNm, String userTel) {
+		return noMemberRepository.findByUserNmOrTelNo(userNm, userTel)
+			.stream()
+			.map(NoMember::toUserMainSearchResponse)
+			.toList();
 	}
 }

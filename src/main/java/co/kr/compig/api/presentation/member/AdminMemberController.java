@@ -146,7 +146,7 @@ public class AdminMemberController {
 		return ResponseEntity.ok(memberService.getMemberResponseByMemberId(memberId));
 	}
 
-	@Operation(summary = "[보호자 && 간병인] 이름 || 전화번호로 검색 후 리스트 보여주기")
+	@Operation(summary = "[보호자(회원, 비회원) && 간병인] 이름 || 전화번호로 검색 후 리스트 보여주기")
 	@GetMapping("/search")
 	public ResponseEntity<List<UserMainSearchResponse>> getPartnerByMemberId(
 		@RequestParam(required = false) String userNm,

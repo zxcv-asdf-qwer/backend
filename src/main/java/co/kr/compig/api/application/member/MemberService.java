@@ -1,10 +1,11 @@
 package co.kr.compig.api.application.member;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.keycloak.representations.idm.GroupRepresentation;
@@ -73,6 +74,7 @@ public class MemberService {
 	private final MemberRepositoryCustom memberRepositoryCustom;
 	private final MemberRepository memberRepository;
 	private final MemberGroupRepository memberGroupRepository;
+	private final NoMemberService noMemberService;
 	private final KeycloakHandler keycloakHandler;
 	private final S3Util s3Util;
 	private final List<SocialLoginService> loginServices;
@@ -298,10 +300,23 @@ public class MemberService {
 
 	@Transactional(readOnly = true)
 	public List<UserMainSearchResponse> getUsersByNameAndTelNo(String userNm, String userTel) {
-		return memberRepository.findByUserNmOrTelNo(userNm, userTel)
+
+		// 회원 목록
+		List<UserMainSearchResponse> memberList = memberRepository.findByUserNmOrTelNo(userNm, userTel)
 			.stream()
 			.map(Member::toUserMainSearchResponse)
-			.collect(Collectors.toList());
+			.toList();
+
+		// 비회원 목록
+		List<UserMainSearchResponse> noMembersByNameAndTelNo = noMemberService.getNoMembersByNameAndTelNo(userNm,
+			userTel);
+		//목록 합치기
+		List<UserMainSearchResponse> combinedList = new ArrayList<>();
+		combinedList.addAll(memberList);
+		combinedList.addAll(noMembersByNameAndTelNo);
+		//이름순 정렬
+		combinedList.sort(Comparator.comparing(UserMainSearchResponse::getUserNm));
+		return combinedList;
 	}
 
 	public String updateAdminById(String memberId, AdminMemberUpdate adminMemberUpdate) {
