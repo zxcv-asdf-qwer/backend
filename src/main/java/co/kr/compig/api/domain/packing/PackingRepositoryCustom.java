@@ -9,5 +9,5 @@ import co.kr.compig.api.presentation.packing.response.PackingResponse;
 
 @Repository
 public interface PackingRepositoryCustom {
-	Page<PackingResponse> findPage(PackingSearchRequest packingSearchRequest, Pageable pageable);
+	Page<PackingResponse> findPage(PackingSearchRequest packingSearchRequest);
 }

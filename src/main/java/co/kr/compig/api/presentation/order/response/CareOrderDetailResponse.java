@@ -8,6 +8,7 @@ import co.kr.compig.api.presentation.patient.response.OrderPatientDetailResponse
 import co.kr.compig.global.code.CareOrderProcessType;
 import co.kr.compig.global.code.IsYn;
 import co.kr.compig.global.code.OrderStatus;
+import co.kr.compig.global.dto.BaseAudit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
-public class CareOrderDetailResponse {
+public class CareOrderDetailResponse extends BaseAudit {
 
 	private Long orderId; // 공고 ID
 

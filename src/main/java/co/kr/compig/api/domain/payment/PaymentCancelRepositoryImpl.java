@@ -31,14 +31,14 @@ public class PaymentCancelRepositoryImpl implements PaymentCancelRepositoryCusto
 	private final JPAQueryFactory jpaQueryFactory;
 
 	@Override
-	public Page<PaymentCancelResponse> findPage(PaymentCancelSearchRequest paymentCancelSearchRequest,
-		Pageable pageable) {
-		BooleanExpression predicate = createPredicate(paymentCancelSearchRequest);
+	public Page<PaymentCancelResponse> findPage(PaymentCancelSearchRequest request) {
+		BooleanExpression predicate = createPredicate(request);
 
 		JPAQuery<PaymentCancelResponse> query = createBaseQuery(predicate)
 			.select(Projections.constructor(PaymentCancelResponse.class,
 				paymentCancel.id,
 				paymentCancel.payment.id));
+		Pageable pageable = request.pageable();
 
 		applySorting(query, pageable);
 

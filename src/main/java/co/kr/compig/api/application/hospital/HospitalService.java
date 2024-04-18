@@ -28,9 +28,8 @@ public class HospitalService {
 	private final HospitalRepositoryCustom hospitalRepositoryCustom;
 
 	@Transactional(readOnly = true)
-	public Page<HospitalResponse> pageListHospital(HospitalSearchRequest hospitalSearchRequest,
-		Pageable pageable) {
-		return hospitalRepositoryCustom.findPage(hospitalSearchRequest, pageable);
+	public Page<HospitalResponse> pageListHospital(HospitalSearchRequest hospitalSearchRequest) {
+		return hospitalRepositoryCustom.findPage(hospitalSearchRequest);
 	}
 
 	@Transactional(readOnly = true)

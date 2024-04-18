@@ -29,7 +29,7 @@ public class SettleRepositoryImpl implements SettleRepositoryCustom {
 	private final JPAQueryFactory jpaQueryFactory;
 
 	@Override
-	public Page<SettleResponse> getPage(SettleSearchRequest request, Pageable pageable) {
+	public Page<SettleResponse> getPage(SettleSearchRequest request) {
 		BooleanExpression predicate = createPredicate(request);
 
 		JPAQuery<SettleResponse> query = createBaseQuery(predicate)
@@ -39,6 +39,7 @@ public class SettleRepositoryImpl implements SettleRepositoryCustom {
 					settle.partnerFees
 				)
 			);
+		Pageable pageable = request.pageable();
 
 		//정렬
 		applySorting(query, pageable);

@@ -1,7 +1,6 @@
 package co.kr.compig.api.domain.app;
 
 import static co.kr.compig.api.domain.app.QAppVersion.*;
-import static co.kr.compig.api.domain.apply.QApply.*;
 import static co.kr.compig.api.domain.member.QMember.*;
 
 import java.util.List;
@@ -21,8 +20,9 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
-import co.kr.compig.global.code.AppOsType;
 import co.kr.compig.api.presentation.app.response.AppVersionResponse;
+import co.kr.compig.global.code.AppOsType;
+import co.kr.compig.global.dto.pagination.PageableRequest;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -41,10 +41,12 @@ public class AppVersionRepositoryImpl implements AppVersionRepositoryCustom {
 	}
 
 	@Override
-	public Page<AppVersionResponse> getAppVersionPage(Pageable pageable) {
+	public Page<AppVersionResponse> getAppVersionPage(PageableRequest request) {
 
 		JPAQuery<AppVersion> query = jpaQueryFactory
 			.selectFrom(appVersion);
+
+		Pageable pageable = request.pageable();
 
 		applySorting(query, pageable);
 
@@ -52,9 +54,11 @@ public class AppVersionRepositoryImpl implements AppVersionRepositoryCustom {
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
 			.fetch();
+
 		List<AppVersionResponse> responses = appVersions.stream()
 			.map(AppVersion::toResponse)
 			.collect(Collectors.toList());
+
 		JPAQuery<Long> countQuery = jpaQueryFactory.from(member)
 			.select(appVersion.count());
 
@@ -63,7 +67,7 @@ public class AppVersionRepositoryImpl implements AppVersionRepositoryCustom {
 
 	private void applySorting(JPAQuery<?> query, Pageable pageable) {
 		for (Sort.Order order : pageable.getSort()) {
-			Path<Object> target = Expressions.path(Object.class, apply,
+			Path<Object> target = Expressions.path(Object.class, appVersion,
 				CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, order.getProperty()));
 			@SuppressWarnings({"rawtypes", "unchecked"})
 			OrderSpecifier<?> orderSpecifier = new OrderSpecifier(

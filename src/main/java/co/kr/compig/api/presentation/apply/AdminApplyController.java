@@ -4,10 +4,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -51,17 +53,16 @@ public class AdminApplyController {
 
 	@Operation(summary = "orderId 로 간병인 지원 목록 조회", description = "페이징 없이")
 	@GetMapping("/orders/{orderId}")
-	public ResponseEntity<List<ApplyResponse>> getApplies(@PathVariable Long orderId,
-		@ParameterObject @RequestParam(required = false) @Valid ApplySearchRequest applySearchRequest) {
-		return ResponseEntity.ok(applyService.getApplies(orderId, applySearchRequest));
+	public ResponseEntity<List<ApplyResponse>> getApplies(@PathVariable Long orderId) {
+		return ResponseEntity.ok(applyService.getApplies(orderId));
 	}
 
 	@Operation(summary = "orderId 로 간병인 지원 목록 조회", description = "페이징")
 	@GetMapping("/orders/{orderId}/pages")
-	public ResponseEntity<PageResponse<ApplyResponse>> getApplyPage(@PathVariable Long orderId,
-		@ParameterObject @RequestParam(required = false) @Valid ApplySearchRequest applySearchRequest,
-		@ParameterObject Pageable pageable) {
-		return ResponseEntity.ok(applyService.getApplyPage(orderId, applySearchRequest, pageable));
+	public ResponseEntity<PageResponse> getApplyPage(@PathVariable Long orderId,
+		@ParameterObject @ModelAttribute ApplySearchRequest applySearchRequest) {
+		Page<ApplyResponse> page = applyService.getApplyPage(orderId, applySearchRequest);
+		return PageResponse.ok(page.stream().toList(), page.getPageable().getOffset(), page.getTotalElements());
 	}
 
 	@Operation(summary = "상세 조회")

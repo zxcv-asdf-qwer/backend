@@ -44,8 +44,8 @@ public class SmsTemplateService {
 		return smsTemplate.toSmsTemplateDetailResponse();
 	}
 
-	public Page<SmsTemplateResponse> getPage(SmsTemplateSearchRequest smsTemplateSearchRequest, Pageable pageable) {
-		return smsTemplateRepositoryCustom.findPage(smsTemplateSearchRequest, pageable);
+	public Page<SmsTemplateResponse> getPage(SmsTemplateSearchRequest smsTemplateSearchRequest) {
+		return smsTemplateRepositoryCustom.findPage(smsTemplateSearchRequest);
 	}
 
 	public Long updateById(Long smsTemplateId, SmsTemplateUpdateRequest smsTemplateUpdateRequest) {

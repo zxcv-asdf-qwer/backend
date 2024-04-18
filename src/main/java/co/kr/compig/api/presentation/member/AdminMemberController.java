@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -62,11 +63,10 @@ public class AdminMemberController {
 
 	@Operation(summary = "비회원 목록 조회")
 	@GetMapping("/no")
-	public ResponseEntity<PageResponse<NoMemberResponse>> getNoMemberPage(
-		@ParameterObject @ModelAttribute @Valid MemberSearchRequest memberSearchRequest,
-		@ParameterObject Pageable pageable) {
-		return ResponseEntity.ok(noMemberService.getNoMemberPage(memberSearchRequest, pageable));
-
+	public ResponseEntity<PageResponse> getNoMemberPage(
+		@ParameterObject @ModelAttribute MemberSearchRequest memberSearchRequest) {
+		Page<NoMemberResponse> page = noMemberService.getNoMemberPage(memberSearchRequest);
+		return PageResponse.ok(page.stream().toList(), page.getPageable().getOffset(), page.getTotalElements());
 	}
 
 	@Operation(summary = "비회원 회원가입")
@@ -106,10 +106,10 @@ public class AdminMemberController {
 
 	@Operation(summary = "관리자 리스트", description = "페이징")
 	@GetMapping
-	public ResponseEntity<PageResponse<MemberResponse>> getAdminPage(
-		@ParameterObject @ModelAttribute @Valid MemberSearchRequest memberSearchRequest,
-		@ParameterObject Pageable pageable) {
-		return ResponseEntity.ok(memberService.getAdminPage(memberSearchRequest, pageable));
+	public ResponseEntity<PageResponse> getAdminPage(
+		@ParameterObject @ModelAttribute MemberSearchRequest memberSearchRequest) {
+		Page<MemberResponse> page = memberService.getAdminPage(memberSearchRequest);
+		return PageResponse.ok(page.stream().toList(), page.getPageable().getOffset(), page.getTotalElements());
 	}
 
 	@Operation(summary = "관리자 memberId 조회")
@@ -120,10 +120,9 @@ public class AdminMemberController {
 
 	@Operation(summary = "보호자 리스트", description = "페이징")
 	@GetMapping(path = "/guardians")
-	public ResponseEntity<PageResponse<GuardianMemberResponse>> getGuardianPage(
-		@ParameterObject @ModelAttribute @Valid MemberSearchRequest memberSearchRequest,
-		@ParameterObject Pageable pageable) {
-		return ResponseEntity.ok(memberService.getGuardianPage(memberSearchRequest, pageable));
+	public ResponseEntity<PageResponse> getGuardianPage(
+		@ParameterObject @ModelAttribute MemberSearchRequest memberSearchRequest) {
+		return PageResponse.ok(memberService.getGuardianPage(memberSearchRequest));
 	}
 
 	@Operation(summary = "보호자 memberId 조회")
@@ -134,10 +133,10 @@ public class AdminMemberController {
 
 	@Operation(summary = "간병인 리스트", description = "페이징")
 	@GetMapping(path = "/partners")
-	public ResponseEntity<PageResponse<PartnerMemberResponse>> getPartnerPage(
-		@ParameterObject @ModelAttribute @Valid MemberSearchRequest memberSearchRequest,
-		@ParameterObject Pageable pageable) {
-		return ResponseEntity.ok(memberService.getPartnerPage(memberSearchRequest, pageable));
+	public ResponseEntity<PageResponse> getPartnerPage(
+		@ParameterObject @ModelAttribute MemberSearchRequest memberSearchRequest) {
+		Page<PartnerMemberResponse> page = memberService.getPartnerPage(memberSearchRequest);
+		return PageResponse.ok(page.stream().toList(), page.getPageable().getOffset(), page.getTotalElements());
 	}
 
 	@Operation(summary = "간병인 memberId 조회")

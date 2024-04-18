@@ -29,9 +29,8 @@ public class MenuPermissionRepositoryImpl implements MenuPermissionRepositoryCus
 	private final JPAQueryFactory jpaQueryFactory;
 
 	@Override
-	public Page<MenuPermissionResponse> findPage(MenuPermissionSearchRequest menuPermissionSearchRequest,
-		Pageable pageable) {
-		BooleanExpression predicate = createPredicate(menuPermissionSearchRequest);
+	public Page<MenuPermissionResponse> findPage(MenuPermissionSearchRequest request) {
+		BooleanExpression predicate = createPredicate(request);
 
 		JPAQuery<MenuPermissionResponse> query = createBaseQuery(predicate)
 			.select(Projections.constructor(MenuPermissionResponse.class,
@@ -42,6 +41,7 @@ public class MenuPermissionRepositoryImpl implements MenuPermissionRepositoryCus
 				menuPermission.menu.id,
 				menuPermission.menu.menuNm
 			));
+		Pageable pageable = request.pageable();
 
 		applySorting(query, pageable);
 

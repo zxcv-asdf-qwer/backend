@@ -12,7 +12,7 @@ import co.kr.compig.api.presentation.terms.response.TermsResponse;
 
 @Repository
 public interface TermsRepositoryCustom {
-	Page<TermsResponse> getTermsPage(TermsSearchRequest termsSearchRequest, Pageable pageable);
+	Page<TermsResponse> getTermsPage(TermsSearchRequest termsSearchRequest);
 
 	Slice<TermsResponse> getTermsSlice(TermsSearchRequest termsSearchRequest, Pageable pageable);
 

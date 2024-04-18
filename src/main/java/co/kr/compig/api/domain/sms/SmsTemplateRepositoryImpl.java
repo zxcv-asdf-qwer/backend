@@ -29,13 +29,14 @@ public class SmsTemplateRepositoryImpl implements SmsTemplateRepositoryCustom {
 	private final JPAQueryFactory jpaQueryFactory;
 
 	@Override
-	public Page<SmsTemplateResponse> findPage(SmsTemplateSearchRequest request, Pageable pageable) {
+	public Page<SmsTemplateResponse> findPage(SmsTemplateSearchRequest request) {
 		BooleanExpression predicate = createPredicate(request);
 
 		JPAQuery<SmsTemplateResponse> query = createBaseQuery(predicate)
 			.select(Projections.constructor(SmsTemplateResponse.class
 				)
 			);
+		Pageable pageable = request.pageable();
 
 		//정렬
 		applySorting(query, pageable);

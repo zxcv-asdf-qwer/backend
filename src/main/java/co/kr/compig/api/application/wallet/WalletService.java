@@ -41,9 +41,8 @@ public class WalletService {
 	}
 
 	@Transactional(readOnly = true)
-	public PageResponse<WalletResponse> getWalletPage(WalletSearchRequest walletSearchRequest, Pageable pageable) {
-		Page<WalletResponse> page = walletRepositoryCustom.findPage(walletSearchRequest, pageable);
-		return new PageResponse<>(page.getContent(), pageable, page.getTotalElements());
+	public Page<WalletResponse> getWalletPage(WalletSearchRequest walletSearchRequest) {
+		return walletRepositoryCustom.findPage(walletSearchRequest);
 	}
 
 	@Transactional(readOnly = true)

@@ -52,9 +52,8 @@ public class PartnerInquiryController {
 	@Operation(summary = "질문 조회")
 	@GetMapping(path = "/question")
 	public ResponseEntity<SliceResponse<QuestionResponse>> getQuestionSlice(
-		@ParameterObject @ModelAttribute @Valid QuestionSearchRequest questionSearchRequest,
-		@ParameterObject Pageable pageable) {
-		return ResponseEntity.ok(questionService.getQuestionSlice(questionSearchRequest, pageable));
+		@ParameterObject @ModelAttribute @Valid QuestionSearchRequest questionSearchRequest) {
+		return ResponseEntity.ok(questionService.getQuestionSlice(questionSearchRequest));
 	}
 
 	@Operation(summary = "질문 상세 조회")

@@ -43,12 +43,9 @@ public class MenuPermissionService {
 	}
 
 	@Transactional(readOnly = true)
-	public PageResponse<MenuPermissionResponse> getMenuPermissionPage(
-		MenuPermissionSearchRequest menuPermissionSearchRequest,
-		Pageable pageable) {
-		Page<MenuPermissionResponse> page = menuPermissionRepositoryCustom.findPage(menuPermissionSearchRequest,
-			pageable);
-		return new PageResponse<>(page.getContent(), pageable, page.getTotalElements());
+	public Page<MenuPermissionResponse> getMenuPermissionPage(
+		MenuPermissionSearchRequest menuPermissionSearchRequest) {
+		return menuPermissionRepositoryCustom.findPage(menuPermissionSearchRequest);
 	}
 
 	@Transactional(readOnly = true)

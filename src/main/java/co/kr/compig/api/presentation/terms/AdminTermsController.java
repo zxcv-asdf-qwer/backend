@@ -3,6 +3,7 @@ package co.kr.compig.api.presentation.terms;
 import java.util.Map;
 
 import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -52,11 +53,11 @@ public class AdminTermsController {
 
 	@Operation(summary = "조회", description = "페이징")
 	@GetMapping(path = "/page")
-	public ResponseEntity<PageResponse<TermsResponse>> pageListBoard(
-		@ParameterObject @RequestParam(required = false) @Valid TermsSearchRequest termsSearchRequest,
-		@ParameterObject Pageable pageable
-	) {
-		return ResponseEntity.ok(termsService.getTermsPage(termsSearchRequest, pageable));
+	public ResponseEntity<PageResponse> pageListBoard(
+		@ParameterObject @ModelAttribute TermsSearchRequest termsSearchRequest) {
+		Page<TermsResponse> page = termsService.getTermsPage(termsSearchRequest);
+		return PageResponse.ok(page.stream().toList(), page.getPageable().getOffset(), page.getTotalElements());
+
 	}
 
 	@Operation(summary = "상세 조회")

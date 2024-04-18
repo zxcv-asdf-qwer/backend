@@ -3,6 +3,7 @@ package co.kr.compig.api.presentation.permission;
 import java.util.Map;
 
 import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -51,10 +52,12 @@ public class AdminMenuPermissionController {
 
 	@Operation(summary = "조회", description = "페이징")
 	@GetMapping
-	public ResponseEntity<PageResponse<MenuPermissionResponse>> getMenuPermissionPage(
-		@ParameterObject @ModelAttribute @Valid MenuPermissionSearchRequest menuPermissionSearchRequest,
-		@ParameterObject Pageable pageable) {
-		return ResponseEntity.ok(menuPermissionService.getMenuPermissionPage(menuPermissionSearchRequest, pageable));
+	public ResponseEntity<PageResponse> getMenuPermissionPage(
+		@ParameterObject @ModelAttribute MenuPermissionSearchRequest menuPermissionSearchRequest) {
+		Page<MenuPermissionResponse> page = menuPermissionService.getMenuPermissionPage(
+			menuPermissionSearchRequest);
+		return PageResponse.ok(page.stream().toList(), page.getPageable().getOffset(), page.getTotalElements());
+
 	}
 
 	@Operation(summary = "상세 조회")

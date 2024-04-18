@@ -11,7 +11,7 @@ import co.kr.compig.api.presentation.board.response.BoardResponse;
 @Repository
 public interface BoardRepositoryCustom {
 
-	Page<BoardResponse> getBoardPage(BoardSearchRequest boardSearchRequest, Pageable pageable);
+	Page<BoardResponse> getBoardPage(BoardSearchRequest boardSearchRequest);
 
 	Slice<BoardResponse> getBoardSlice(BoardSearchRequest boardSearchRequest, Pageable pageable);
 }

@@ -1,5 +1,6 @@
 package co.kr.compig.api.presentation.permission.response;
 
+import co.kr.compig.global.dto.BaseAudit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
-public class MenuPermissionResponse {
+public class MenuPermissionResponse extends BaseAudit {
 
 	private Long id; // 메뉴 권한 ID
 	private String groupKey; // group key

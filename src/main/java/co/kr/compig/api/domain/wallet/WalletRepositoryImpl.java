@@ -29,13 +29,14 @@ public class WalletRepositoryImpl implements WalletRepositoryCustom {
 	private final JPAQueryFactory jpaQueryFactory;
 
 	@Override
-	public Page<WalletResponse> findPage(WalletSearchRequest walletSearchRequest, Pageable pageable) {
-		BooleanExpression predicate = createPredicate(walletSearchRequest);
+	public Page<WalletResponse> findPage(WalletSearchRequest request) {
+		BooleanExpression predicate = createPredicate(request);
 
 		JPAQuery<WalletResponse> query = createBaseQuery(predicate)
 			.select(Projections.constructor(WalletResponse.class,
 				wallet.member.id,
 				wallet.packing.id));
+		Pageable pageable = request.pageable();
 
 		applySorting(query, pageable);
 

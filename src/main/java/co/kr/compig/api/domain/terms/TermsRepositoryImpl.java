@@ -31,7 +31,7 @@ public class TermsRepositoryImpl implements TermsRepositoryCustom {
 	private final JPAQueryFactory jpaQueryFactory;
 
 	@Override
-	public Page<TermsResponse> getTermsPage(TermsSearchRequest request, Pageable pageable) {
+	public Page<TermsResponse> getTermsPage(TermsSearchRequest request) {
 		BooleanExpression predicate = createPredicate(request);
 
 		JPAQuery<TermsResponse> query = createBaseQuery(predicate)
@@ -40,6 +40,7 @@ public class TermsRepositoryImpl implements TermsRepositoryCustom {
 				terms.createdAndModified.createdBy,
 				terms.createdAndModified.createdOn
 			));
+		Pageable pageable = request.pageable();
 
 		applySorting(query, pageable);
 

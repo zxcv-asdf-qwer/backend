@@ -1,40 +1,55 @@
 package co.kr.compig.global.dto.pagination;
 
-import java.io.Serializable;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-public class PageResponse<T> implements Serializable {
+@Data
+@NoArgsConstructor
+public class PageResponse {
 
-	private final List<T> data;
+	private List<?> data;
+	private int totalCount;
 
-	private final long totalCount;
-	private final int totalPage;
-
-	//기본 생성자 호출시 empty list
-	public PageResponse() {
-		this.data = Collections.emptyList();
-		this.totalCount = 0L;
-		this.totalPage = 0;
+	public PageResponse(List<?> data, int total) {
+		this.data = data;
+		this.totalCount = total;
 	}
 
-	public PageResponse(List<T> content, Pageable pageable, Long totalCount) {
-		final PageImpl<T> page = new PageImpl<>(content, pageable, totalCount);
+	public static ResponseEntity<PageResponse> ok(List<? extends PagingResult> result) {
+		int total = 0;
 
-		this.data = page.getContent();
-		this.totalCount = page.getTotalElements();
-		this.totalPage = page.getTotalPages();
+		if (CollectionUtils.isEmpty(result)) {
+			result = new ArrayList<>();
+		} else {
+			total = result.get(0).getTotalCount();
+			if (total == 0) {
+				total = result.size();
+			}
+		}
+		return ResponseEntity.ok(new PageResponse(result, total));
 	}
 
-	public PageResponse(PageImpl<T> page) {
-		this.data = page.getContent();
-		this.totalCount = page.getTotalElements();
-		this.totalPage = page.getTotalPages();
+	public static ResponseEntity<PageResponse> ok(List<? extends PagingResult> dataList, long offset, long total) {
+		return ResponseEntity.ok(new PageResponse(convertDataList(dataList, offset), (int)total));
+	}
+
+	private static List<?> convertDataList(List<?> dataList, long offset) {
+		AtomicInteger atomicInteger = new AtomicInteger((int)(offset + 1));
+
+		return dataList.stream().map(data -> {
+			if (data instanceof PagingResult) {
+				((PagingResult)data).setRowNum(atomicInteger.getAndIncrement());
+			}
+
+			return data;
+		}).collect(Collectors.toList());
 	}
 }

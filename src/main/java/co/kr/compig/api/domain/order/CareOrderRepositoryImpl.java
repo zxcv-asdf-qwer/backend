@@ -38,8 +38,8 @@ public class CareOrderRepositoryImpl implements CareOrderRepositoryCustom {
 	private final JPAQueryFactory jpaQueryFactory;
 
 	@Override
-	public Page<CareOrderDetailResponse> findPage(CareOrderSearchRequest careOrderSearchRequest, Pageable pageable) {
-		BooleanExpression predicate = createPredicate(careOrderSearchRequest);
+	public Page<CareOrderDetailResponse> findPage(CareOrderSearchRequest request) {
+		BooleanExpression predicate = createPredicate(request);
 
 		JPAQuery<CareOrderDetailResponse> query = createBaseQuery(predicate)
 			.leftJoin(careOrder.member, member)
@@ -69,6 +69,7 @@ public class CareOrderRepositoryImpl implements CareOrderRepositoryCustom {
 						.from(member)
 						.where(member.id.eq(careOrder.createdAndModified.updatedBy)),
 					careOrder.createdAndModified.updatedOn));
+		Pageable pageable = request.pageable();
 
 		applySorting(query, pageable);
 

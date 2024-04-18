@@ -4,7 +4,6 @@ import java.util.Map;
 
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,13 +50,10 @@ public class AdminHospitalController {
 
 	@Operation(summary = "조회")
 	@GetMapping
-	public ResponseEntity<PageResponse<HospitalResponse>> pageListHospital(
-		@ParameterObject @ModelAttribute @Valid HospitalSearchRequest hospitalSearchRequest,
-		Pageable pageable) {
-		Page<HospitalResponse> page = hospitalService.pageListHospital(hospitalSearchRequest, pageable);
-		PageResponse<HospitalResponse> pageResponse = new PageResponse<>(page.getContent(), pageable,
-			page.getTotalElements());
-		return ResponseEntity.ok(pageResponse);
+	public ResponseEntity<PageResponse> pageListHospital(
+		@ParameterObject @ModelAttribute HospitalSearchRequest hospitalSearchRequest) {
+		Page<HospitalResponse> page = hospitalService.pageListHospital(hospitalSearchRequest);
+		return PageResponse.ok(page.stream().toList(), page.getPageable().getOffset(), page.getTotalElements());
 	}
 
 	@Operation(summary = "상세 조회")

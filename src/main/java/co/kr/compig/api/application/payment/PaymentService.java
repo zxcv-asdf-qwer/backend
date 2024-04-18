@@ -56,9 +56,8 @@ public class PaymentService {
 	}
 
 	@Transactional(readOnly = true)
-	public PageResponse<PaymentResponse> getPaymentPage(PaymentSearchRequest paymentSearchRequest, Pageable pageable) {
-		Page<PaymentResponse> page = paymentRepositoryCustom.findPage(paymentSearchRequest, pageable);
-		return new PageResponse<>(page.getContent(), pageable, page.getTotalElements());
+	public Page<PaymentResponse> getPaymentPage(PaymentSearchRequest paymentSearchRequest) {
+		return paymentRepositoryCustom.findPage(paymentSearchRequest);
 	}
 
 	@Transactional(readOnly = true)

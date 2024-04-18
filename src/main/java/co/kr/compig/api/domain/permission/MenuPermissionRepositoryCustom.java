@@ -10,5 +10,5 @@ import co.kr.compig.api.presentation.permission.response.MenuPermissionResponse;
 @Repository
 public interface MenuPermissionRepositoryCustom {
 
-	Page<MenuPermissionResponse> findPage(MenuPermissionSearchRequest menuPermissionSearchRequest, Pageable pageable);
+	Page<MenuPermissionResponse> findPage(MenuPermissionSearchRequest menuPermissionSearchRequest);
 }

@@ -29,9 +29,8 @@ public class SettleService {
 	}
 
 	@Transactional(readOnly = true)
-	public PageResponse<SettleResponse> getSettlePage(SettleSearchRequest settleSearchRequest, Pageable pageable) {
-		Page<SettleResponse> page = settleRepositoryCustom.getPage(settleSearchRequest, pageable);
-		return new PageResponse<>(page.getContent(), pageable, page.getTotalElements());
+	public Page<SettleResponse> getSettlePage(SettleSearchRequest settleSearchRequest) {
+		return settleRepositoryCustom.getPage(settleSearchRequest);
 	}
 
 	@Transactional(readOnly = true)

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -56,11 +57,10 @@ public class AdminBoardController {
 
 	@Operation(summary = "조회", description = "페이징")
 	@GetMapping
-	public ResponseEntity<PageResponse<BoardResponse>> getBoardPage(
-		@ParameterObject @ModelAttribute @Valid BoardSearchRequest boardSearchRequest,
-		@ParameterObject Pageable pageable) {
-		;
-		return ResponseEntity.ok(boardService.getBoardPage(boardSearchRequest, pageable));
+	public ResponseEntity<PageResponse> getBoardPage(
+		@ParameterObject @ModelAttribute BoardSearchRequest boardSearchRequest) {
+		Page<BoardResponse> page = boardService.getBoardPage(boardSearchRequest);
+		return PageResponse.ok(page.stream().toList(), page.getPageable().getOffset(), page.getTotalElements());
 	}
 
 	@Operation(summary = "상세 조회")

@@ -12,7 +12,7 @@ import co.kr.compig.api.presentation.order.response.CareOrderResponse;
 @Repository
 public interface CareOrderRepositoryCustom {
 
-	Page<CareOrderDetailResponse> findPage(CareOrderSearchRequest careOrderSearchRequest, Pageable pageable);
+	Page<CareOrderDetailResponse> findPage(CareOrderSearchRequest careOrderSearchRequest);
 
 	Slice<CareOrderResponse> findAllByCondition(CareOrderSearchRequest careOrderSearchRequest, Pageable pageable);
 }

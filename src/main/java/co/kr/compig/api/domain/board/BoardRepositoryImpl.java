@@ -31,8 +31,8 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
 	private final JPAQueryFactory jpaQueryFactory;
 
 	@Override
-	public Page<BoardResponse> getBoardPage(BoardSearchRequest boardSearchRequest, Pageable pageable) {
-		BooleanExpression predicate = createPredicate(boardSearchRequest);
+	public Page<BoardResponse> getBoardPage(BoardSearchRequest request) {
+		BooleanExpression predicate = createPredicate(request);
 
 		JPAQuery<BoardResponse> query = createBaseQuery(predicate)
 			.select(Projections.constructor(BoardResponse.class,
@@ -49,6 +49,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
 					board.thumbnailImageUrl
 				)
 			);
+		Pageable pageable = request.pageable();
 
 		//정렬
 		applySorting(query, pageable);

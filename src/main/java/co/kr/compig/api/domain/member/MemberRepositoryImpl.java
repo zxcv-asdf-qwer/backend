@@ -114,7 +114,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 	}
 
 	@Override
-	public Page<MemberResponse> getAdminPage(MemberSearchRequest request, Pageable pageable) {
+	public Page<MemberResponse> getAdminPage(MemberSearchRequest request) {
 		BooleanExpression predicate = createPredicate(request);
 
 		JPAQuery<Member> query = createBaseQuery(predicate)
@@ -122,6 +122,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 			.where(member.userType.eq(UserType.SYS_ADMIN)
 				.or(member.userType.eq(UserType.SYS_USER))
 			);
+		Pageable pageable = request.pageable();
 
 		//정렬
 		applySorting(query, pageable);
@@ -144,12 +145,13 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 	}
 
 	@Override
-	public Page<PartnerMemberResponse> getPartnerPage(MemberSearchRequest request, Pageable pageable) {
+	public Page<PartnerMemberResponse> getPartnerPage(MemberSearchRequest request) {
 		BooleanExpression predicate = createPredicate(request);
 
 		JPAQuery<Member> query = createBaseQuery(predicate)
 			.select(member)
 			.where(predicate.and(member.userType.eq(UserType.PARTNER)));
+		Pageable pageable = request.pageable();
 
 		//정렬
 		applySorting(query, pageable);
@@ -166,32 +168,6 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 		JPAQuery<Long> countQuery = createBaseQuery(predicate)
 			.select(member.count())
 			.where(predicate.and(member.userType.eq(UserType.PARTNER)));
-
-		return PageableExecutionUtils.getPage(responses, pageable, countQuery::fetchOne);
-	}
-
-	@Override
-	public Page<GuardianMemberResponse> getGuardianPage(MemberSearchRequest request, Pageable pageable) {
-		BooleanExpression predicate = createPredicate(request);
-
-		JPAQuery<Member> query = createBaseQuery(predicate)
-			.select(member)
-			.where(predicate.and(member.userType.eq(UserType.GUARDIAN)));
-
-		//정렬
-		applySorting(query, pageable);
-
-		List<Member> members = query
-			.offset(pageable.getOffset())
-			.limit(pageable.getPageSize()) // 페이징
-			.fetch();
-
-		List<GuardianMemberResponse> responses = members.stream()
-			.map(Member::toGuardianMemberResponse)
-			.collect(Collectors.toList());
-
-		JPAQuery<Long> countQuery = createBaseQuery(predicate)
-			.select(member.count()).where(predicate.and(member.userType.eq(UserType.GUARDIAN)));
 
 		return PageableExecutionUtils.getPage(responses, pageable, countQuery::fetchOne);
 	}

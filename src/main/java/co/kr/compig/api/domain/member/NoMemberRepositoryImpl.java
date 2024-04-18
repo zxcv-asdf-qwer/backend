@@ -29,11 +29,12 @@ public class NoMemberRepositoryImpl implements NoMemberRepositoryCustom {
 	private final JPAQueryFactory jpaQueryFactory;
 
 	@Override
-	public Page<NoMemberResponse> getNoMemberPage(MemberSearchRequest request, Pageable pageable) {
+	public Page<NoMemberResponse> getNoMemberPage(MemberSearchRequest request) {
 		BooleanExpression predicate = createPredicate(request);
 
 		JPAQuery<NoMember> query = jpaQueryFactory
 			.selectFrom(noMember);
+		Pageable pageable = request.pageable();
 
 		//정렬
 		applySorting(query, pageable);

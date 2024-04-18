@@ -62,7 +62,7 @@ public class ApplyService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<ApplyResponse> getApplies(Long orderId, ApplySearchRequest searchRequest) {
+	public List<ApplyResponse> getApplies(Long orderId) {
 		CareOrder careOrderById = careOrderService.getCareOrderById(orderId);
 		return careOrderById.getApplys().stream()
 			.map(Apply::toApplyResponse)
@@ -70,9 +70,8 @@ public class ApplyService {
 	}
 
 	@Transactional(readOnly = true)
-	public PageResponse<ApplyResponse> getApplyPage(Long orderId, ApplySearchRequest searchRequest, Pageable pageable) {
-		Page<ApplyResponse> page = applyRepositoryCustom.getApplyPage(orderId, searchRequest, pageable);
-		return new PageResponse<>(page.getContent(), pageable, page.getTotalElements());
+	public Page<ApplyResponse> getApplyPage(Long orderId, ApplySearchRequest searchRequest) {
+		return applyRepositoryCustom.getApplyPage(orderId, searchRequest);
 	}
 
 	@Transactional(readOnly = true)
@@ -88,9 +87,9 @@ public class ApplyService {
 		applyRepository.delete(apply);
 	}
 
-	public SliceResponse<ApplyResponse> getApplySlice(Long orderId, ApplySearchRequest applySearchRequest,
-		Pageable pageable) {
-		Slice<ApplyResponse> slice = applyRepositoryCustom.getApplySlice(orderId, applySearchRequest, pageable);
+	public SliceResponse<ApplyResponse> getApplySlice(Long orderId, ApplySearchRequest request) {
+		Pageable pageable = request.pageable();
+		Slice<ApplyResponse> slice = applyRepositoryCustom.getApplySlice(orderId, request, pageable);
 		return new SliceResponse<>(slice.getContent(), pageable, slice.hasNext());
 	}
 

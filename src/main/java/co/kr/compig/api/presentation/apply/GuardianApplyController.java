@@ -34,9 +34,8 @@ public class GuardianApplyController {
 	@Operation(summary = "목록 조회(커서)")
 	@GetMapping("/orders/{orderId}")
 	public ResponseEntity<SliceResponse<ApplyResponse>> getApplySlice(@PathVariable Long orderId,
-		@ParameterObject @ModelAttribute @Valid ApplySearchRequest applySearchRequest,
-		@ParameterObject Pageable pageable) {
-		return ResponseEntity.ok(applyService.getApplySlice(orderId, applySearchRequest, pageable));
+		@ParameterObject @ModelAttribute @Valid ApplySearchRequest applySearchRequest) {
+		return ResponseEntity.ok(applyService.getApplySlice(orderId, applySearchRequest));
 	}
 
 	@Operation(summary = "상세 조회")

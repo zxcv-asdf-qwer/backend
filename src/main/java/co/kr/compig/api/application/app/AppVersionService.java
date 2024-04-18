@@ -1,18 +1,17 @@
 package co.kr.compig.api.application.app;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import co.kr.compig.api.domain.app.AppVersion;
 import co.kr.compig.api.domain.app.AppVersionRepository;
 import co.kr.compig.api.domain.app.AppVersionRepositoryCustom;
-import co.kr.compig.global.code.AppOsType;
 import co.kr.compig.api.presentation.app.request.AppVersionCreateRequest;
 import co.kr.compig.api.presentation.app.request.AppVersionUpdateRequest;
 import co.kr.compig.api.presentation.app.response.AppVersionResponse;
-import co.kr.compig.global.dto.pagination.PageResponse;
+import co.kr.compig.global.code.AppOsType;
+import co.kr.compig.global.dto.pagination.PageableRequest;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import co.kr.compig.global.error.model.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -96,10 +95,8 @@ public class AppVersionService {
 	}
 
 	@Transactional(readOnly = true)
-	public PageResponse<AppVersionResponse> getAppVersionPage(
-		Pageable pageable) {
-
-		Page<AppVersionResponse> page = appVersionRepositoryCustom.getAppVersionPage(pageable);
-		return new PageResponse<>(page.getContent(), pageable, page.getTotalElements());
+	public Page<AppVersionResponse> getAppVersionPage(
+		PageableRequest pageable) {
+		return appVersionRepositoryCustom.getAppVersionPage(pageable);
 	}
 }

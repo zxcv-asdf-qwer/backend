@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import co.kr.compig.global.dto.pagination.PagingResult;
 import co.kr.compig.global.embedded.Created;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import lombok.AllArgsConstructor;
@@ -17,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class BaseAudit {
+public class BaseAudit extends PagingResult {
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private String createdBy; // 등록자 아이디

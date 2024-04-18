@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,7 +16,8 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Setter
 @SuperBuilder(toBuilder = true)
-public class PageableRequest {
+@EqualsAndHashCode(callSuper = true)
+public class PageableRequest extends PagingRequest {
 
 	private String cursorId; // 커서 id
 	private String keywordType; // 검색조건

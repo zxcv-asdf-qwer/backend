@@ -37,9 +37,8 @@ public class TermsService {
 	}
 
 	@Transactional(readOnly = true)
-	public PageResponse<TermsResponse> getTermsPage(TermsSearchRequest termsSearchRequest, Pageable pageable) {
-		Page<TermsResponse> page = termsRepositoryCustom.getTermsPage(termsSearchRequest, pageable);
-		return new PageResponse<>(page.getContent(), pageable, page.getTotalElements());
+	public Page<TermsResponse> getTermsPage(TermsSearchRequest termsSearchRequest) {
+		return termsRepositoryCustom.getTermsPage(termsSearchRequest);
 	}
 
 	@Transactional(readOnly = true)

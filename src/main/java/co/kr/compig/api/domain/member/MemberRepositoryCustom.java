@@ -16,10 +16,7 @@ public interface MemberRepositoryCustom {
 
 	Slice<MemberPageResponse> getUserPageCursor(MemberSearchRequest memberSearchRequest, Pageable pageable);
 
-	Page<MemberResponse> getAdminPage(MemberSearchRequest memberSearchRequest, Pageable pageable);
+	Page<MemberResponse> getAdminPage(MemberSearchRequest memberSearchRequest);
 
-	Page<PartnerMemberResponse> getPartnerPage(MemberSearchRequest memberSearchRequest, Pageable pageable);
-
-	Page<GuardianMemberResponse> getGuardianPage(MemberSearchRequest memberSearchRequest, Pageable pageable);
-
+	Page<PartnerMemberResponse> getPartnerPage(MemberSearchRequest memberSearchRequest);
 }

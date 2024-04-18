@@ -9,5 +9,5 @@ import co.kr.compig.api.presentation.wallet.response.WalletResponse;
 
 @Repository
 public interface WalletRepositoryCustom {
-	Page<WalletResponse> findPage(WalletSearchRequest walletSearchRequest, Pageable pageable);
+	Page<WalletResponse> findPage(WalletSearchRequest walletSearchRequest);
 }

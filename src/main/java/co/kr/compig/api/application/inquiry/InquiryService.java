@@ -40,10 +40,8 @@ public class InquiryService {
 	}
 
 	@Transactional(readOnly = true)
-	public PageResponse<QuestionResponse> getQuestionPage(QuestionSearchRequest questionSearchRequest,
-		Pageable pageable) {
-		Page<QuestionResponse> page = questionRepositoryCustom.getQuestionPage(questionSearchRequest, pageable);
-		return new PageResponse<>(page.getContent(), pageable, page.getTotalElements());
+	public Page<QuestionResponse> getQuestionPage(QuestionSearchRequest questionSearchRequest) {
+		return questionRepositoryCustom.getQuestionPage(questionSearchRequest);
 	}
 
 	@Transactional(readOnly = true)
@@ -72,9 +70,9 @@ public class InquiryService {
 	}
 
 	@Transactional(readOnly = true)
-	public SliceResponse<QuestionResponse> getQuestionSlice(QuestionSearchRequest questionSearchRequest,
-		Pageable pageable) {
-		Slice<QuestionResponse> slice = questionRepositoryCustom.getQuestionSlice(questionSearchRequest, pageable);
+	public SliceResponse<QuestionResponse> getQuestionSlice(QuestionSearchRequest request) {
+		Pageable pageable = request.pageable();
+		Slice<QuestionResponse> slice = questionRepositoryCustom.getQuestionSlice(request, pageable);
 		return new SliceResponse<>(slice.getContent(), pageable, slice.hasNext());
 	}
 

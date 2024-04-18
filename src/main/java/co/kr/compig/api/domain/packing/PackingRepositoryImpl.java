@@ -29,14 +29,15 @@ public class PackingRepositoryImpl implements PackingRepositoryCustom {
 	private final JPAQueryFactory jpaQueryFactory;
 
 	@Override
-	public Page<PackingResponse> findPage(PackingSearchRequest packingSearchRequest, Pageable pageable) {
-		BooleanExpression predicate = createPredicate(packingSearchRequest);
+	public Page<PackingResponse> findPage(PackingSearchRequest request) {
+		BooleanExpression predicate = createPredicate(request);
 
 		JPAQuery<PackingResponse> query = createBaseQuery(predicate)
 			.select(Projections.constructor(PackingResponse.class,
 				packing.id,
 				packing.careOrder.id
 			));
+		Pageable pageable = request.pageable();
 
 		applySorting(query, pageable);
 

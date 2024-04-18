@@ -10,6 +10,6 @@ import co.kr.compig.api.presentation.member.response.NoMemberResponse;
 @Repository
 public interface NoMemberRepositoryCustom {
 
-	Page<NoMemberResponse> getNoMemberPage(MemberSearchRequest memberSearchRequest, Pageable pageable);
+	Page<NoMemberResponse> getNoMemberPage(MemberSearchRequest memberSearchRequest);
 
 }

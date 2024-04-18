@@ -30,13 +30,14 @@ public class PaymentRepositoryImpl implements PaymentRepositoryCustom {
 	private final JPAQueryFactory jpaQueryFactory;
 
 	@Override
-	public Page<PaymentResponse> findPage(PaymentSearchRequest paymentSearchRequest, Pageable pageable) {
-		BooleanExpression predicate = createPredicate(paymentSearchRequest);
+	public Page<PaymentResponse> findPage(PaymentSearchRequest request) {
+		BooleanExpression predicate = createPredicate(request);
 		JPAQuery<PaymentResponse> query = createBaseQuery(predicate)
 			.select(Projections.constructor(PaymentResponse.class,
 				payment.id,
 				payment.careOrder.id
 			));
+		Pageable pageable = request.pageable();
 
 		applySorting(query, pageable);
 

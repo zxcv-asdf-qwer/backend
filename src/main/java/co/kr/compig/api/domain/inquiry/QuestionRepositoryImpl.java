@@ -31,8 +31,8 @@ public class QuestionRepositoryImpl implements QuestionRepositoryCustom {
 	private final JPAQueryFactory jpaQueryFactory;
 
 	@Override
-	public Page<QuestionResponse> getQuestionPage(QuestionSearchRequest questionSearchRequest, Pageable pageable) {
-		BooleanExpression predicate = createPredicate(questionSearchRequest);
+	public Page<QuestionResponse> getQuestionPage(QuestionSearchRequest request) {
+		BooleanExpression predicate = createPredicate(request);
 
 		JPAQuery<QuestionResponse> query = createBaseQuery(predicate)
 			.select(Projections.constructor(QuestionResponse.class,
@@ -43,6 +43,7 @@ public class QuestionRepositoryImpl implements QuestionRepositoryCustom {
 					question.isAnswer
 				)
 			);
+		Pageable pageable = request.pageable();
 
 		applySorting(query, pageable);
 

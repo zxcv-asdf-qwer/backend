@@ -25,6 +25,7 @@ import co.kr.compig.api.application.social.SocialLoginService;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.member.MemberGroup;
 import co.kr.compig.api.domain.member.MemberGroupRepository;
+import co.kr.compig.api.domain.member.MemberMapper;
 import co.kr.compig.api.domain.member.MemberRepository;
 import co.kr.compig.api.domain.member.MemberRepositoryCustom;
 import co.kr.compig.api.infrastructure.auth.keycloak.KeycloakAuthApi;
@@ -73,6 +74,7 @@ public class MemberService {
 
 	private final MemberRepositoryCustom memberRepositoryCustom;
 	private final MemberRepository memberRepository;
+	private final MemberMapper memberMapper;
 	private final MemberGroupRepository memberGroupRepository;
 	private final NoMemberService noMemberService;
 	private final KeycloakHandler keycloakHandler;
@@ -258,27 +260,18 @@ public class MemberService {
 	}
 
 	@Transactional(readOnly = true)
-	public PageResponse<MemberResponse> getAdminPage(@Valid MemberSearchRequest memberSearchRequest,
-		Pageable pageable) {
-
-		Page<MemberResponse> page = memberRepositoryCustom.getAdminPage(memberSearchRequest, pageable);
-		return new PageResponse<>(page.getContent(), pageable, page.getTotalElements());
+	public Page<MemberResponse> getAdminPage(@Valid MemberSearchRequest memberSearchRequest) {
+		return memberRepositoryCustom.getAdminPage(memberSearchRequest);
 	}
 
 	@Transactional(readOnly = true)
-	public PageResponse<PartnerMemberResponse> getPartnerPage(@Valid MemberSearchRequest memberSearchRequest,
-		Pageable pageable) {
-
-		Page<PartnerMemberResponse> page = memberRepositoryCustom.getPartnerPage(memberSearchRequest, pageable);
-		return new PageResponse<>(page.getContent(), pageable, page.getTotalElements());
+	public Page<PartnerMemberResponse> getPartnerPage(@Valid MemberSearchRequest memberSearchRequest) {
+		return memberRepositoryCustom.getPartnerPage(memberSearchRequest);
 	}
 
 	@Transactional(readOnly = true)
-	public PageResponse<GuardianMemberResponse> getGuardianPage(@Valid MemberSearchRequest memberSearchRequest,
-		Pageable pageable) {
-
-		Page<GuardianMemberResponse> page = memberRepositoryCustom.getGuardianPage(memberSearchRequest, pageable);
-		return new PageResponse<>(page.getContent(), pageable, page.getTotalElements());
+	public List<GuardianMemberResponse> getGuardianPage(MemberSearchRequest memberSearchRequest) {
+		return memberMapper.selectGuardianPaging(memberSearchRequest);
 	}
 
 	@Transactional(readOnly = true)

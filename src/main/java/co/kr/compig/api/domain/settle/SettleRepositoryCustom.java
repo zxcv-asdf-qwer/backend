@@ -9,5 +9,5 @@ import co.kr.compig.api.presentation.settle.response.SettleResponse;
 
 @Repository
 public interface SettleRepositoryCustom {
-	Page<SettleResponse> getPage(SettleSearchRequest settleSearchRequest, Pageable pageable);
+	Page<SettleResponse> getPage(SettleSearchRequest settleSearchRequest);
 }

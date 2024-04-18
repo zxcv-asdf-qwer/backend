@@ -3,6 +3,7 @@ package co.kr.compig.api.presentation.payment;
 import java.util.Map;
 
 import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -48,10 +49,12 @@ public class AdminPaymentCancelController {
 
 	@Operation(summary = "조회")
 	@GetMapping
-	public ResponseEntity<PageResponse<PaymentCancelResponse>> getPaymentCancelPage(
-		@ParameterObject @ModelAttribute @Valid PaymentCancelSearchRequest paymentCancelSearchRequest,
-		@ParameterObject Pageable pageable) {
-		return ResponseEntity.ok(paymentCancelService.getPaymentCancelPage(paymentCancelSearchRequest, pageable));
+	public ResponseEntity<PageResponse> getPaymentCancelPage(
+		@ParameterObject @ModelAttribute PaymentCancelSearchRequest paymentCancelSearchRequest) {
+		Page<PaymentCancelResponse> page = paymentCancelService.getPaymentCancelPage(
+			paymentCancelSearchRequest);
+		return PageResponse.ok(page.stream().toList(), page.getPageable().getOffset(), page.getTotalElements());
+
 	}
 
 	@Operation(summary = "상세 조회")

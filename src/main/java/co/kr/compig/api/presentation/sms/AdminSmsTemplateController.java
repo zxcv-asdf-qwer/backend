@@ -2,6 +2,7 @@ package co.kr.compig.api.presentation.sms;
 
 import java.util.Map;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -59,12 +60,10 @@ public class AdminSmsTemplateController {
 
 	@Operation(summary = "조회")
 	@GetMapping
-	public ResponseEntity<PageResponse<SmsTemplateResponse>> getPage(
-		@ModelAttribute @Valid SmsTemplateSearchRequest smsTemplateSearchRequest, Pageable pageable) {
-		Page<SmsTemplateResponse> page = smsTemplateService.getPage(smsTemplateSearchRequest, pageable);
-		PageResponse<SmsTemplateResponse> pageResponse = new PageResponse<>(page.getContent(), pageable,
-			page.getTotalElements());
-		return ResponseEntity.ok(pageResponse);
+	public ResponseEntity<PageResponse> getPage(@ParameterObject @ModelAttribute SmsTemplateSearchRequest smsTemplateSearchRequest) {
+		Page<SmsTemplateResponse> page = smsTemplateService.getPage(smsTemplateSearchRequest);
+		return PageResponse.ok(page.stream().toList(), page.getPageable().getOffset(), page.getTotalElements());
+
 	}
 
 	@Operation(summary = "정보 수정하기")

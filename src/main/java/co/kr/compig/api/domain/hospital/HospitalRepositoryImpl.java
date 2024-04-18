@@ -30,9 +30,8 @@ public class HospitalRepositoryImpl implements HospitalRepositoryCustom {
 	private final JPAQueryFactory jpaQueryFactory;
 
 	@Override
-	public Page<HospitalResponse> findPage(HospitalSearchRequest hospitalSearchRequest,
-		Pageable pageable) {
-		BooleanExpression predicate = createPredicate(hospitalSearchRequest);
+	public Page<HospitalResponse> findPage(HospitalSearchRequest request) {
+		BooleanExpression predicate = createPredicate(request);
 
 		JPAQuery<HospitalResponse> query = createBaseQuery(predicate)
 			.select(Projections.constructor(HospitalResponse.class,
@@ -44,6 +43,7 @@ public class HospitalRepositoryImpl implements HospitalRepositoryCustom {
 					hospital.hospitalOperationHours
 				)
 			);
+		Pageable pageable = request.pageable();
 
 		applySorting(query, pageable);
 

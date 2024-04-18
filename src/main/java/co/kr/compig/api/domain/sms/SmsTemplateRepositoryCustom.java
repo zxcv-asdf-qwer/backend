@@ -9,5 +9,5 @@ import co.kr.compig.api.presentation.sms.response.SmsTemplateResponse;
 
 @Repository
 public interface SmsTemplateRepositoryCustom {
-	Page<SmsTemplateResponse> findPage(SmsTemplateSearchRequest smsTemplateSearchRequest, Pageable pageable);
+	Page<SmsTemplateResponse> findPage(SmsTemplateSearchRequest smsTemplateSearchRequest);
 }

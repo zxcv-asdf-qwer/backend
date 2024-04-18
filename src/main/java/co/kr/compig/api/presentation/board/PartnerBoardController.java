@@ -32,9 +32,8 @@ public class PartnerBoardController {
 	@Operation(summary = "조회")
 	@GetMapping
 	public ResponseEntity<SliceResponse<BoardResponse>> getBoardSlice(
-		@ParameterObject @ModelAttribute @Valid BoardSearchRequest boardSearchRequest,
-		@ParameterObject Pageable pageable) {
-		return ResponseEntity.ok(boardService.getBoardSlice(boardSearchRequest, pageable));
+		@ParameterObject @ModelAttribute @Valid BoardSearchRequest boardSearchRequest) {
+		return ResponseEntity.ok(boardService.getBoardSlice(boardSearchRequest));
 	}
 
 	@Operation(summary = "상세 조회")

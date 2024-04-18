@@ -3,6 +3,7 @@ package co.kr.compig.api.presentation.packing;
 import java.util.Map;
 
 import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -51,10 +52,10 @@ public class AdminPackingController {
 
 	@Operation(summary = "조회", description = "페이징")
 	@GetMapping
-	public ResponseEntity<PageResponse<PackingResponse>> getPackingPage(
-		@ParameterObject @ModelAttribute @Valid PackingSearchRequest packingSearchRequest,
-		@ParameterObject Pageable pageable) {
-		return ResponseEntity.ok(packingService.getPackingPage(packingSearchRequest, pageable));
+	public ResponseEntity<PageResponse> getPackingPage(
+		@ParameterObject @ModelAttribute PackingSearchRequest packingSearchRequest) {
+		Page<PackingResponse> page = packingService.getPackingPage(packingSearchRequest);
+		return PageResponse.ok(page.stream().toList(), page.getPageable().getOffset(), page.getTotalElements());
 	}
 
 	@Operation(summary = "상세 조회")

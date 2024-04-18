@@ -38,11 +38,9 @@ public class PaymentCancelService {
 	}
 
 	@Transactional(readOnly = true)
-	public PageResponse<PaymentCancelResponse> getPaymentCancelPage(
-		PaymentCancelSearchRequest paymentCancelSearchRequest,
-		Pageable pageable) {
-		Page<PaymentCancelResponse> page = paymentCancelRepositoryCustom.findPage(paymentCancelSearchRequest, pageable);
-		return new PageResponse<>(page.getContent(), pageable, page.getTotalElements());
+	public Page<PaymentCancelResponse> getPaymentCancelPage(
+		PaymentCancelSearchRequest paymentCancelSearchRequest) {
+		return paymentCancelRepositoryCustom.findPage(paymentCancelSearchRequest);
 	}
 
 	@Transactional(readOnly = true)

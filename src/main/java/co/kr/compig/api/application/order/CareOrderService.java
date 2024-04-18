@@ -188,11 +188,9 @@ public class CareOrderService {
 	}
 
 	@Transactional(readOnly = true)
-	public PageResponse<CareOrderDetailResponse> pageListCareOrder(CareOrderSearchRequest careOrderSearchRequest,
-		Pageable pageable) {
+	public Page<CareOrderDetailResponse> pageListCareOrder(CareOrderSearchRequest careOrderSearchRequest) {
 
-		Page<CareOrderDetailResponse> page = careOrderRepositoryCustom.findPage(careOrderSearchRequest, pageable);
-		return new PageResponse<>(page.getContent(), pageable, page.getTotalElements());
+		return careOrderRepositoryCustom.findPage(careOrderSearchRequest);
 	}
 
 	@Transactional(readOnly = true)

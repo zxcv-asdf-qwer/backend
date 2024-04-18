@@ -12,8 +12,8 @@ import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 
-import co.kr.compig.global.dto.pagination.nouse.PagingRequest;
-import co.kr.compig.global.dto.pagination.nouse.PagingResult;
+import co.kr.compig.global.dto.pagination.PagingRequest;
+import co.kr.compig.global.dto.pagination.PagingResult;
 
 @Intercepts({
 	@Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class,
@@ -58,14 +58,14 @@ public class PagingInterceptor implements Interceptor {
 			}
 
 			if (isPaging(pagingDto)) {
-				int limit = pagingDto.getLength();
-				if (pagingDto.getStart() == 0) {
-					pagingDto.setStart(1);
+				int limit = pagingDto.getSize();
+				if (pagingDto.getPage() == 0) {
+					pagingDto.setPage(1);
 				}
-				int offset = (pagingDto.getStart() * pagingDto.getLength()) - pagingDto.getLength();
+				int offset = (pagingDto.getPage() * pagingDto.getSize()) - pagingDto.getSize();
 
 				pagingStr = " LIMIT " + limit + " OFFSET " + offset;
-				return String.format(PAGING_PRE, sortStr, pagingDto.getStart(), pagingDto.getLength()) + org
+				return String.format(PAGING_PRE, sortStr, pagingDto.getPage(), pagingDto.getSize()) + org
 					+ String.format(PAGING_POST, sortStr, pagingStr);
 			}
 			return org;
@@ -75,7 +75,7 @@ public class PagingInterceptor implements Interceptor {
 	}
 
 	private boolean isPaging(PagingRequest pagingDto) {
-		return pagingDto.getStart() != null && pagingDto.getLength() != null;
+		return pagingDto.getPage() != null && pagingDto.getSize() != null;
 	}
 
 	// see: MapperBuilderAssistant

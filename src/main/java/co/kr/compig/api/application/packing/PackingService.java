@@ -37,9 +37,8 @@ public class PackingService {
 	}
 
 	@Transactional(readOnly = true)
-	public PageResponse<PackingResponse> getPackingPage(PackingSearchRequest packingSearchRequest, Pageable pageable) {
-		Page<PackingResponse> page = packingRepositoryCustom.findPage(packingSearchRequest, pageable);
-		return new PageResponse<>(page.getContent(), pageable, page.getTotalElements());
+	public Page<PackingResponse> getPackingPage(PackingSearchRequest packingSearchRequest) {
+		return packingRepositoryCustom.findPage(packingSearchRequest);
 	}
 
 	@Transactional(readOnly = true)

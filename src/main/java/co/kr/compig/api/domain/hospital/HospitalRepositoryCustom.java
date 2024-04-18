@@ -11,7 +11,7 @@ import co.kr.compig.api.presentation.hospital.response.HospitalResponse;
 @Repository
 public interface HospitalRepositoryCustom {
 
-	Page<HospitalResponse> findPage(HospitalSearchRequest hospitalSearchRequest, Pageable pageable);
+	Page<HospitalResponse> findPage(HospitalSearchRequest hospitalSearchRequest);
 
 	Slice<HospitalResponse> findAllByCondition(HospitalSearchRequest hospitalSearchRequest, Pageable pageable);
 }

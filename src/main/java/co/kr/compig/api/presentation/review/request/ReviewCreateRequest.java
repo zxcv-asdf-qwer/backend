@@ -23,6 +23,7 @@ public class ReviewCreateRequest {
 	@NotBlank
 	private String contents; // 내용
 
+	@Builder.Default
 	private IsYn publish = IsYn.Y; //게시 여부
 
 	@NotBlank

@@ -57,10 +57,8 @@ public class BoardService {
 	}
 
 	@Transactional(readOnly = true)
-	public PageResponse<BoardResponse> getBoardPage(BoardSearchRequest boardSearchRequest,
-		Pageable pageable) {
-		Page<BoardResponse> page = boardRepositoryCustom.getBoardPage(boardSearchRequest, pageable);
-		return new PageResponse<>(page.getContent(), pageable, page.getTotalElements());
+	public Page<BoardResponse> getBoardPage(BoardSearchRequest boardSearchRequest) {
+		return boardRepositoryCustom.getBoardPage(boardSearchRequest);
 	}
 
 	public Long updateBoard(Long boardId, BoardUpdateRequest boardUpdateRequest) {
@@ -111,9 +109,9 @@ public class BoardService {
 	}
 
 	@Transactional(readOnly = true)
-	public SliceResponse<BoardResponse> getBoardSlice(@Valid BoardSearchRequest boardSearchRequest,
-		Pageable pageable) {
-		Slice<BoardResponse> slice = boardRepositoryCustom.getBoardSlice(boardSearchRequest, pageable);
+	public SliceResponse<BoardResponse> getBoardSlice(@Valid BoardSearchRequest request) {
+		Pageable pageable = request.pageable();
+		Slice<BoardResponse> slice = boardRepositoryCustom.getBoardSlice(request, pageable);
 		return new SliceResponse<>(slice.getContent(), pageable, slice.hasNext());
 	}
 }

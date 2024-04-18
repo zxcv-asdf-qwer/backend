@@ -41,11 +41,8 @@ public class NoMemberService {
 	}
 
 	@Transactional(readOnly = true)
-	public PageResponse<NoMemberResponse> getNoMemberPage(@Valid MemberSearchRequest memberSearchRequest,
-		Pageable pageable) {
-
-		Page<NoMemberResponse> page = noMemberRepositoryCustom.getNoMemberPage(memberSearchRequest, pageable);
-		return new PageResponse<>(page.getContent(), pageable, page.getTotalElements());
+	public Page<NoMemberResponse> getNoMemberPage(@Valid MemberSearchRequest memberSearchRequest) {
+		return noMemberRepositoryCustom.getNoMemberPage(memberSearchRequest);
 	}
 
 	@Transactional(readOnly = true)
