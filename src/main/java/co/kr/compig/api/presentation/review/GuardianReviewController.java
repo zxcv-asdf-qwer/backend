@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.review.ReviewService;
+import co.kr.compig.api.presentation.review.request.ReportCreateRequest;
 import co.kr.compig.api.presentation.review.request.ReviewCreateRequest;
 import co.kr.compig.api.presentation.review.request.ReviewSearchRequest;
 import co.kr.compig.api.presentation.review.request.ReviewUpdateRequest;
@@ -76,6 +77,18 @@ public class GuardianReviewController {
 	) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("reviewId", reviewService.updateReview(reviewId, reviewUpdateRequest)))
+			.build());
+	}
+
+	//신고하기
+	@Operation(summary = "신고하기")
+	@PostMapping(path = "/report/{reviewId}")
+	public ResponseEntity<Response<?>> createReport(
+		@PathVariable(name = "reviewId") Long reviewId,
+		@ParameterObject @RequestBody @Valid ReportCreateRequest reportCreateRequest
+	) {
+		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
+			.data(Map.of("reportId", reviewService.createReportGuardian(reviewId, reportCreateRequest)))
 			.build());
 	}
 }

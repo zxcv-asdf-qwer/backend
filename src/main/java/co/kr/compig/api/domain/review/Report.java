@@ -2,8 +2,13 @@ package co.kr.compig.api.domain.review;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import co.kr.compig.api.domain.member.Member;
+import co.kr.compig.api.presentation.review.response.ReportDetailResponse;
+import co.kr.compig.global.code.ReportType;
+import co.kr.compig.global.code.converter.ReportTypeConverter;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -40,6 +45,10 @@ public class Report {
 	@Column(name = "report_id")
 	private Long id;
 
+	@Column
+	@Convert(converter = ReportTypeConverter.class)
+	private ReportType reportType;
+
 	private String contents; //내용
 	/* =================================================================
 	 * Relation method
@@ -56,6 +65,17 @@ public class Report {
 	@Embedded
 	@Builder.Default
 	private CreatedAndUpdated createdAndModified = new CreatedAndUpdated();
+
+	public ReportDetailResponse toReportDetailResponse(Member member) {
+		return ReportDetailResponse.builder()
+			.reportId(this.id)
+			.reviewCreatedBy(this.review.getMember().getUserNm())
+			.contents(this.contents)
+			.reportCreatedBy(member.getUserNm())
+			.reportType(this.reportType)
+			.createdOn(this.createdAndModified.getCreatedOn())
+			.build();
+	}
 	/* =================================================================
  	 * Business
        ================================================================= */

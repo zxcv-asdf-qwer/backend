@@ -1,5 +1,6 @@
 package co.kr.compig.api.application.review;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -9,14 +10,22 @@ import co.kr.compig.api.application.member.MemberService;
 import co.kr.compig.api.application.order.CareOrderService;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.order.CareOrder;
+import co.kr.compig.api.domain.review.Report;
+import co.kr.compig.api.domain.review.ReportRepository;
+import co.kr.compig.api.domain.review.ReportRepositoryCustom;
 import co.kr.compig.api.domain.review.Review;
 import co.kr.compig.api.domain.review.ReviewRepository;
 import co.kr.compig.api.domain.review.ReviewRepositoryCustom;
+import co.kr.compig.api.presentation.review.request.ReportCreateRequest;
+import co.kr.compig.api.presentation.review.request.ReportSearchRequest;
 import co.kr.compig.api.presentation.review.request.ReviewCreateRequest;
 import co.kr.compig.api.presentation.review.request.ReviewSearchRequest;
 import co.kr.compig.api.presentation.review.request.ReviewUpdateRequest;
+import co.kr.compig.api.presentation.review.response.ReportDetailResponse;
+import co.kr.compig.api.presentation.review.response.ReportResponse;
 import co.kr.compig.api.presentation.review.response.ReviewDetailResponse;
 import co.kr.compig.api.presentation.review.response.ReviewResponse;
+import co.kr.compig.global.dto.pagination.PageResponse;
 import co.kr.compig.global.dto.pagination.SliceResponse;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +37,8 @@ public class ReviewService {
 
 	private final ReviewRepository reviewRepository;
 	private final ReviewRepositoryCustom reviewRepositoryCustom;
+	private final ReportRepository reportRepository;
+	private final ReportRepositoryCustom reportRepositoryCustom;
 	private final MemberService memberService;
 	private final CareOrderService careOrderService;
 
@@ -56,5 +67,27 @@ public class ReviewService {
 		Review review = reviewRepository.findById(reviewId).orElseThrow(NotExistDataException::new);
 		review.update(reviewUpdateRequest);
 		return review.getId();
+	}
+
+	public void deleteReview(Long reviewId) {
+		Review review = reviewRepository.findById(reviewId).orElseThrow(NotExistDataException::new);
+		reviewRepository.delete(review);
+	}
+
+	public Long createReportGuardian(Long reviewId, ReportCreateRequest reportCreateRequest) {
+		Review review = reviewRepository.findById(reviewId).orElseThrow(NotExistDataException::new);
+		Report report = reportCreateRequest.converterEntity(review);
+		return reportRepository.save(report).getId();
+	}
+
+	public PageResponse<ReportResponse> getReportPage(ReportSearchRequest reportSearchRequest, Pageable pageable) {
+		Page<ReportResponse> page = reportRepositoryCustom.getReportPage(reportSearchRequest, pageable);
+		return new PageResponse<>(page.getContent(), pageable, page.getTotalElements());
+	}
+
+	public ReportDetailResponse getReport(Long reportId) {
+		Report report = reportRepository.findById(reportId).orElseThrow(NotExistDataException::new);
+		Member member = memberService.getMemberById(report.getCreatedAndModified().getCreatedBy());
+		return report.toReportDetailResponse(member);
 	}
 }
