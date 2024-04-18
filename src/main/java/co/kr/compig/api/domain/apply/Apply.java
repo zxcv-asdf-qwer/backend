@@ -10,8 +10,10 @@ import co.kr.compig.api.presentation.apply.response.ApplyDetailResponse;
 import co.kr.compig.api.presentation.apply.response.ApplyResponse;
 import co.kr.compig.global.code.ApplyStatus;
 import co.kr.compig.global.code.converter.ApplyStatusConverter;
+import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
@@ -68,12 +70,23 @@ public class Apply {
 	@JsonBackReference//연관관계의 주인 Entity 에 선언, 직렬화가 되지 않도록 수행
 	private Member member = new Member();
 
+	/* =================================================================
+	 * Default columns
+	 ================================================================= */
+	@Embedded
+	@Builder.Default
+	private CreatedAndUpdated createdAndModified = new CreatedAndUpdated();
+
 	public ApplyDetailResponse toApplyDetailResponse(Member member, CareOrder careOrder) {
-		return ApplyDetailResponse.builder()
+		ApplyDetailResponse build = ApplyDetailResponse.builder()
 			.id(this.id)
 			.memberId(member.getId())
 			.careOrderId(careOrder.getId())
+			.applyStatus(this.applyStatus)
 			.build();
+		build.setCreatedAndUpdated(this.createdAndModified);
+
+		return build;
 	}
 
 	public void update(ApplyUpdateRequest applyUpdateRequest) {
@@ -88,12 +101,15 @@ public class Apply {
 	}
 
 	public ApplyResponse toApplyResponse() {
-		return ApplyResponse.builder()
+		ApplyResponse build = ApplyResponse.builder()
 			.applyId(this.id)
 			.memberId(this.member.getId())
 			.careOrderId(this.careOrder.getId())
 			.applyStatus(this.applyStatus)
 			.build();
+		build.setCreatedAndUpdated(this.createdAndModified);
+
+		return build;
 	}
 
 	public void setApplyStatus(ApplyStatus applyStatus) {

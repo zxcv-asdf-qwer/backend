@@ -85,7 +85,7 @@ public class ReviewService {
 
 	public ReportDetailResponse getReport(Long reportId) {
 		Report report = reportRepository.findById(reportId).orElseThrow(NotExistDataException::new);
-		Member member = memberService.getMemberById(report.getCreatedAndModified().getCreatedBy());
+		Member member = memberService.getMemberById(report.getCreatedAndModified().getCreatedBy().getId());
 		return report.toReportDetailResponse(member);
 	}
 }

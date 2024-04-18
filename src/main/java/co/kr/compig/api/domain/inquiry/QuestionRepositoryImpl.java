@@ -39,7 +39,7 @@ public class QuestionRepositoryImpl implements QuestionRepositoryCustom {
 					question.id,
 					question.questionType,
 					question.questionTitle,
-					question.createdAndModified.createdBy,
+					question.createdAndModified.createdBy.userNm,
 					question.createdAndModified.createdOn,
 					question.isAnswer
 				)
@@ -68,7 +68,7 @@ public class QuestionRepositoryImpl implements QuestionRepositoryCustom {
 					question.id,
 					question.questionType,
 					question.questionTitle,
-					question.createdAndModified.createdBy,
+					question.createdAndModified.createdBy.userNm,
 					question.createdAndModified.createdOn,
 					question.isAnswer
 				)
@@ -93,7 +93,7 @@ public class QuestionRepositoryImpl implements QuestionRepositoryCustom {
 	private BooleanExpression createPredicate(QuestionSearchRequest request) {
 		BooleanExpression predicate = Expressions.asBoolean(true).isTrue();
 		if (request.getMemberId() != null) {
-			predicate = predicate.and(question.createdAndModified.createdBy.eq(request.getMemberId()));
+			predicate = predicate.and(question.createdAndModified.createdBy.id.eq(request.getMemberId()));
 		}
 		return predicate;
 	}

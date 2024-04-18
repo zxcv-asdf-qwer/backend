@@ -17,6 +17,5 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 public class TermsResponse extends BaseAudit {
 	private TermsType termsType;
-	private String createdBy;
 	private LocalDateTime createdOn;
 }

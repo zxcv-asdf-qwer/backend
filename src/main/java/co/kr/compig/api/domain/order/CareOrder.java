@@ -190,18 +190,18 @@ public class CareOrder {
 		OrderPatientDetailResponse orderPatientDetailResponse = this.orderPatient.toOrderPatientDetailResponse();
 		CareOrderDetailResponse build = CareOrderDetailResponse.builder()
 			.orderId(this.id)
+			.memberId(this.member != null ? this.member.getId() : null)
+			.noMemberId(this.noMember != null ? this.noMember.getId() : null)
+			.userNm(this.member != null ? this.member.getUserNm() : this.noMember.getUserNm())
+			.telNo(this.member != null ? this.member.getTelNo() : this.noMember.getTelNo())
 			.startDateTime(this.startDateTime)
 			.endDateTime(this.endDateTime)
 			.orderStatus(this.orderStatus)
 			.publishYn(this.publishYn)
 			.careOrderProcessType(this.careOrderProcessType)
 			.orderRequest(this.orderRequest)
-			.memberId(this.member != null ? this.member.getId() : String.valueOf(this.noMember.getId()))
-			.userNm(this.member != null ? this.member.getUserNm() : this.noMember.getUserNm())
-			.telNo(this.member != null ? this.member.getTelNo() : this.noMember.getTelNo())
-			// .memberType(this.member != null ? MEMBER : NO_MEMBER)
 			.orderPatient(orderPatientDetailResponse)
-			// .applies(applyResponses)
+			.applies(applyResponses)
 			.build();
 		return build;
 	}

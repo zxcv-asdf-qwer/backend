@@ -126,7 +126,7 @@ public class Board {
 	}
 
 	public BoardDetailResponse toBoardDetailResponse() {
-		return BoardDetailResponse.builder()
+		BoardDetailResponse build = BoardDetailResponse.builder()
 			.boardId(this.id)
 			.title(this.title)
 			.smallTitle(this.smallTitle)
@@ -134,14 +134,14 @@ public class Board {
 			.boardType(this.boardType)
 			.contentsType(this.contentsType)
 			.viewCount(this.viewCount)
-			.createdBy(this.createdAndModified.getCreatedBy())
-			.createdOn(this.createdAndModified.getCreatedOn())
 			.startDate(this.startDate)
 			.endDate(this.endDate)
 			.thumbNail(this.thumbnailImageUrl != null ? urlToBase64(this.thumbnailImageUrl) : null)
 			.systemFiles(this.systemFiles.stream().map(path -> urlToBase64(path.getFilePath())).collect(
 				Collectors.toList()))
 			.build();
+		build.setCreatedAndUpdated(this.createdAndModified);
+		return build;
 	}
 
 	public String urlToBase64(String encodedString) {

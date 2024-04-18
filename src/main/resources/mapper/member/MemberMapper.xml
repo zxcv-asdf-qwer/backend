@@ -2,28 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="co.kr.compig.api.domain.member.MemberMapper">
 
-    <select id="selectMemberList" resultType="Member" parameterType="MemberSearchRequest">
-        SELECT mm.member_id as id
-        FROM member mm
-        <where>
-            <if test='userType != null'>
-                AND user_type IN
-                <foreach collection="userType" item="item" separator="," close=")" open="(">
-                    #{item.code}
-                </foreach>
-            </if>
-            <if test="userNm != null and userNm != ''">
-                AND user_nm LIKE '%' || #{userNm} || '%'
-            </if>
-            <if test="telNo != null and telNo != ''">
-                AND tel_no LIKE '%' || #{telNo} || '%'
-            </if>
-            <if test="fromCreatedOn != null and toCreatedOn != null">
-                AND created_on BETWEEN #{fromCreatedOn} AND #{toCreatedOn}
-            </if>
-        </where>
-    </select>
-
     <select id="selectGuardianList" resultType="GuardianMemberResponse" parameterType="MemberSearchRequest">
         SELECT mm.member_id as memberId,
         mm.user_nm as userNm,
@@ -56,8 +34,8 @@
         mm.ci,
         mm.recent_login_date,
         mm.ip_address as ipAddress,
-        (select m.user_nm from member m where m.member_id = mm.CREATED_BY) AS createdBy,
-        (select m.user_nm from member m where m.member_id = mm.UPDATED_BY) AS updatedBy,
+        (select m.user_nm from member m where m.member_id = mm.CREATED_BY) AS createdByName,
+        (select m.user_nm from member m where m.member_id = mm.UPDATED_BY) AS updatedByName,
         mm.CREATED_ON AS createdOn,
         mm.UPDATED_ON AS updatedOn,
         'MEMBER' AS memberType
@@ -106,8 +84,8 @@
         null as ci,
         null as recentLoginDate,
         null as ipAddress,
-        (select m.user_nm from member m where m.member_id = nm.CREATED_BY) AS createdBy,
-        (select m.user_nm from member m where m.member_id = nm.UPDATED_BY) AS updatedBy,
+        (select m.user_nm from member m where m.member_id = nm.CREATED_BY) AS createdByName,
+        (select m.user_nm from member m where m.member_id = nm.UPDATED_BY) AS updatedByName,
         nm.CREATED_ON AS createdOn,
         nm.UPDATED_ON AS updatedOn,
         'NO_MEMBER' AS memberType

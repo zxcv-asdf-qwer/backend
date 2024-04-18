@@ -1,14 +1,19 @@
 package co.kr.compig.global.embedded;
 
+import static co.kr.compig.global.utils.SecurityUtil.*;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.hibernate.annotations.ColumnDefault;
 
-import co.kr.compig.global.utils.SecurityUtil;
+import co.kr.compig.api.domain.member.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import lombok.Data;
 
@@ -18,8 +23,9 @@ public class Created {
 	/**********************************************
 	 * Default columns
 	 **********************************************/
-	@Column(length = 50, updatable = false)
-	private String createdBy; // 등록자 아이디
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "created_by", updatable = false)
+	private Member createdBy; // 등록자 객체
 
 	@Column(updatable = false)
 	@ColumnDefault("CURRENT_TIMESTAMP")
@@ -27,8 +33,8 @@ public class Created {
 
 	@PrePersist
 	public void prePersist() {
-		if (StringUtils.isBlank(createdBy)) {
-			createdBy = SecurityUtil.getMemberId();
+		if (ObjectUtils.allNull(createdBy)) {
+			createdBy = getCurrentMember();
 		}
 		if (createdOn == null) {
 			createdOn = LocalDateTime.now();
@@ -38,7 +44,7 @@ public class Created {
 	public Created() {
 	}
 
-	public Created(String createdBy, LocalDateTime createdOn) {
+	public Created(Member createdBy, LocalDateTime createdOn) {
 		this.createdBy = createdBy;
 		this.createdOn = createdOn;
 	}

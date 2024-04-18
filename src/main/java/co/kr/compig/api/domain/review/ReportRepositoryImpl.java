@@ -1,6 +1,5 @@
 package co.kr.compig.api.domain.review;
 
-import static co.kr.compig.api.domain.member.QMember.*;
 import static co.kr.compig.api.domain.review.QReport.*;
 
 import java.util.List;
@@ -37,12 +36,11 @@ public class ReportRepositoryImpl implements ReportRepositoryCustom {
 			.select(Projections.constructor(ReportResponse.class,
 					report.id,
 					report.review.member.userNm,
-					member.userNm,
+					report.createdAndModified.createdBy.userNm,
 					report.reportType,
 					report.createdAndModified.createdOn
 				)
-			)
-			.join(member).on(report.createdAndModified.createdBy.eq(member.id));
+			);
 		Pageable pageable = request.pageable();
 
 		applySorting(query, pageable);

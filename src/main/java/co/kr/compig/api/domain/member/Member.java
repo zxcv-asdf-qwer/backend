@@ -435,7 +435,7 @@ public class Member {
 	}
 
 	public PartnerMemberResponse toPartnerMemberResponse() {
-		return PartnerMemberResponse.builder()
+		PartnerMemberResponse partnerMemberResponse = PartnerMemberResponse.builder()
 			.memberId(this.id)
 			.userNm(this.userNm)
 			.telNo(this.telNo)
@@ -454,6 +454,8 @@ public class Member {
 			.address2(this.address2)
 			.introduce(this.introduce)
 			.build();
+		partnerMemberResponse.setCreatedAndUpdated(this.createdAndModified);
+		return partnerMemberResponse;
 	}
 
 	public void setLeaveMember(String leaveReason) {

@@ -4,10 +4,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.keycloak.representations.idm.GroupRepresentation;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
@@ -255,28 +255,19 @@ public class MemberService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<MemberResponse> getMemberPage(@Valid MemberSearchRequest memberSearchRequest) {
-		List<String> ids = memberMapper.selectMemberList(memberSearchRequest)
-			.stream()
-			.map(Member::getId)
-			.collect(Collectors.toList());
-		List<Member> foundMembers = memberRepository.findAllById(ids);
-		return foundMembers.stream().map(Member::toResponse).collect(Collectors.toList());
+	public Page<MemberResponse> getAdminPage(@Valid MemberSearchRequest memberSearchRequest) {
+		return memberRepositoryCustom.getAdminPage(memberSearchRequest);
 	}
+
+	@Transactional(readOnly = true)
+	public Page<PartnerMemberResponse> getPartnerPage(@Valid MemberSearchRequest memberSearchRequest) {
+		return memberRepositoryCustom.getPartnerPage(memberSearchRequest);
+	}
+
 
 	@Transactional(readOnly = true)
 	public List<GuardianMemberResponse> getGuardianPage(MemberSearchRequest memberSearchRequest) {
 		return memberMapper.selectGuardianList(memberSearchRequest);
-	}
-
-	@Transactional(readOnly = true)
-	public List<PartnerMemberResponse> getPartnerPage(MemberSearchRequest memberSearchRequest) {
-		List<String> ids = memberMapper.selectMemberList(memberSearchRequest)
-			.stream()
-			.map(Member::getId)
-			.collect(Collectors.toList());
-		List<Member> foundMembers = memberRepository.findAllById(ids);
-		return foundMembers.stream().map(Member::toPartnerMemberResponse).collect(Collectors.toList());
 	}
 
 	@Transactional(readOnly = true)

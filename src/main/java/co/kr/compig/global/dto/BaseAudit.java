@@ -21,26 +21,33 @@ import lombok.experimental.SuperBuilder;
 public class BaseAudit extends PagingResult {
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	private String createdBy; // 등록자 아이디
+	private String createdByName; // 등록자 아이디
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private String createdByUserId; // 등록자 아이디
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private LocalDateTime createdOn; // 등록일시
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	private String updatedBy; // 수정자 아이디
+	private String updatedByName; // 수정자 아이디
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private String updatedByUserId; // 수정자 아이디
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private LocalDateTime updatedOn; // 수정일시
 
 	public void setCreatedAndUpdated(CreatedAndUpdated createdAndUpdated) {
 		if (createdAndUpdated != null) {
-			this.createdBy = createdAndUpdated.getCreatedBy();
+			this.createdByName = createdAndUpdated.getCreatedBy().getUserNm();
+			this.createdByUserId = createdAndUpdated.getCreatedBy().getUserId();
 			this.createdOn = createdAndUpdated.getCreatedOn();
-			this.updatedBy = createdAndUpdated.getUpdatedBy();
+			this.updatedByName = createdAndUpdated.getUpdatedBy().getUserNm();
+			this.updatedByUserId = createdAndUpdated.getUpdatedBy().getUserId();
 			this.updatedOn = createdAndUpdated.getUpdatedOn();
 		}
 	}
 
 	public void setCreated(Created created) {
 		if (created != null) {
-			this.createdBy = created.getCreatedBy();
+			this.createdByName = created.getCreatedBy().getUserNm();
+			this.createdByUserId = created.getCreatedBy().getUserId();
 			this.createdOn = created.getCreatedOn();
 		}
 	}

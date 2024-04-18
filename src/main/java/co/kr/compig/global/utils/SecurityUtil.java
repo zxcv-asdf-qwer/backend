@@ -6,19 +6,33 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+import co.kr.compig.api.application.member.MemberService;
+import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.global.error.exception.BizException;
 import co.kr.compig.global.security.CustomOauth2User;
 import co.kr.compig.global.security.CustomOauth2UserAuthenticatedToken;
-
+@Component
 public class SecurityUtil {
+	private static MemberService memberService;
 
+	@Autowired
+	public SecurityUtil(MemberService service) {
+		memberService = service;
+	}
+
+	public static Member getCurrentMember() {
+		Member memberById = memberService.getMemberById(getMemberId());
+		return memberById;
+	}
 	public final static String TEST_TOKEN = "testToken";
 
 	/**

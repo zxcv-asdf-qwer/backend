@@ -1,6 +1,5 @@
 package co.kr.compig.api.domain.review;
 
-import static co.kr.compig.api.domain.member.QMember.*;
 import static co.kr.compig.api.domain.review.QReview.*;
 
 import java.util.List;
@@ -35,12 +34,11 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
 		JPAQuery<ReviewResponse> query = createBaseQuery(predicate)
 			.select(Projections.constructor(ReviewResponse.class,
 				review.id,
-				member.userNm,
+				review.createdAndModified.createdBy.userNm,
 				review.createdAndModified.createdOn,
 				review.contents,
 				review.point
-			))
-			.leftJoin(review.member, member);
+			));
 
 		applySorting(query, pageable);
 

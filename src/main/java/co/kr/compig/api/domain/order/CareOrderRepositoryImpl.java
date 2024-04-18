@@ -1,6 +1,5 @@
 package co.kr.compig.api.domain.order;
 
-import static co.kr.compig.api.domain.apply.QApply.*;
 import static co.kr.compig.api.domain.board.QBoard.*;
 import static co.kr.compig.api.domain.member.QMember.*;
 import static co.kr.compig.api.domain.member.QNoMember.*;
@@ -25,11 +24,9 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
-import co.kr.compig.api.presentation.apply.response.ApplyCareOrderResponse;
 import co.kr.compig.api.presentation.order.request.CareOrderSearchRequest;
 import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
 import co.kr.compig.api.presentation.order.response.CareOrderResponse;
-import co.kr.compig.api.presentation.patient.response.OrderPatientDetailResponse;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -41,59 +38,27 @@ public class CareOrderRepositoryImpl implements CareOrderRepositoryCustom {
 	public Page<CareOrderDetailResponse> findPage(CareOrderSearchRequest request) {
 		BooleanExpression predicate = createPredicate(request);
 
-		JPAQuery<CareOrderDetailResponse> query = createBaseQuery(predicate)
-			.leftJoin(careOrder.member, member)
-			.leftJoin(careOrder.noMember, noMember)
-			.select(
-				Projections.constructor(CareOrderDetailResponse.class, careOrder.id,
-					member.id,
-					noMember.id,
-					member.userNm,
-					member.telNo,
-					careOrder.startDateTime, careOrder.endDateTime, careOrder.orderStatus, careOrder.publishYn,
-					careOrder.careOrderProcessType, careOrder.orderRequest,
-					Projections.constructor(OrderPatientDetailResponse.class, careOrder.orderPatient.id,
-						careOrder.orderPatient.name, careOrder.orderPatient.gender, careOrder.orderPatient.birthDate,
-						careOrder.orderPatient.height, careOrder.orderPatient.weight, careOrder.orderPatient.diseaseNms,
-						careOrder.orderPatient.selfToiletAvailabilities, careOrder.orderPatient.moveAvailability,
-						careOrder.orderPatient.mealAvailability, careOrder.orderPatient.genderPreference,
-						careOrder.orderPatient.covid19Test, careOrder.orderPatient.patientRequest,
-						careOrder.orderPatient.locationType, careOrder.orderPatient.addressCd,
-						careOrder.orderPatient.address1, careOrder.orderPatient.address2,
-						careOrder.orderPatient.member.id),
-					jpaQueryFactory.select(member.userId)
-						.from(member)
-						.where(member.id.eq(careOrder.createdAndModified.createdBy)),
-					careOrder.createdAndModified.createdOn,
-					jpaQueryFactory.select(member.userId)
-						.from(member)
-						.where(member.id.eq(careOrder.createdAndModified.updatedBy)),
-					careOrder.createdAndModified.updatedOn));
+		JPAQuery<CareOrder> query = createBaseQuery(predicate)
+			.select(careOrder);
 		Pageable pageable = request.pageable();
 
 		applySorting(query, pageable);
 
-		List<CareOrderDetailResponse> careOrders = query
+		List<CareOrder> careOrders = query
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize()) // 페이징 + 다음 페이지 존재 여부 확인을 위해 +1
 			.fetch();
-		List<ApplyCareOrderResponse> applies = jpaQueryFactory.from(apply)
-			.select(
-				Projections.constructor(ApplyCareOrderResponse.class, apply.careOrder.id, apply.id, apply.applyStatus))
-			.fetch();
-		careOrders.stream()
-			.parallel()
-			.forEach(order -> order.setApplies(applies.stream()
-				.parallel()
-				.filter(apply -> apply.getOrderId().equals(order.getOrderId()))
-				.toList()));
+
+		List<CareOrderDetailResponse> responses = careOrders.stream()
+			.map(CareOrder::toCareOrderDetailResponse)
+			.toList();
 
 		JPAQuery<Long> countQuery = createBaseQuery(predicate)
 			.select(careOrder.count())
 			.leftJoin(careOrder.member, member)
 			.leftJoin(careOrder.noMember, noMember);
 
-		return PageableExecutionUtils.getPage(careOrders, pageable, countQuery::fetchOne);
+		return PageableExecutionUtils.getPage(responses, pageable, countQuery::fetchOne);
 	}
 
 	@Override
@@ -167,16 +132,6 @@ public class CareOrderRepositoryImpl implements CareOrderRepositoryCustom {
 			@SuppressWarnings({"rawtypes", "unchecked"}) OrderSpecifier<?> orderSpecifier = new OrderSpecifier(
 				order.isAscending() ? Order.ASC : Order.DESC, target);
 			query.orderBy(orderSpecifier);
-		}
-	}
-
-	private void applySorting(Pageable pageable) {
-		for (Sort.Order order : pageable.getSort()) {
-			Path<Object> target = Expressions.path(Object.class, careOrder,
-				CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, order.getProperty()));
-			@SuppressWarnings({"rawtypes", "unchecked"}) OrderSpecifier<?> orderSpecifier = new OrderSpecifier(
-				order.isAscending() ? Order.ASC : Order.DESC, target);
-
 		}
 	}
 

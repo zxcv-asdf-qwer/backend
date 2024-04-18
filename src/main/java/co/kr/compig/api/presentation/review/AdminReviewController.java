@@ -19,7 +19,6 @@ import co.kr.compig.global.dto.pagination.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -45,7 +44,7 @@ public class AdminReviewController {
 	@Operation(summary = "신고 조회", description = "페이징")
 	@GetMapping("/report")
 	public ResponseEntity<PageResponse> getReportPage(
-		@ParameterObject @ModelAttribute @Valid ReportSearchRequest reportSearchRequest
+		@ParameterObject @ModelAttribute ReportSearchRequest reportSearchRequest
 	) {
 		Page<ReportResponse> page = reviewService.getReportPage(reportSearchRequest);
 		return PageResponse.ok(page.stream().toList(), page.getPageable().getOffset(), page.getTotalElements());

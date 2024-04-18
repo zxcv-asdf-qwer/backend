@@ -58,8 +58,6 @@ public class Terms {
 		return TermsDetailResponse.builder()
 			.termsType(this.termsType)
 			.contents(this.contents)
-			.createdBy(this.createdAndModified.getCreatedBy())
-			.createdOn(this.createdAndModified.getCreatedOn())
 			.build();
 	}
 

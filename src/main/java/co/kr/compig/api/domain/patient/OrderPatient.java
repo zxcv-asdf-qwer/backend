@@ -23,7 +23,6 @@ import co.kr.compig.global.code.LocationType;
 import co.kr.compig.global.code.ToiletType;
 import co.kr.compig.global.code.converter.DiseaseCodeListConverter;
 import co.kr.compig.global.code.converter.ToiletTypeListConverter;
-import co.kr.compig.global.utils.SecurityUtil;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -161,7 +160,6 @@ public class OrderPatient {
 			.addressCd(this.addressCd)
 			.address1(this.address1)
 			.address2(this.address2)
-			.memberId(SecurityUtil.getMemberId())
 			.build();
 	}
 

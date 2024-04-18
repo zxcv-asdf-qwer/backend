@@ -1,9 +1,9 @@
 package co.kr.compig.api.presentation.member;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -94,8 +94,8 @@ public class AdminMemberController {
 	@GetMapping
 	public ResponseEntity<PageResponse> getAdminPage(
 		@ParameterObject @ModelAttribute MemberSearchRequest memberSearchRequest) {
-		List<MemberResponse> page = memberService.getMemberPage(memberSearchRequest);
-		return PageResponse.ok(page);
+		Page<MemberResponse> page = memberService.getAdminPage(memberSearchRequest);
+		return PageResponse.ok(page.stream().toList(), page.getPageable().getOffset(), page.getTotalElements());
 	}
 
 	@Operation(summary = "관리자 memberId 조회")
@@ -121,8 +121,8 @@ public class AdminMemberController {
 	@GetMapping(path = "/partners")
 	public ResponseEntity<PageResponse> getPartnerPage(
 		@ParameterObject @ModelAttribute MemberSearchRequest memberSearchRequest) {
-		List<PartnerMemberResponse> page = memberService.getPartnerPage(memberSearchRequest);
-		return PageResponse.ok(page);
+		Page<PartnerMemberResponse> page = memberService.getPartnerPage(memberSearchRequest);
+		return PageResponse.ok(page.stream().toList(), page.getPageable().getOffset(), page.getTotalElements());
 	}
 
 	@Operation(summary = "간병인 memberId 조회")

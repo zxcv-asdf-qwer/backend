@@ -43,7 +43,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
 					board.boardType,
 					board.contentsType,
 					board.viewCount,
-					board.createdAndModified.createdBy,
+					board.createdAndModified.createdBy.userNm,
 					board.createdAndModified.createdOn,
 					board.startDate,
 					board.endDate,
@@ -91,7 +91,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
 		}
 		if (request.getCreatedBy() != null) {
 			predicate = predicate.and(
-				board.createdAndModified.createdBy.containsIgnoreCase(request.getCreatedBy()));
+				board.createdAndModified.createdBy.id.containsIgnoreCase(request.getCreatedBy()));
 		}
 		return predicate;
 	}
@@ -121,7 +121,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
 					board.boardType,
 					board.contentsType,
 					board.viewCount,
-					board.createdAndModified.createdBy,
+					board.createdAndModified.createdBy.userNm,
 					board.createdAndModified.createdOn,
 					board.startDate,
 					board.endDate,

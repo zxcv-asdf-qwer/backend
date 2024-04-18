@@ -37,7 +37,7 @@ public class TermsRepositoryImpl implements TermsRepositoryCustom {
 		JPAQuery<TermsResponse> query = createBaseQuery(predicate)
 			.select(Projections.constructor(TermsResponse.class,
 				terms.termsType,
-				terms.createdAndModified.createdBy,
+				terms.createdAndModified.createdBy.userNm,
 				terms.createdAndModified.createdOn
 			));
 		Pageable pageable = request.pageable();
@@ -62,7 +62,7 @@ public class TermsRepositoryImpl implements TermsRepositoryCustom {
 		JPAQuery<TermsResponse> query = createBaseQuery(predicate)
 			.select(Projections.constructor(TermsResponse.class,
 				terms.termsType,
-				terms.createdAndModified.createdBy,
+				terms.createdAndModified.createdBy.userNm,
 				terms.createdAndModified.createdOn
 			));
 
@@ -89,7 +89,7 @@ public class TermsRepositoryImpl implements TermsRepositoryCustom {
 		JPAQuery<TermsResponse> query = createBaseQuery(predicate)
 			.select(Projections.constructor(TermsResponse.class,
 				terms.termsType,
-				terms.createdAndModified.createdBy,
+				terms.createdAndModified.createdBy.userNm,
 				terms.createdAndModified.createdOn
 			))
 			.orderBy(terms.createdAndModified.createdOn.desc());

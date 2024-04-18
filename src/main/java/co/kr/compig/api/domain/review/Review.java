@@ -98,8 +98,6 @@ public class Review {
 	public ReviewDetailResponse toReviewDetailResponse() {
 		return ReviewDetailResponse.builder()
 			.id(this.id)
-			.createdBy(this.member.getUserNm())
-			.createOn(this.createdAndModified.getCreatedOn())
 			.contents(this.contents)
 			.point(this.point)
 			.build();

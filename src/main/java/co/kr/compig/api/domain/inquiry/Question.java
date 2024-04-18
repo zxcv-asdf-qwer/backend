@@ -83,15 +83,15 @@ public class Question {
 	================================================================= */
 
 	public QuestionDetailResponse toQuestionDetailResponse() {
-		return QuestionDetailResponse.builder()
+		QuestionDetailResponse build = QuestionDetailResponse.builder()
 			.questionId(this.id)
 			.questionType(this.questionType)
 			.questionTitle(this.questionTitle)
 			.questionContent(this.questionContent)
-			.createdBy(this.createdAndModified.getCreatedBy())
-			.createdOn(this.createdAndModified.getCreatedOn())
 			.isAnswer(this.isAnswer)
 			.build();
+		build.setCreatedAndUpdated(this.createdAndModified);
+		return build;
 	}
 
 	public void update(QuestionUpdateRequest questionUpdateRequest) {

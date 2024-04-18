@@ -16,8 +16,6 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 public class ReviewDetailResponse extends BaseAudit {
 	private Long id; // 공고 ID
-	private String createdBy; // 작성자
-	private LocalDateTime createOn; // 작성일
 	private String contents; // 내용
 	private int point; // 별점
 }

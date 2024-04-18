@@ -1,14 +1,19 @@
 package co.kr.compig.global.embedded;
 
+import static co.kr.compig.global.utils.SecurityUtil.*;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.hibernate.annotations.ColumnDefault;
 
-import co.kr.compig.global.utils.SecurityUtil;
+import co.kr.compig.api.domain.member.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import lombok.Data;
@@ -20,11 +25,13 @@ public class CreatedAndUpdated {
 	/**********************************************
 	 * Default columns
 	 **********************************************/
-	@Column(length = 50, updatable = false)
-	private String createdBy; // 등록자 아이디
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "created_by", updatable = false)
+	private Member createdBy; // 등록자 객체
 
-	@Column(length = 50)
-	private String updatedBy; // 수정자 아이디
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "updated_by")
+	private Member updatedBy; // 수정자 객체
 
 	@Column(updatable = false)
 	@ColumnDefault("CURRENT_TIMESTAMP")
@@ -35,8 +42,8 @@ public class CreatedAndUpdated {
 
 	@PrePersist
 	public void prePersist() {
-		if (StringUtils.isBlank(createdBy)) {
-			createdBy = SecurityUtil.getMemberId();
+		if (ObjectUtils.allNull(createdBy)) {
+			createdBy = getCurrentMember();
 		}
 		if (createdOn == null) {
 			createdOn = LocalDateTime.now();
@@ -47,14 +54,14 @@ public class CreatedAndUpdated {
 
 	@PreUpdate
 	public void preUpdate() {
-		updatedBy = SecurityUtil.getMemberId();
+		updatedBy = getCurrentMember();
 		updatedOn = LocalDateTime.now();
 	}
 
 	public CreatedAndUpdated() {
 	}
 
-	public CreatedAndUpdated(String createdBy, LocalDateTime createdOn, String updatedBy,
+	public CreatedAndUpdated(Member createdBy, LocalDateTime createdOn, Member updatedBy,
 		LocalDateTime updatedOn) {
 		this.createdBy = createdBy;
 		this.createdOn = createdOn;
