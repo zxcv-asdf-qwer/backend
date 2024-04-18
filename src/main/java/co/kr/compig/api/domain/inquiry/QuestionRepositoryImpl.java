@@ -39,6 +39,7 @@ public class QuestionRepositoryImpl implements QuestionRepositoryCustom {
 					question.id,
 					question.questionType,
 					question.questionTitle,
+					question.createdAndModified.createdBy,
 					question.createdAndModified.createdOn,
 					question.isAnswer
 				)
@@ -66,6 +67,7 @@ public class QuestionRepositoryImpl implements QuestionRepositoryCustom {
 					question.id,
 					question.questionType,
 					question.questionTitle,
+					question.createdAndModified.createdBy,
 					question.createdAndModified.createdOn,
 					question.isAnswer
 				)

@@ -21,7 +21,8 @@ public class QuestionDetailResponse {
 	private QuestionType questionType; // 질문 타입
 	private String questionTitle; // 질문 제목
 	private String questionContent; // 질문 내용
-	private LocalDateTime createOn; // 질문 날짜
+	private String createdBy; // 작성자
+	private LocalDateTime createdOn; // 질문 날짜
 	private IsYn isAnswer; // 답변 유무
 	private String answerTitle; // 답변 제목
 	private String answerContent; // 답변 내용
