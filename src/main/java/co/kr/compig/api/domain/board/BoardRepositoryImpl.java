@@ -44,6 +44,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
 					board.contentsType,
 					board.viewCount,
 					board.createdAndModified.createdBy,
+					board.createdAndModified.createdOn,
 					board.startDate,
 					board.endDate,
 					board.thumbnailImageUrl
@@ -121,6 +122,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
 					board.contentsType,
 					board.viewCount,
 					board.createdAndModified.createdBy,
+					board.createdAndModified.createdOn,
 					board.startDate,
 					board.endDate,
 					board.thumbnailImageUrl

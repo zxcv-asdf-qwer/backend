@@ -1,11 +1,11 @@
 package co.kr.compig.api.domain.inquiry;
 
+import co.kr.compig.api.presentation.inquiry.request.QuestionUpdateRequest;
+import co.kr.compig.api.presentation.inquiry.response.QuestionDetailResponse;
 import co.kr.compig.global.code.IsYn;
 import co.kr.compig.global.code.QuestionType;
 import co.kr.compig.global.code.UseYn;
 import co.kr.compig.global.code.converter.QuestionTypeConverter;
-import co.kr.compig.api.presentation.inquiry.request.QuestionUpdateRequest;
-import co.kr.compig.api.presentation.inquiry.response.QuestionDetailResponse;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -88,7 +88,8 @@ public class Question {
 			.questionType(this.questionType)
 			.questionTitle(this.questionTitle)
 			.questionContent(this.questionContent)
-			.createOn(this.createdAndModified.getCreatedOn())
+			.createdBy(this.createdAndModified.getCreatedBy())
+			.createdOn(this.createdAndModified.getCreatedOn())
 			.isAnswer(this.isAnswer)
 			.build();
 	}

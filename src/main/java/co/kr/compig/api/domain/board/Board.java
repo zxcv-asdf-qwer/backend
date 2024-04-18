@@ -8,15 +8,15 @@ import java.util.stream.Collectors;
 
 import org.hibernate.annotations.ColumnDefault;
 
+import co.kr.compig.api.domain.file.SystemFile;
+import co.kr.compig.api.presentation.board.request.BoardUpdateRequest;
+import co.kr.compig.api.presentation.board.response.BoardDetailResponse;
 import co.kr.compig.global.code.BoardType;
 import co.kr.compig.global.code.ContentsType;
 import co.kr.compig.global.code.IsYn;
 import co.kr.compig.global.code.UseYn;
 import co.kr.compig.global.code.converter.BoardTypeConverter;
 import co.kr.compig.global.code.converter.ContentsTypeConverter;
-import co.kr.compig.api.domain.file.SystemFile;
-import co.kr.compig.api.presentation.board.request.BoardUpdateRequest;
-import co.kr.compig.api.presentation.board.response.BoardDetailResponse;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -135,6 +135,7 @@ public class Board {
 			.contentsType(this.contentsType)
 			.viewCount(this.viewCount)
 			.createdBy(this.createdAndModified.getCreatedBy())
+			.createdOn(this.createdAndModified.getCreatedOn())
 			.startDate(this.startDate)
 			.endDate(this.endDate)
 			.thumbNail(this.thumbnailImageUrl != null ? urlToBase64(this.thumbnailImageUrl) : null)
