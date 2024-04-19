@@ -18,8 +18,8 @@ public enum ContentsType implements BaseEnumCode<String> {
 	MATCH_SERVICE("MSE", "매칭 서비스(케어 매니저)", UseYn.Y), // 매칭 서비스(케어 매니저)
 	CALCULATE("CAL", "정산(케어 매니저)", UseYn.Y), // 정산(케어 매니저)
 	EDUCATION("EDU", "교육 및 자격증(케어 매니저)", UseYn.Y), // 교육 및 자격증(케어 매니저),
-	GUARDIAN("GUA", "보호자 관련", UseYn.Y),
-	PARTNER("PAR", "간병인 관련", UseYn.Y),
+	GUARDIAN("GUA", "보호자", UseYn.Y),
+	PARTNER("PAR", "간병인", UseYn.Y),
 
 	// 교육
 	PRIMARY_EDUCATION("PED", "간병인 필수 교육", UseYn.Y), // 간병인 필수 교육
