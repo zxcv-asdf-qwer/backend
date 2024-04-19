@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public enum MemberType implements BaseEnumCode<String> {
-	NO_MEMBER("NOM", "비회원"), // 비회원
-	MEMBER("MEM", "회원"); // 회원
+	NO_MEMBER("NO_MEMBER", "비회원"), // 비회원
+	MEMBER("MEMBER", "회원"); // 회원
 
 	private final String code;
 	private final String desc;
