@@ -27,13 +27,12 @@ import co.kr.compig.api.domain.settle.Settle;
 import co.kr.compig.api.presentation.order.request.AdminCareOrderCreateRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderCalculateRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderCreateRequest;
+import co.kr.compig.api.presentation.order.request.CareOrderExtensionsRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderSearchRequest;
-import co.kr.compig.api.presentation.order.request.CareOrderUpdateRequest;
 import co.kr.compig.api.presentation.order.request.FamilyCareOrderCreateRequest;
 import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
 import co.kr.compig.api.presentation.order.response.CareOrderResponse;
-import co.kr.compig.global.code.OrderStatus;
-import co.kr.compig.global.error.exception.BizException;
+import co.kr.compig.global.code.OrderType;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import co.kr.compig.global.utils.SecurityUtil;
 import lombok.RequiredArgsConstructor;
@@ -149,6 +148,7 @@ public class CareOrderService {
 		}
 
 		// TODO 결제pg요청 프로세스
+		//return을 결제 url 로 넘기기
 		careOrder.addPayment(Payment.builder()
 			.price(totalPrice)//보호자 수수료 적용한 금액(보호자가 지불해야 하는 금액)(간병일 전체)
 			.build());
@@ -184,13 +184,49 @@ public class CareOrderService {
 		return careOrderRepository.findById(careOrderId).orElseThrow(NotExistDataException::new);
 	}
 
-	public Long updateCareOrder(Long careOrderId, CareOrderUpdateRequest careOrderUpdateRequest) {
+	public Long extensionsCareOrder(Long careOrderId, CareOrderExtensionsRequest careOrderExtensionsRequest) {
+		CareOrderCalculateRequest calculateRequest = CareOrderCalculateRequest.builder()
+			.startDateTime(careOrderExtensionsRequest.getStartDateTime())
+			.endDateTime(careOrderExtensionsRequest.getEndDateTime())
+			.amount(careOrderExtensionsRequest.getAmount())
+			.periodType(careOrderExtensionsRequest.getPeriodType())
+			.build();
+
 		CareOrder careOrder = careOrderRepository.findById(careOrderId).orElseThrow(NotExistDataException::new);
-		if (!careOrder.getOrderStatus().equals(OrderStatus.MATCHING_WAITING)) {
-			throw new BizException("공고를 수정 할 수 없습니다.");
+		//간병 연장
+		CareOrder extensionOrder = careOrder.extension(careOrderExtensionsRequest.getStartDateTime(),
+			careOrderExtensionsRequest.getEndDateTime());
+
+		int totalPrice = 0;
+		long daysBetween = ChronoUnit.DAYS.between(careOrderExtensionsRequest.getStartDateTime(),
+			careOrderExtensionsRequest.getEndDateTime());
+		Settle recentSettle = settleService.getRecentSettle();
+
+		for (int i = 0; i <= daysBetween; i++) {
+			if (extensionOrder.getOrderType().equals(OrderType.GENERAL)) {
+				// 지원자 o, packing
+				// 종료 날짜(2024-04-17 10:00:00) - 시작 날짜(2024-04-12 10:00:00)
+				// 시작 날짜부터 종료 날짜까지 5일 Packing 객체 생성
+				LocalDateTime startDateTime = extensionOrder.getStartDateTime().plusDays(i);
+				LocalDateTime endDateTime = startDateTime.plusDays(1);
+				Packing build = Packing.builder()
+					.careOrder(extensionOrder)
+					.settle(recentSettle)
+					.periodType(careOrderExtensionsRequest.getPeriodType())
+					.amount(careOrderExtensionsRequest.getAmount())
+					.startDateTime(startDateTime)
+					.endDateTime(endDateTime)
+					.build();
+				extensionOrder.addPacking(build);
+			}
+
+			totalPrice += calculatePaymentPriceOneDay(calculateRequest, recentSettle.getGuardianFees());
 		}
-		careOrder.update(careOrderUpdateRequest);
-		return careOrder.getId();
+		log.info(String.valueOf(totalPrice));
+
+		// TODO 결제pg요청 프로세스
+		//return을 결제 url 로 넘기기
+		return extensionOrder.getId();
 	}
 
 	public void cancelCareOrder(Long careOrderId) {

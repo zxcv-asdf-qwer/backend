@@ -22,9 +22,10 @@ import co.kr.compig.api.domain.patient.OrderPatient;
 import co.kr.compig.api.domain.payment.Payment;
 import co.kr.compig.api.domain.review.Review;
 import co.kr.compig.api.presentation.apply.response.ApplyCareOrderResponse;
-import co.kr.compig.api.presentation.order.request.CareOrderUpdateRequest;
+import co.kr.compig.api.presentation.order.request.CareOrderExtensionsRequest;
 import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
 import co.kr.compig.api.presentation.patient.response.OrderPatientDetailResponse;
+import co.kr.compig.global.code.ApplyStatus;
 import co.kr.compig.global.code.CareOrderProcessType;
 import co.kr.compig.global.code.IsYn;
 import co.kr.compig.global.code.OrderStatus;
@@ -33,6 +34,7 @@ import co.kr.compig.global.code.converter.CareOrderProcessTypeConverter;
 import co.kr.compig.global.code.converter.OrderStatusConverter;
 import co.kr.compig.global.code.converter.OrderTypeConverter;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
+import co.kr.compig.global.error.exception.BizException;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -120,7 +122,7 @@ public class CareOrder {
 	@JoinColumn(name = "member_id", foreignKey = @ForeignKey(name = "fk01_order_patient"))
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonBackReference//연관관계의 주인 Entity 에 선언, 직렬화가 되지 않도록 수행
-	private Member member; // Member id
+	private Member member; // Member id 보호자
 
 	@Builder.Default
 	@JoinColumn(name = "order_patient_id", nullable = false, foreignKey = @ForeignKey(name = "fk03_care_order"))
@@ -207,9 +209,45 @@ public class CareOrder {
 		return build;
 	}
 
-	public void update(CareOrderUpdateRequest careOrderUpdateRequest) {
-		this.startDateTime = careOrderUpdateRequest.getStartDateTime();
-		this.endDateTime = careOrderUpdateRequest.getEndDateTime();
+	public CareOrder extension(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+		//1.start 연장하려는 간병인이, 보호자가 선택한 연장기간 중에, 매칭된 다른 간병공고와 겹치지 않은지 체크
+		Member matchApplyMember = this.applys
+			.stream()
+			.filter(apply -> apply.getApplyStatus().equals(ApplyStatus.MATCHING_COMPLETE))
+			.map(Apply::getMember)
+			.findFirst()
+			.orElseThrow(() -> new BizException("현재 간병 공고의 매칭된 지원자가 없습니다."));
+		// 겹치는 간병 공고가 있는지 체크
+		boolean hasOverlap = matchApplyMember.getApplys().stream().anyMatch(apply -> {
+			LocalDateTime existingStart = apply.getCareOrder().getStartDateTime();
+			LocalDateTime existingEnd = apply.getCareOrder().getEndDateTime();
+			// 겹치는 조건 검사: 요청 시작 시간이 기존 종료 시간 이전이고 요청 종료 시간이 기존 시작 시간 이후인 경우
+			return this.startDateTime.isBefore(existingEnd)
+				&& this.endDateTime.isAfter(existingStart);
+		});
+		if (hasOverlap) {
+			throw new BizException("매칭하고자 하는 간병인의 간병 기간이 겹칩니다.");
+		}
+		//1. end
+		return CareOrder.builder()
+			.startDateTime(this.startDateTime)
+			.endDateTime(this.endDateTime)
+			.orderStatus(OrderStatus.MATCHING_COMPLETE)
+			.orderType(this.orderType)
+			.publishYn(IsYn.Y)
+			.orderRequest(this.orderRequest)
+			.careOrderProcessType(CareOrderProcessType.AUTO)
+			.applys(this.applys.stream()
+				.filter(apply -> apply.getApplyStatus().equals(ApplyStatus.MATCHING_COMPLETE))
+				.collect(Collectors.toSet()))
+			.member(this.member)
+			.orderPatient(this.orderPatient)
+			.build();
+	}
+
+	public void update(CareOrderExtensionsRequest careOrderExtensionsRequest) {
+		this.startDateTime = careOrderExtensionsRequest.getStartDateTime();
+		this.endDateTime = careOrderExtensionsRequest.getEndDateTime();
 	}
 
 	public void cancelOrder() {

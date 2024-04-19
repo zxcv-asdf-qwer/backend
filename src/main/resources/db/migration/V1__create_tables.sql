@@ -154,7 +154,6 @@ create table if not exists care_order
     start_date_time         timestamp(6),
     care_order_process_type varchar(255),
     member_id               varchar(255),
-    no_member_id            bigint,
     order_request           TEXT,
     order_status            varchar(15)  default 'MATCHING_WAITING',
     order_type              varchar(10)  default 'GENERAL',
@@ -402,7 +401,6 @@ create table if not exists order_patient
     address2                   varchar(200),
     location_type              varchar(255),
     member_id                  varchar(255),
-    no_member_id               bigint,
     patient_request            varchar(255),
     disease_nms                json,
     self_toilet_availabilities json,
@@ -448,7 +446,6 @@ create table if not exists patient
     address2                   varchar(200),
     location_type              varchar(255),
     member_id                  varchar(255),
-    no_member_id               bigint,
     patient_request            varchar(255),
     disease_nms                json,
     self_toilet_availabilities json,
@@ -622,20 +619,6 @@ create table if not exists wallet
     primary key (wallet_id)
 );
 
-create sequence if not exists no_member_seq start with 1 increment by 1;
-create table if not exists no_member
-(
-    no_member_id bigint not null,
-    tel_no       varchar(100),
-    user_nm      varchar(100),
-    created_by   varchar(50),
-    created_on   timestamp(6) default CURRENT_TIMESTAMP,
-    updated_by   varchar(50),
-    updated_on   timestamp(6) default CURRENT_TIMESTAMP,
-    primary key (no_member_id),
-    constraint uk01_no_member unique (user_nm, tel_no)
-);
-
 create sequence if not exists facking_seq start with 1 increment by 1;
 create table if not exists facking
 (
@@ -726,11 +709,6 @@ alter table if exists care_order
             references member
 ;
 alter table if exists care_order
-    add constraint fk02_care_order
-        foreign key (no_member_id)
-            references no_member
-;
-alter table if exists care_order
     add constraint fk03_care_order
         foreign key (order_patient_id)
             references order_patient
@@ -760,11 +738,7 @@ alter table if exists order_patient
         foreign key (member_id)
             references member
 ;
-alter table if exists order_patient
-    add constraint fk02_order_patient
-        foreign key (no_member_id)
-            references no_member
-;
+
 alter table if exists packing
     add constraint fk01_packing
         foreign key (care_order_id)
@@ -779,11 +753,6 @@ alter table if exists patient
     add constraint fk01_patient
         foreign key (member_id)
             references member
-;
-alter table if exists patient
-    add constraint fk02_patient
-        foreign key (no_member_id)
-            references no_member
 ;
 alter table if exists payment
     add constraint fk01_payment

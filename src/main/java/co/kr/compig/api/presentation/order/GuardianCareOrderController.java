@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import co.kr.compig.api.application.order.CareOrderService;
 import co.kr.compig.api.presentation.order.request.CareOrderCreateRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderSearchRequest;
-import co.kr.compig.api.presentation.order.request.CareOrderUpdateRequest;
 import co.kr.compig.api.presentation.order.request.FamilyCareOrderCreateRequest;
 import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
 import co.kr.compig.api.presentation.order.response.CareOrderResponse;
@@ -81,16 +79,6 @@ public class GuardianCareOrderController {
 	) {
 		return ResponseEntity.ok(Response.<CareOrderDetailResponse>builder()
 			.data(careOrderService.getCareOrder(careOrderId))
-			.build());
-	}
-
-	@Operation(summary = "정보 수정하기")
-	@PutMapping(path = "/{careOrderId}")
-	public ResponseEntity<Response<?>> updateCareOrder(
-		@PathVariable(name = "careOrderId") Long careOrderId,
-		@RequestBody @Valid CareOrderUpdateRequest careOrderUpdateRequest) {
-		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-			.data(Map.of("careOrderId", careOrderService.updateCareOrder(careOrderId, careOrderUpdateRequest)))
 			.build());
 	}
 

@@ -23,6 +23,7 @@ import org.keycloak.representations.idm.UserRepresentation;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import co.kr.compig.api.domain.account.Account;
+import co.kr.compig.api.domain.apply.Apply;
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.domain.patient.OrderPatient;
 import co.kr.compig.api.domain.patient.Patient;
@@ -231,6 +232,11 @@ public class Member {
 	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonManagedReference //연관관계 주인 반대 Entity 에 선언, 정상적으로 직렬화 수행
 	private final Set<Review> reviews = new HashSet<>();
+
+	@Builder.Default
+	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference //연관관계 주인 반대 Entity 에 선언, 정상적으로 직렬화 수행
+	private Set<Apply> applys = new HashSet<>();
 
 	/* =================================================================
 	 * Relation method

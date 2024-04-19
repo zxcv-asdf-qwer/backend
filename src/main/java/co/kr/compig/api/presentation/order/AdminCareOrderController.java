@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import co.kr.compig.api.application.order.CareOrderService;
 import co.kr.compig.api.presentation.order.request.AdminCareOrderCreateRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderCalculateRequest;
+import co.kr.compig.api.presentation.order.request.CareOrderExtensionsRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderSearchRequest;
-import co.kr.compig.api.presentation.order.request.CareOrderUpdateRequest;
 import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.dto.pagination.PageResponse;
@@ -79,13 +79,13 @@ public class AdminCareOrderController {
 			.build());
 	}
 
-	@Operation(summary = "간병 공고 정보 수정하기")
-	@PutMapping(path = "/{orderId}")
-	public ResponseEntity<Response<?>> updateCareOrder(
+	@Operation(summary = "간병 공고 연장하기")
+	@PutMapping(path = "/{orderId}/extensions")
+	public ResponseEntity<Response<?>> extensionsCareOrder(
 		@PathVariable(name = "orderId") Long orderId,
-		@RequestBody @Valid CareOrderUpdateRequest careOrderUpdateRequest) {
+		@RequestBody @Valid CareOrderExtensionsRequest careOrderExtensionsRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-			.data(Map.of("orderId", careOrderService.updateCareOrder(orderId, careOrderUpdateRequest)))
+			.data(Map.of("orderId", careOrderService.extensionsCareOrder(orderId, careOrderExtensionsRequest)))
 			.build());
 	}
 
