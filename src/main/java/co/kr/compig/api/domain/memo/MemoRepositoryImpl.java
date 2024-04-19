@@ -3,8 +3,8 @@ package co.kr.compig.api.domain.memo;
 import static co.kr.compig.api.domain.memo.QMemo.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -18,17 +18,18 @@ public class MemoRepositoryImpl implements MemoRepositoryCustom {
 
 	@Override
 	public List<MemoResponse> getMemoList(Long orderId) {
-		JPAQuery<MemoResponse> query = jpaQueryFactory
+		JPAQuery<Memo> query = jpaQueryFactory
 			.from(memo)
 			.where(memo.careOrder.id.eq(orderId))
-			.select(Projections.constructor(MemoResponse.class,
-				memo.id,
-				memo.contents,
-				memo.createdAndModified.createdBy.userNm,
-				memo.createdAndModified.createdOn
-			))
-			.orderBy(memo.createdAndModified.createdOn.desc());
-		return query.fetch();
+			.select(memo);
+
+		List<Memo> memos = query.fetch();
+
+		List<MemoResponse> responses = memos.stream()
+			.map(Memo::toMemoResponse)
+			.collect(Collectors.toList());
+
+		return responses;
 	}
 
 }

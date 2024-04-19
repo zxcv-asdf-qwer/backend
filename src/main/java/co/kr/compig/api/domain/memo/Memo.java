@@ -3,6 +3,7 @@ package co.kr.compig.api.domain.memo;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import co.kr.compig.api.domain.order.CareOrder;
+import co.kr.compig.api.presentation.memo.response.MemoResponse;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -58,6 +59,16 @@ public class Memo {
 	@Embedded
 	@Builder.Default
 	private CreatedAndUpdated createdAndModified = new CreatedAndUpdated();
+
+	public MemoResponse toMemoResponse() {
+		MemoResponse memoResponse = MemoResponse.builder()
+			.memoId(this.id)
+			.contents(this.contents)
+			.build();
+
+		memoResponse.setCreatedAndUpdated(this.createdAndModified);
+		return memoResponse;
+	}
 
 	/* =================================================================
 	 * Business login
