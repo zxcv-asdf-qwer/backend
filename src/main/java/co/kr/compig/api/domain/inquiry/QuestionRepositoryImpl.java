@@ -4,6 +4,7 @@ import static co.kr.compig.api.domain.board.QBoard.*;
 import static co.kr.compig.api.domain.inquiry.QQuestion.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,29 +35,25 @@ public class QuestionRepositoryImpl implements QuestionRepositoryCustom {
 	public Page<QuestionResponse> getQuestionPage(QuestionSearchRequest request) {
 		BooleanExpression predicate = createPredicate(request);
 
-		JPAQuery<QuestionResponse> query = createBaseQuery(predicate)
-			.select(Projections.constructor(QuestionResponse.class,
-					question.id,
-					question.questionType,
-					question.questionTitle,
-					question.createdAndModified.createdBy.userNm,
-					question.createdAndModified.createdOn,
-					question.isAnswer
-				)
-			);
+		JPAQuery<Question> query = createBaseQuery(predicate)
+			.select(question);
 		Pageable pageable = request.pageable();
 
 		applySorting(query, pageable);
 
-		List<QuestionResponse> questions = query
+		List<Question> questions = query
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
 			.fetch();
 
+		List<QuestionResponse> responses = questions.stream()
+			.map(Question::toQuestionResponse)
+			.collect(Collectors.toList());
+
 		JPAQuery<Long> countQuery = createBaseQuery(predicate)
 			.select(question.count());
 
-		return PageableExecutionUtils.getPage(questions, pageable, countQuery::fetchOne);
+		return PageableExecutionUtils.getPage(responses, pageable, countQuery::fetchOne);
 	}
 
 	@Override

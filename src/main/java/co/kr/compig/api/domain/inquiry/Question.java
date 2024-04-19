@@ -2,6 +2,7 @@ package co.kr.compig.api.domain.inquiry;
 
 import co.kr.compig.api.presentation.inquiry.request.QuestionUpdateRequest;
 import co.kr.compig.api.presentation.inquiry.response.QuestionDetailResponse;
+import co.kr.compig.api.presentation.inquiry.response.QuestionResponse;
 import co.kr.compig.global.code.IsYn;
 import co.kr.compig.global.code.QuestionType;
 import co.kr.compig.global.code.UseYn;
@@ -102,5 +103,17 @@ public class Question {
 
 	public void updateIsAnswer(IsYn isYn) {
 		this.isAnswer = isYn;
+	}
+
+	public QuestionResponse toQuestionResponse() {
+		QuestionResponse questionResponse = QuestionResponse.builder()
+			.id(this.id)
+			.questionType(this.questionType)
+			.questionTitle(this.questionTitle)
+			.isAnswer(this.isAnswer)
+			.build();
+
+		questionResponse.setCreatedAndUpdated(this.createdAndModified);
+		return questionResponse;
 	}
 }
