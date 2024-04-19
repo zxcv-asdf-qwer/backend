@@ -6,6 +6,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Repository;
 
 import co.kr.compig.api.presentation.member.request.MemberSearchRequest;
+import co.kr.compig.api.presentation.member.response.GuardianMemberResponse;
 import co.kr.compig.api.presentation.member.response.MemberPageResponse;
 import co.kr.compig.api.presentation.member.response.MemberResponse;
 import co.kr.compig.api.presentation.member.response.PartnerMemberResponse;
@@ -18,5 +19,7 @@ public interface MemberRepositoryCustom {
 	Page<MemberResponse> getAdminPage(MemberSearchRequest memberSearchRequest);
 
 	Page<PartnerMemberResponse> getPartnerPage(MemberSearchRequest memberSearchRequest);
+
+	Page<GuardianMemberResponse> getGuardianPage(MemberSearchRequest memberSearchRequest);
 
 }

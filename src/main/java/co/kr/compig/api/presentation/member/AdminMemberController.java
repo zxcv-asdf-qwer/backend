@@ -24,6 +24,7 @@ import co.kr.compig.api.presentation.member.request.MemberSearchRequest;
 import co.kr.compig.api.presentation.member.request.NoMemberCreate;
 import co.kr.compig.api.presentation.member.request.PartnerMemberCreate;
 import co.kr.compig.api.presentation.member.request.PartnerMemberUpdate;
+import co.kr.compig.api.presentation.member.response.GuardianMemberResponse;
 import co.kr.compig.api.presentation.member.response.MemberResponse;
 import co.kr.compig.api.presentation.member.response.PartnerMemberResponse;
 import co.kr.compig.global.dto.Response;
@@ -106,7 +107,8 @@ public class AdminMemberController {
 	@GetMapping(path = "/guardians")
 	public ResponseEntity<PageResponse> getGuardianPage(
 		@ParameterObject @ModelAttribute MemberSearchRequest memberSearchRequest) {
-		return PageResponse.ok(memberService.getGuardianPage(memberSearchRequest));
+		Page<GuardianMemberResponse> page = memberService.getGuardianPage(memberSearchRequest);
+		return PageResponse.ok(page.stream().toList(), page.getPageable().getOffset(), page.getTotalElements());
 	}
 
 	@Operation(summary = "보호자 memberId 조회")

@@ -272,8 +272,8 @@ public class MemberService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<GuardianMemberResponse> getGuardianPage(MemberSearchRequest memberSearchRequest) {
-		return memberMapper.selectGuardianList(memberSearchRequest);
+	public Page<GuardianMemberResponse> getGuardianPage(MemberSearchRequest memberSearchRequest) {
+		return memberRepositoryCustom.getGuardianPage(memberSearchRequest);
 	}
 
 	@Transactional(readOnly = true)

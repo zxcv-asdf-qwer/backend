@@ -33,6 +33,7 @@ import co.kr.compig.api.presentation.member.request.AdminMemberUpdate;
 import co.kr.compig.api.presentation.member.request.GuardianMemberUpdate;
 import co.kr.compig.api.presentation.member.request.MemberUpdateRequest;
 import co.kr.compig.api.presentation.member.request.PartnerMemberUpdate;
+import co.kr.compig.api.presentation.member.response.GuardianMemberResponse;
 import co.kr.compig.api.presentation.member.response.MemberResponse;
 import co.kr.compig.api.presentation.member.response.PartnerMemberResponse;
 import co.kr.compig.api.presentation.pass.request.PassSaveRequest;
@@ -465,6 +466,18 @@ public class Member {
 			.build();
 		partnerMemberResponse.setCreatedAndUpdated(this.createdAndModified);
 		return partnerMemberResponse;
+	}
+
+	public GuardianMemberResponse toGuardianMemberResponse() {
+		return GuardianMemberResponse.builder()
+			.memberId(this.id)
+			.userNm(this.userNm)
+			.telNo(this.telNo)
+			.email(this.email)
+			.memberRegisterType(this.memberRegisterType)
+			.memberType(this.memberType)
+			.registerDate(this.createdAndModified.getCreatedOn().toLocalDate())
+			.build();
 	}
 
 	public void setLeaveMember(String leaveReason) {

@@ -23,6 +23,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import co.kr.compig.api.presentation.member.request.MemberSearchRequest;
+import co.kr.compig.api.presentation.member.response.GuardianMemberResponse;
 import co.kr.compig.api.presentation.member.response.MemberPageResponse;
 import co.kr.compig.api.presentation.member.response.MemberResponse;
 import co.kr.compig.api.presentation.member.response.PartnerMemberResponse;
@@ -111,6 +112,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 		}
 		return member.userNm.lt(userNm);
 	}
+
 	@Override
 	public Page<MemberResponse> getAdminPage(MemberSearchRequest request) {
 		BooleanExpression predicate = createPredicate(request);
@@ -166,6 +168,33 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 		JPAQuery<Long> countQuery = createBaseQuery(predicate)
 			.select(member.count())
 			.where(predicate.and(member.userType.eq(UserType.PARTNER)));
+
+		return PageableExecutionUtils.getPage(responses, pageable, countQuery::fetchOne);
+	}
+
+	@Override
+	public Page<GuardianMemberResponse> getGuardianPage(MemberSearchRequest request) {
+		BooleanExpression predicate = createPredicate(request);
+
+		JPAQuery<Member> query = createBaseQuery(predicate)
+			.select(member)
+			.where(predicate.and(member.userType.eq(UserType.GUARDIAN)));
+		Pageable pageable = request.pageable();
+
+		//정렬
+		applySorting(query, pageable);
+
+		List<Member> members = query
+			.offset(pageable.getOffset())
+			.limit(pageable.getPageSize()) // 페이징
+			.fetch();
+
+		List<GuardianMemberResponse> responses = members.stream()
+			.map(Member::toGuardianMemberResponse)
+			.collect(Collectors.toList());
+
+		JPAQuery<Long> countQuery = createBaseQuery(predicate)
+			.select(member.count()).where(predicate.and(member.userType.eq(UserType.GUARDIAN)));
 
 		return PageableExecutionUtils.getPage(responses, pageable, countQuery::fetchOne);
 	}
