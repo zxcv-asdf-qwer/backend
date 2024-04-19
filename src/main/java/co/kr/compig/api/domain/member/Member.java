@@ -469,7 +469,7 @@ public class Member {
 	}
 
 	public GuardianMemberResponse toGuardianMemberResponse() {
-		return GuardianMemberResponse.builder()
+		GuardianMemberResponse build = GuardianMemberResponse.builder()
 			.memberId(this.id)
 			.userNm(this.userNm)
 			.telNo(this.telNo)
@@ -478,6 +478,8 @@ public class Member {
 			.memberType(this.memberType)
 			.registerDate(this.createdAndModified.getCreatedOn().toLocalDate())
 			.build();
+		build.setCreatedAndUpdated(this.createdAndModified);
+		return build;
 	}
 
 	public void setLeaveMember(String leaveReason) {
