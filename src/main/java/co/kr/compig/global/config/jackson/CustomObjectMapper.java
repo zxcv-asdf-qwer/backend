@@ -69,8 +69,9 @@ public class CustomObjectMapper {
 					gen.writeEndObject();
 				} else {
 					gen.writeStartObject();
-					gen.writeString(value.name());
+					gen.writeStringField("name", value.name());
 					gen.writeEndObject();
+
 				}
 			}
 		});
