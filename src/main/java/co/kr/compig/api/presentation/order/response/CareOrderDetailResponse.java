@@ -8,6 +8,7 @@ import co.kr.compig.api.presentation.patient.response.OrderPatientDetailResponse
 import co.kr.compig.global.code.CareOrderProcessType;
 import co.kr.compig.global.code.IsYn;
 import co.kr.compig.global.code.OrderStatus;
+import co.kr.compig.global.code.OrderType;
 import co.kr.compig.global.dto.BaseAudit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,6 +30,7 @@ public class CareOrderDetailResponse extends BaseAudit {
 	private LocalDateTime startDateTime; // 시작 날짜
 	private LocalDateTime endDateTime; // 종료 날짜
 	private OrderStatus orderStatus; // 공고 상태
+	private OrderType orderType; // 일반간병|가족간병
 	private IsYn publishYn; // 게시 여부
 	private CareOrderProcessType careOrderProcessType; // 매칭 구분
 	private String orderRequest; // 요청사항

@@ -10,6 +10,7 @@ import co.kr.compig.api.domain.packing.Facking;
 import co.kr.compig.api.domain.patient.OrderPatient;
 import co.kr.compig.api.domain.settle.Settle;
 import co.kr.compig.global.code.IsYn;
+import co.kr.compig.global.code.OrderType;
 import co.kr.compig.global.code.PeriodType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -69,6 +70,7 @@ public class FamilyCareOrderCreateRequest {
 			.title(this.title)
 			.orderRequest(this.orderRequest)
 			.publishYn(IsYn.Y)
+			.orderType(OrderType.FAMILY)
 			.member(member)
 			.orderPatient(orderPatient)
 			.build();

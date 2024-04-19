@@ -107,6 +107,9 @@ public class CareOrderRepositoryImpl implements CareOrderRepositoryCustom {
 		if (request.getOrderStatus() != null) {
 			predicate = predicate.and(careOrder.orderStatus.eq(request.getOrderStatus()));
 		}
+		if (request.getOrderType() != null) {
+			predicate = predicate.and(careOrder.orderType.eq(request.getOrderType()));
+		}
 		if (request.getFromCreatedOn() != null) {
 			predicate = predicate.and(
 				careOrder.createdAndModified.createdOn.goe(request.getFromCreatedOn())); //크거나 같고(.goe)

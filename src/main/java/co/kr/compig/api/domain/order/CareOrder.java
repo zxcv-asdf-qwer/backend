@@ -28,8 +28,10 @@ import co.kr.compig.api.presentation.patient.response.OrderPatientDetailResponse
 import co.kr.compig.global.code.CareOrderProcessType;
 import co.kr.compig.global.code.IsYn;
 import co.kr.compig.global.code.OrderStatus;
+import co.kr.compig.global.code.OrderType;
 import co.kr.compig.global.code.converter.CareOrderProcessTypeConverter;
 import co.kr.compig.global.code.converter.OrderStatusConverter;
+import co.kr.compig.global.code.converter.OrderTypeConverter;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -82,10 +84,14 @@ public class CareOrder {
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
 	private LocalDateTime endDateTime; // 종료 날짜
 
-	@Column
+	@Column(length = 15)
 	@Builder.Default
 	@Convert(converter = OrderStatusConverter.class)
 	private OrderStatus orderStatus = OrderStatus.MATCHING_WAITING; // 공고 상태
+
+	@Column(length = 10)
+	@Convert(converter = OrderTypeConverter.class)
+	private OrderType orderType; // 공고 상태
 
 	@Column
 	@Enumerated(EnumType.STRING)
@@ -190,6 +196,7 @@ public class CareOrder {
 			.startDateTime(this.startDateTime)
 			.endDateTime(this.endDateTime)
 			.orderStatus(this.orderStatus)
+			.orderType(this.orderType)
 			.publishYn(this.publishYn)
 			.careOrderProcessType(this.careOrderProcessType)
 			.orderRequest(this.orderRequest)

@@ -2,6 +2,7 @@ package co.kr.compig.api.presentation.order.request;
 
 import co.kr.compig.global.code.IsYn;
 import co.kr.compig.global.code.OrderStatus;
+import co.kr.compig.global.code.OrderType;
 import co.kr.compig.global.dto.pagination.PageableRequest;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.AllArgsConstructor;
@@ -18,4 +19,6 @@ public class CareOrderSearchRequest extends PageableRequest {
 	private OrderStatus orderStatus; // 공고 상태
 	private String userNm; // 보호자명
 	private String telNo; // 전화번호
+	@Parameter(description = "GENERAL(일반간병), FAMILY(가족간병)")
+	private OrderType orderType; // 일반간병|가족간병
 }
