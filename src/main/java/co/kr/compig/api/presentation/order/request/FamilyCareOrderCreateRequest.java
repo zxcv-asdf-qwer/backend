@@ -92,4 +92,12 @@ public class FamilyCareOrderCreateRequest {
 			.build();
 	}
 
+	public CareOrderCalculateRequest toCareOrderCalculateRequest() {
+		return CareOrderCalculateRequest.builder()
+			.amount(this.amount)
+			.startDateTime(this.startDateTime)
+			.endDateTime(this.endDateTime)
+			.periodType(this.periodType)
+			.build();
+	}
 }

@@ -203,6 +203,7 @@ public class CareOrder {
 			.orderPatient(orderPatientDetailResponse)
 			.applies(applyResponses)
 			.build();
+		build.setCreatedAndUpdated(this.createdAndModified);
 		return build;
 	}
 

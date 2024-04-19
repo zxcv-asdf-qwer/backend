@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.order.CareOrderService;
 import co.kr.compig.api.presentation.order.request.AdminCareOrderCreateRequest;
+import co.kr.compig.api.presentation.order.request.CareOrderCalculateRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderSearchRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderUpdateRequest;
 import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
@@ -56,6 +57,16 @@ public class AdminCareOrderController {
 		Page<CareOrderDetailResponse> page = careOrderService.pageListCareOrder(
 			careOrderSearchRequest);
 		return PageResponse.ok(page.stream().toList(), page.getPageable().getOffset(), page.getTotalElements());
+	}
+
+	@Operation(summary = "간병비 계산")
+	@GetMapping(path = "/calculate")
+	public ResponseEntity<Response<?>> getCareOrderCalculate(
+		@ParameterObject @ModelAttribute CareOrderCalculateRequest careOrderCalculateRequest
+	) {
+		return ResponseEntity.ok(Response.<Map<String, Integer>>builder()
+			.data(Map.of("totalPrice", careOrderService.getCareOrderCalculate(careOrderCalculateRequest)))
+			.build());
 	}
 
 	@Operation(summary = "간병 공고 상세 조회")

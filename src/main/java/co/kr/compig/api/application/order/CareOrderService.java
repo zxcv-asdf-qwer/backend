@@ -1,5 +1,7 @@
 package co.kr.compig.api.application.order;
 
+import static co.kr.compig.global.utils.CalculateUtil.*;
+
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
@@ -23,6 +25,7 @@ import co.kr.compig.api.domain.patient.Patient;
 import co.kr.compig.api.domain.payment.Payment;
 import co.kr.compig.api.domain.settle.Settle;
 import co.kr.compig.api.presentation.order.request.AdminCareOrderCreateRequest;
+import co.kr.compig.api.presentation.order.request.CareOrderCalculateRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderCreateRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderSearchRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderUpdateRequest;
@@ -137,8 +140,13 @@ public class CareOrderService {
 		Facking build = familyCareOrderCreateRequest.toEntity(careOrder, recentSettle);
 
 		careOrder.addFacking(build);
-
-		totalPrice += build.calculatePaymentPriceOneDay();
+		// 종료 날짜(2024-04-17 10:00:00) - 시작 날짜(2024-04-12 10:00:00)
+		// 시작 날짜부터 종료 날짜까지 5일 Packing 객체 생성
+		long daysBetween = ChronoUnit.DAYS.between(careOrder.getStartDateTime(), careOrder.getEndDateTime());
+		for (int i = 0; i <= daysBetween; i++) {
+			totalPrice += calculatePaymentPriceOneDay(familyCareOrderCreateRequest.toCareOrderCalculateRequest(),
+				recentSettle.getGuardianFees());
+		}
 
 		// TODO 결제pg요청 프로세스
 		careOrder.addPayment(Payment.builder()
@@ -157,6 +165,18 @@ public class CareOrderService {
 	public CareOrderDetailResponse getCareOrder(Long careOrderId) {
 		CareOrder careOrder = this.getCareOrderById(careOrderId);
 		return careOrder.toCareOrderDetailResponse();
+	}
+
+	@Transactional(readOnly = true)
+	public int getCareOrderCalculate(CareOrderCalculateRequest careOrderCalculateRequest) {
+		int totalPrice = 0;
+		long daysBetween = ChronoUnit.DAYS.between(careOrderCalculateRequest.getStartDateTime(),
+			careOrderCalculateRequest.getEndDateTime());
+		Settle recentSettle = settleService.getRecentSettle();
+		for (int i = 0; i <= daysBetween; i++) {
+			totalPrice += calculatePaymentPriceOneDay(careOrderCalculateRequest, recentSettle.getGuardianFees());
+		}
+		return totalPrice;
 	}
 
 	@Transactional(readOnly = true)
