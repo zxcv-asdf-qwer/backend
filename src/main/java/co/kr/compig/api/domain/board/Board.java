@@ -11,6 +11,7 @@ import org.hibernate.annotations.ColumnDefault;
 import co.kr.compig.api.domain.file.SystemFile;
 import co.kr.compig.api.presentation.board.request.BoardUpdateRequest;
 import co.kr.compig.api.presentation.board.response.BoardDetailResponse;
+import co.kr.compig.api.presentation.board.response.BoardResponse;
 import co.kr.compig.global.code.BoardType;
 import co.kr.compig.global.code.ContentsType;
 import co.kr.compig.global.code.IsYn;
@@ -155,4 +156,21 @@ public class Board {
 	@Builder.Default
 	private CreatedAndUpdated createdAndModified = new CreatedAndUpdated();
 
+	public BoardResponse toResponse() {
+		BoardResponse boardResponse = BoardResponse.builder()
+			.boardId(this.id)
+			.title(this.title)
+			.smallTitle(this.smallTitle)
+			.contents(this.contents)
+			.boardType(this.boardType)
+			.contentsType(this.contentsType)
+			.viewCount(this.viewCount)
+			.startDate(this.startDate)
+			.endDate(this.endDate)
+			.thumbNail(this.thumbnailImageUrl)
+			.build();
+
+		boardResponse.setCreatedAndUpdated(this.createdAndModified);
+		return boardResponse;
+	}
 }

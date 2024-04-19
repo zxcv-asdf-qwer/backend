@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.presentation.review.response.ReportDetailResponse;
+import co.kr.compig.api.presentation.review.response.ReportResponse;
 import co.kr.compig.global.code.ReportType;
 import co.kr.compig.global.code.converter.ReportTypeConverter;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
@@ -75,6 +76,17 @@ public class Report {
 			.reportType(this.reportType)
 			.createdOn(this.createdAndModified.getCreatedOn())
 			.build();
+	}
+
+	public ReportResponse toResponse() {
+		ReportResponse reportResponse = ReportResponse.builder()
+			.reportId(this.id)
+			.reviewCreatedBy(this.review.getMember().getUserNm())
+			.reportType(this.reportType)
+			.build();
+
+		reportResponse.setCreatedAndUpdated(this.createdAndModified);
+		return reportResponse;
 	}
 	/* =================================================================
  	 * Business

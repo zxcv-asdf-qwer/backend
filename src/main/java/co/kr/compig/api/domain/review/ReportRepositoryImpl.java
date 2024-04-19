@@ -3,6 +3,7 @@ package co.kr.compig.api.domain.review;
 import static co.kr.compig.api.domain.review.QReport.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +14,6 @@ import com.google.common.base.CaseFormat;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Path;
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -32,28 +32,25 @@ public class ReportRepositoryImpl implements ReportRepositoryCustom {
 	public Page<ReportResponse> getReportPage(ReportSearchRequest request) {
 		BooleanExpression predicate = createPredicate(request);
 
-		JPAQuery<ReportResponse> query = createBaseQuery(predicate)
-			.select(Projections.constructor(ReportResponse.class,
-					report.id,
-					report.review.member.userNm,
-					report.createdAndModified.createdBy.userNm,
-					report.reportType,
-					report.createdAndModified.createdOn
-				)
-			);
+		JPAQuery<Report> query = createBaseQuery(predicate)
+			.select(report);
 		Pageable pageable = request.pageable();
 
 		applySorting(query, pageable);
 
-		List<ReportResponse> reports = query
+		List<Report> reports = query
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
 			.fetch();
 
+		List<ReportResponse> responses = reports.stream()
+			.map(Report::toResponse)
+			.collect(Collectors.toList());
+
 		JPAQuery<Long> countQuery = createBaseQuery(predicate)
 			.select(report.count());
 
-		return PageableExecutionUtils.getPage(reports, pageable, countQuery::fetchOne);
+		return PageableExecutionUtils.getPage(responses, pageable, countQuery::fetchOne);
 	}
 
 	private JPAQuery<?> createBaseQuery(BooleanExpression predicate) {

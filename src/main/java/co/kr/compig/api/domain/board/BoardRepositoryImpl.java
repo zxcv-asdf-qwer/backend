@@ -3,6 +3,7 @@ package co.kr.compig.api.domain.board;
 import static co.kr.compig.api.domain.board.QBoard.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,36 +35,26 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
 	public Page<BoardResponse> getBoardPage(BoardSearchRequest request) {
 		BooleanExpression predicate = createPredicate(request);
 
-		JPAQuery<BoardResponse> query = createBaseQuery(predicate)
-			.select(Projections.constructor(BoardResponse.class,
-					board.id,
-					board.title,
-					board.smallTitle,
-					board.contents,
-					board.boardType,
-					board.contentsType,
-					board.viewCount,
-					board.createdAndModified.createdBy.userNm,
-					board.createdAndModified.createdOn,
-					board.startDate,
-					board.endDate,
-					board.thumbnailImageUrl
-				)
-			);
+		JPAQuery<Board> query = createBaseQuery(predicate)
+			.select(board);
+
 		Pageable pageable = request.pageable();
 
-		//정렬
 		applySorting(query, pageable);
 
-		List<BoardResponse> boards = query
+		List<Board> boards = query
 			.offset(pageable.getOffset())
-			.limit(pageable.getPageSize()) //페이징
+			.limit(pageable.getPageSize())
 			.fetch();
+
+		List<BoardResponse> responses = boards.stream()
+			.map(Board::toResponse)
+			.collect(Collectors.toList());
 
 		JPAQuery<Long> countQuery = createBaseQuery(predicate)
 			.select(board.count());
 
-		return PageableExecutionUtils.getPage(boards, pageable, countQuery::fetchOne);
+		return PageableExecutionUtils.getPage(responses, pageable, countQuery::fetchOne);
 	}
 
 	private JPAQuery<?> createBaseQuery(BooleanExpression predicate) {
