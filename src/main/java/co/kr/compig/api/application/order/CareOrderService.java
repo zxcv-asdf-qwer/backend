@@ -10,11 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import co.kr.compig.api.application.member.MemberService;
-import co.kr.compig.api.application.member.NoMemberService;
 import co.kr.compig.api.application.patient.OrderPatientService;
 import co.kr.compig.api.application.settle.SettleService;
 import co.kr.compig.api.domain.member.Member;
-import co.kr.compig.api.domain.member.NoMember;
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.domain.order.CareOrderRepository;
 import co.kr.compig.api.domain.order.CareOrderRepositoryCustom;
@@ -31,7 +29,6 @@ import co.kr.compig.api.presentation.order.request.CareOrderUpdateRequest;
 import co.kr.compig.api.presentation.order.request.FamilyCareOrderCreateRequest;
 import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
 import co.kr.compig.api.presentation.order.response.CareOrderResponse;
-import co.kr.compig.global.code.MemberType;
 import co.kr.compig.global.code.OrderStatus;
 import co.kr.compig.global.error.exception.BizException;
 import co.kr.compig.global.error.exception.NotExistDataException;
@@ -46,78 +43,42 @@ import lombok.extern.slf4j.Slf4j;
 public class CareOrderService {
 
 	private final MemberService memberService;
-	private final NoMemberService noMemberService;
 	private final SettleService settleService;
 	private final OrderPatientService orderPatientService;
 	private final CareOrderRepository careOrderRepository;
 	private final CareOrderRepositoryCustom careOrderRepositoryCustom;
 
 	public Long createCareOrderAdmin(AdminCareOrderCreateRequest adminCareOrderCreateRequest) {
-		if (adminCareOrderCreateRequest.getMemberType().equals(MemberType.MEMBER)) {
-			Member member = memberService.getMemberById(adminCareOrderCreateRequest.getMemberId());
-			Patient patientById = member.getPatients()
-				.stream()
-				.filter(patient -> patient.getId().equals(adminCareOrderCreateRequest.getPatientId()))
-				.findFirst()
-				.orElseThrow(NotExistDataException::new);
-			// ModelMapper modelMapper = new ModelMapper();
-			// modelMapper.getConfiguration().setFieldAccessLevel(Configuration.AccessLevel.PRIVATE).setFieldMatchingEnabled(true).setMatchingStrategy(MatchingStrategies.LOOSE);
+		Member member = memberService.getMemberById(adminCareOrderCreateRequest.getMemberId());
+		Patient patientById = member.getPatients()
+			.stream()
+			.filter(patient -> patient.getId().equals(adminCareOrderCreateRequest.getPatientId()))
+			.findFirst()
+			.orElseThrow(NotExistDataException::new);
+		// ModelMapper modelMapper = new ModelMapper();
+		// modelMapper.getConfiguration().setFieldAccessLevel(Configuration.AccessLevel.PRIVATE).setFieldMatchingEnabled(true).setMatchingStrategy(MatchingStrategies.LOOSE);
+		OrderPatient orderPatient = orderPatientService.save(patientById.toOrderPatient());
 
-			OrderPatient orderPatient = orderPatientService.save(patientById.toOrderPatient());
-
-			CareOrder careOrder = careOrderRepository.save(
-				adminCareOrderCreateRequest.converterEntity(member, orderPatient));
-			Settle recentSettle = settleService.getRecentSettle();
-			// 종료 날짜(2024-04-17 10:00:00) - 시작 날짜(2024-04-12 10:00:00)
-			// 시작 날짜부터 종료 날짜까지 5일 Packing 객체 생성
-			long daysBetween = ChronoUnit.DAYS.between(careOrder.getStartDateTime(), careOrder.getEndDateTime());
-			for (int i = 0; i <= daysBetween; i++) {
-				LocalDateTime startDateTime = careOrder.getStartDateTime().plusDays(i);
-				LocalDateTime endDateTime = startDateTime.plusDays(1);
-				Packing build = Packing.builder()
-					.careOrder(careOrder)
-					.settle(recentSettle)
-					.periodType(adminCareOrderCreateRequest.getPeriodType())
-					.amount(adminCareOrderCreateRequest.getAmount())
-					.startDateTime(startDateTime)
-					.endDateTime(endDateTime)
-					.build();
-				careOrder.addPacking(build);
-			}
-			return careOrder.getId();
-		} else {
-			NoMember noMember = noMemberService.getNoMemberById(adminCareOrderCreateRequest.getMemberId());
-			Patient patientById = noMember.getPatients()
-				.stream()
-				.filter(patient -> patient.getId().equals(adminCareOrderCreateRequest.getPatientId()))
-				.findFirst()
-				.orElseThrow(NotExistDataException::new);
-			// ModelMapper modelMapper = new ModelMapper();
-			// modelMapper.getConfiguration().setFieldAccessLevel(Configuration.AccessLevel.PRIVATE).setFieldMatchingEnabled(true).setMatchingStrategy(MatchingStrategies.LOOSE);
-
-			OrderPatient orderPatient = orderPatientService.save(patientById.toOrderPatient());
-
-			CareOrder careOrder = careOrderRepository.save(
-				adminCareOrderCreateRequest.converterEntity(noMember, orderPatient));
-			Settle recentSettle = settleService.getRecentSettle();
-			// 종료 날짜(2024-04-17 10:00:00) - 시작 날짜(2024-04-12 10:00:00)
-			// 시작 날짜부터 종료 날짜까지 5일 Packing 객체 생성
-			long daysBetween = ChronoUnit.DAYS.between(careOrder.getStartDateTime(), careOrder.getEndDateTime());
-			for (int i = 0; i <= daysBetween; i++) {
-				LocalDateTime startDateTime = careOrder.getStartDateTime().plusDays(i);
-				LocalDateTime endDateTime = startDateTime.plusDays(1);
-				Packing build = Packing.builder()
-					.careOrder(careOrder)
-					.settle(recentSettle)
-					.periodType(adminCareOrderCreateRequest.getPeriodType())
-					.amount(adminCareOrderCreateRequest.getAmount())
-					.startDateTime(startDateTime)
-					.endDateTime(endDateTime)
-					.build();
-				careOrder.addPacking(build);
-			}
-			return careOrder.getId();
+		CareOrder careOrder = careOrderRepository.save(
+			adminCareOrderCreateRequest.converterEntity(member, orderPatient));
+		Settle recentSettle = settleService.getRecentSettle();
+		// 종료 날짜(2024-04-17 10:00:00) - 시작 날짜(2024-04-12 10:00:00)
+		// 시작 날짜부터 종료 날짜까지 5일 Packing 객체 생성
+		long daysBetween = ChronoUnit.DAYS.between(careOrder.getStartDateTime(), careOrder.getEndDateTime());
+		for (int i = 0; i <= daysBetween; i++) {
+			LocalDateTime startDateTime = careOrder.getStartDateTime().plusDays(i);
+			LocalDateTime endDateTime = startDateTime.plusDays(1);
+			Packing build = Packing.builder()
+				.careOrder(careOrder)
+				.settle(recentSettle)
+				.periodType(adminCareOrderCreateRequest.getPeriodType())
+				.amount(adminCareOrderCreateRequest.getAmount())
+				.startDateTime(startDateTime)
+				.endDateTime(endDateTime)
+				.build();
+			careOrder.addPacking(build);
 		}
+		return careOrder.getId();
 	}
 
 	public Long createCareOrderGuardian(CareOrderCreateRequest careOrderCreateRequest) {

@@ -6,13 +6,11 @@ import java.util.List;
 import org.hibernate.validator.constraints.Length;
 
 import co.kr.compig.api.domain.member.Member;
-import co.kr.compig.api.domain.member.NoMember;
 import co.kr.compig.api.domain.patient.Patient;
 import co.kr.compig.global.code.DiseaseCode;
 import co.kr.compig.global.code.GenderCode;
 import co.kr.compig.global.code.IsYn;
 import co.kr.compig.global.code.LocationType;
-import co.kr.compig.global.code.MemberType;
 import co.kr.compig.global.code.ToiletType;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -31,8 +29,6 @@ public class AdminPatientCreateRequest {
 
 	@NotBlank
 	private String memberId; // 멤버 ID
-	@NotNull
-	private MemberType memberType; // 비회원/회원
 
 	@NotBlank
 	@Pattern(regexp = "^[\\sㄱ-ㅎ가-힣A-Za-z0-9_-]{2,100}$")
@@ -99,23 +95,4 @@ public class AdminPatientCreateRequest {
 			.build();
 	}
 
-	public Patient converterEntity(NoMember noMember) {
-		return Patient.builder()
-			.name(this.name)
-			.gender(this.gender)
-			.birthDate(this.birthDate)
-			.height(this.height)
-			.weight(this.weight)
-			.diseaseNms(this.diseaseNms)
-			.selfToiletAvailabilities(this.selfToiletAvailabilities)
-			.genderPreference(this.genderPreference)
-			.covid19Test(this.covid19Test)
-			.patientRequest(this.patientRequest)
-			.locationType(this.locationType)
-			.addressCd(this.addressCd)
-			.address1(this.address1)
-			.address2(this.address2)
-			.noMember(noMember)
-			.build();
-	}
 }

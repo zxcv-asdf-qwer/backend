@@ -5,11 +5,9 @@ import java.time.LocalDateTime;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import co.kr.compig.api.domain.member.Member;
-import co.kr.compig.api.domain.member.NoMember;
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.domain.patient.OrderPatient;
 import co.kr.compig.global.code.IsYn;
-import co.kr.compig.global.code.MemberType;
 import co.kr.compig.global.code.PeriodType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -50,9 +48,6 @@ public class AdminCareOrderCreateRequest {
 	private String memberId; // 멤버 ID
 
 	@NotNull
-	private MemberType memberType; // 비회원/회원
-
-	@NotNull
 	private Long patientId; // 간병공고 등록시 환자 정보 ID
 
 	public CareOrder converterEntity(Member member, OrderPatient orderPatient) {
@@ -63,18 +58,6 @@ public class AdminCareOrderCreateRequest {
 			.orderRequest(this.orderRequest)
 			.publishYn(this.publishYn)
 			.member(member)
-			.orderPatient(orderPatient)
-			.build();
-	}
-
-	public CareOrder converterEntity(NoMember noMember, OrderPatient orderPatient) {
-		return CareOrder.builder()
-			.startDateTime(this.startDateTime)
-			.endDateTime(this.endDateTime)
-			.title(this.title)
-			.orderRequest(this.orderRequest)
-			.publishYn(this.publishYn)
-			.noMember(noMember)
 			.orderPatient(orderPatient)
 			.build();
 	}

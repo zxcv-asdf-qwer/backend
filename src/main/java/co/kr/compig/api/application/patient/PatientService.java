@@ -9,9 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import co.kr.compig.api.application.member.MemberService;
-import co.kr.compig.api.application.member.NoMemberService;
 import co.kr.compig.api.domain.member.Member;
-import co.kr.compig.api.domain.member.NoMember;
 import co.kr.compig.api.domain.patient.Patient;
 import co.kr.compig.api.domain.patient.PatientRepository;
 import co.kr.compig.api.domain.patient.PatientRepositoryCustom;
@@ -21,7 +19,6 @@ import co.kr.compig.api.presentation.patient.request.PatientSearchRequest;
 import co.kr.compig.api.presentation.patient.request.PatientUpdateRequest;
 import co.kr.compig.api.presentation.patient.response.PatientDetailResponse;
 import co.kr.compig.api.presentation.patient.response.PatientResponse;
-import co.kr.compig.global.code.MemberType;
 import co.kr.compig.global.error.exception.BizException;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import co.kr.compig.global.utils.SecurityUtil;
@@ -35,21 +32,13 @@ import lombok.extern.slf4j.Slf4j;
 public class PatientService {
 
 	private final MemberService memberService;
-	private final NoMemberService noMemberService;
-
 	private final PatientRepository patientRepository;
 	private final PatientRepositoryCustom patientRepositoryCustom;
 
 	public Long createPatientAdmin(AdminPatientCreateRequest adminPatientCreateRequest) {
-		if (adminPatientCreateRequest.getMemberType().equals(MemberType.MEMBER)) {
-			Member member = memberService.getMemberById(adminPatientCreateRequest.getMemberId());
-			Patient patient = adminPatientCreateRequest.converterEntity(member);
-			return patientRepository.save(patient).getId();
-		} else {
-			NoMember noMember = noMemberService.getNoMemberById(adminPatientCreateRequest.getMemberId());
-			Patient patient = adminPatientCreateRequest.converterEntity(noMember);
-			return patientRepository.save(patient).getId();
-		}
+		Member member = memberService.getMemberById(adminPatientCreateRequest.getMemberId());
+		Patient patient = adminPatientCreateRequest.converterEntity(member);
+		return patientRepository.save(patient).getId();
 
 	}
 
@@ -80,21 +69,14 @@ public class PatientService {
 		return patientRepositoryCustom.findAllByCondition(patientSearchRequest, pageable);
 	}
 
-	public List<PatientResponse> getPatients(String memberId, MemberType memberType) {
+	public List<PatientResponse> getPatients(String memberId) {
 		if (memberId == null) {
 			throw new BizException("memberId가 없습니다.");
 		}
-		if (memberType.equals(MemberType.MEMBER)) {
-			Member member = memberService.getMemberById(memberId);
-			return patientRepository.findAllByMember(member).stream()
-				.map(Patient::toPatientResponse)
-				.collect(Collectors.toList());
-		} else {
-			NoMember noMember = noMemberService.getNoMemberById(memberId);
-			return patientRepository.findAllByNoMember(noMember).stream()
-				.map(Patient::toPatientResponse)
-				.collect(Collectors.toList());
-		}
+		Member member = memberService.getMemberById(memberId);
+		return patientRepository.findAllByMember(member).stream()
+			.map(Patient::toPatientResponse)
+			.collect(Collectors.toList());
 	}
 
 	public Patient getOrderPatientByOrderPatientId(Long orderPatientId) {

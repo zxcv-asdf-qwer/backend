@@ -2,7 +2,7 @@ package co.kr.compig.api.presentation.member.request;
 
 import org.hibernate.validator.constraints.Length;
 
-import co.kr.compig.api.domain.member.NoMember;
+import co.kr.compig.api.domain.member.Member;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -23,8 +23,8 @@ public class NoMemberCreate {
 
 	private String telNo; // 휴대폰번호
 
-	public NoMember convertEntity() {
-		return NoMember.builder()
+	public Member convertEntity() {
+		return Member.builder()
 			.userNm(this.userNm)
 			.telNo(this.telNo)
 			.build();

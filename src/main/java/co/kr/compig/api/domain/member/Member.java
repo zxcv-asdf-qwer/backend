@@ -1,6 +1,7 @@
 package co.kr.compig.api.domain.member;
 
 import static co.kr.compig.global.utils.CalculateUtil.*;
+import static co.kr.compig.global.utils.KeyGen.*;
 import static co.kr.compig.global.utils.LogUtil.*;
 import static co.kr.compig.global.utils.PasswordValidation.*;
 
@@ -41,10 +42,12 @@ import co.kr.compig.global.code.DomesticForeignCode;
 import co.kr.compig.global.code.GenderCode;
 import co.kr.compig.global.code.IsYn;
 import co.kr.compig.global.code.MemberRegisterType;
+import co.kr.compig.global.code.MemberType;
 import co.kr.compig.global.code.OrderStatus;
 import co.kr.compig.global.code.UseYn;
 import co.kr.compig.global.code.UserType;
 import co.kr.compig.global.code.converter.DeptCodeConverter;
+import co.kr.compig.global.code.converter.MemberTypeConverter;
 import co.kr.compig.global.code.converter.UserTypeConverter;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import co.kr.compig.global.error.exception.BizException;
@@ -114,6 +117,11 @@ public class Member {
 	@Column(length = 10)
 	@Convert(converter = UserTypeConverter.class)
 	private UserType userType; // 사용자 구분
+
+	@Column(length = 10)
+	@Convert(converter = MemberTypeConverter.class)
+	@Builder.Default
+	private MemberType memberType = MemberType.MEMBER; // 회원 비회원 구분
 
 	@Column(length = 10)
 	@Convert(converter = DeptCodeConverter.class)
@@ -222,6 +230,7 @@ public class Member {
 	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonManagedReference //연관관계 주인 반대 Entity 에 선언, 정상적으로 직렬화 수행
 	private final Set<Review> reviews = new HashSet<>();
+
 	/* =================================================================
 	 * Relation method
 	   ================================================================= */
@@ -634,5 +643,11 @@ public class Member {
 			case F -> "여자";
 			default -> "알 수 없음";  // 예시로 추가된 경우, 실제 GenderCode에 따라 다를 수 있음
 		};
+	}
+
+	public void setNoMemberCreate() {
+		this.userType = UserType.GUARDIAN;
+		this.memberType = MemberType.NO_MEMBER;
+		this.id = getRandomKey("compiglab");
 	}
 }

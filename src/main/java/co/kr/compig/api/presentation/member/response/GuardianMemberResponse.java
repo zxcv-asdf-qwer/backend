@@ -3,7 +3,6 @@ package co.kr.compig.api.presentation.member.response;
 import java.time.LocalDate;
 
 import co.kr.compig.global.code.MemberRegisterType;
-import co.kr.compig.global.code.MemberType;
 import co.kr.compig.global.dto.BaseAudit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,6 +23,5 @@ public class GuardianMemberResponse extends BaseAudit {
 	private String email; //이메일
 	private MemberRegisterType memberRegisterType; //회원가입 유형
 	private LocalDate registerDate; //가입일자
-	private MemberType memberType; //회원 비회원
 
 }

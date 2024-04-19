@@ -35,6 +35,7 @@ import co.kr.compig.api.presentation.member.request.GuardianMemberUpdate;
 import co.kr.compig.api.presentation.member.request.LeaveRequest;
 import co.kr.compig.api.presentation.member.request.MemberSearchRequest;
 import co.kr.compig.api.presentation.member.request.MemberUpdateRequest;
+import co.kr.compig.api.presentation.member.request.NoMemberCreate;
 import co.kr.compig.api.presentation.member.request.PartnerMemberCreate;
 import co.kr.compig.api.presentation.member.request.PartnerMemberUpdate;
 import co.kr.compig.api.presentation.member.response.GuardianMemberResponse;
@@ -210,6 +211,12 @@ public class MemberService {
 		);
 	}
 
+	public String noMemberCreate(NoMemberCreate noMemberCreate) {
+		Member noMember = noMemberCreate.convertEntity();
+		noMember.setNoMemberCreate();
+		return memberRepository.save(noMember).getId();
+	}
+
 	public void updateMember(MemberUpdateRequest memberUpdateRequest) {
 		Member memberById = this.getMemberById(SecurityUtil.getMemberId());
 		setReferenceDomain(memberUpdateRequest.getUserType(), memberById);
@@ -263,7 +270,6 @@ public class MemberService {
 	public Page<PartnerMemberResponse> getPartnerPage(@Valid MemberSearchRequest memberSearchRequest) {
 		return memberRepositoryCustom.getPartnerPage(memberSearchRequest);
 	}
-
 
 	@Transactional(readOnly = true)
 	public List<GuardianMemberResponse> getGuardianPage(MemberSearchRequest memberSearchRequest) {

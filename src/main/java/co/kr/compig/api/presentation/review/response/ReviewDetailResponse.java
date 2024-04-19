@@ -1,7 +1,5 @@
 package co.kr.compig.api.presentation.review.response;
 
-import java.time.LocalDateTime;
-
 import co.kr.compig.global.dto.BaseAudit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

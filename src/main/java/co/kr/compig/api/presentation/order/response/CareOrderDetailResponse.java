@@ -24,7 +24,6 @@ public class CareOrderDetailResponse extends BaseAudit {
 
 	private Long orderId; // 공고 ID
 	private String memberId; // userId
-	private Long noMemberId;
 	private String userNm; // 보호자명
 	private String telNo; // 보호자번호
 	private LocalDateTime startDateTime; // 시작 날짜

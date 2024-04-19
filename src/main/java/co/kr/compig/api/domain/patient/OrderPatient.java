@@ -12,7 +12,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import co.kr.compig.api.domain.member.Member;
-import co.kr.compig.api.domain.member.NoMember;
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.presentation.patient.request.OrderPatientUpdateRequest;
 import co.kr.compig.api.presentation.patient.response.OrderPatientDetailResponse;
@@ -130,11 +129,6 @@ public class OrderPatient {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonBackReference//연관관계의 주인 Entity 에 선언, 직렬화가 되지 않도록 수행
 	private Member member; // Member id
-
-	@JoinColumn(name = "no_member_id", foreignKey = @ForeignKey(name = "fk02_order_patient"))
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JsonBackReference//연관관계의 주인 Entity 에 선언, 직렬화가 되지 않도록 수행
-	private NoMember noMember; // Member id
 
 	@Builder.Default
 	@OneToMany(mappedBy = "orderPatient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

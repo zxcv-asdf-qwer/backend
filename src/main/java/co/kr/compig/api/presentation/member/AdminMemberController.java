@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.member.MemberService;
-import co.kr.compig.api.application.member.NoMemberService;
 import co.kr.compig.api.presentation.member.request.AdminMemberCreate;
 import co.kr.compig.api.presentation.member.request.AdminMemberUpdate;
 import co.kr.compig.api.presentation.member.request.GuardianMemberCreate;
@@ -46,7 +45,6 @@ import lombok.extern.slf4j.Slf4j;
 public class AdminMemberController {
 
 	private final MemberService memberService;
-	private final NoMemberService noMemberService;
 
 	@Operation(summary = "최종 접속 일시, 접속 ip 업데이트")
 	@PutMapping("/recent-login")
@@ -58,8 +56,8 @@ public class AdminMemberController {
 	@Operation(summary = "비회원 회원가입")
 	@PostMapping("/no")
 	public ResponseEntity<Response<?>> noMemberCreate(@RequestBody @Valid NoMemberCreate noMemberCreate) {
-		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-			.data(Map.of("memberSeq", noMemberService.noMemberCreate(noMemberCreate)))
+		return ResponseEntity.ok().body(Response.<Map<String, String>>builder()
+			.data(Map.of("memberId", memberService.noMemberCreate(noMemberCreate)))
 			.build());
 	}
 

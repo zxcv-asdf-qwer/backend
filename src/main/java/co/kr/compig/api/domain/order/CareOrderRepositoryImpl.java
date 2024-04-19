@@ -2,7 +2,6 @@ package co.kr.compig.api.domain.order;
 
 import static co.kr.compig.api.domain.board.QBoard.*;
 import static co.kr.compig.api.domain.member.QMember.*;
-import static co.kr.compig.api.domain.member.QNoMember.*;
 import static co.kr.compig.api.domain.order.QCareOrder.*;
 
 import java.util.List;
@@ -55,8 +54,7 @@ public class CareOrderRepositoryImpl implements CareOrderRepositoryCustom {
 
 		JPAQuery<Long> countQuery = createBaseQuery(predicate)
 			.select(careOrder.count())
-			.leftJoin(careOrder.member, member)
-			.leftJoin(careOrder.noMember, noMember);
+			.leftJoin(careOrder.member, member);
 
 		return PageableExecutionUtils.getPage(responses, pageable, countQuery::fetchOne);
 	}

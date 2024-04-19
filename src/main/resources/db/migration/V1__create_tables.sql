@@ -273,6 +273,7 @@ create table if not exists member
     gender                  varchar(255),
     use_yn                  char(1)      default 'Y',
     user_type               varchar(10),
+    member_type             varchar(10)  default 'MEMBER',
     member_register_type    varchar(35),
     jumin1                  varchar(6),
     jumin2                  varchar(7),
@@ -312,6 +313,7 @@ comment on column member.tel_no is '전화번호';
 comment on column member.gender is '성별';
 comment on column member.use_yn is '사용 여부';
 comment on column member.user_type is '사용자 구분';
+comment on column member.member_type is '비회원 구분';
 comment on column member.member_register_type is '회원가입 유형';
 comment on column member.jumin1 is '주민등록번호 앞자리';
 comment on column member.jumin2 is '주민등록번호 뒷자리';
