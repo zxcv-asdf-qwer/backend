@@ -68,7 +68,9 @@ public class CustomObjectMapper {
 					gen.writeObjectField("desc", ((BaseEnumCode)value).getDesc());
 					gen.writeEndObject();
 				} else {
+					gen.writeStartObject();
 					gen.writeString(value.name());
+					gen.writeEndObject();
 				}
 			}
 		});
