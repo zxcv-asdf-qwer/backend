@@ -67,6 +67,9 @@ public class Facking {
 	@Convert(converter = PeriodTypeConverter.class)
 	private PeriodType periodType; // 시간제, 기간제
 
+	@Column
+	private Integer partTime; //파트타임 시간 시간제 일 경우 필수
+
 	@Column(length = 100)
 	private String partnerNm; // 간병인 이름
 

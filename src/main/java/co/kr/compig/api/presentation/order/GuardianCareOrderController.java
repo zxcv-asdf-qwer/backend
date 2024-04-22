@@ -86,7 +86,7 @@ public class GuardianCareOrderController {
 	@DeleteMapping(path = "/{careOrderId}")
 	public ResponseEntity<Response<?>> cancelCareOrder(
 		@PathVariable(name = "careOrderId") Long careOrderId) {
-		careOrderService.cancelCareOrder(careOrderId);
+		careOrderService.cancelCareOrderForGuardian(careOrderId);
 		return ResponseEntity.ok().build();
 	}
 }

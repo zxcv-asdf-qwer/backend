@@ -1,7 +1,10 @@
 package co.kr.compig.api.domain.payment;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.presentation.payment.response.PaymentDetailResponse;
@@ -44,11 +47,33 @@ public class Payment {
 	@Column(name = "payment_id")
 	private Long id;
 
+	@Column(length = 250)
+	private String goodsName; // 상품명
+
 	@Column(nullable = false)
-	private Integer price; // 결제금액
+	private Integer price; // 결제금액 amt
+
+	@Column(length = 250)
+	private String moid; //상점주문번호 (고유값)
+
+	@Column(length = 250)
+	private String orderUrl; // 결제 URL
+
+	@Column(length = 250)
+	private String buyerName; // 결제자 이름
+
+	@Column(length = 250)
+	private String buyerTel; // 결제자 휴대폰번호
+
+	@Column(length = 250)
+	private String buyerEmail; // 결제자 이메일 주소
 
 	@Column
-	private String moid;
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+	private LocalDateTime payExpDate; //SMS 결제 마감기한
+
+	@Column
+	private String payRequestResultCode; // 결과코드
 
 	/* =================================================================
 	 * Domain mapping

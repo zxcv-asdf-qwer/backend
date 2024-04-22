@@ -2,7 +2,6 @@ package co.kr.compig.global.utils;
 
 import static co.kr.compig.global.code.PeriodType.*;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Period;
 
@@ -52,11 +51,8 @@ public class CalculateUtil {
 			throw new BizException("금액을 입력해주세요.");
 		}
 		if (careOrderCalculateRequest.getPeriodType() == PART_TIME) {
-			// 두 날짜와 시간 사이의 차이 계산
-			Duration duration = Duration.between(careOrderCalculateRequest.getStartDateTime(),
-				careOrderCalculateRequest.getEndDateTime());
 			// 차이를 시간 단위로 변환
-			long hours = duration.toHours();
+			long hours = careOrderCalculateRequest.getPartTime();
 			// 금액 * 시간
 			long result = careOrderCalculateRequest.getAmount().longValue() * hours;
 

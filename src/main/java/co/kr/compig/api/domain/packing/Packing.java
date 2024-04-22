@@ -73,6 +73,9 @@ public class Packing {
 	@Convert(converter = PeriodTypeConverter.class)
 	private PeriodType periodType; // 시간제, 기간제
 
+	@Column
+	private Integer partTime; //파트타임 시간 시간제 일 경우 필수
+
 	/* =================================================================
 	 * Domain mapping
 	   ================================================================= */

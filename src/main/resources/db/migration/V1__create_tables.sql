@@ -421,6 +421,7 @@ create table if not exists packing
     settle_id       bigint  not null,
     start_date_time timestamp(6),
     period_type     varchar(255),
+    part_time       integer,
     created_by      varchar(50),
     created_on      timestamp(6) default CURRENT_TIMESTAMP,
     updated_by      varchar(50),
@@ -471,14 +472,22 @@ create table if not exists payment_cancel
 create sequence if not exists payment_seq start with 1 increment by 1;
 create table if not exists payment
 (
-    payment_id bigint  not null,
-    price      integer not null,
-    order_id   bigint  not null,
-    moid       varchar(255),
-    created_by varchar(50),
-    created_on timestamp(6) default CURRENT_TIMESTAMP,
-    updated_by varchar(50),
-    updated_on timestamp(6) default CURRENT_TIMESTAMP,
+
+    payment_id              bigint  not null,
+    order_id                bigint  not null,
+    goods_name              varchar(250),
+    price                   integer not null,
+    moid                    varchar(255),
+    order_url               varchar(250),
+    buyer_name              varchar(250),
+    buyer_tel               varchar(250),
+    buyer_email             varchar(250),
+    pay_exp_date            timestamp(6),
+    pay_request_result_code varchar(255),
+    created_by              varchar(50),
+    created_on              timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by              varchar(50),
+    updated_on              timestamp(6) default CURRENT_TIMESTAMP,
     primary key (payment_id)
 );
 
@@ -634,6 +643,7 @@ create table if not exists facking
     address1        varchar(200),
     address2        varchar(200),
     period_type     varchar(255),
+    part_time       integer,
     created_by      varchar(50),
     created_on      timestamp(6) default CURRENT_TIMESTAMP,
     updated_by      varchar(50),

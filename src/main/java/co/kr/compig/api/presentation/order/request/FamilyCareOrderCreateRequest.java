@@ -9,9 +9,10 @@ import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.domain.packing.Facking;
 import co.kr.compig.api.domain.patient.OrderPatient;
 import co.kr.compig.api.domain.settle.Settle;
-import co.kr.compig.global.code.IsYn;
 import co.kr.compig.global.code.OrderType;
 import co.kr.compig.global.code.PeriodType;
+import co.kr.compig.global.validator.annotaion.Conditional;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Conditional(selected = "periodType", values = {"PART_TIME"}, required = {"partTime"})
 public class FamilyCareOrderCreateRequest {
 
 	@NotBlank
@@ -57,6 +59,9 @@ public class FamilyCareOrderCreateRequest {
 	@NotNull
 	private PeriodType periodType;  // 시간제, 기간제
 
+	@Parameter(description = "파트타임 시간 시간제 일 경우 필수")
+	private Integer partTime; //파트타임 시간 시간제 일 경우 필수
+
 	@NotNull
 	private Integer amount; //금액 //보호자들이 입력한 금액, 수수료 계산전
 
@@ -69,7 +74,6 @@ public class FamilyCareOrderCreateRequest {
 			.endDateTime(this.endDateTime)
 			.title(this.title)
 			.orderRequest(this.orderRequest)
-			.publishYn(IsYn.Y)
 			.orderType(OrderType.FAMILY)
 			.member(member)
 			.orderPatient(orderPatient)
@@ -88,6 +92,7 @@ public class FamilyCareOrderCreateRequest {
 			.startDateTime(this.startDateTime)
 			.endDateTime(this.endDateTime)
 			.periodType(this.periodType)
+			.partTime(this.partTime)
 			.amount(this.amount)
 			.build();
 	}
@@ -98,6 +103,7 @@ public class FamilyCareOrderCreateRequest {
 			.startDateTime(this.startDateTime)
 			.endDateTime(this.endDateTime)
 			.periodType(this.periodType)
+			.partTime(this.partTime)
 			.build();
 	}
 }

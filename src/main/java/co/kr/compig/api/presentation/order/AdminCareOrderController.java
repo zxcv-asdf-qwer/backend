@@ -16,10 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.order.CareOrderService;
-import co.kr.compig.api.presentation.order.request.AdminCareOrderCreateRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderCalculateRequest;
+import co.kr.compig.api.presentation.order.request.CareOrderCreateRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderExtensionsRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderSearchRequest;
+import co.kr.compig.api.presentation.order.request.FamilyCareOrderCreateRequest;
 import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.dto.pagination.PageResponse;
@@ -41,12 +42,23 @@ public class AdminCareOrderController {
 	private final CareOrderService careOrderService;
 
 	@Operation(summary = "간병 공고 등록")
-	@PostMapping
-	public ResponseEntity<Response<?>> createCareOrder(
-		@ParameterObject @RequestBody @Valid AdminCareOrderCreateRequest adminCareOrderCreateRequest
+	@PostMapping("/member/{memberId}")
+	public ResponseEntity<Response<?>> createCareOrder(@PathVariable String memberId,
+		@ParameterObject @RequestBody @Valid CareOrderCreateRequest careOrderCreateRequest
 	) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-			.data(Map.of("orderId", careOrderService.createCareOrderAdmin(adminCareOrderCreateRequest)))
+			.data(Map.of("orderId", careOrderService.createCareOrderAdmin(memberId, careOrderCreateRequest)))
+			.build());
+	}
+
+	@Operation(summary = "가족 간병공고 생성하기")
+	@PostMapping("/member/{memberId}/family")
+	public ResponseEntity<Response<?>> createFamilyCareOrder(@PathVariable String memberId,
+		@ParameterObject @RequestBody @Valid FamilyCareOrderCreateRequest familyCareOrderCreateRequest
+	) {
+		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
+			.data(Map.of("careOrderId",
+				careOrderService.createFamilyCareOrderAdmin(memberId, familyCareOrderCreateRequest)))
 			.build());
 	}
 
