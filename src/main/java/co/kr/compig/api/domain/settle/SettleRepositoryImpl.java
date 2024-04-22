@@ -3,6 +3,7 @@ package co.kr.compig.api.domain.settle;
 import static co.kr.compig.api.domain.settle.QSettle.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +14,6 @@ import com.google.common.base.CaseFormat;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Path;
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -32,22 +32,22 @@ public class SettleRepositoryImpl implements SettleRepositoryCustom {
 	public Page<SettleResponse> getPage(SettleSearchRequest request) {
 		BooleanExpression predicate = createPredicate(request);
 
-		JPAQuery<SettleResponse> query = createBaseQuery(predicate)
-			.select(Projections.constructor(SettleResponse.class,
-					settle.id,
-					settle.guardianFees,
-					settle.partnerFees
-				)
-			);
+		JPAQuery<Settle> query = createBaseQuery(predicate)
+			.select(settle);
+
 		Pageable pageable = request.pageable();
 
 		//정렬
 		applySorting(query, pageable);
 
-		List<SettleResponse> responses = query
+		List<Settle> settles = query
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize()) //페이징
 			.fetch();
+
+		List<SettleResponse> responses = settles.stream()
+			.map(Settle::toResponse)
+			.collect(Collectors.toList());
 
 		JPAQuery<Long> countQuery = createBaseQuery(predicate)
 			.select(settle.count());

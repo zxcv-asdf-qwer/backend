@@ -64,4 +64,15 @@ public class Settle {
 	@Embedded
 	@Builder.Default
 	private Created created = new Created();
+
+	public SettleResponse toResponse() {
+		SettleResponse settleResponse = SettleResponse.builder()
+			.settleId(this.id)
+			.guardianFees(this.guardianFees)
+			.partnerFees(this.partnerFees)
+			.build();
+
+		settleResponse.setCreated(this.created);
+		return settleResponse;
+	}
 }
