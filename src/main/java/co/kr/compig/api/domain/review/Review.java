@@ -98,7 +98,7 @@ public class Review {
 
 	public ReviewDetailResponse toReviewDetailResponse() {
 		ReviewDetailResponse response = ReviewDetailResponse.builder()
-			.id(this.id)
+			.reviewId(this.id)
 			.orderId(this.careOrder.getId())
 			.contents(this.contents)
 			.point(this.point)
@@ -116,7 +116,7 @@ public class Review {
 
 	public ReviewResponse toReview() {
 		ReviewResponse response = ReviewResponse.builder()
-			.id(this.id)
+			.reviewId(this.id)
 			.orderId(this.careOrder.getId())
 			.contents(this.contents)
 			.point(this.point)

@@ -21,7 +21,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
 public class MenuDetailResponse extends BaseAudit {
-	private Long id;
+	private Long menuId;
 	private MenuDivCode menuDiv;
 	private String menuNm;
 	private String menuUrl;

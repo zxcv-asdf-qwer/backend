@@ -15,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
 public class QuestionResponse extends BaseAudit {
-	private Long id; // 질문 ID
+	private Long questionId; // 질문 ID
 	private QuestionType questionType; // 질문 타입
 	private String questionTitle; // 질문 제목
 	private IsYn isAnswer; // 답변 유무

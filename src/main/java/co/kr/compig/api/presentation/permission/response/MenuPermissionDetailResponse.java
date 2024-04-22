@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
 public class MenuPermissionDetailResponse extends BaseAudit {
-	private Long id; // 메뉴 권한 ID
+	private Long menuPermissionId; // 메뉴 권한 ID
 	private String groupKey; // group key
 	private String memberId; // 멤버 ID
 	private String userNm; // 사용자 명

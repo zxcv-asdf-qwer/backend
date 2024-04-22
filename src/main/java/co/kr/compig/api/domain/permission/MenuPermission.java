@@ -78,7 +78,7 @@ public class MenuPermission {
 
 	public MenuPermissionDetailResponse toMenuPermissionDetailResponse() {
 		return MenuPermissionDetailResponse.builder()
-			.id(this.id)
+			.menuPermissionId(this.id)
 			.groupKey(this.groupKey)
 			.memberId(this.member.getId())
 			.userNm(this.member.getUserNm())
@@ -96,7 +96,7 @@ public class MenuPermission {
 
 	public MenuPermissionResponse toResponse() {
 		MenuPermissionResponse menuPermissionResponse = MenuPermissionResponse.builder()
-			.id(this.id)
+			.menuPermissionId(this.id)
 			.groupKey(this.groupKey)
 			.memberId(this.member.getId())
 			.userNm(this.member.getUserNm())

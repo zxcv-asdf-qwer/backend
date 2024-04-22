@@ -14,5 +14,6 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
 public class TermsResponse extends BaseAudit {
+	private Long termsId;
 	private TermsType termsType;
 }

@@ -107,7 +107,7 @@ public class Question {
 
 	public QuestionResponse toQuestionResponse() {
 		QuestionResponse questionResponse = QuestionResponse.builder()
-			.id(this.id)
+			.questionId(this.id)
 			.questionType(this.questionType)
 			.questionTitle(this.questionTitle)
 			.isAnswer(this.isAnswer)

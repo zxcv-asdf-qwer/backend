@@ -57,6 +57,7 @@ public class Terms {
 
 	public TermsDetailResponse toTermsDetailResponse() {
 		return TermsDetailResponse.builder()
+			.termsId(this.id)
 			.termsType(this.termsType)
 			.contents(this.contents)
 			.build();
@@ -69,6 +70,7 @@ public class Terms {
 
 	public TermsResponse toResponse() {
 		TermsResponse termsResponse = TermsResponse.builder()
+			.termsId(this.id)
 			.termsType(this.termsType)
 			.build();
 

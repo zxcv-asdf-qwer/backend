@@ -13,6 +13,6 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
 public class MenuResponse extends BaseAudit {
-	private Long id; // 메뉴 ID
+	private Long menuId; // 메뉴 ID
 	private String menuNm; // 메뉴명
 }

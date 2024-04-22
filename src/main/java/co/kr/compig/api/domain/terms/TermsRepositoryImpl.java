@@ -63,6 +63,7 @@ public class TermsRepositoryImpl implements TermsRepositoryCustom {
 
 		JPAQuery<TermsResponse> query = createBaseQuery(predicate)
 			.select(Projections.constructor(TermsResponse.class,
+				terms.id,
 				terms.termsType,
 				terms.createdAndModified.createdBy.userNm,
 				terms.createdAndModified.createdOn
@@ -90,6 +91,7 @@ public class TermsRepositoryImpl implements TermsRepositoryCustom {
 
 		JPAQuery<TermsResponse> query = createBaseQuery(predicate)
 			.select(Projections.constructor(TermsResponse.class,
+				terms.id,
 				terms.termsType,
 				terms.createdAndModified.createdBy.userNm,
 				terms.createdAndModified.createdOn

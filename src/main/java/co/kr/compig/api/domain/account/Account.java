@@ -73,7 +73,7 @@ public class Account {
 
 	public AccountDetailResponse toAccountDetailResponse() {
 		return AccountDetailResponse.builder()
-			.id(this.id)
+			.accountId(this.id)
 			.accountNumber(this.accountNumber)
 			.accountName(this.accountName)
 			.bankName(this.bankName.getCode())

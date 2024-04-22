@@ -83,7 +83,7 @@ public class AccountService {
 		AES256 aes256 = new AES256(encryptKey.getEncryptKey());
 		try {
 			return AccountDetailResponse.builder()
-				.id(account.getId())
+				.accountId(account.getId())
 				.accountNumber(aes256.decrypt(account.getAccountNumber(), account.getIv()))
 				.accountName(aes256.decrypt(account.getAccountName(), account.getIv()))
 				.bankName(account.getBankName().getCode())

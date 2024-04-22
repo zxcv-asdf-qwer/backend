@@ -78,7 +78,7 @@ public class Apply {
 
 	public ApplyDetailResponse toApplyDetailResponse(Member member, CareOrder careOrder) {
 		ApplyDetailResponse build = ApplyDetailResponse.builder()
-			.id(this.id)
+			.applyId(this.id)
 			.memberId(member.getId())
 			.careOrderId(careOrder.getId())
 			.applyStatus(this.applyStatus)

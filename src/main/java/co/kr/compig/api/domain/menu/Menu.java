@@ -115,7 +115,7 @@ public class Menu {
 
 	public MenuDetailResponse toMenuDetailResponse() {
 		return MenuDetailResponse.builder()
-			.id(this.id)
+			.menuId(this.id)
 			.menuDiv(this.menuDiv)
 			.menuNm(this.menuNm)
 			.menuUrl(this.menuUrl)
