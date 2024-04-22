@@ -174,6 +174,11 @@ public class CareOrder {
 		payment.setCareOrder(this);
 	}
 
+	public void addMemo(Memo memo) {
+		this.memos.add(memo);
+		memo.setCareOrder(this);
+	}
+
 	/* =================================================================
 	 * Default columns
 	   ================================================================= */

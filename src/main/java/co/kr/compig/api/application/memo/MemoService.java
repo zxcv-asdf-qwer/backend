@@ -30,7 +30,7 @@ public class MemoService {
 	public Long createMemo(Long orderId, AdminMemoCreateRequest adminMemoCreateRequest) {
 		CareOrder careOrder = careOrderService.getCareOrderById(orderId);
 		Memo memo = adminMemoCreateRequest.converterEntity(careOrder);
-		memoRepository.save(memo);
+		careOrder.addMemo(memo);
 		return memo.getId();
 	}
 

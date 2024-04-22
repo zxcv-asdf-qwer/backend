@@ -51,7 +51,13 @@ public class Memo {
 	@JoinColumn(name = "care_order_id", nullable = false, foreignKey = @ForeignKey(name = "fk01_memo"))
 	@JsonBackReference//연관관계의 주인 Entity 에 선언, 직렬화가 되지 않도록 수행
 	private CareOrder careOrder;
+	/* =================================================================
+	 * Relation method
+	   ================================================================= */
 
+	public void setCareOrder(CareOrder careOrder) {
+		this.careOrder = careOrder;
+	}
 	/* =================================================================
 	 * Default columns
 	 ================================================================= */
