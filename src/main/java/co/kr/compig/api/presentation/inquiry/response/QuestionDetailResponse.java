@@ -23,7 +23,6 @@ public class QuestionDetailResponse extends BaseAudit {
 	private String questionTitle; // 질문 제목
 	private String questionContent; // 질문 내용
 	private IsYn isAnswer; // 답변 유무
-	private String answerTitle; // 답변 제목
 	private String answerContent; // 답변 내용
 	private LocalDateTime answerUpdateOn; // 답변 업데이트 날짜
 }

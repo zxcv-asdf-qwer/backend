@@ -44,9 +44,6 @@ public class Answer {
 	private Long id;
 
 	@Column
-	private String answerTitle;    // 답변 제목
-
-	@Column
 	private String answerContent;    // 답변 내용
 
 	@Column(length = 1)
@@ -73,7 +70,6 @@ public class Answer {
 	 * Relation method
 	   ================================================================= */
 	public void update(AnswerUpdateRequest answerUpdateRequest) {
-		this.answerTitle = answerUpdateRequest.getAnswerTitle();
 		this.answerContent = answerUpdateRequest.getAnswerContent();
 	}
 
