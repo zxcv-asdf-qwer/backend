@@ -31,19 +31,19 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Tag(name = "간병인 환자 정보", description = "환자 정보 관련 API")
+@Tag(name = "보호자 환자 정보", description = "환자 정보 관련 API")
 @SecurityRequirement(name = "Bearer Authentication")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/partner/patient", produces = "application/json")
+@RequestMapping(path = "/guardian/patient", produces = "application/json")
 public class PartnerPatientController {
 	private final PatientService patientService;
 
 	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createPatient(
-		@ParameterObject @ModelAttribute @Valid PatientCreateRequest patientCreateRequest) {
+		@ParameterObject @RequestBody @Valid PatientCreateRequest patientCreateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("patientId", patientService.createPatientUser(patientCreateRequest)))
 			.build());
@@ -59,7 +59,7 @@ public class PartnerPatientController {
 		return ResponseEntity.ok(sliceResponse);
 	}
 
-	@Operation(summary = "상세 조회")
+	@Operation(summary = "환자 상세 조회")
 	@GetMapping(path = "/{patientId}")
 	public ResponseEntity<Response<PatientDetailResponse>> getPatient(
 		@PathVariable(name = "patientId") Long patientId) {
@@ -68,11 +68,11 @@ public class PartnerPatientController {
 			.build());
 	}
 
-	@Operation(summary = "정보 수정하기")
+	@Operation(summary = "환자 정보 수정")
 	@PutMapping(path = "/{patientId}")
 	public ResponseEntity<Response<?>> updateBoard(
 		@PathVariable(name = "patientId") Long patientId,
-		@RequestBody @Valid PatientUpdateRequest patientUpdateRequest) {
+		@ParameterObject @RequestBody @Valid PatientUpdateRequest patientUpdateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("patientId", patientService.updatePatient(patientId, patientUpdateRequest)))
 			.build());

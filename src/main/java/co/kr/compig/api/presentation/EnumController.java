@@ -20,7 +20,7 @@ public class EnumController {
 	public ResponseEntity<?> getEnumValues(
 		@Parameter(description = "enum Type class name") @PathVariable String enumName) {
 		try {
-			Class<?> enumClass = Class.forName("co.kr.compig.api.domain.code." + enumName);
+			Class<?> enumClass = Class.forName("co.kr.compig.global.code." + enumName);
 			if (enumClass.isEnum()) {
 				return ResponseEntity.ok(enumClass.getMethod("values").invoke(null));
 			} else {
