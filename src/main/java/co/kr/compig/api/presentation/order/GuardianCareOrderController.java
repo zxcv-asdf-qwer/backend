@@ -43,7 +43,7 @@ public class GuardianCareOrderController {
 	@Operation(summary = "일반 간병공고 생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createCareOrder(
-		@ParameterObject @RequestBody @Valid CareOrderCreateRequest careOrderCreateRequest
+		@RequestBody @Valid CareOrderCreateRequest careOrderCreateRequest
 	) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("careOrderId", careOrderService.createCareOrderGuardian(careOrderCreateRequest)))
@@ -53,7 +53,7 @@ public class GuardianCareOrderController {
 	@Operation(summary = "가족 간병공고 생성하기")
 	@PostMapping("/family")
 	public ResponseEntity<Response<?>> createFamilyCareOrder(
-		@ParameterObject @RequestBody @Valid FamilyCareOrderCreateRequest familyCareOrderCreateRequest
+		@RequestBody @Valid FamilyCareOrderCreateRequest familyCareOrderCreateRequest
 	) {
 		return ResponseEntity.ok().body(Response.<Map<String, String>>builder()
 			.data(Map.of("orderUrl", careOrderService.createFamilyCareOrderGuardian(familyCareOrderCreateRequest)))

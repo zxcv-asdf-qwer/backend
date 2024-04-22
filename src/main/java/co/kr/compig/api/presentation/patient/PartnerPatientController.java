@@ -43,7 +43,7 @@ public class PartnerPatientController {
 	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createPatient(
-		@ParameterObject @RequestBody @Valid PatientCreateRequest patientCreateRequest) {
+		@RequestBody @Valid PatientCreateRequest patientCreateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("patientId", patientService.createPatientUser(patientCreateRequest)))
 			.build());
@@ -72,7 +72,7 @@ public class PartnerPatientController {
 	@PutMapping(path = "/{patientId}")
 	public ResponseEntity<Response<?>> updateBoard(
 		@PathVariable(name = "patientId") Long patientId,
-		@ParameterObject @RequestBody @Valid PatientUpdateRequest patientUpdateRequest) {
+		@RequestBody @Valid PatientUpdateRequest patientUpdateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("patientId", patientService.updatePatient(patientId, patientUpdateRequest)))
 			.build());

@@ -42,7 +42,7 @@ public class GuardianReviewController {
 	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createReview(
-		@ParameterObject @RequestBody @Valid ReviewCreateRequest reviewCreateRequest
+		@RequestBody @Valid ReviewCreateRequest reviewCreateRequest
 	) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("reviewId", reviewService.createReviewGuardian(reviewCreateRequest)))

@@ -3,7 +3,6 @@ package co.kr.compig.api.presentation.apply;
 import java.util.List;
 import java.util.Map;
 
-import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,7 +38,7 @@ public class AdminApplyController {
 	@Operation(summary = "간병인 지원 시키기")
 	@PostMapping("/orders/{orderId}")
 	public ResponseEntity<Response<?>> createApply(@PathVariable Long orderId,
-		@ParameterObject @RequestBody @Valid ApplyCreateRequest applyCreateRequest) {
+		@RequestBody @Valid ApplyCreateRequest applyCreateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("applyId", applyService.createApplyByAdmin(orderId, applyCreateRequest)))
 			.build());

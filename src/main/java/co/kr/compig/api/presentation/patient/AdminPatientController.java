@@ -3,7 +3,6 @@ package co.kr.compig.api.presentation.patient;
 import java.util.List;
 import java.util.Map;
 
-import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,7 +38,7 @@ public class AdminPatientController {
 	@Operation(summary = "환자 프로필 등록")
 	@PostMapping
 	public ResponseEntity<Response<?>> createPatient(
-		@ParameterObject @RequestBody @Valid AdminPatientCreateRequest adminPatientCreateRequest) {
+		@RequestBody @Valid AdminPatientCreateRequest adminPatientCreateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("patientId", patientService.createPatientAdmin(adminPatientCreateRequest)))
 			.build());
@@ -68,7 +67,7 @@ public class AdminPatientController {
 	@PutMapping(path = "/{patientId}")
 	public ResponseEntity<Response<?>> updatePatient(
 		@PathVariable(name = "patientId") Long patientId,
-		@ParameterObject @RequestBody @Valid PatientUpdateRequest patientUpdateRequest) {
+		@RequestBody @Valid PatientUpdateRequest patientUpdateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("patientId", patientService.updatePatient(patientId, patientUpdateRequest)))
 			.build());

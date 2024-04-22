@@ -3,7 +3,6 @@ package co.kr.compig.api.presentation.memo;
 import java.util.List;
 import java.util.Map;
 
-import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,7 +36,7 @@ public class AdminMemoController {
 	@PostMapping("/{orderId}")
 	public ResponseEntity<Response<?>> createMemo(
 		@PathVariable(name = "orderId") Long orderId,
-		@ParameterObject @RequestBody @Valid AdminMemoCreateRequest adminMemoCreateRequest
+		@RequestBody @Valid AdminMemoCreateRequest adminMemoCreateRequest
 	) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("memoId", memoService.createMemo(orderId, adminMemoCreateRequest)))

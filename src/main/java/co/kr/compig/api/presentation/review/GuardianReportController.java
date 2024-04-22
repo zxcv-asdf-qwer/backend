@@ -2,7 +2,6 @@ package co.kr.compig.api.presentation.review;
 
 import java.util.Map;
 
-import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,7 +33,7 @@ public class GuardianReportController {
 	@PostMapping(path = "/{reviewId}")
 	public ResponseEntity<Response<?>> createReport(
 		@PathVariable(name = "reviewId") Long reviewId,
-		@ParameterObject @RequestBody @Valid ReportCreateRequest reportCreateRequest
+		@RequestBody @Valid ReportCreateRequest reportCreateRequest
 	) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("reportId", reportService.createReportGuardian(reviewId, reportCreateRequest)))

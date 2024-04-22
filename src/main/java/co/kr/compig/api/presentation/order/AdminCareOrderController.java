@@ -44,7 +44,7 @@ public class AdminCareOrderController {
 	@Operation(summary = "간병 공고 등록")
 	@PostMapping("/member/{memberId}")
 	public ResponseEntity<Response<?>> createCareOrder(@PathVariable String memberId,
-		@ParameterObject @RequestBody @Valid CareOrderCreateRequest careOrderCreateRequest
+		@RequestBody @Valid CareOrderCreateRequest careOrderCreateRequest
 	) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("orderId", careOrderService.createCareOrderAdmin(memberId, careOrderCreateRequest)))
@@ -54,7 +54,7 @@ public class AdminCareOrderController {
 	@Operation(summary = "가족 간병공고 생성하기")
 	@PostMapping("/member/{memberId}/family")
 	public ResponseEntity<Response<?>> createFamilyCareOrder(@PathVariable String memberId,
-		@ParameterObject @RequestBody @Valid FamilyCareOrderCreateRequest familyCareOrderCreateRequest
+		@RequestBody @Valid FamilyCareOrderCreateRequest familyCareOrderCreateRequest
 	) {
 		return ResponseEntity.ok().body(Response.<Map<String, String>>builder()
 			.data(Map.of("orderUrl",
