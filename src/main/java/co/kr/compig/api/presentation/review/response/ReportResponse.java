@@ -15,7 +15,9 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 public class ReportResponse extends BaseAudit {
 
-	private Long reportId; // 신고 ID
-	private String reviewCreatedBy; // 리뷰 작성자
+	private ReviewDetailResponse reviewDetailResponse; // 리뷰 내용
+	private Long reportId; //신고 ID
+	private String contents; //리뷰 내용
 	private ReportType reportType; // 분류
+
 }

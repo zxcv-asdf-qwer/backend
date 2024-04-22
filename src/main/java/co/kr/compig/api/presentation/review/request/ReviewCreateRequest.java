@@ -29,6 +29,9 @@ public class ReviewCreateRequest {
 	@NotNull
 	private Long careOrderId; // 공고 ID
 
+	@NotNull
+	private String memberId; // 멤버 ID
+
 	public Review converterEntity(Member member, CareOrder careOrder) {
 		return Review.builder()
 			.contents(this.contents)

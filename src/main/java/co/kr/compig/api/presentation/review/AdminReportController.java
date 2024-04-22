@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.review.ReportService;
 import co.kr.compig.api.presentation.review.request.ReportSearchRequest;
-import co.kr.compig.api.presentation.review.response.ReportDetailResponse;
 import co.kr.compig.api.presentation.review.response.ReportResponse;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.dto.pagination.PageResponse;
@@ -43,10 +42,10 @@ public class AdminReportController {
 
 	@Operation(summary = "상세 조회")
 	@GetMapping(path = "/{reportId}")
-	public ResponseEntity<Response<ReportDetailResponse>> getReport(
+	public ResponseEntity<Response<ReportResponse>> getReport(
 		@PathVariable(name = "reportId") Long reportId
 	) {
-		return ResponseEntity.ok(Response.<ReportDetailResponse>builder()
+		return ResponseEntity.ok(Response.<ReportResponse>builder()
 			.data(reportService.getReport(reportId))
 			.build());
 	}

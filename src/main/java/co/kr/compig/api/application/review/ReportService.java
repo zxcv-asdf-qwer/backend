@@ -11,7 +11,6 @@ import co.kr.compig.api.domain.review.Review;
 import co.kr.compig.api.domain.review.ReviewRepository;
 import co.kr.compig.api.presentation.review.request.ReportCreateRequest;
 import co.kr.compig.api.presentation.review.request.ReportSearchRequest;
-import co.kr.compig.api.presentation.review.response.ReportDetailResponse;
 import co.kr.compig.api.presentation.review.response.ReportResponse;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import lombok.RequiredArgsConstructor;
@@ -36,9 +35,8 @@ public class ReportService {
 		return reportRepositoryCustom.getReportPage(reportSearchRequest);
 	}
 
-	public ReportDetailResponse getReport(Long reportId) {
+	public ReportResponse getReport(Long reportId) {
 		Report report = reportRepository.findById(reportId).orElseThrow(NotExistDataException::new);
-		ReportResponse reportResponse = report.toResponse();
-		return report.toReportDetailResponse(reportResponse);
+		return report.toResponse();
 	}
 }

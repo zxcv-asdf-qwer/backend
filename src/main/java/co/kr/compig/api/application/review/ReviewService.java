@@ -19,7 +19,6 @@ import co.kr.compig.api.presentation.review.response.ReviewDetailResponse;
 import co.kr.compig.api.presentation.review.response.ReviewResponse;
 import co.kr.compig.global.dto.pagination.SliceResponse;
 import co.kr.compig.global.error.exception.NotExistDataException;
-import co.kr.compig.global.utils.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -33,7 +32,7 @@ public class ReviewService {
 	private final CareOrderService careOrderService;
 
 	public Long createReviewGuardian(ReviewCreateRequest reviewCreateRequest) {
-		Member member = memberService.getMemberById(SecurityUtil.getMemberId());
+		Member member = memberService.getMemberById(reviewCreateRequest.getMemberId());
 		CareOrder careOrder = careOrderService.getCareOrderById(reviewCreateRequest.getCareOrderId());
 		Review review = reviewCreateRequest.converterEntity(member, careOrder);
 		reviewRepository.save(review);

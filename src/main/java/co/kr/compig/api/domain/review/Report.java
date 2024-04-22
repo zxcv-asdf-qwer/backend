@@ -2,7 +2,6 @@ package co.kr.compig.api.domain.review;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import co.kr.compig.api.presentation.review.response.ReportDetailResponse;
 import co.kr.compig.api.presentation.review.response.ReportResponse;
 import co.kr.compig.global.code.ReportType;
 import co.kr.compig.global.code.converter.ReportTypeConverter;
@@ -66,23 +65,12 @@ public class Report {
 	@Builder.Default
 	private CreatedAndUpdated createdAndModified = new CreatedAndUpdated();
 
-	public ReportDetailResponse toReportDetailResponse(ReportResponse reportResponse) {
-		ReportDetailResponse reportDetailResponse = ReportDetailResponse.builder()
-			.reportResponse(reportResponse)
-			.reportId(this.id)
-			.reviewCreatedBy(this.review.getCreatedAndModified().getCreatedBy().getUserNm())
-			.contents(this.contents)
-			.build();
-
-		reportDetailResponse.setCreatedAndUpdated(this.createdAndModified);
-		return reportDetailResponse;
-	}
-
 	public ReportResponse toResponse() {
 		ReportResponse reportResponse = ReportResponse.builder()
+			.reviewDetailResponse(this.review.toReviewDetailResponse())
 			.reportId(this.id)
-			.reviewCreatedBy(this.review.getCreatedAndModified().getCreatedBy().getUserNm())
 			.reportType(this.reportType)
+			.contents(this.contents)
 			.build();
 
 		reportResponse.setCreatedAndUpdated(this.createdAndModified);
