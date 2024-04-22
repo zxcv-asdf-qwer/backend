@@ -1,7 +1,5 @@
 package co.kr.compig.api.presentation.terms.response;
 
-import java.time.LocalDateTime;
-
 import co.kr.compig.global.code.TermsType;
 import co.kr.compig.global.dto.BaseAudit;
 import lombok.AllArgsConstructor;
@@ -17,5 +15,4 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 public class TermsResponse extends BaseAudit {
 	private TermsType termsType;
-	private LocalDateTime createdOn;
 }

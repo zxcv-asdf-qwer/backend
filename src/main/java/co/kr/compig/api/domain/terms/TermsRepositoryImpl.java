@@ -3,6 +3,7 @@ package co.kr.compig.api.domain.terms;
 import static co.kr.compig.api.domain.terms.QTerms.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,20 +35,21 @@ public class TermsRepositoryImpl implements TermsRepositoryCustom {
 	public Page<TermsResponse> getTermsPage(TermsSearchRequest request) {
 		BooleanExpression predicate = createPredicate(request);
 
-		JPAQuery<TermsResponse> query = createBaseQuery(predicate)
-			.select(Projections.constructor(TermsResponse.class,
-				terms.termsType,
-				terms.createdAndModified.createdBy.userNm,
-				terms.createdAndModified.createdOn
-			));
+		JPAQuery<Terms> query = createBaseQuery(predicate)
+			.select(terms);
+
 		Pageable pageable = request.pageable();
 
 		applySorting(query, pageable);
 
-		List<TermsResponse> responses = query
+		List<Terms> termsList = query
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
 			.fetch();
+
+		List<TermsResponse> responses = termsList.stream()
+			.map(Terms::toResponse)
+			.collect(Collectors.toList());
 
 		JPAQuery<Long> countQuery = createBaseQuery(predicate)
 			.select(terms.count());
