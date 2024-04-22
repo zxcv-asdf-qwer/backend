@@ -121,7 +121,8 @@ public class CareOrderService {
 		return careOrder.getId();
 	}
 
-	public Long createFamilyCareOrderAdmin(String memberId, FamilyCareOrderCreateRequest familyCareOrderCreateRequest) {
+	public String createFamilyCareOrderAdmin(String memberId,
+		FamilyCareOrderCreateRequest familyCareOrderCreateRequest) {
 		Member member = memberService.getMemberById(memberId);
 		Patient patientById = member.getPatients()
 			.stream()
@@ -159,7 +160,7 @@ public class CareOrderService {
 			.buyerTel(member.getTelNo())
 			.build();
 
-		// TODO 결제pg요청 프로세스
+		// 결제pg요청 프로세스
 		ResponseEntity<String> response = payApi.requestSmsPay(smsPayRequest);
 		Gson gson = new GsonBuilder()
 			.setPrettyPrinting()
@@ -173,10 +174,10 @@ public class CareOrderService {
 		//return을 결제 url 로 넘기기
 		careOrder.addPayment(smsPayResponse.toEntity(totalPrice));
 
-		return careOrder.getId();
+		return smsPayResponse.getOrderUrl();
 	}
 
-	public Long createFamilyCareOrderGuardian(FamilyCareOrderCreateRequest familyCareOrderCreateRequest) {
+	public String createFamilyCareOrderGuardian(FamilyCareOrderCreateRequest familyCareOrderCreateRequest) {
 		Member member = memberService.getMemberById(SecurityUtil.getMemberId());
 		Patient patientById = member.getPatients()
 			.stream()
@@ -214,7 +215,7 @@ public class CareOrderService {
 			.buyerTel(member.getTelNo())
 			.build();
 
-		// TODO 결제pg요청 프로세스
+		// 결제pg요청 프로세스
 		ResponseEntity<String> response = payApi.requestSmsPay(smsPayRequest);
 		Gson gson = new GsonBuilder()
 			.setPrettyPrinting()
@@ -228,7 +229,7 @@ public class CareOrderService {
 		//return을 결제 url 로 넘기기
 		careOrder.addPayment(smsPayResponse.toEntity(totalPrice));
 
-		return careOrder.getId();
+		return smsPayResponse.getOrderUrl();
 	}
 
 	@Transactional(readOnly = true)
@@ -260,7 +261,7 @@ public class CareOrderService {
 		return careOrderRepository.findById(careOrderId).orElseThrow(NotExistDataException::new);
 	}
 
-	public Long extensionsCareOrder(Long careOrderId, CareOrderExtensionsRequest careOrderExtensionsRequest) {
+	public String extensionsCareOrder(Long careOrderId, CareOrderExtensionsRequest careOrderExtensionsRequest) {
 		CareOrderCalculateRequest calculateRequest = CareOrderCalculateRequest.builder()
 			.startDateTime(careOrderExtensionsRequest.getStartDateTime())
 			.endDateTime(careOrderExtensionsRequest.getEndDateTime())
@@ -308,7 +309,7 @@ public class CareOrderService {
 			.buyerName(careOrder.getMember().getUserNm())
 			.buyerTel(careOrder.getMember().getTelNo())
 			.build();
-		// TODO 결제pg요청 프로세스
+		// 결제pg요청 프로세스
 		ResponseEntity<String> response = payApi.requestSmsPay(smsPayRequest);
 		Gson gson = new GsonBuilder()
 			.setPrettyPrinting()
@@ -321,7 +322,7 @@ public class CareOrderService {
 		);
 		//return을 결제 url 로 넘기기
 		careOrder.addPayment(smsPayResponse.toEntity(totalPrice));
-		return extensionOrder.getId();
+		return smsPayResponse.getOrderUrl();
 	}
 
 	public void cancelCareOrder(Long careOrderId) {
