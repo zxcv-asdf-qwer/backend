@@ -10,6 +10,7 @@ import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.presentation.review.request.ReviewUpdateRequest;
 import co.kr.compig.api.presentation.review.response.ReviewDetailResponse;
+import co.kr.compig.api.presentation.review.response.ReviewResponse;
 import co.kr.compig.global.code.IsYn;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.CascadeType;
@@ -96,16 +97,33 @@ public class Review {
 	private CreatedAndUpdated createdAndModified = new CreatedAndUpdated();
 
 	public ReviewDetailResponse toReviewDetailResponse() {
-		return ReviewDetailResponse.builder()
+		ReviewDetailResponse response = ReviewDetailResponse.builder()
 			.id(this.id)
+			.orderId(this.careOrder.getId())
 			.contents(this.contents)
 			.point(this.point)
 			.build();
+
+		response.setCreatedAndUpdated(this.createdAndModified);
+
+		return response;
 	}
 
 	public void update(ReviewUpdateRequest reviewUpdateRequest) {
 		this.contents = reviewUpdateRequest.getContents();
 		this.point = reviewUpdateRequest.getPoint();
+	}
+
+	public ReviewResponse toReview() {
+		ReviewResponse response = ReviewResponse.builder()
+			.id(this.id)
+			.orderId(this.careOrder.getId())
+			.contents(this.contents)
+			.point(this.point)
+			.build();
+
+		response.setCreatedAndUpdated(this.createdAndModified);
+		return response;
 	}
 	/* =================================================================
  	 * Business

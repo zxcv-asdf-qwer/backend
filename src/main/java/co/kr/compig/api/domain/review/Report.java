@@ -2,7 +2,6 @@ package co.kr.compig.api.domain.review;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.presentation.review.response.ReportDetailResponse;
 import co.kr.compig.api.presentation.review.response.ReportResponse;
 import co.kr.compig.global.code.ReportType;
@@ -67,21 +66,22 @@ public class Report {
 	@Builder.Default
 	private CreatedAndUpdated createdAndModified = new CreatedAndUpdated();
 
-	public ReportDetailResponse toReportDetailResponse(Member member) {
-		return ReportDetailResponse.builder()
+	public ReportDetailResponse toReportDetailResponse(ReportResponse reportResponse) {
+		ReportDetailResponse reportDetailResponse = ReportDetailResponse.builder()
+			.reportResponse(reportResponse)
 			.reportId(this.id)
-			.reviewCreatedBy(this.review.getMember().getUserNm())
+			.reviewCreatedBy(this.review.getCreatedAndModified().getCreatedBy().getUserNm())
 			.contents(this.contents)
-			.reportCreatedBy(member.getUserNm())
-			.reportType(this.reportType)
-			.createdOn(this.createdAndModified.getCreatedOn())
 			.build();
+
+		reportDetailResponse.setCreatedAndUpdated(this.createdAndModified);
+		return reportDetailResponse;
 	}
 
 	public ReportResponse toResponse() {
 		ReportResponse reportResponse = ReportResponse.builder()
 			.reportId(this.id)
-			.reviewCreatedBy(this.review.getMember().getUserNm())
+			.reviewCreatedBy(this.review.getCreatedAndModified().getCreatedBy().getUserNm())
 			.reportType(this.reportType)
 			.build();
 

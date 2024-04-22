@@ -17,5 +17,5 @@ public class ReportResponse extends BaseAudit {
 
 	private Long reportId; // 신고 ID
 	private String reviewCreatedBy; // 리뷰 작성자
-	private ReportType reportType; // 신고 사유
+	private ReportType reportType; // 분류
 }
