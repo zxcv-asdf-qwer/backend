@@ -20,4 +20,5 @@ public class MenuPermissionResponse extends BaseAudit {
 	private String userNm; // 사용자 명
 	private Long menuId; // 메뉴 ID
 	private String menuNm; // 메뉴명
+
 }

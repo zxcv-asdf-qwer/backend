@@ -7,9 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import co.kr.compig.api.application.member.MemberService;
 import co.kr.compig.api.application.menu.MenuService;
 import co.kr.compig.api.domain.member.Member;
-import co.kr.compig.api.domain.member.MemberRepository;
 import co.kr.compig.api.domain.menu.Menu;
-import co.kr.compig.api.domain.menu.MenuRepository;
 import co.kr.compig.api.domain.permission.MenuPermission;
 import co.kr.compig.api.domain.permission.MenuPermissionRepository;
 import co.kr.compig.api.domain.permission.MenuPermissionRepositoryCustom;
@@ -28,8 +26,6 @@ public class MenuPermissionService {
 
 	private final MenuPermissionRepository menuPermissionRepository;
 	private final MenuPermissionRepositoryCustom menuPermissionRepositoryCustom;
-	private final MenuRepository menuRepository;
-	private final MemberRepository memberRepository;
 	private final MenuService menuService;
 	private final MemberService memberService;
 

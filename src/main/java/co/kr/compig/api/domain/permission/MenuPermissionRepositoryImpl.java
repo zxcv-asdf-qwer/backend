@@ -3,6 +3,7 @@ package co.kr.compig.api.domain.permission;
 import static co.kr.compig.api.domain.permission.QMenuPermission.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +14,6 @@ import com.google.common.base.CaseFormat;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Path;
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -32,28 +32,26 @@ public class MenuPermissionRepositoryImpl implements MenuPermissionRepositoryCus
 	public Page<MenuPermissionResponse> findPage(MenuPermissionSearchRequest request) {
 		BooleanExpression predicate = createPredicate(request);
 
-		JPAQuery<MenuPermissionResponse> query = createBaseQuery(predicate)
-			.select(Projections.constructor(MenuPermissionResponse.class,
-				menuPermission.id,
-				menuPermission.groupKey,
-				menuPermission.member.id,
-				menuPermission.member.userNm,
-				menuPermission.menu.id,
-				menuPermission.menu.menuNm
-			));
+		JPAQuery<MenuPermission> query = createBaseQuery(predicate)
+			.select(menuPermission);
+
 		Pageable pageable = request.pageable();
 
 		applySorting(query, pageable);
 
-		List<MenuPermissionResponse> menuPermissions = query
+		List<MenuPermission> menuPermissions = query
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
 			.fetch();
 
+		List<MenuPermissionResponse> responses = menuPermissions.stream()
+			.map(MenuPermission::toResponse)
+			.collect(Collectors.toList());
+
 		JPAQuery<Long> countQuery = createBaseQuery(predicate)
 			.select(menuPermission.count());
 
-		return PageableExecutionUtils.getPage(menuPermissions, pageable, countQuery::fetchOne);
+		return PageableExecutionUtils.getPage(responses, pageable, countQuery::fetchOne);
 	}
 
 	private BooleanExpression createPredicate(MenuPermissionSearchRequest request) {

@@ -6,6 +6,7 @@ import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.menu.Menu;
 import co.kr.compig.api.presentation.permission.request.MenuPermissionUpdateRequest;
 import co.kr.compig.api.presentation.permission.response.MenuPermissionDetailResponse;
+import co.kr.compig.api.presentation.permission.response.MenuPermissionResponse;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -91,5 +92,19 @@ public class MenuPermission {
 		this.menu = menu;
 		this.groupKey = menuPermissionUpdateRequest.getGroupKey();
 
+	}
+
+	public MenuPermissionResponse toResponse() {
+		MenuPermissionResponse menuPermissionResponse = MenuPermissionResponse.builder()
+			.id(this.id)
+			.groupKey(this.groupKey)
+			.memberId(this.member.getId())
+			.userNm(this.member.getUserNm())
+			.menuId(this.menu.getId())
+			.menuNm(this.menu.getMenuNm())
+			.build();
+
+		menuPermissionResponse.setCreatedAndUpdated(this.createdAndModified);
+		return menuPermissionResponse;
 	}
 }
