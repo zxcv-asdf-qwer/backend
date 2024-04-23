@@ -28,6 +28,7 @@ public class ReportService {
 	public Long createReportGuardian(Long reviewId, ReportCreateRequest reportCreateRequest) {
 		Review review = reviewService.getReviewById(reviewId);
 		Report report = reportCreateRequest.converterEntity(review);
+		review.addReport(report);
 		return reportRepository.save(report).getId();
 	}
 

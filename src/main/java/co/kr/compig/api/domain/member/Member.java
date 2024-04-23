@@ -276,6 +276,11 @@ public class Member {
 		menuPermission.setMember(this);
 	}
 
+	public void addReview(Review review) {
+		this.reviews.add(review);
+		review.setMember(this);
+	}
+
 	public void setPicture(String picture) {
 		this.picture = picture;
 	}
@@ -671,4 +676,5 @@ public class Member {
 		this.memberType = MemberType.NO_MEMBER;
 		this.id = getRandomKey("compiglab");
 	}
+
 }

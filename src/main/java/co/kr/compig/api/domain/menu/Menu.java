@@ -145,6 +145,11 @@ public class Menu {
 		this.parent = parent;
 	}
 
+	public void addMenuPermission(MenuPermission menuPermission) {
+		this.menuPermissions.add(menuPermission);
+		menuPermission.setMenu(this);
+	}
+
 
   /* =================================================================
    * Business

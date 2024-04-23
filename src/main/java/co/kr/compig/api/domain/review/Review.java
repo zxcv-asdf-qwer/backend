@@ -125,6 +125,15 @@ public class Review {
 		response.setCreatedAndUpdated(this.createdAndModified);
 		return response;
 	}
+
+	public void setMember(Member member) {
+		this.member = member;
+	}
+
+	public void addReport(Report report) {
+		this.reports.add(report);
+		report.setReview(this);
+	}
 	/* =================================================================
  	 * Business
        ================================================================= */
