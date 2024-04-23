@@ -1,5 +1,6 @@
 package co.kr.compig.api.presentation.member;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springdoc.core.annotations.ParameterObject;
@@ -104,12 +105,20 @@ public class AdminMemberController {
 	}
 
 	@Operation(summary = "보호자 리스트", description = "페이징")
-	@GetMapping(path = "/guardians")
+	@GetMapping(path = "/guardians/page")
 	public ResponseEntity<PageResponse> getGuardianPage(
 		@ParameterObject @ModelAttribute MemberSearchRequest memberSearchRequest) {
 		Page<GuardianMemberResponse> page = memberService.getGuardianPage(memberSearchRequest);
 		return PageResponse.ok(page.stream().toList(), page.getPageable().getOffset(), page.getTotalElements());
 	}
+
+	@Operation(summary = "보호자 리스트 main 에서 검색", description = "페이징 없음")
+	@GetMapping(path = "/guardians")
+	public ResponseEntity<List<GuardianMemberResponse>> getGuardianList(
+		@ParameterObject @ModelAttribute MemberSearchRequest memberSearchRequest) {
+		return ResponseEntity.ok(memberService.getGuardianList(memberSearchRequest));
+	}
+
 
 	@Operation(summary = "보호자 memberId 조회")
 	@GetMapping("/guardians/{memberId}")

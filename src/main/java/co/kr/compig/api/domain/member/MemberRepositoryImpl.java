@@ -80,7 +80,34 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 		BooleanExpression predicate = Expressions.asBoolean(true).isTrue();
 
 		if (request.getUserNm() != null) {
+			predicate = predicate.and(member.userNm.contains(request.getUserNm()));
+		}
+
+		if (request.getTelNo() != null) {
+			predicate = predicate.and(member.telNo.contains(request.getTelNo()));
+		}
+
+		if (request.getFromCreatedOn() != null) {
+			predicate = predicate.and(
+				member.createdAndModified.createdOn.goe(request.getFromCreatedOn())); //크거나 같고(.goe)
+		}
+
+		if (request.getToCreatedOn() != null) {
+			predicate = predicate.and(member.createdAndModified.createdOn.loe(request.getToCreatedOn())); //작거나 같은(.loe)
+		}
+
+		return predicate;
+	}
+
+	private BooleanExpression createPredicateList(MemberSearchRequest request) {
+		BooleanExpression predicate = Expressions.asBoolean(true).isTrue();
+
+		if (request.getUserNm() != null) {
 			predicate = predicate.and(member.userNm.eq(request.getUserNm()));
+		}
+
+		if (request.getTelNo() != null) {
+			predicate = predicate.and(member.telNo.eq(request.getTelNo()));
 		}
 
 		if (request.getFromCreatedOn() != null) {
@@ -197,5 +224,25 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 			.select(member.count()).where(predicate.and(member.userType.eq(UserType.GUARDIAN)));
 
 		return PageableExecutionUtils.getPage(responses, pageable, countQuery::fetchOne);
+	}
+
+	@Override
+	public List<GuardianMemberResponse> getGuardianList(MemberSearchRequest request) {
+		BooleanExpression predicate = createPredicateList(request);
+
+		JPAQuery<Member> query = createBaseQuery(predicate)
+			.select(member)
+			.where(predicate.and(member.userType.eq(UserType.GUARDIAN)));
+		Pageable pageable = request.pageable();
+
+		//정렬
+		applySorting(query, pageable);
+
+		List<Member> members = query
+			.fetch();
+
+		return members.stream()
+			.map(Member::toGuardianMemberResponse)
+			.collect(Collectors.toList());
 	}
 }
