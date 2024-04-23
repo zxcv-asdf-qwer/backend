@@ -277,6 +277,11 @@ public class MemberService {
 	}
 
 	@Transactional(readOnly = true)
+	public List<GuardianMemberResponse> getGuardianList(MemberSearchRequest memberSearchRequest) {
+		return memberRepositoryCustom.getGuardianList(memberSearchRequest);
+	}
+
+	@Transactional(readOnly = true)
 	public Member getMemberById(String memberId) {
 		return memberRepository.findById(memberId).orElseThrow(
 			NotExistDataException::new);
