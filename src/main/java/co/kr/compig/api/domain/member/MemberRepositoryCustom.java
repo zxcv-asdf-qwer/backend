@@ -24,5 +24,5 @@ public interface MemberRepositoryCustom {
 
 	Page<GuardianMemberResponse> getGuardianPage(MemberSearchRequest memberSearchRequest);
 
-	List<GuardianMemberResponse> getGuardianList(MemberSearchRequest memberSearchRequest);
+	List<MemberResponse> getUserList(MemberSearchRequest memberSearchRequest);
 }

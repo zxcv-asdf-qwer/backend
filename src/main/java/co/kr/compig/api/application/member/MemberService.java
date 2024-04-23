@@ -277,8 +277,8 @@ public class MemberService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<GuardianMemberResponse> getGuardianList(MemberSearchRequest memberSearchRequest) {
-		return memberRepositoryCustom.getGuardianList(memberSearchRequest);
+	public List<MemberResponse> getUserList(MemberSearchRequest memberSearchRequest) {
+		return memberRepositoryCustom.getUserList(memberSearchRequest);
 	}
 
 	@Transactional(readOnly = true)

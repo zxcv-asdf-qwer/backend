@@ -105,18 +105,18 @@ public class AdminMemberController {
 	}
 
 	@Operation(summary = "보호자 리스트", description = "페이징")
-	@GetMapping(path = "/guardians/page")
+	@GetMapping(path = "/guardians")
 	public ResponseEntity<PageResponse> getGuardianPage(
 		@ParameterObject @ModelAttribute MemberSearchRequest memberSearchRequest) {
 		Page<GuardianMemberResponse> page = memberService.getGuardianPage(memberSearchRequest);
 		return PageResponse.ok(page.stream().toList(), page.getPageable().getOffset(), page.getTotalElements());
 	}
 
-	@Operation(summary = "보호자 리스트 main 에서 검색", description = "페이징 없음")
-	@GetMapping(path = "/guardians")
-	public ResponseEntity<List<GuardianMemberResponse>> getGuardianList(
+	@Operation(summary = "유저 리스트 main 에서 검색", description = "페이징 없음")
+	@GetMapping(path = "/main")
+	public ResponseEntity<List<MemberResponse>> getGuardianList(
 		@ParameterObject @ModelAttribute MemberSearchRequest memberSearchRequest) {
-		return ResponseEntity.ok(memberService.getGuardianList(memberSearchRequest));
+		return ResponseEntity.ok(memberService.getUserList(memberSearchRequest));
 	}
 
 

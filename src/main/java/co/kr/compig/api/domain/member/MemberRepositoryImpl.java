@@ -227,12 +227,12 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 	}
 
 	@Override
-	public List<GuardianMemberResponse> getGuardianList(MemberSearchRequest request) {
+	public List<MemberResponse> getUserList(MemberSearchRequest request) {
 		BooleanExpression predicate = createPredicateList(request);
 
 		JPAQuery<Member> query = createBaseQuery(predicate)
 			.select(member)
-			.where(predicate.and(member.userType.eq(UserType.GUARDIAN)));
+			.where(predicate.and(member.userType.in(request.getUserType())));
 		Pageable pageable = request.pageable();
 
 		//정렬
@@ -242,7 +242,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 			.fetch();
 
 		return members.stream()
-			.map(Member::toGuardianMemberResponse)
+			.map(Member::toResponse)
 			.collect(Collectors.toList());
 	}
 }
