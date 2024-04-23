@@ -84,7 +84,7 @@ public class AppVersion { // 앱 버전 체크
      ================================================================= */
 
 	public AppVersionResponse toResponse() {
-		return AppVersionResponse.builder()
+		AppVersionResponse appVersionResponse = AppVersionResponse.builder()
 			.appVersionId(id)
 			.osCode(osCode)
 			.lastVer(lastVer)
@@ -93,6 +93,9 @@ public class AppVersion { // 앱 버전 체크
 			.minVerNm(minVerNm)
 			.forceUpdate(forceUpdate)
 			.build();
+
+		appVersionResponse.setCreatedAndUpdated(this.createdAndModified);
+		return appVersionResponse;
 	}
 
 	public void update(AppVersionUpdateRequest request) {
