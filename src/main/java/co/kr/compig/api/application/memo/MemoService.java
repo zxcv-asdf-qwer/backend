@@ -31,6 +31,7 @@ public class MemoService {
 		CareOrder careOrder = careOrderService.getCareOrderById(orderId);
 		Memo memo = adminMemoCreateRequest.converterEntity(careOrder);
 		careOrder.addMemo(memo);
+		memoRepository.flush();
 		return memo.getId();
 	}
 
