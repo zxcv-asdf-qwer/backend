@@ -179,6 +179,11 @@ public class CareOrder {
 		memo.setCareOrder(this);
 	}
 
+	public void addReview(Review review) {
+		this.reviews.add(review);
+		review.setCareOrder(this);
+	}
+
 	/* =================================================================
 	 * Default columns
 	   ================================================================= */
@@ -262,4 +267,5 @@ public class CareOrder {
 	public boolean isPayment() {
 		return this.payments != null;
 	}
+
 }

@@ -35,7 +35,9 @@ public class ReviewService {
 		Member member = memberService.getMemberById(reviewCreateRequest.getMemberId());
 		CareOrder careOrder = careOrderService.getCareOrderById(reviewCreateRequest.getCareOrderId());
 		Review review = reviewCreateRequest.converterEntity(member, careOrder);
-		reviewRepository.save(review);
+		member.addReview(review);
+		careOrder.addReview(review);
+		reviewRepository.flush();
 		return review.getId();
 	}
 

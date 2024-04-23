@@ -125,6 +125,10 @@ public class Review {
 		response.setCreatedAndUpdated(this.createdAndModified);
 		return response;
 	}
+
+	public void setMember(Member member) {
+		this.member = member;
+	}
 	/* =================================================================
  	 * Business
        ================================================================= */
