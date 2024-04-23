@@ -56,11 +56,14 @@ public class Terms {
 	private CreatedAndUpdated createdAndModified = new CreatedAndUpdated();
 
 	public TermsDetailResponse toTermsDetailResponse() {
-		return TermsDetailResponse.builder()
+		TermsDetailResponse termsDetailResponse = TermsDetailResponse.builder()
 			.termsId(this.id)
 			.termsType(this.termsType)
 			.contents(this.contents)
 			.build();
+
+		termsDetailResponse.setCreatedAndUpdated(this.createdAndModified);
+		return termsDetailResponse;
 	}
 
 	public void update(TermsUpdateRequest termsUpdateRequest) {
