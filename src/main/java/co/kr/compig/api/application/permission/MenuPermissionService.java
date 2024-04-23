@@ -33,7 +33,9 @@ public class MenuPermissionService {
 		Member member = memberService.getMemberById(menuPermissionCreateRequest.getMemberId());
 		Menu menu = menuService.getMenuById(menuPermissionCreateRequest.getMenuId());
 		MenuPermission menuPermission = menuPermissionCreateRequest.converterEntity(member, menu);
-		return menuPermissionRepository.save(menuPermission).getId();
+		menu.addMenuPermission(menuPermission);
+		menuPermissionRepository.flush();
+		return menuPermission.getId();
 	}
 
 	@Transactional(readOnly = true)

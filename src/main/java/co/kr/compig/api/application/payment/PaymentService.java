@@ -33,7 +33,9 @@ public class PaymentService {
 	public Long createPayment(PaymentCreateRequest paymentCreateRequest) {
 		CareOrder careOrderById = careOrderService.getCareOrderById(paymentCreateRequest.getOrderId());
 		Payment payment = paymentCreateRequest.converterEntity(careOrderById);
-		return paymentRepository.save(payment).getId();
+		careOrderById.addPayment(payment);
+		paymentRepository.flush();
+		return payment.getId();
 	}
 
 	@Transactional(readOnly = true)
