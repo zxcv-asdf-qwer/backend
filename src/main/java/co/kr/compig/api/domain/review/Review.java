@@ -129,6 +129,11 @@ public class Review {
 	public void setMember(Member member) {
 		this.member = member;
 	}
+
+	public void addReport(Report report) {
+		this.reports.add(report);
+		report.setReview(this);
+	}
 	/* =================================================================
  	 * Business
        ================================================================= */

@@ -76,6 +76,10 @@ public class Report {
 		reportResponse.setCreatedAndUpdated(this.createdAndModified);
 		return reportResponse;
 	}
+
+	public void setReview(Review review) {
+		this.review = review;
+	}
 	/* =================================================================
  	 * Business
        ================================================================= */
