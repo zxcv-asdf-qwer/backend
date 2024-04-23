@@ -107,8 +107,5 @@ public class MenuPermission {
 		menuPermissionResponse.setCreatedAndUpdated(this.createdAndModified);
 		return menuPermissionResponse;
 	}
-
-	public void setMenu(Menu menu) {
-		this.menu = menu;
-	}
+	
 }

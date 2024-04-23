@@ -276,11 +276,6 @@ public class Member {
 		menuPermission.setMember(this);
 	}
 
-	public void addReview(Review review) {
-		this.reviews.add(review);
-		review.setMember(this);
-	}
-
 	public void setPicture(String picture) {
 		this.picture = picture;
 	}

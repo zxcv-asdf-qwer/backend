@@ -130,10 +130,6 @@ public class Review {
 		this.member = member;
 	}
 
-	public void addReport(Report report) {
-		this.reports.add(report);
-		report.setReview(this);
-	}
 	/* =================================================================
  	 * Business
        ================================================================= */
