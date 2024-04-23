@@ -107,7 +107,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 		}
 
 		if (request.getTelNo() != null) {
-			predicate = predicate.and(member.telNo.eq(request.getTelNo()));
+			predicate = predicate.or(member.telNo.eq(request.getTelNo()));
 		}
 
 		if (request.getFromCreatedOn() != null) {
