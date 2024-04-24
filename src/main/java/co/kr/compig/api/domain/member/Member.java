@@ -423,6 +423,7 @@ public class Member {
 			.gender(this.gender)
 			.useYn(this.useYn)
 			.userType(this.userType)
+			.deptCode(this.deptCode)
 			.memberRegisterType(this.memberRegisterType)
 			.address1(this.address1)
 			.address2(this.address2)
