@@ -8,8 +8,11 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.presentation.payment.response.PaymentDetailResponse;
+import co.kr.compig.global.code.PaymentType;
+import co.kr.compig.global.code.converter.PaymentTypeConverter;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
@@ -55,6 +58,10 @@ public class Payment {
 
 	@Column(length = 250)
 	private String moid; //상점주문번호 (고유값)
+
+	@Column(length = 15)
+	@Convert(converter = PaymentTypeConverter.class)
+	private PaymentType paymentType;
 
 	@Column(length = 250)
 	private String orderUrl; // 결제 URL

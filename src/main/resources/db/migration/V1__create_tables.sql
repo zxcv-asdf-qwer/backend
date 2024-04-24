@@ -478,6 +478,7 @@ create table if not exists payment
     goods_name              varchar(250),
     price                   integer not null,
     moid                    varchar(255),
+    payment_type            varchar(15),
     order_url               varchar(250),
     buyer_name              varchar(250),
     buyer_tel               varchar(250),

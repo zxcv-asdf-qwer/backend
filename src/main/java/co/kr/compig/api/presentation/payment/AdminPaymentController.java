@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.payment.PaymentService;
-import co.kr.compig.api.presentation.payment.request.PaymentCreateRequest;
 import co.kr.compig.api.presentation.payment.request.PaymentSearchRequest;
 import co.kr.compig.api.presentation.payment.response.PaymentDetailResponse;
 import co.kr.compig.api.presentation.payment.response.PaymentResponse;
@@ -23,7 +22,6 @@ import co.kr.compig.global.dto.pagination.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,17 +30,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "/admin/payment", produces = "application/json")
+@RequestMapping(path = "/admin/payments", produces = "application/json")
 public class AdminPaymentController {
 
 	private final PaymentService paymentService;
 
 	@Operation(summary = "생성하기")
-	@PostMapping
-	public ResponseEntity<Response<?>> createPayment(
-		@ParameterObject @ModelAttribute @Valid PaymentCreateRequest paymentCreateRequest) {
-		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-			.data(Map.of("paymentId", paymentService.createPayment(paymentCreateRequest)))
+	@PostMapping("/orderId/{orderId}")
+	public ResponseEntity<Response<?>> createPayment(@PathVariable(name = "orderId") Long orderId) {
+		return ResponseEntity.ok().body(Response.<Map<String, String>>builder()
+			.data(Map.of("orderUrl", paymentService.createPayment(orderId)))
 			.build());
 	}
 
@@ -52,7 +49,6 @@ public class AdminPaymentController {
 		@ParameterObject @ModelAttribute PaymentSearchRequest paymentSearchRequest) {
 		Page<PaymentResponse> page = paymentService.getPaymentPage(paymentSearchRequest);
 		return PageResponse.ok(page.stream().toList(), page.getPageable().getOffset(), page.getTotalElements());
-
 	}
 
 	@Operation(summary = "상세 조회")
