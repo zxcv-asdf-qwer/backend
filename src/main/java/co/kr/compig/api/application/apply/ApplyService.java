@@ -44,6 +44,7 @@ public class ApplyService {
 			.map(Apply::getId)
 			.orElseGet(() -> {
 				Apply apply = applyCreateRequest.converterEntity(member, careOrder);
+				apply.setApplyStatus(ApplyStatus.MATCHING_WAIT);
 				return applyRepository.save(apply).getId();
 			});
 	}
@@ -55,29 +56,29 @@ public class ApplyService {
 			.map(Apply::getId)
 			.orElseGet(() -> {
 				Apply apply = applyCreateRequest.converterEntity(member, careOrder);
+				apply.setApplyStatus(ApplyStatus.MATCHING_WAIT);
 				return applyRepository.save(apply).getId();
 			});
 	}
 
 	@Transactional(readOnly = true)
-	public List<ApplyResponse> getApplies(Long orderId) {
+	public List<ApplyDetailResponse> getApplies(Long orderId) {
 		CareOrder careOrderById = careOrderService.getCareOrderById(orderId);
 		return careOrderById.getApplys().stream()
-			.map(Apply::toApplyResponse)
+			.map(Apply::toApplyDetailResponse)
 			.collect(Collectors.toList());
 	}
 
 	@Transactional(readOnly = true)
 	public ApplyDetailResponse getApply(Long applyId) {
 		Apply apply = applyRepository.findById(applyId).orElseThrow(NotExistDataException::new);
-		Member member = memberService.getMemberById(apply.getMember().getId());
-		CareOrder careOrder = careOrderService.getCareOrderById(apply.getCareOrder().getId());
-		return apply.toApplyDetailResponse(member, careOrder);
+		return apply.toApplyDetailResponse();
 	}
 
 	public void deleteApply(Long applyId) {
 		Apply apply = applyRepository.findById(applyId).orElseThrow(NotExistDataException::new);
-		applyRepository.delete(apply);
+		CareOrder careOrder = careOrderService.getCareOrderById(apply.getCareOrder().getId());
+		careOrder.removeApply(apply);
 	}
 
 	public SliceResponse<ApplyResponse> getApplySlice(Long orderId, ApplySearchRequest request) {

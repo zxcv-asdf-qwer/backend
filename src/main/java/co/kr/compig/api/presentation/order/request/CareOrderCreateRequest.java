@@ -14,7 +14,6 @@ import co.kr.compig.global.code.OrderType;
 import co.kr.compig.global.code.PeriodType;
 import co.kr.compig.global.validator.annotaion.Conditional;
 import io.swagger.v3.oas.annotations.Parameter;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,7 +35,6 @@ public class CareOrderCreateRequest {
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH")
 	private LocalDateTime endDateTime; // 종료 날짜
 
-	@NotBlank
 	private String title; // 제목
 
 	private String orderRequest; // 요청 사항

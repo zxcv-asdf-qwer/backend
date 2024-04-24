@@ -4,7 +4,6 @@ import static co.kr.compig.global.code.OrderStatus.*;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -21,7 +20,6 @@ import co.kr.compig.api.domain.packing.Packing;
 import co.kr.compig.api.domain.patient.OrderPatient;
 import co.kr.compig.api.domain.payment.Payment;
 import co.kr.compig.api.domain.review.Review;
-import co.kr.compig.api.presentation.apply.response.ApplyCareOrderResponse;
 import co.kr.compig.api.presentation.order.request.CareOrderExtensionsRequest;
 import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
 import co.kr.compig.api.presentation.patient.response.OrderPatientDetailResponse;
@@ -179,6 +177,10 @@ public class CareOrder {
 		memo.setCareOrder(this);
 	}
 
+	public void removeApply(final Apply apply) {
+		this.applys.remove(apply);
+	}
+
 	/* =================================================================
 	 * Default columns
 	   ================================================================= */
@@ -191,9 +193,6 @@ public class CareOrder {
 	   ================================================================= */
 
 	public CareOrderDetailResponse toCareOrderDetailResponse() {
-		List<ApplyCareOrderResponse> applyResponses = this.applys.stream()
-			.map(Apply::toApplyCareOrderResponse) // Apply 객체를 ApplyDetailResponse 객체로 매핑
-			.collect(Collectors.toList());
 		OrderPatientDetailResponse orderPatientDetailResponse = this.orderPatient.toOrderPatientDetailResponse();
 		CareOrderDetailResponse build = CareOrderDetailResponse.builder()
 			.orderId(this.id)
@@ -208,7 +207,6 @@ public class CareOrder {
 			.careOrderProcessType(this.careOrderProcessType)
 			.orderRequest(this.orderRequest)
 			.orderPatient(orderPatientDetailResponse)
-			.applies(applyResponses)
 			.build();
 		build.setCreatedAndUpdated(this.createdAndModified);
 		return build;

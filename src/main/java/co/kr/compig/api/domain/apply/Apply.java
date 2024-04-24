@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.order.CareOrder;
-import co.kr.compig.api.presentation.apply.request.ApplyUpdateRequest;
-import co.kr.compig.api.presentation.apply.response.ApplyCareOrderResponse;
 import co.kr.compig.api.presentation.apply.response.ApplyDetailResponse;
-import co.kr.compig.api.presentation.apply.response.ApplyResponse;
 import co.kr.compig.global.code.ApplyStatus;
 import co.kr.compig.global.code.converter.ApplyStatusConverter;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
@@ -76,31 +73,8 @@ public class Apply {
 	@Builder.Default
 	private CreatedAndUpdated createdAndModified = new CreatedAndUpdated();
 
-	public ApplyDetailResponse toApplyDetailResponse(Member member, CareOrder careOrder) {
+	public ApplyDetailResponse toApplyDetailResponse() {
 		ApplyDetailResponse build = ApplyDetailResponse.builder()
-			.applyId(this.id)
-			.memberId(member.getId())
-			.careOrderId(careOrder.getId())
-			.applyStatus(this.applyStatus)
-			.build();
-		build.setCreatedAndUpdated(this.createdAndModified);
-
-		return build;
-	}
-
-	public void update(ApplyUpdateRequest applyUpdateRequest) {
-		this.applyStatus = applyUpdateRequest.getApplyStatus();
-	}
-
-	public ApplyCareOrderResponse toApplyCareOrderResponse() {
-		return ApplyCareOrderResponse.builder()
-			.applyId(this.id)
-			.applyStatus(this.applyStatus)
-			.build();
-	}
-
-	public ApplyResponse toApplyResponse() {
-		ApplyResponse build = ApplyResponse.builder()
 			.applyId(this.id)
 			.memberId(this.member.getId())
 			.careOrderId(this.careOrder.getId())

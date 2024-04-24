@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/partner/apply", produces = "application/json")
+@RequestMapping(path = "/partner/applies", produces = "application/json")
 public class PartnerApplyController {
 	private final ApplyService applyService;
 

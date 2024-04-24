@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/guardian/applys", produces = "application/json")
+@RequestMapping(path = "/guardian/applies", produces = "application/json")
 public class GuardianApplyController {
 	private final ApplyService applyService;
 

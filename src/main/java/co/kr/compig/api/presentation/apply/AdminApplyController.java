@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import co.kr.compig.api.application.apply.ApplyService;
 import co.kr.compig.api.presentation.apply.request.ApplyCreateRequest;
 import co.kr.compig.api.presentation.apply.response.ApplyDetailResponse;
-import co.kr.compig.api.presentation.apply.response.ApplyResponse;
 import co.kr.compig.global.dto.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -30,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/admin/applys", produces = "application/json")
+@RequestMapping(path = "/admin/applies", produces = "application/json")
 public class AdminApplyController {
 
 	private final ApplyService applyService;
@@ -46,7 +45,7 @@ public class AdminApplyController {
 
 	@Operation(summary = "orderId 로 간병인 지원 목록 조회", description = "페이징 없이")
 	@GetMapping("/orders/{orderId}")
-	public ResponseEntity<List<ApplyResponse>> getApplies(@PathVariable Long orderId) {
+	public ResponseEntity<List<ApplyDetailResponse>> getApplies(@PathVariable Long orderId) {
 		return ResponseEntity.ok(applyService.getApplies(orderId));
 	}
 
