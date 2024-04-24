@@ -425,6 +425,7 @@ public class Member {
 			.userType(this.userType)
 			.deptCode(this.deptCode)
 			.memberRegisterType(this.memberRegisterType)
+			.memberType(this.memberType)
 			.address1(this.address1)
 			.address2(this.address2)
 			.domesticForeignCode(this.domesticForeignCode)

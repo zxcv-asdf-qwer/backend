@@ -12,6 +12,7 @@ import co.kr.compig.global.code.DomesticForeignCode;
 import co.kr.compig.global.code.GenderCode;
 import co.kr.compig.global.code.IsYn;
 import co.kr.compig.global.code.MemberRegisterType;
+import co.kr.compig.global.code.MemberType;
 import co.kr.compig.global.code.UseYn;
 import co.kr.compig.global.code.UserType;
 import co.kr.compig.global.dto.BaseAudit;
@@ -38,6 +39,7 @@ public class MemberResponse extends BaseAudit {
 	private UserType userType; //사용자 타입
 	private DeptCode deptCode; // 부서 구분
 	private MemberRegisterType memberRegisterType; // 회원가입 유형
+	private MemberType memberType; //회원 비회원
 	private String address1; //주소
 	private String address2; //주소
 	private MultipartFile picture; //프로필사진
