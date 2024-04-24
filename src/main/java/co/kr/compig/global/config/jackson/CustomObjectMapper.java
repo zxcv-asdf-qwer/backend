@@ -59,20 +59,24 @@ public class CustomObjectMapper {
 		// enum 데이터를 객체 형태로 리턴
 		simpleModule.addSerializer(Enum.class, new StdSerializer<>(Enum.class) {
 			@Override
-			public void serialize(Enum value, JsonGenerator gen, SerializerProvider provider)
-				throws IOException {
-				if (value instanceof BaseEnumCode) {
-					gen.writeStartObject();
-					gen.writeStringField("name", value.name());
-					gen.writeObjectField("code", ((BaseEnumCode)value).getCode());
-					gen.writeObjectField("desc", ((BaseEnumCode)value).getDesc());
-					gen.writeEndObject();
-				} else {
-					gen.writeStartObject();
-					gen.writeStringField("name", value.name());
-					gen.writeEndObject();
+			public void serialize(Enum value, JsonGenerator gen, SerializerProvider provider) {
+				try {
+					if (value instanceof BaseEnumCode) {
+						gen.writeStartObject();
+						gen.writeStringField("name", value.name());
+						gen.writeObjectField("code", ((BaseEnumCode)value).getCode());
+						gen.writeObjectField("desc", ((BaseEnumCode)value).getDesc());
+						gen.writeEndObject();
+					} else {
+						gen.writeStartObject();
+						gen.writeStringField("name", value.name());
+						gen.writeEndObject();
 
+					}
+				} catch (IOException e) {
+					//notThing
 				}
+
 			}
 		});
 
