@@ -6,5 +6,5 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import co.kr.compig.global.code.AppOsType;
 
 public interface AppVersionRepository extends JpaRepository<AppVersion, Long>, QuerydslPredicateExecutor<AppVersion> {
-	Boolean existsByOsCodeAndLastVerAndMinVer(AppOsType osType, String lastVer, String minVer);
+	Boolean existsByOsCodeAndMinVer(AppOsType osType, String minVer);
 }

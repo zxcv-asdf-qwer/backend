@@ -2,33 +2,36 @@ package co.kr.compig.api.presentation.app.request;
 
 import co.kr.compig.api.domain.app.AppVersion;
 import co.kr.compig.global.code.AppOsType;
-import co.kr.compig.global.code.IsYn;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public record AppVersionCreateRequest(
-	@NotNull
-	AppOsType osCode, // 요청된 디바이스 os이름
-	@NotBlank
-	String lastVer, // 앱 사용 가능한 최신 버전 정보
-	@NotBlank
-	String lastVerNm, // 앱 사용 가능한 최신 버전 이름
-	@NotBlank
-	String minVer, // 앱 사용 가능한 최소 버전 정보
-	@NotBlank
-	String minVerNm, // 앱 사용 가능한 최소 버전 이름
-	@NotNull
-	IsYn forceUpdate // 강제 업데이트 여부
-) {
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class AppVersionCreateRequest {
 
-	public AppVersion toEntity() {
+	@NotNull
+	private AppOsType osCode; // 요청된 디바이스 OS 유형
+
+	@NotBlank
+	private String minVer; // 최소 버전
+
+	@NotBlank
+	private String updateUrl; // 엽데이트 ULR
+
+	private String contents; // 내용
+
+	public AppVersion converterEntity() {
 		return AppVersion.builder()
-			.osCode(osCode)
-			.lastVer(lastVer)
-			.lastVerNm(lastVerNm)
-			.minVer(minVer)
-			.minVerNm(minVerNm)
-			.forceUpdate(forceUpdate)
+			.osCode(this.osCode)
+			.minVer(this.minVer)
+			.updateUrl(this.updateUrl)
+			.contents(this.contents)
 			.build();
 	}
 }

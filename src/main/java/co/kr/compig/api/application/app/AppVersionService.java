@@ -26,25 +26,15 @@ public class AppVersionService {
 	private final AppVersionRepository appVersionRepository;
 	private final AppVersionRepositoryCustom appVersionRepositoryCustom;
 
-	/**
-	 * app version data create
-	 */
 	public Long create(final AppVersionCreateRequest request) {
 		//TODO "osCode", "lastVer", "minVer" uk validation 필요
-		if (appVersionRepository.existsByOsCodeAndLastVerAndMinVer(request.osCode(), request.lastVer(),
-			request.minVer())) {
+		if (appVersionRepository.existsByOsCodeAndMinVer(request.getOsCode(), request.getMinVer())) {
 			throw new IllegalArgumentException("이미 존재하는 버전입니다.");
 		}
-		final AppVersion appVersion = request.toEntity();
-
+		AppVersion appVersion = request.converterEntity();
 		return appVersionRepository.save(appVersion).getId();
 	}
 
-	/**
-	 * read recent by os type
-	 * @param osType : os type
-	 * @return AppVersionResponse
-	 */
 	@Transactional(readOnly = true)
 	public AppVersionResponse getRecentByOsType(final String osType) {
 		final AppOsType appOsType = AppOsType.valueOf(osType);
@@ -55,11 +45,6 @@ public class AppVersionService {
 
 	}
 
-	/**
-	 * read app version by pk
-	 * @param appId : pk
-	 * @return AppVersionResponse
-	 */
 	@Transactional(readOnly = true)
 	public AppVersionResponse getById(final Long appId) {
 		return appVersionRepository.findById(appId)
@@ -67,27 +52,16 @@ public class AppVersionService {
 			.orElseThrow(() -> new NotExistDataException(ErrorCode.INVALID_NOT_EXIST_DATA));
 	}
 
-	/**
-	 * update app version by pk
-	 * @param appId pk
-	 * @param request AppVersionRequest
-	 */
 	public Long updateById(final Long appId, final AppVersionUpdateRequest request) {
-		//TODO "osCode", "lastVer", "minVer" uk validation 필요
-		if (appVersionRepository.existsByOsCodeAndLastVerAndMinVer(request.osCode(), request.lastVer(),
-			request.minVer())) {
-			throw new IllegalArgumentException("이미 존재하는 버전입니다.");
-		}
 		AppVersion appVersion = appVersionRepository.findById(appId)
 			.orElseThrow(() -> new NotExistDataException(ErrorCode.INVALID_NOT_EXIST_DATA));
+		if (appVersionRepository.existsByOsCodeAndMinVer(appVersion.getOsCode(), request.getMinVer())) {
+			throw new IllegalArgumentException("이미 존재하는 버전입니다.");
+		}
 		appVersion.update(request);
 		return appVersion.getId();
 	}
 
-	/**
-	 * delete app version by pk
-	 * @param appId app pk
-	 */
 	public void deleteById(final Long appId) {
 		AppVersion appVersion = appVersionRepository.findById(appId)
 			.orElseThrow(() -> new NotExistDataException(ErrorCode.INVALID_NOT_EXIST_DATA));

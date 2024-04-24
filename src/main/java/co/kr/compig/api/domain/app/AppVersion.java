@@ -1,19 +1,14 @@
 package co.kr.compig.api.domain.app;
 
-import org.hibernate.annotations.ColumnDefault;
-
 import co.kr.compig.api.presentation.app.request.AppVersionUpdateRequest;
 import co.kr.compig.api.presentation.app.response.AppVersionResponse;
 import co.kr.compig.global.code.AppOsType;
-import co.kr.compig.global.code.IsYn;
 import co.kr.compig.global.code.converter.AppOsTypeConverter;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -52,25 +47,16 @@ public class AppVersion { // 앱 버전 체크
 
 	@Column(length = 20, nullable = false)
 	@Convert(converter = AppOsTypeConverter.class)
-	private AppOsType osCode; // 요청된 디바이스 os이름
-
-	@Column(nullable = false)
-	private String lastVer; // 앱 사용 가능한 최신 버전 정보
-
-	@Column(length = 50, nullable = false)
-	private String lastVerNm; // 앱 사용 가능한 최신 버전 이름
+	private AppOsType osCode; // 요청된 디바이스 os 유형
 
 	@Column(nullable = false)
 	private String minVer; // 앱 사용 가능한 최소 버전 정보
 
-	@Column(length = 50, nullable = false)
-	private String minVerNm; // 앱 사용 가능한 최소 버전 이름
+	@Column(nullable = false)
+	private String updateUrl; // 업데이트 URL
 
-	@Column(length = 1)
-	@ColumnDefault("'N'")
-	@Enumerated(EnumType.STRING)
-	@Builder.Default
-	private IsYn forceUpdate = IsYn.N; // 강제 업데이트 여부
+	@Column
+	private String contents; // 내용
 
 	/* =================================================================
 	 * Default columns
@@ -79,19 +65,12 @@ public class AppVersion { // 앱 버전 체크
 	@Builder.Default
 	private CreatedAndUpdated createdAndModified = new CreatedAndUpdated();
 
-	/* =================================================================
-	 * Business login
-     ================================================================= */
-
 	public AppVersionResponse toResponse() {
 		AppVersionResponse appVersionResponse = AppVersionResponse.builder()
-			.appVersionId(id)
-			.osCode(osCode)
-			.lastVer(lastVer)
-			.lastVerNm(lastVerNm)
-			.minVer(minVer)
-			.minVerNm(minVerNm)
-			.forceUpdate(forceUpdate)
+			.appVersionId(this.id)
+			.osCode(this.osCode)
+			.minVer(this.minVer)
+			.updateUrl(this.updateUrl)
 			.build();
 
 		appVersionResponse.setCreatedAndUpdated(this.createdAndModified);
@@ -99,13 +78,15 @@ public class AppVersion { // 앱 버전 체크
 	}
 
 	public void update(AppVersionUpdateRequest request) {
-		this.osCode = request.osCode();
-		this.lastVer = request.lastVer();
-		this.lastVerNm = request.lastVerNm();
-		this.minVer = request.minVer();
-		this.minVerNm = request.minVerNm();
-		this.forceUpdate = request.forceUpdate();
+		this.minVer = request.getMinVer();
+		this.updateUrl = request.getUpdateUrl();
+		this.contents = request.getContents();
 	}
+
+	/* =================================================================
+	 * Business login
+     ================================================================= */
+
 }
 
 
