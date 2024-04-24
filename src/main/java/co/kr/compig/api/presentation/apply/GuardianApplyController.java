@@ -38,11 +38,11 @@ public class GuardianApplyController {
 	}
 
 	@Operation(summary = "상세 조회")
-	@GetMapping(path = "/{applyId}")
+	@GetMapping(path = "/orders/{orderId}/memberId/{partnerId}")
 	public ResponseEntity<Response<ApplyDetailResponse>> getApply(
-		@PathVariable(name = "applyId") Long applyId) {
+		@PathVariable(name = "orderId") Long orderId, @PathVariable(name = "partnerId") String memberId) {
 		return ResponseEntity.ok(Response.<ApplyDetailResponse>builder()
-			.data(applyService.getApply(applyId))
+			.data(applyService.getApply(orderId, memberId))
 			.build());
 	}
 

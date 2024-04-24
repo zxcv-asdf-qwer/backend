@@ -1,5 +1,7 @@
 package co.kr.compig.api.domain.apply;
 
+import static co.kr.compig.global.utils.CalculateUtil.*;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import co.kr.compig.api.domain.member.Member;
@@ -77,6 +79,10 @@ public class Apply {
 		ApplyDetailResponse build = ApplyDetailResponse.builder()
 			.applyId(this.id)
 			.memberId(this.member.getId())
+			.userNm(this.member.getUserNm())
+			.gender(this.member.getGender())
+			.age(calculateAgeFromJumin(this.member.getJumin1()))
+			.telNo(this.member.getTelNo())
 			.careOrderId(this.careOrder.getId())
 			.applyStatus(this.applyStatus)
 			.build();

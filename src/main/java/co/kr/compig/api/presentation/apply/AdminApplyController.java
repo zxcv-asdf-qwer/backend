@@ -50,35 +50,35 @@ public class AdminApplyController {
 	}
 
 	@Operation(summary = "상세 조회")
-	@GetMapping(path = "/{applyId}")
+	@GetMapping(path = "/orders/{orderId}/memberId/{partnerId}")
 	public ResponseEntity<Response<ApplyDetailResponse>> getApply(
-		@PathVariable(name = "applyId") Long applyId) {
+		@PathVariable(name = "orderId") Long orderId, @PathVariable(name = "partnerId") String memberId) {
 		return ResponseEntity.ok(Response.<ApplyDetailResponse>builder()
-			.data(applyService.getApply(applyId))
+			.data(applyService.getApply(orderId, memberId))
 			.build());
 	}
 
 	@Operation(summary = "매칭완료")
-	@PutMapping(path = "/matching-complete/{applyId}")
+	@PutMapping(path = "/matching-complete/orders/{orderId}/memberId/{partnerId}")
 	public ResponseEntity<Response<?>> updateMatchingComplete(
-		@PathVariable(name = "applyId") Long applyId) {
-		applyService.updateMatchingComplete(applyId);
+		@PathVariable(name = "orderId") Long orderId, @PathVariable(name = "partnerId") String memberId) {
+		applyService.updateMatchingComplete(orderId, memberId);
 		return ResponseEntity.ok().build();
 	}
 
 	@Operation(summary = "매칭대기")
-	@PutMapping(path = "/matching-wait/{applyId}")
+	@PutMapping(path = "/matching-wait/orders/{orderId}/memberId/{partnerId}")
 	public ResponseEntity<Response<?>> updateMatchingWait(
-		@PathVariable(name = "applyId") Long applyId) {
-		applyService.updateMatchingWait(applyId);
+		@PathVariable(name = "orderId") Long orderId, @PathVariable(name = "partnerId") String memberId) {
+		applyService.updateMatchingWait(orderId, memberId);
 		return ResponseEntity.ok().build();
 	}
 
 	@Operation(summary = "지원 취소 시키기")
-	@DeleteMapping(path = "/{applyId}")
-	public ResponseEntity<Response<?>> deleteApply(
-		@PathVariable(name = "applyId") Long applyId) {
-		applyService.deleteApply(applyId);
+	@DeleteMapping(path = "/matching-cancel/orders/{orderId}/memberId/{partnerId}")
+	public ResponseEntity<Response<?>> cancelApply(
+		@PathVariable(name = "orderId") Long orderId, @PathVariable(name = "partnerId") String memberId) {
+		applyService.deleteApply(orderId, memberId);
 		return ResponseEntity.ok().build();
 	}
 }

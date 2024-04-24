@@ -38,11 +38,11 @@ public class ApplyService {
 	private final MemberService memberService;
 
 	public Long createApplyByAdmin(Long orderId, ApplyCreateRequest applyCreateRequest) {
-		Member member = memberService.getMemberById(applyCreateRequest.getMemberId());
-		CareOrder careOrder = careOrderService.getCareOrderById(orderId);
-		return applyRepository.findByMemberAndCareOrder(member, careOrder)
+		return applyRepository.findByCareOrder_idAndMember_id(orderId, applyCreateRequest.getMemberId())
 			.map(Apply::getId)
 			.orElseGet(() -> {
+				Member member = memberService.getMemberById(applyCreateRequest.getMemberId());
+				CareOrder careOrder = careOrderService.getCareOrderById(orderId);
 				Apply apply = applyCreateRequest.converterEntity(member, careOrder);
 				apply.setApplyStatus(ApplyStatus.MATCHING_WAIT);
 				return applyRepository.save(apply).getId();
@@ -50,11 +50,11 @@ public class ApplyService {
 	}
 
 	public Long createApply(Long orderId, ApplyCreateRequest applyCreateRequest) {
-		Member member = memberService.getMemberById(SecurityUtil.getMemberId());
-		CareOrder careOrder = careOrderService.getCareOrderById(orderId);
-		return applyRepository.findByMemberAndCareOrder(member, careOrder)
+		return applyRepository.findByCareOrder_idAndMember_id(orderId, SecurityUtil.getMemberId())
 			.map(Apply::getId)
 			.orElseGet(() -> {
+				Member member = memberService.getMemberById(SecurityUtil.getMemberId());
+				CareOrder careOrder = careOrderService.getCareOrderById(orderId);
 				Apply apply = applyCreateRequest.converterEntity(member, careOrder);
 				apply.setApplyStatus(ApplyStatus.MATCHING_WAIT);
 				return applyRepository.save(apply).getId();
@@ -70,13 +70,15 @@ public class ApplyService {
 	}
 
 	@Transactional(readOnly = true)
-	public ApplyDetailResponse getApply(Long applyId) {
-		Apply apply = applyRepository.findById(applyId).orElseThrow(NotExistDataException::new);
+	public ApplyDetailResponse getApply(Long orderId, String memberId) {
+		Apply apply = applyRepository.findByCareOrder_idAndMember_id(orderId, memberId)
+			.orElseThrow(NotExistDataException::new);
 		return apply.toApplyDetailResponse();
 	}
 
-	public void deleteApply(Long applyId) {
-		Apply apply = applyRepository.findById(applyId).orElseThrow(NotExistDataException::new);
+	public void deleteApply(Long orderId, String memberId) {
+		Apply apply = applyRepository.findByCareOrder_idAndMember_id(orderId, memberId)
+			.orElseThrow(NotExistDataException::new);
 		CareOrder careOrder = careOrderService.getCareOrderById(apply.getCareOrder().getId());
 		careOrder.removeApply(apply);
 	}
@@ -87,15 +89,17 @@ public class ApplyService {
 		return new SliceResponse<>(slice.getContent(), pageable, slice.hasNext());
 	}
 
-	public void updateMatchingComplete(Long applyId) {
-		Apply apply = applyRepository.findById(applyId).orElseThrow(NotExistDataException::new);
+	public void updateMatchingComplete(Long orderId, String memberId) {
+		Apply apply = applyRepository.findByCareOrder_idAndMember_id(orderId, memberId)
+			.orElseThrow(NotExistDataException::new);
 		//TODO 간병인이 간병중인지
 		//TODO 간병인이 해야할 간병 중에 기간이 겹치는게 있는지
 		apply.setApplyStatus(ApplyStatus.MATCHING_COMPLETE);
 	}
 
-	public void updateMatchingWait(Long applyId) {
-		Apply apply = applyRepository.findById(applyId).orElseThrow(NotExistDataException::new);
+	public void updateMatchingWait(Long orderId, String memberId) {
+		Apply apply = applyRepository.findByCareOrder_idAndMember_id(orderId, memberId)
+			.orElseThrow(NotExistDataException::new);
 		apply.setApplyStatus(ApplyStatus.MATCHING_WAIT);
 	}
 }
