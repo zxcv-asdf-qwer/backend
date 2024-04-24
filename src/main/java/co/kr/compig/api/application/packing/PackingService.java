@@ -8,7 +8,6 @@ import co.kr.compig.api.application.order.CareOrderService;
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.domain.packing.Packing;
 import co.kr.compig.api.domain.packing.PackingRepository;
-import co.kr.compig.api.domain.packing.PackingRepositoryCustom;
 import co.kr.compig.api.presentation.packing.request.PackingCreateRequest;
 import co.kr.compig.api.presentation.packing.request.PackingSearchRequest;
 import co.kr.compig.api.presentation.packing.request.PackingUpdateRequest;
@@ -25,7 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 public class PackingService {
 
 	private final PackingRepository packingRepository;
-	private final PackingRepositoryCustom packingRepositoryCustom;
 	private final CareOrderService careOrderService;
 
 	public Long createPacking(PackingCreateRequest packingCreateRequest) {
@@ -36,7 +34,7 @@ public class PackingService {
 
 	@Transactional(readOnly = true)
 	public Page<PackingResponse> getPackingPage(PackingSearchRequest packingSearchRequest) {
-		return packingRepositoryCustom.findPage(packingSearchRequest);
+		return packingRepository.findPage(packingSearchRequest);
 	}
 
 	@Transactional(readOnly = true)

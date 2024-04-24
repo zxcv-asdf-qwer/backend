@@ -43,7 +43,7 @@ public class AdminWalletController {
 	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createWallet(
-		@ParameterObject @ModelAttribute @Valid WalletCreateRequest walletCreateRequest) {
+		@RequestBody @Valid WalletCreateRequest walletCreateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("walletId", walletService.createWallet(walletCreateRequest)))
 			.build());

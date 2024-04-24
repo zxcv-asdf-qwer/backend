@@ -1,13 +1,17 @@
 package co.kr.compig.api.domain.packing;
 
+import static co.kr.compig.api.domain.apply.QApply.*;
+import static co.kr.compig.api.domain.order.QCareOrder.*;
 import static co.kr.compig.api.domain.packing.QPacking.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
+import org.springframework.stereotype.Repository;
 
 import com.google.common.base.CaseFormat;
 import com.querydsl.core.types.Order;
@@ -21,8 +25,11 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import co.kr.compig.api.presentation.packing.request.PackingSearchRequest;
 import co.kr.compig.api.presentation.packing.response.PackingResponse;
+import co.kr.compig.global.code.ApplyStatus;
+import co.kr.compig.global.code.OrderStatus;
 import lombok.RequiredArgsConstructor;
 
+@Repository
 @RequiredArgsConstructor
 public class PackingRepositoryImpl implements PackingRepositoryCustom {
 
@@ -77,5 +84,20 @@ public class PackingRepositoryImpl implements PackingRepositoryCustom {
 			);
 			query.orderBy(orderSpecifier);
 		}
+	}
+
+	@Override
+	public List<Packing> findByEndDateTimeLessThanEqualAndOrderStatusAndApplyStatus(
+		LocalDateTime endDateTime, OrderStatus orderStatus, ApplyStatus applyStatus) {
+		return jpaQueryFactory
+			.selectFrom(packing)
+			.join(packing.careOrder, careOrder)
+			.join(careOrder.applys, apply)
+			.where(
+				packing.endDateTime.loe(endDateTime),
+				careOrder.orderStatus.eq(orderStatus),
+				apply.applyStatus.eq(applyStatus)
+			)
+			.fetch();
 	}
 }

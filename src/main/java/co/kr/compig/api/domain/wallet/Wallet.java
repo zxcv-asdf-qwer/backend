@@ -5,7 +5,14 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.packing.Packing;
 import co.kr.compig.api.presentation.wallet.response.WalletDetailResponse;
+import co.kr.compig.global.code.ExchangeType;
+import co.kr.compig.global.code.TransactionType;
+import co.kr.compig.global.code.converter.ExchangeTypeConverter;
+import co.kr.compig.global.code.converter.TransactionTypeConverter;
+import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
@@ -41,6 +48,27 @@ public class Wallet {
 	@Column(name = "wallet_id")
 	private Long id;
 
+	@Column(length = 15)
+	@Convert(converter = TransactionTypeConverter.class)
+	private TransactionType transactionType; //입금, 출금
+
+	@Column(length = 15)
+	@Convert(converter = ExchangeTypeConverter.class)
+	private ExchangeType exchangeType; //수기, 자동
+
+	@Column
+	private Integer transactionAmount; //거래 금액
+
+	@Column
+	private Integer balance; //잔액
+
+	@Column
+	private String description; //비고
+
+	/* =================================================================
+	* Domain mapping
+	================================================================= */
+
 	@Builder.Default
 	@JoinColumn(name = "member_id", nullable = false, foreignKey = @ForeignKey(name = "fk01_wallet"))
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -48,10 +76,23 @@ public class Wallet {
 	private Member member = new Member(); // Member id
 
 	@Builder.Default
-	@JoinColumn(name = "packing_id", nullable = false, foreignKey = @ForeignKey(name = "fk02_wallet"))
+	@JoinColumn(name = "packing_id", foreignKey = @ForeignKey(name = "fk02_wallet"))
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Packing packing = new Packing();
 
+	/* =================================================================
+	* Default columns
+	================================================================= */
+	@Embedded
+	@Builder.Default
+	private CreatedAndUpdated createdAndUpdated = new CreatedAndUpdated();
+	/* =================================================================
+	* Relation method
+	================================================================= */
+
+	/* =================================================================
+ 	 * Business
+       ================================================================= */
 	public WalletDetailResponse toWalletDetailResponse() {
 		return WalletDetailResponse.builder()
 			.memberId(this.member.getId())

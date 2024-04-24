@@ -44,7 +44,7 @@ public class CalculateUtil {
 		return currentYear - startYear;
 	}
 
-	//지불해야 할 금액 계산(간병일 하루)
+	//지불해야 할 금액 계산(간병일 하루+보호자 수수료)
 	public static Integer calculatePaymentPriceOneDay(CareOrderCalculateRequest careOrderCalculateRequest,
 		Integer guardianFees) {
 		if (careOrderCalculateRequest.getAmount() == null) {
@@ -74,6 +74,25 @@ public class CalculateUtil {
 			long paymentResult = (long)(careOrderCalculateRequest.getAmount() * multiplier);
 
 			return (int)paymentResult;
+		}
+		throw new BizException("계산 될 수 없습니다.");
+	}
+
+	//금액 계산(간병일 하루 금액만)
+	public static Integer calculatePriceOneDay(CareOrderCalculateRequest careOrderCalculateRequest) {
+		if (careOrderCalculateRequest.getAmount() == null) {
+			throw new BizException("금액을 입력해주세요.");
+		}
+		if (careOrderCalculateRequest.getPeriodType() == PART_TIME) {
+			// 차이를 시간 단위로 변환
+			long hours = careOrderCalculateRequest.getPartTime();
+			// 금액 * 시간
+			long result = careOrderCalculateRequest.getAmount().longValue() * hours;
+
+			return (int)result;
+		}
+		if (careOrderCalculateRequest.getPeriodType() == PERIOD) {
+			return careOrderCalculateRequest.getAmount();
 		}
 		throw new BizException("계산 될 수 없습니다.");
 	}

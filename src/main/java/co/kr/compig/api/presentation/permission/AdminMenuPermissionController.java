@@ -43,7 +43,7 @@ public class AdminMenuPermissionController {
 	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createMenuPermission(
-		@ParameterObject @ModelAttribute @Valid MenuPermissionCreateRequest menuPermissionCreateRequest) {
+		@RequestBody @Valid MenuPermissionCreateRequest menuPermissionCreateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("menuPermissionId", menuPermissionService.createMenuPermission(menuPermissionCreateRequest)))
 			.build());

@@ -41,7 +41,7 @@ public class AdminMenuController {
 	@Operation(summary = "생성하기", hidden = true)
 	@PostMapping
 	public ResponseEntity<Response<?>> createMenu(
-		@ParameterObject @ModelAttribute @Valid MenuCreateRequest menuCreateRequest
+		@RequestBody @Valid MenuCreateRequest menuCreateRequest
 	) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("menuId", menuService.createMenu(menuCreateRequest)))

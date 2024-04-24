@@ -1,0 +1,26 @@
+package co.kr.compig.api.application.packing;
+
+import org.springframework.context.annotation.Profile;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
+
+import co.kr.compig.global.code.ExchangeType;
+import co.kr.compig.global.code.TransactionType;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Profile({"dev", "prod"})
+@Slf4j
+@Component
+@RequiredArgsConstructor
+public class PackingSchedulerTask {
+	private final PackingSchService packingSchService;
+
+	@Scheduled(cron = "0/30 * * * *")   // 매일 30분 마다 실행
+	@SchedulerLock(name = "PackingSchService_transactionWallet", lockAtLeastFor = "PT5M", lockAtMostFor = "PT10M")
+	public void transactionWallet() {
+		packingSchService.transactionWallet(TransactionType.CREDIT, ExchangeType.AUTO, "");
+	}
+}

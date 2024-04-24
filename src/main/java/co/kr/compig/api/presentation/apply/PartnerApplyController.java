@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,7 +39,7 @@ public class PartnerApplyController {
 	@Operation(summary = "간병인 지원하기")
 	@PostMapping("/orders/{orderId}")
 	public ResponseEntity<Response<?>> createApply(@PathVariable Long orderId,
-		@ParameterObject @ModelAttribute @Valid ApplyCreateRequest applyCreateRequest) {
+		@RequestBody @Valid ApplyCreateRequest applyCreateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("applyId", applyService.createApply(orderId, applyCreateRequest)))
 			.build());

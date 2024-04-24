@@ -42,7 +42,7 @@ public class AdminHospitalController {
 	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createHospital(
-		@ParameterObject @ModelAttribute @Valid HospitalCreateRequest hospitalCreateRequest) {
+		@RequestBody @Valid HospitalCreateRequest hospitalCreateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("hospitalId", hospitalService.createHospital(hospitalCreateRequest)))
 			.build());

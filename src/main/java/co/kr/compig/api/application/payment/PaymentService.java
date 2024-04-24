@@ -63,10 +63,9 @@ public class PaymentService {
 		Set<Packing> packages = careOrder.getPackages();
 		packages.forEach(packing -> {
 			CareOrderCalculateRequest calculateRequest = CareOrderCalculateRequest.builder()
-				.startDateTime(careOrder.getStartDateTime())
-				.endDateTime(careOrder.getEndDateTime())
 				.amount(packing.getAmount())
 				.periodType(packing.getPeriodType())
+				.partTime(packing.getPartTime())
 				.build();
 			totalPrice.addAndGet(calculatePaymentPriceOneDay(calculateRequest,
 				recentSettle.getGuardianFees()));

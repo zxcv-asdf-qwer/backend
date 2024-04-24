@@ -35,15 +35,6 @@ import lombok.extern.slf4j.Slf4j;
 public class PartnerWalletController {
 	private final WalletService walletService;
 
-	@Operation(summary = "생성하기")
-	@PostMapping
-	public ResponseEntity<Response<?>> createWallet(
-		@ParameterObject @ModelAttribute @Valid WalletCreateRequest walletCreateRequest) {
-		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-			.data(Map.of("walletId", walletService.createWallet(walletCreateRequest)))
-			.build());
-	}
-
 	@Operation(summary = "상세 조회")
 	@GetMapping(path = "/{walletId}")
 	public ResponseEntity<Response<WalletDetailResponse>> getWallet(

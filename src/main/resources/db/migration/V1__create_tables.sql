@@ -619,13 +619,18 @@ create table if not exists terms
 create sequence if not exists wallet_seq start with 1 increment by 1;
 create table if not exists wallet
 (
-    wallet_id  bigint       not null,
-    packing_id bigint       not null,
-    member_id  varchar(255) not null,
-    created_by varchar(50),
-    created_on timestamp(6) default CURRENT_TIMESTAMP,
-    updated_by varchar(50),
-    updated_on timestamp(6) default CURRENT_TIMESTAMP,
+    wallet_id          bigint       not null,
+    member_id          varchar(255) not null,
+    packing_id         bigint,
+    transaction_type   varchar(15),
+    transaction_amount integer,
+    balance            integer,
+    exchange_type      varchar(15),
+    description        varchar(255),
+    created_by         varchar(50),
+    created_on         timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by         varchar(50),
+    updated_on         timestamp(6) default CURRENT_TIMESTAMP,
     primary key (wallet_id)
 );
 

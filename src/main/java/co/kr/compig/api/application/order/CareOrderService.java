@@ -41,7 +41,6 @@ import co.kr.compig.api.presentation.order.request.FamilyCareOrderCreateRequest;
 import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
 import co.kr.compig.api.presentation.order.response.CareOrderResponse;
 import co.kr.compig.global.code.OrderStatus;
-import co.kr.compig.global.code.OrderType;
 import co.kr.compig.global.error.exception.BizException;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import co.kr.compig.global.utils.GsonLocalDateTimeAdapter;
@@ -262,13 +261,6 @@ public class CareOrderService {
 	}
 
 	public String extensionsCareOrder(Long careOrderId, CareOrderExtensionsRequest careOrderExtensionsRequest) {
-		CareOrderCalculateRequest calculateRequest = CareOrderCalculateRequest.builder()
-			.startDateTime(careOrderExtensionsRequest.getStartDateTime())
-			.endDateTime(careOrderExtensionsRequest.getEndDateTime())
-			.amount(careOrderExtensionsRequest.getAmount())
-			.periodType(careOrderExtensionsRequest.getPeriodType())
-			.build();
-
 		CareOrder careOrder = careOrderRepository.findById(careOrderId).orElseThrow(NotExistDataException::new);
 		//간병 연장
 		CareOrder extensionOrder = careOrder.extension(careOrderExtensionsRequest.getStartDateTime(),
@@ -280,23 +272,28 @@ public class CareOrderService {
 		Settle recentSettle = settleService.getRecentSettle();
 
 		for (int i = 0; i < daysBetween; i++) {
-			if (extensionOrder.getOrderType().equals(OrderType.GENERAL)) {
-				// 지원자 o, packing
-				// 종료 날짜(2024-04-17 10:00:00) - 시작 날짜(2024-04-12 10:00:00)
-				// 시작 날짜부터 종료 날짜까지 5일 Packing 객체 생성
-				LocalDateTime startDateTime = extensionOrder.getStartDateTime().plusDays(i);
-				LocalDateTime endDateTime = startDateTime.plusDays(1);
-				Packing build = Packing.builder()
-					.careOrder(extensionOrder)
-					.settle(recentSettle)
-					.periodType(careOrderExtensionsRequest.getPeriodType())
-					.amount(careOrderExtensionsRequest.getAmount())
-					.startDateTime(startDateTime)
-					.endDateTime(endDateTime)
-					.build();
-				extensionOrder.addPacking(build);
-			}
+			// 지원자 o, packing
+			// 종료 날짜(2024-04-17 10:00:00) - 시작 날짜(2024-04-12 10:00:00)
+			// 시작 날짜부터 종료 날짜까지 5일 Packing 객체 생성
+			LocalDateTime startDateTime = extensionOrder.getStartDateTime().plusDays(i);
+			LocalDateTime endDateTime = startDateTime.plusDays(1);
 
+			Packing build = Packing.builder()
+				.careOrder(extensionOrder)
+				.settle(recentSettle)
+				.periodType(careOrderExtensionsRequest.getPeriodType())
+				.partTime(careOrderExtensionsRequest.getPartTime())
+				.amount(careOrderExtensionsRequest.getAmount())
+				.startDateTime(startDateTime)
+				.endDateTime(endDateTime)
+				.build();
+			extensionOrder.addPacking(build);
+
+			CareOrderCalculateRequest calculateRequest = CareOrderCalculateRequest.builder()
+				.amount(careOrderExtensionsRequest.getAmount())
+				.periodType(careOrderExtensionsRequest.getPeriodType())
+				.partTime(careOrderExtensionsRequest.getPartTime())
+				.build();
 			totalPrice += calculatePaymentPriceOneDay(calculateRequest, recentSettle.getGuardianFees());
 		}
 		log.info(String.valueOf(totalPrice));
