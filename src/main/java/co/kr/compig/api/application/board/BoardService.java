@@ -55,6 +55,10 @@ public class BoardService {
 		return board.getId();
 	}
 
+	public String uploadImage(MultipartFile file) {
+		return s3Util.upload(file);
+	}
+
 	@Transactional(readOnly = true)
 	public Page<BoardResponse> getBoardPage(BoardSearchRequest boardSearchRequest) {
 		return boardRepositoryCustom.getBoardPage(boardSearchRequest);
@@ -113,4 +117,5 @@ public class BoardService {
 		Slice<BoardResponse> slice = boardRepositoryCustom.getBoardSlice(request, pageable);
 		return new SliceResponse<>(slice.getContent(), pageable, slice.hasNext());
 	}
+
 }
