@@ -121,8 +121,9 @@ public class TermsRepositoryImpl implements TermsRepositoryCustom {
 		if (request.getTermsType() != null) {
 			predicate = predicate.and(terms.termsType.eq(request.getTermsType()));
 		}
-		if (request.getCreateOn() != null) {
-			predicate = predicate.and(terms.createdAndModified.createdOn.eq(request.getToCreatedOn()));
+		if (request.getCreatedOn() != null) {
+			predicate = predicate.and(terms.createdAndModified.createdOn.between(request.getCreatedOn().atTime(0, 0, 0),
+				request.getCreatedOn().atTime(23, 59, 59)));
 		}
 
 		return predicate;
