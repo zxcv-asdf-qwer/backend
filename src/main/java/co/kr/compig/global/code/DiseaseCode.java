@@ -17,7 +17,10 @@ public enum DiseaseCode implements BaseEnumCode<String> {
 	DELIRIUM("DEL", "섬망", UseYn.Y),
 	BODY_PARALYSIS("BOD", "전신마비", UseYn.Y),
 	HEMIPLEGIA("HEM", "편마비", UseYn.Y),
-	NOTHING("NOT", "질환 없음", UseYn.Y);
+	NOTHING("NOT", "질환 없음", UseYn.Y),
+	FEEDING("FEE", "피딩", UseYn.Y),
+	SUCTION("SUC", "석션", UseYn.Y)
+	;
 
 	private final String code;
 	private final String desc;
