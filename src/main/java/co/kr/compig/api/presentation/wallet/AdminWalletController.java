@@ -5,12 +5,10 @@ import java.util.Map;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import co.kr.compig.api.application.wallet.WalletService;
 import co.kr.compig.api.presentation.wallet.request.WalletCreateRequest;
 import co.kr.compig.api.presentation.wallet.request.WalletSearchRequest;
-import co.kr.compig.api.presentation.wallet.request.WalletUpdateRequest;
 import co.kr.compig.api.presentation.wallet.response.WalletDetailResponse;
 import co.kr.compig.api.presentation.wallet.response.WalletResponse;
 import co.kr.compig.global.dto.Response;
@@ -40,12 +37,12 @@ public class AdminWalletController {
 
 	private final WalletService walletService;
 
-	@Operation(summary = "생성하기")
+	@Operation(summary = "수기정산")
 	@PostMapping
 	public ResponseEntity<Response<?>> createWallet(
 		@RequestBody @Valid WalletCreateRequest walletCreateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-			.data(Map.of("walletId", walletService.createWallet(walletCreateRequest)))
+			.data(Map.of("walletId", walletService.createWalletAdmin(walletCreateRequest)))
 			.build());
 	}
 
@@ -59,29 +56,18 @@ public class AdminWalletController {
 	}
 
 	@Operation(summary = "상세 조회")
-	@GetMapping(path = "/{walletId}")
-	public ResponseEntity<Response<WalletDetailResponse>> getWallet(
-		@PathVariable(name = "walletId") Long walletId) {
-		return ResponseEntity.ok(Response.<WalletDetailResponse>builder()
-			.data(walletService.getWallet(walletId))
+	@GetMapping(path = "/members/{memberId}")
+	public ResponseEntity<Response<WalletResponse>> getWallet(@PathVariable(name = "memberId") String memberId) {
+		return ResponseEntity.ok(Response.<WalletResponse>builder()
+			.data(walletService.getWallet(memberId))
 			.build());
 	}
 
-	@Operation(summary = "정보 수정하기")
-	@PutMapping(path = "/{walletId}")
-	public ResponseEntity<Response<?>> updateWallet(
-		@PathVariable(name = "walletId") Long walletId,
-		@RequestBody @Valid WalletUpdateRequest walletUpdateRequest) {
-		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-			.data(Map.of("walletId", walletService.updateWallet(walletId, walletUpdateRequest)))
-			.build());
-	}
-
-	@Operation(summary = "삭제")
-	@DeleteMapping(path = "/{walletId}")
-	public ResponseEntity<Response<?>> deleteWallet(
-		@PathVariable(name = "walletId") Long walletId) {
-		walletService.deleteWallet(walletId);
-		return ResponseEntity.ok().build();
+	@Operation(summary = "수기 정산 내역")
+	@GetMapping("/exchange")
+	public ResponseEntity<PageResponse> getExchangeHandWalletPage(
+		@ParameterObject @ModelAttribute WalletSearchRequest walletSearchRequest) {
+		Page<WalletDetailResponse> page = walletService.getExchangeHandWalletPage(walletSearchRequest);
+		return PageResponse.ok(page.stream().toList(), page.getPageable().getOffset(), page.getTotalElements());
 	}
 }

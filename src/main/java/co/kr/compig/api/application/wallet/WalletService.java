@@ -5,6 +5,8 @@ import static co.kr.compig.api.domain.order.QCareOrder.*;
 import static co.kr.compig.api.domain.packing.QPacking.*;
 import static co.kr.compig.global.utils.CalculateUtil.*;
 
+import java.util.stream.Collectors;
+
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +23,6 @@ import co.kr.compig.api.domain.wallet.WalletRepositoryCustom;
 import co.kr.compig.api.presentation.order.request.CareOrderCalculateRequest;
 import co.kr.compig.api.presentation.wallet.request.WalletCreateRequest;
 import co.kr.compig.api.presentation.wallet.request.WalletSearchRequest;
-import co.kr.compig.api.presentation.wallet.request.WalletUpdateRequest;
 import co.kr.compig.api.presentation.wallet.response.WalletDetailResponse;
 import co.kr.compig.api.presentation.wallet.response.WalletResponse;
 import co.kr.compig.global.code.ApplyStatus;
@@ -43,11 +44,12 @@ public class WalletService {
 	private final PackingService packingService;
 	private final JPAQueryFactory jpaQueryFactory;
 
-	public Long createWallet(WalletCreateRequest walletCreateRequest) {
+	public Long createWalletAdmin(WalletCreateRequest walletCreateRequest) {
 		Member member = memberService.getMemberById(walletCreateRequest.getMemberId());
 
 		// 가장 최근의 Wallet 가져오기
-		Wallet lastWallet = walletRepository.findTopByMemberOrderByCreatedAndUpdated_CreatedOnDesc(member).orElse(null);
+		Wallet lastWallet = walletRepository.findTopByMemberOrderByCreatedAndModified_CreatedOnDesc(member)
+			.orElse(null);
 		// 이전 잔액
 		int previousBalance = (lastWallet != null) ? lastWallet.getBalance() : 0;
 
@@ -65,8 +67,8 @@ public class WalletService {
 		Wallet wallet = Wallet.builder()
 			.member(member)
 			.packing(null)
-			.transactionType(walletCreateRequest.getTransactionType()) // 입금
-			.exchangeType(ExchangeType.HAND) // 자동
+			.transactionType(walletCreateRequest.getTransactionType()) // 입금, 출금
+			.exchangeType(ExchangeType.HAND) // 수기
 			.transactionAmount(walletCreateRequest.getAmount()) //수기입력 금액
 			.balance(newBalance) //잔액
 			.description(walletCreateRequest.getDescription())
@@ -90,7 +92,8 @@ public class WalletService {
 		}
 
 		// 가장 최근의 Wallet 가져오기
-		Wallet lastWallet = walletRepository.findTopByMemberOrderByCreatedAndUpdated_CreatedOnDesc(member).orElse(null);
+		Wallet lastWallet = walletRepository.findTopByMemberOrderByCreatedAndModified_CreatedOnDesc(member)
+			.orElse(null);
 		// 이전 잔액
 		int previousBalance = (lastWallet != null) ? lastWallet.getBalance() : 0;
 		//간병하루 - 간병인 수수료
@@ -129,21 +132,19 @@ public class WalletService {
 	}
 
 	@Transactional(readOnly = true)
-	public WalletDetailResponse getWallet(Long walletId) {
-		Wallet wallet = walletRepository.findById(walletId).orElseThrow(NotExistDataException::new);
-		return wallet.toWalletDetailResponse();
+	public Page<WalletDetailResponse> getExchangeHandWalletPage(WalletSearchRequest walletSearchRequest) {
+		return walletRepositoryCustom.getExchangeHandWalletPage(walletSearchRequest);
+	}
+	@Transactional(readOnly = true)
+	public WalletResponse getWallet(String memberId) {
+		Member member = memberService.getMemberById(memberId);
+		return WalletResponse.builder()
+			.partnerMemberResponse(member.toPartnerMemberResponse())
+			.walletDetailResponsesList(member.getWallets()
+				.stream()
+				.map(Wallet::toWalletDetailResponse)
+				.collect(Collectors.toList())
+			).build();
 	}
 
-	public Long updateWallet(Long walletId, WalletUpdateRequest walletUpdateRequest) {
-		Wallet wallet = walletRepository.findById(walletId).orElseThrow(NotExistDataException::new);
-		Member member = memberService.getMemberById(walletUpdateRequest.getMemberId());
-		Packing packing = packingService.getPackingById(walletUpdateRequest.getPackingId());
-		wallet.update(member, packing);
-		return wallet.getId();
-	}
-
-	public void deleteWallet(Long walletId) {
-		Wallet wallet = walletRepository.findById(walletId).orElseThrow(NotExistDataException::new);
-		walletRepository.delete(wallet);
-	}
 }
