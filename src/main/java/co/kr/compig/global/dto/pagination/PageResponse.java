@@ -1,12 +1,13 @@
 package co.kr.compig.global.dto.pagination;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.CollectionUtils;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -39,6 +40,11 @@ public class PageResponse {
 
 	public static ResponseEntity<PageResponse> ok(List<? extends PagingResult> dataList, long offset, long total) {
 		return ResponseEntity.ok(new PageResponse(convertDataList(dataList, offset), (int)total));
+	}
+
+	public static ResponseEntity<PageResponse> noResult() {
+		return ResponseEntity.ok(new PageResponse(
+			Collections.singletonList(CollectionUtils.emptyCollection()), 0));
 	}
 
 	private static List<?> convertDataList(List<?> dataList, long offset) {

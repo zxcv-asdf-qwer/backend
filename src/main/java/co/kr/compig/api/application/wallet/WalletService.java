@@ -5,15 +5,19 @@ import static co.kr.compig.api.domain.order.QCareOrder.*;
 import static co.kr.compig.api.domain.packing.QPacking.*;
 import static co.kr.compig.global.utils.CalculateUtil.*;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import co.kr.compig.api.application.member.MemberService;
+import co.kr.compig.api.application.system.EncryptKeyService;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.packing.Packing;
 import co.kr.compig.api.domain.wallet.Wallet;
@@ -28,6 +32,8 @@ import co.kr.compig.api.presentation.wallet.response.WalletResponseWithSecret;
 import co.kr.compig.global.code.ApplyStatus;
 import co.kr.compig.global.code.ExchangeType;
 import co.kr.compig.global.code.TransactionType;
+import co.kr.compig.global.crypt.AES256;
+import co.kr.compig.global.dto.pagination.PageResponse;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +48,7 @@ public class WalletService {
 	private final WalletRepositoryCustom walletRepositoryCustom;
 	private final MemberService memberService;
 	private final JPAQueryFactory jpaQueryFactory;
+	private final EncryptKeyService encryptKeyService;
 
 	public Long createWalletAdmin(WalletCreateRequest walletCreateRequest) {
 		Member member = memberService.getMemberById(walletCreateRequest.getMemberId());
@@ -123,6 +130,8 @@ public class WalletService {
 			.description(description)
 			.build();
 		walletRepository.save(wallet);
+		// TODO 스케쥴러 createBy
+		// TODO 마지막 날이면 orderstatus ORDER_COMPLETE 으로 변경 해주기
 	}
 
 	@Transactional(readOnly = true)
@@ -136,8 +145,50 @@ public class WalletService {
 	}
 
 	@Transactional(readOnly = true)
-	public Page<WalletResponseWithSecret> getExchangeOneDayWalletPage(WalletSearchRequest walletSearchRequest) {
-		return walletRepositoryCustom.getExchangeOneDayWalletPage(walletSearchRequest);
+	public ResponseEntity<PageResponse> getExchangeOneDayWalletPage(WalletSearchRequest walletSearchRequest) {
+		Page<Wallet> page = walletRepositoryCustom.getExchangeOneDayWalletPage(walletSearchRequest);
+		if(CollectionUtils.isEmpty(page.getContent())) {
+			return PageResponse.noResult();
+		}
+		AES256 aes256 = encryptKeyService.getEncryptKey();
+		List<WalletResponseWithSecret> responses =
+			page.get().map(wallet -> {
+				CareOrderCalculateRequest calculateRequest = CareOrderCalculateRequest.builder()
+					.amount(wallet.getPacking().getAmount())
+					.periodType(wallet.getPacking().getPeriodType())
+					.partTime(wallet.getPacking().getPartTime())
+					.build();
+				String accountName;
+				String accountNumber;
+
+				try {
+					accountName = aes256.decrypt(wallet.getMember().getAccount().getAccountName(),
+						wallet.getMember().getAccount().getIv());
+				} catch (Exception e) {
+					accountName = null;
+					log.error("Decryption error for account name: {}", e.getMessage());
+				}
+
+				try {
+					accountNumber = aes256.decrypt(wallet.getMember().getAccount().getAccountNumber(),
+						wallet.getMember().getAccount().getIv());
+				} catch (Exception e) {
+					accountNumber = null;
+					log.error("Decryption error for account number: {}", e.getMessage());
+				}
+				return WalletResponseWithSecret.builder()
+					.userNm(wallet.getMember().getUserNm())
+					.price(calculatePriceOneDay(calculateRequest))
+					.partnerFee(wallet.getPacking().getSettle().getPartnerFees())
+					.transactionAmount(wallet.getTransactionAmount())
+					.orderId(wallet.getPacking().getCareOrder().getId())
+					.accountName(accountName)
+					.jumin(wallet.getMember().getJumin1() + "-" + wallet.getMember().getJumin2())
+					.bankName(wallet.getMember().getAccount() != null ?  wallet.getMember().getAccount().getBankName() : null)
+					.accountNumber(accountNumber)
+					.build();
+			}).collect(Collectors.toList());
+		return PageResponse.ok(responses.stream().toList(), page.getPageable().getOffset(), page.getTotalElements());
 	}
 
 	@Transactional(readOnly = true)

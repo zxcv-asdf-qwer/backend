@@ -13,12 +13,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import co.kr.compig.api.application.packing.PackingSchService;
 import co.kr.compig.api.application.wallet.WalletService;
 import co.kr.compig.api.presentation.wallet.request.WalletCreateRequest;
 import co.kr.compig.api.presentation.wallet.request.WalletSearchRequest;
 import co.kr.compig.api.presentation.wallet.response.WalletDetailResponse;
 import co.kr.compig.api.presentation.wallet.response.WalletResponse;
-import co.kr.compig.api.presentation.wallet.response.WalletResponseWithSecret;
+import co.kr.compig.global.code.ExchangeType;
+import co.kr.compig.global.code.TransactionType;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.dto.pagination.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,6 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AdminWalletController {
 
 	private final WalletService walletService;
+	private final PackingSchService packingSchService;
 
 	@Operation(summary = "수기정산")
 	@PostMapping
@@ -45,6 +48,13 @@ public class AdminWalletController {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("walletId", walletService.createWalletAdmin(walletCreateRequest)))
 			.build());
+	}
+
+	@Operation(summary = "스케쥴러 정산 자동")
+	@PostMapping("/scheduler-task")
+	public ResponseEntity<Response<?>> createWalletSchedulerTask() {
+		packingSchService.transactionWallet(TransactionType.CREDIT, ExchangeType.AUTO, "");
+		return ResponseEntity.ok().build();
 	}
 
 	@Operation(summary = "조회")
@@ -76,7 +86,6 @@ public class AdminWalletController {
 	@GetMapping("/exchange-one-day")
 	public ResponseEntity<PageResponse> getExchangeOneDayWalletPage(
 		@ParameterObject @ModelAttribute WalletSearchRequest walletSearchRequest) {
-		Page<WalletResponseWithSecret> page = walletService.getExchangeOneDayWalletPage(walletSearchRequest);
-		return PageResponse.ok(page.stream().toList(), page.getPageable().getOffset(), page.getTotalElements());
+		return walletService.getExchangeOneDayWalletPage(walletSearchRequest);
 	}
 }

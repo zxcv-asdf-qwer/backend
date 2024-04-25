@@ -1,10 +1,9 @@
-package co.kr.compig.global.config;
+package co.kr.compig.global.scheduler;
 
 import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
@@ -16,7 +15,7 @@ import net.javacrumbs.shedlock.spring.annotation.EnableSchedulerLock;
 
 @Configuration
 @EnableScheduling
-@EnableSchedulerLock(defaultLockAtMostFor = "10m") //기본 잠금의 최대 유지 시간
+@EnableSchedulerLock(defaultLockAtMostFor = "PT1M") //기본 잠금의 최대 유지 시간
 public class SchedulerConfig implements SchedulingConfigurer {
     @Override
     public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
@@ -30,9 +29,6 @@ public class SchedulerConfig implements SchedulingConfigurer {
 
     @Bean
     public LockProvider lockProvider(DataSource dataSource) {
-        return new JdbcTemplateLockProvider(JdbcTemplateLockProvider.Configuration.builder()
-            .withJdbcTemplate(new JdbcTemplate(dataSource))
-            .usingDbTime()  // Works on Postgres, MySQL, MariaDb, MS SQL, Oracle, DB2, HSQL and H2
-            .build()  );
+        return new JdbcTemplateLockProvider(dataSource);
     }
 }

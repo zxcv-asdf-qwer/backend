@@ -20,6 +20,7 @@ import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.global.error.exception.BizException;
 import co.kr.compig.global.security.CustomOauth2User;
 import co.kr.compig.global.security.CustomOauth2UserAuthenticatedToken;
+
 @Component
 public class SecurityUtil {
 	private static MemberService memberService;
@@ -30,9 +31,15 @@ public class SecurityUtil {
 	}
 
 	public static Member getCurrentMember() {
-		Member memberById = memberService.getMemberById(getMemberId());
+		String memberId = getMemberId();
+		if (memberId == "SCHEDULER") {
+			return Member.builder().id("SCHEDULER").build();
+		}
+
+		Member memberById = memberService.getMemberById(memberId);
 		return memberById;
 	}
+
 	public final static String TEST_TOKEN = "testToken";
 
 	/**

@@ -8,6 +8,7 @@ import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 
 import co.kr.compig.global.code.ExchangeType;
 import co.kr.compig.global.code.TransactionType;
+import co.kr.compig.global.scheduler.AbstractScheduler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,13 +16,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class PackingSchedulerTask {
+public class PackingSchedulerTask extends AbstractScheduler {
 	private final PackingSchService packingSchService;
 	//lockAtMostFor - 잠금이 최대로 유지되는 시간
 	//lockAtLeastFor - 잠금이 최소로 유지되는 시간
 	@Scheduled(cron = "* 0/30 * * * *")   // 매일 30분 마다 실행
-	@SchedulerLock(name = "PackingSchService_transactionWallet", lockAtLeastFor = "PT2M", lockAtMostFor = "PT10M")
+	@SchedulerLock(name = "PackingSchService_transactionWallet", lockAtLeastFor = "PT5M", lockAtMostFor = "PT10M")
 	public void transactionWallet() {
+		setupToken();
 		packingSchService.transactionWallet(TransactionType.CREDIT, ExchangeType.AUTO, "");
 	}
 }
