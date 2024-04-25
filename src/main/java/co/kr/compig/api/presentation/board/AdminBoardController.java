@@ -45,9 +45,9 @@ public class AdminBoardController {
 	private final BoardService boardService;
 
 	@Operation(summary = "생성하기")
-	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<Response<?>> createBoard(
-		@RequestPart(value = "boardCreateRequest") @ModelAttribute @Valid BoardCreateRequest boardCreateRequest,
+		@RequestPart(value = "boardCreateRequest") @Valid BoardCreateRequest boardCreateRequest,
 		@RequestPart(value = "file", required = false) List<MultipartFile> files) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("boardId", boardService.createBoard(boardCreateRequest, files)))
@@ -95,7 +95,7 @@ public class AdminBoardController {
 	@Operation(summary = "생성하기 - base64")
 	@PostMapping(path = "/base64")
 	public ResponseEntity<Response<?>> createBoardBase64(
-		@ParameterObject @ModelAttribute @Valid BoardCreateRequest boardCreateRequest,
+		@ParameterObject @Valid BoardCreateRequest boardCreateRequest,
 		@RequestPart(value = "file", required = false) Map<String, String> files
 	) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
