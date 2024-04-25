@@ -2,6 +2,7 @@ package co.kr.compig.api.domain.wallet;
 
 import static co.kr.compig.api.domain.member.QMember.*;
 import static co.kr.compig.api.domain.wallet.QWallet.*;
+import static co.kr.compig.global.utils.CalculateUtil.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,17 +19,25 @@ import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
+import co.kr.compig.api.application.system.EncryptKeyService;
 import co.kr.compig.api.domain.member.Member;
+import co.kr.compig.api.presentation.order.request.CareOrderCalculateRequest;
 import co.kr.compig.api.presentation.wallet.request.WalletSearchRequest;
 import co.kr.compig.api.presentation.wallet.response.WalletDetailResponse;
 import co.kr.compig.api.presentation.wallet.response.WalletResponse;
+import co.kr.compig.api.presentation.wallet.response.WalletResponseWithSecret;
+import co.kr.compig.global.code.ExchangeType;
 import co.kr.compig.global.code.UserType;
+import co.kr.compig.global.crypt.AES256;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 public class WalletRepositoryImpl implements WalletRepositoryCustom {
 
 	private final JPAQueryFactory jpaQueryFactory;
+	private final EncryptKeyService encryptKeyService;
 
 	@Override
 	public Page<WalletResponse> findPage(WalletSearchRequest request) {
@@ -83,8 +92,13 @@ public class WalletRepositoryImpl implements WalletRepositoryCustom {
 		if (request.getUserNm() != null) {
 			predicate = predicate.and(wallet.member.userNm.eq(request.getUserNm()));
 		}
-		if (request.getExchangeType() != null) {
-			predicate = predicate.and(wallet.exchangeType.eq(request.getExchangeType()));
+		if (request.getFromCreatedOn() != null) {
+			predicate = predicate.and(
+				member.createdAndModified.createdOn.goe(request.getFromCreatedOn())); //크거나 같고(.goe)
+		}
+
+		if (request.getToCreatedOn() != null) {
+			predicate = predicate.and(member.createdAndModified.createdOn.loe(request.getToCreatedOn())); //작거나 같은(.loe)
 		}
 		return predicate;
 	}
@@ -96,7 +110,8 @@ public class WalletRepositoryImpl implements WalletRepositoryCustom {
 		JPAQuery<Wallet> query = jpaQueryFactory
 			.selectFrom(wallet)
 			.leftJoin(wallet.member, member)  // 지갑에서 회원으로 조인
-			.where(wallet.member.userType.eq(UserType.PARTNER), predicate) // 추가적인 필터 조건
+			.where(wallet.member.userType.eq(UserType.PARTNER), wallet.exchangeType.eq(ExchangeType.HAND),
+				predicate) // 추가적인 필터 조건
 			.orderBy(wallet.id.desc());  // 지갑 ID에 따라 내림차순 정렬
 
 		Pageable pageable = request.pageable();
@@ -113,7 +128,75 @@ public class WalletRepositoryImpl implements WalletRepositoryCustom {
 		JPAQuery<Long> countQuery = jpaQueryFactory
 			.select(wallet.count())
 			.leftJoin(wallet.member, member)  // 지갑에서 회원으로 조인
-			.where(wallet.member.userType.eq(UserType.PARTNER), predicate); // 추가적인 필터 조건
+			.where(wallet.member.userType.eq(UserType.PARTNER), wallet.exchangeType.eq(ExchangeType.HAND),
+				predicate); // 추가적인 필터 조건
+
+		return PageableExecutionUtils.getPage(responses, pageable, countQuery::fetchOne);
+	}
+
+	@Override
+	public Page<WalletResponseWithSecret> getExchangeOneDayWalletPage(WalletSearchRequest request) {
+		BooleanExpression predicate = createPredicate(request);
+
+		JPAQuery<Wallet> query = jpaQueryFactory
+			.selectFrom(wallet)
+			.leftJoin(wallet.member, member)  // 지갑에서 회원으로 조인
+			.where(wallet.member.userType.eq(UserType.PARTNER), wallet.exchangeType.eq(ExchangeType.AUTO),
+				predicate) // 추가적인 필터 조건
+			.orderBy(wallet.id.desc());  // 지갑 ID에 따라 내림차순 정렬
+
+		Pageable pageable = request.pageable();
+
+		List<Wallet> wallets = query
+			.offset(pageable.getOffset())
+			.limit(pageable.getPageSize())
+			.fetch();
+
+		AES256 aes256 = encryptKeyService.getEncryptKey();
+
+		List<WalletResponseWithSecret> responses =
+			wallets.stream().map(wallet -> {
+				CareOrderCalculateRequest calculateRequest = CareOrderCalculateRequest.builder()
+					.amount(wallet.getPacking().getAmount())
+					.periodType(wallet.getPacking().getPeriodType())
+					.partTime(wallet.getPacking().getPartTime())
+					.build();
+				String accountName;
+				String accountNumber;
+
+				try {
+					accountName = aes256.decrypt(wallet.getMember().getAccount().getAccountName(),
+						wallet.getMember().getAccount().getIv());
+				} catch (Exception e) {
+					accountName = null;
+					log.error("Decryption error for account name: {}", e.getMessage());
+				}
+
+				try {
+					accountNumber = aes256.decrypt(wallet.getMember().getAccount().getAccountNumber(),
+						wallet.getMember().getAccount().getIv());
+				} catch (Exception e) {
+					accountNumber = null;
+					log.error("Decryption error for account number: {}", e.getMessage());
+				}
+				return WalletResponseWithSecret.builder()
+					.userNm(wallet.getMember().getUserNm())
+					.price(calculatePriceOneDay(calculateRequest))
+					.partnerFee(wallet.getPacking().getSettle().getPartnerFees())
+					.transactionAmount(wallet.getTransactionAmount())
+					.orderId(wallet.getPacking().getCareOrder().getId())
+					.accountName(accountName)
+					.jumin(wallet.getMember().getJumin1() + "-" + wallet.getMember().getJumin2())
+					.bankName(wallet.getMember().getAccount().getBankName())
+					.accountNumber(accountNumber)
+					.build();
+			}).collect(Collectors.toList());
+
+		JPAQuery<Long> countQuery = jpaQueryFactory
+			.select(wallet.count())
+			.leftJoin(wallet.member, member)  // 지갑에서 회원으로 조인
+			.where(wallet.member.userType.eq(UserType.PARTNER), wallet.exchangeType.eq(ExchangeType.AUTO),
+				predicate); // 추가적인 필터 조건
 
 		return PageableExecutionUtils.getPage(responses, pageable, countQuery::fetchOne);
 	}

@@ -6,9 +6,11 @@ import org.springframework.stereotype.Repository;
 import co.kr.compig.api.presentation.wallet.request.WalletSearchRequest;
 import co.kr.compig.api.presentation.wallet.response.WalletDetailResponse;
 import co.kr.compig.api.presentation.wallet.response.WalletResponse;
+import co.kr.compig.api.presentation.wallet.response.WalletResponseWithSecret;
 
 @Repository
 public interface WalletRepositoryCustom {
 	Page<WalletResponse> findPage(WalletSearchRequest walletSearchRequest);
 	Page<WalletDetailResponse> getExchangeHandWalletPage(WalletSearchRequest walletSearchRequest);
+	Page<WalletResponseWithSecret> getExchangeOneDayWalletPage(WalletSearchRequest walletSearchRequest);
 }

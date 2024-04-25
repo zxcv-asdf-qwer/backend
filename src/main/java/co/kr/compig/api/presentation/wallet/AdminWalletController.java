@@ -18,6 +18,7 @@ import co.kr.compig.api.presentation.wallet.request.WalletCreateRequest;
 import co.kr.compig.api.presentation.wallet.request.WalletSearchRequest;
 import co.kr.compig.api.presentation.wallet.response.WalletDetailResponse;
 import co.kr.compig.api.presentation.wallet.response.WalletResponse;
+import co.kr.compig.api.presentation.wallet.response.WalletResponseWithSecret;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.dto.pagination.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -64,10 +65,18 @@ public class AdminWalletController {
 	}
 
 	@Operation(summary = "수기 정산 내역")
-	@GetMapping("/exchange")
+	@GetMapping("/exchange-hand")
 	public ResponseEntity<PageResponse> getExchangeHandWalletPage(
 		@ParameterObject @ModelAttribute WalletSearchRequest walletSearchRequest) {
 		Page<WalletDetailResponse> page = walletService.getExchangeHandWalletPage(walletSearchRequest);
+		return PageResponse.ok(page.stream().toList(), page.getPageable().getOffset(), page.getTotalElements());
+	}
+
+	@Operation(summary = "간병인 일일 정산내역")
+	@GetMapping("/exchange-one-day")
+	public ResponseEntity<PageResponse> getExchangeOneDayWalletPage(
+		@ParameterObject @ModelAttribute WalletSearchRequest walletSearchRequest) {
+		Page<WalletResponseWithSecret> page = walletService.getExchangeOneDayWalletPage(walletSearchRequest);
 		return PageResponse.ok(page.stream().toList(), page.getPageable().getOffset(), page.getTotalElements());
 	}
 }

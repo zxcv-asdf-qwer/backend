@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import co.kr.compig.api.application.member.MemberService;
-import co.kr.compig.api.application.packing.PackingService;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.packing.Packing;
 import co.kr.compig.api.domain.wallet.Wallet;
@@ -25,6 +24,7 @@ import co.kr.compig.api.presentation.wallet.request.WalletCreateRequest;
 import co.kr.compig.api.presentation.wallet.request.WalletSearchRequest;
 import co.kr.compig.api.presentation.wallet.response.WalletDetailResponse;
 import co.kr.compig.api.presentation.wallet.response.WalletResponse;
+import co.kr.compig.api.presentation.wallet.response.WalletResponseWithSecret;
 import co.kr.compig.global.code.ApplyStatus;
 import co.kr.compig.global.code.ExchangeType;
 import co.kr.compig.global.code.TransactionType;
@@ -41,7 +41,6 @@ public class WalletService {
 	private final WalletRepository walletRepository;
 	private final WalletRepositoryCustom walletRepositoryCustom;
 	private final MemberService memberService;
-	private final PackingService packingService;
 	private final JPAQueryFactory jpaQueryFactory;
 
 	public Long createWalletAdmin(WalletCreateRequest walletCreateRequest) {
@@ -135,6 +134,12 @@ public class WalletService {
 	public Page<WalletDetailResponse> getExchangeHandWalletPage(WalletSearchRequest walletSearchRequest) {
 		return walletRepositoryCustom.getExchangeHandWalletPage(walletSearchRequest);
 	}
+
+	@Transactional(readOnly = true)
+	public Page<WalletResponseWithSecret> getExchangeOneDayWalletPage(WalletSearchRequest walletSearchRequest) {
+		return walletRepositoryCustom.getExchangeOneDayWalletPage(walletSearchRequest);
+	}
+
 	@Transactional(readOnly = true)
 	public WalletResponse getWallet(String memberId) {
 		Member member = memberService.getMemberById(memberId);
