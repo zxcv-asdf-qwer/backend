@@ -16,6 +16,7 @@ import co.kr.compig.api.presentation.board.request.TermsUpdateRequest;
 import co.kr.compig.api.presentation.terms.request.TermsCreateRequest;
 import co.kr.compig.api.presentation.terms.request.TermsSearchRequest;
 import co.kr.compig.api.presentation.terms.response.TermsDetailResponse;
+import co.kr.compig.api.presentation.terms.response.TermsListResponse;
 import co.kr.compig.api.presentation.terms.response.TermsResponse;
 import co.kr.compig.global.code.TermsType;
 import co.kr.compig.global.dto.pagination.SliceResponse;
@@ -66,7 +67,7 @@ public class TermsService {
 	}
 
 	@Transactional(readOnly = true)
-	public Map<TermsType, List<TermsResponse>> getTermsList(TermsSearchRequest termsSearchRequest) {
-		return termsRepositoryCustom.getTermsList(termsSearchRequest);
+	public Map<TermsType, List<TermsListResponse>> getTermsList() {
+		return termsRepositoryCustom.getTermsList();
 	}
 }

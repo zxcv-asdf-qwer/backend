@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import co.kr.compig.api.application.terms.TermsService;
 import co.kr.compig.api.presentation.terms.request.TermsSearchRequest;
 import co.kr.compig.api.presentation.terms.response.TermsDetailResponse;
+import co.kr.compig.api.presentation.terms.response.TermsListResponse;
 import co.kr.compig.api.presentation.terms.response.TermsResponse;
 import co.kr.compig.global.code.TermsType;
 import co.kr.compig.global.dto.Response;
@@ -29,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/pv/terms", produces = "application/json")
+@RequestMapping(path = "/pb/terms", produces = "application/json")
 public class UserTermsController {
 	private final TermsService termsService;
 
@@ -44,10 +45,8 @@ public class UserTermsController {
 
 	@Operation(summary = "조회", description = "리스트")
 	@GetMapping(path = "/list")
-	public ResponseEntity<Map<TermsType, List<TermsResponse>>> getTermsList(
-		@ParameterObject @ModelAttribute @Valid TermsSearchRequest termsSearchRequest
-	) {
-		return ResponseEntity.ok(termsService.getTermsList(termsSearchRequest));
+	public ResponseEntity<Map<TermsType, List<TermsListResponse>>> getTermsList() {
+		return ResponseEntity.ok(termsService.getTermsList());
 	}
 
 	@Operation(summary = "상세 조회")

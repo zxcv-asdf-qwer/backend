@@ -9,6 +9,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Repository;
 
 import co.kr.compig.api.presentation.terms.request.TermsSearchRequest;
+import co.kr.compig.api.presentation.terms.response.TermsListResponse;
 import co.kr.compig.api.presentation.terms.response.TermsResponse;
 import co.kr.compig.global.code.TermsType;
 
@@ -18,5 +19,5 @@ public interface TermsRepositoryCustom {
 
 	Slice<TermsResponse> getTermsSlice(TermsSearchRequest termsSearchRequest, Pageable pageable);
 
-	Map<TermsType, List<TermsResponse>> getTermsList(TermsSearchRequest termsSearchRequest);
+	Map<TermsType, List<TermsListResponse>> getTermsList();
 }

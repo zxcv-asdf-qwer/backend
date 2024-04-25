@@ -2,6 +2,7 @@ package co.kr.compig.api.domain.terms;
 
 import co.kr.compig.api.presentation.board.request.TermsUpdateRequest;
 import co.kr.compig.api.presentation.terms.response.TermsDetailResponse;
+import co.kr.compig.api.presentation.terms.response.TermsListResponse;
 import co.kr.compig.api.presentation.terms.response.TermsResponse;
 import co.kr.compig.global.code.TermsType;
 import co.kr.compig.global.code.converter.TermsTypeConverter;
@@ -80,5 +81,15 @@ public class Terms {
 			.build();
 
 		return termsResponse;
+	}
+
+	public TermsListResponse toTermListResponse() {
+		TermsListResponse termsListResponse = TermsListResponse.builder()
+			.termsId(this.id)
+			.createdOn(this.createdAndModified.getCreatedOn().toLocalDate())
+			.contents(this.contents)
+			.build();
+
+		return termsListResponse;
 	}
 }

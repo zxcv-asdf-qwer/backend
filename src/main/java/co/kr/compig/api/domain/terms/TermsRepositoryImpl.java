@@ -1,7 +1,6 @@
 package co.kr.compig.api.domain.terms;
 
 import static co.kr.compig.api.domain.terms.QTerms.*;
-import static java.util.stream.Collectors.*;
 
 import java.util.List;
 import java.util.Map;
@@ -25,6 +24,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import co.kr.compig.api.presentation.terms.request.TermsSearchRequest;
+import co.kr.compig.api.presentation.terms.response.TermsListResponse;
 import co.kr.compig.api.presentation.terms.response.TermsResponse;
 import co.kr.compig.global.code.TermsType;
 import lombok.RequiredArgsConstructor;
@@ -90,21 +90,16 @@ public class TermsRepositoryImpl implements TermsRepositoryCustom {
 	}
 
 	@Override
-	public Map<TermsType, List<TermsResponse>> getTermsList(TermsSearchRequest termsSearchRequest) {
-		BooleanExpression predicate = createPredicate(termsSearchRequest);
+	public Map<TermsType, List<TermsListResponse>> getTermsList() {
+		BooleanExpression predicate = Expressions.asBoolean(true).isTrue();
 
 		JPAQuery<Terms> query = createBaseQuery(predicate)
 			.select(terms)
 			.orderBy(terms.createdAndModified.createdOn.desc());
 
-		List<TermsResponse> responses = query.fetch().stream()
-			.map(Terms::toResponse)
-			.collect(Collectors.toList());
-
-		Map<TermsType, List<TermsResponse>> collect = responses.stream()
-			.collect(groupingBy((TermsResponse::getTermsType)));
-
-		return collect;
+		return query.fetch().stream()
+			.collect(Collectors.groupingBy(Terms::getTermsType,
+				Collectors.mapping(Terms::toTermListResponse, Collectors.toList())));
 	}
 
 	private BooleanExpression cursorCursorId(Long cursorId) {
