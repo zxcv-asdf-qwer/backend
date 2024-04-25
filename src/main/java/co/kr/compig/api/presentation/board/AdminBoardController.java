@@ -54,6 +54,15 @@ public class AdminBoardController {
 			.build());
 	}
 
+	@Operation(summary = "이미지 업로드")
+	@PostMapping(path = "/imageUpload")
+	public ResponseEntity<Response<?>> uploadImage(
+		@RequestPart(value = "file", required = false) MultipartFile file) {
+		return ResponseEntity.ok().body(Response.<String>builder()
+			.data(boardService.uploadImage(file))
+			.build());
+	}
+
 	@Operation(summary = "조회", description = "페이징")
 	@GetMapping
 	public ResponseEntity<PageResponse> getBoardPage(
