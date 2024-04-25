@@ -17,9 +17,10 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class PackingSchedulerTask {
 	private final PackingSchService packingSchService;
-
-	@Scheduled(cron = "0/30 * * * *")   // 매일 30분 마다 실행
-	@SchedulerLock(name = "PackingSchService_transactionWallet", lockAtLeastFor = "PT5M", lockAtMostFor = "PT10M")
+	//lockAtMostFor - 잠금이 최대로 유지되는 시간
+	//lockAtLeastFor - 잠금이 최소로 유지되는 시간
+	@Scheduled(cron = "* 0/30 * * * *")   // 매일 30분 마다 실행
+	@SchedulerLock(name = "PackingSchService_transactionWallet", lockAtLeastFor = "PT2M", lockAtMostFor = "PT10M")
 	public void transactionWallet() {
 		packingSchService.transactionWallet(TransactionType.CREDIT, ExchangeType.AUTO, "");
 	}
