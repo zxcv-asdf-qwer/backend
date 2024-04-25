@@ -86,7 +86,6 @@ public class Question {
 	public QuestionDetailResponse toQuestionDetailResponse() {
 		QuestionDetailResponse build = QuestionDetailResponse.builder()
 			.questionId(this.id)
-			.questionType(this.questionType)
 			.questionTitle(this.questionTitle)
 			.questionContent(this.questionContent)
 			.isAnswer(this.isAnswer)
@@ -96,7 +95,6 @@ public class Question {
 	}
 
 	public void update(QuestionUpdateRequest questionUpdateRequest) {
-		this.questionType = questionUpdateRequest.getQuestionType();
 		this.questionTitle = questionUpdateRequest.getQuestionTitle();
 		this.questionContent = questionUpdateRequest.getQuestionContent();
 	}
@@ -108,7 +106,6 @@ public class Question {
 	public QuestionResponse toQuestionResponse() {
 		QuestionResponse questionResponse = QuestionResponse.builder()
 			.questionId(this.id)
-			.questionType(this.questionType)
 			.questionTitle(this.questionTitle)
 			.isAnswer(this.isAnswer)
 			.build();

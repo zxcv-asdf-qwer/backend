@@ -41,7 +41,7 @@ public class PartnerInquiryController {
 	@Operation(summary = "질문 생성하기")
 	@PostMapping(path = "/question")
 	public ResponseEntity<Response<?>> createQuestion(
-		@ParameterObject @ModelAttribute @Valid QuestionCreateRequest questionCreateRequest
+		@ParameterObject @RequestBody @Valid QuestionCreateRequest questionCreateRequest
 	) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("questionId", questionService.createQuestion(questionCreateRequest)))

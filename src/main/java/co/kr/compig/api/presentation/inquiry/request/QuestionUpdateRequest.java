@@ -1,6 +1,6 @@
 package co.kr.compig.api.presentation.inquiry.request;
 
-import co.kr.compig.global.code.QuestionType;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class QuestionUpdateRequest {
-	private QuestionType questionType; // 질문 유형
+
+	@Schema(description = "질문 제목")
 	private String questionTitle; // 질문 제목
+	@Schema(description = "질문 내용")
 	private String questionContent; // 질문 내용
 }

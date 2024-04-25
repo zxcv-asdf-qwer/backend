@@ -44,7 +44,7 @@ public class AdminInquiryController {
 	@Operation(summary = "질문 생성하기")
 	@PostMapping(path = "/question")
 	public ResponseEntity<Response<?>> createQuestion(
-		@ParameterObject @ModelAttribute @Valid QuestionCreateRequest questionCreateRequest
+		@ParameterObject @RequestBody @Valid QuestionCreateRequest questionCreateRequest
 	) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("questionId", inquiryService.createQuestion(questionCreateRequest)))
@@ -90,7 +90,7 @@ public class AdminInquiryController {
 	@PostMapping(path = "/answer/{questionId}")
 	public ResponseEntity<Response<?>> createAnswer(
 		@PathVariable(name = "questionId") Long questionId,
-		@ModelAttribute @Valid AnswerCreateRequest answerCreateRequest) {
+		@ParameterObject @RequestBody @Valid AnswerCreateRequest answerCreateRequest) {
 		return ResponseEntity.ok()
 			.body(Response.<Map<String, Long>>builder()
 				.data(Map.of("answerId", inquiryService.createAnswer(questionId, answerCreateRequest)))
@@ -101,7 +101,7 @@ public class AdminInquiryController {
 	@PutMapping(path = "/answer/{answerId}")
 	public ResponseEntity<Response<?>> updateAnswer(
 		@PathVariable(name = "answerId") Long answerId,
-		@RequestBody @Valid AnswerUpdateRequest answerUpdateRequest) {
+		@ParameterObject @RequestBody @Valid AnswerUpdateRequest answerUpdateRequest) {
 		return ResponseEntity.ok()
 			.body(Response.<Map<String, Long>>builder()
 				.data(Map.of("answerId", inquiryService.updateAnswer(answerId, answerUpdateRequest)))

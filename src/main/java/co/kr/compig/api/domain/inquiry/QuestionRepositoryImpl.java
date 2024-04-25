@@ -1,6 +1,5 @@
 package co.kr.compig.api.domain.inquiry;
 
-import static co.kr.compig.api.domain.board.QBoard.*;
 import static co.kr.compig.api.domain.inquiry.QQuestion.*;
 
 import java.util.List;
@@ -17,7 +16,6 @@ import com.google.common.base.CaseFormat;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Path;
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -60,31 +58,27 @@ public class QuestionRepositoryImpl implements QuestionRepositoryCustom {
 	public Slice<QuestionResponse> getQuestionSlice(QuestionSearchRequest questionSearchRequest, Pageable pageable) {
 		BooleanExpression predicate = createPredicate(questionSearchRequest);
 
-		JPAQuery<QuestionResponse> query = createBaseQuery(predicate)
-			.select(Projections.constructor(QuestionResponse.class,
-					question.id,
-					question.questionType,
-					question.questionTitle,
-					question.createdAndModified.createdBy.userNm,
-					question.createdAndModified.createdOn,
-					question.isAnswer
-				)
-			);
+		JPAQuery<Question> query = createBaseQuery(predicate)
+			.select(question)
+			.where(cursorCursorId(Long.valueOf(questionSearchRequest.getCursorId())));
 
 		applySorting(query, pageable);
 
-		List<QuestionResponse> questions = query
-			.where(cursorCursorId(Long.parseLong(questionSearchRequest.getCursorId())))
+		List<Question> questions = query
 			.offset(pageable.getOffset())
-			.limit(pageable.getPageSize() + 1) // 페이징 + 다음 페이지 존재 여부 확인을 위해 +1
+			.limit(pageable.getPageSize() + 1)
 			.fetch();
+
+		List<QuestionResponse> responses = questions.stream()
+			.map(Question::toQuestionResponse)
+			.collect(Collectors.toList());
 
 		boolean hasNext = false;
 		if (questions.size() > pageable.getPageSize()) {
 			questions.remove(pageable.getPageSize());
 			hasNext = true;
 		}
-		return new SliceImpl<>(questions, pageable, hasNext);
+		return new SliceImpl<>(responses, pageable, hasNext);
 	}
 
 	private BooleanExpression createPredicate(QuestionSearchRequest request) {
@@ -115,6 +109,6 @@ public class QuestionRepositoryImpl implements QuestionRepositoryCustom {
 	private BooleanExpression cursorCursorId(Long cursorId) {
 		if (cursorId == null)
 			return null;
-		return board.id.lt(cursorId);
+		return question.id.lt(cursorId);
 	}
 }

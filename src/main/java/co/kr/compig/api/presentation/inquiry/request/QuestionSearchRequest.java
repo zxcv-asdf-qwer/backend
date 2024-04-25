@@ -1,6 +1,7 @@
 package co.kr.compig.api.presentation.inquiry.request;
 
 import co.kr.compig.global.dto.pagination.PageableRequest;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
@@ -9,5 +10,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @AllArgsConstructor
 public class QuestionSearchRequest extends PageableRequest {
-	private String memberId; // 사용자 ID
+
+	@Schema(description = "사용자 ID")
+	private String memberId;
 }
