@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.terms.TermsService;
@@ -47,7 +46,7 @@ public class GuardianTermsController {
 	@Operation(summary = "조회", description = "리스트")
 	@GetMapping(path = "/list")
 	public ResponseEntity<List<TermsResponse>> getTermsList(
-		@ParameterObject @RequestParam(required = false) @Valid TermsSearchRequest termsSearchRequest
+		@ParameterObject @ModelAttribute @Valid TermsSearchRequest termsSearchRequest
 	) {
 		return ResponseEntity.ok(termsService.getTermsList(termsSearchRequest));
 	}
