@@ -1,8 +1,10 @@
 package co.kr.compig.api.domain.terms;
 
 import static co.kr.compig.api.domain.terms.QTerms.*;
+import static java.util.stream.Collectors.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -24,6 +26,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import co.kr.compig.api.presentation.terms.request.TermsSearchRequest;
 import co.kr.compig.api.presentation.terms.response.TermsResponse;
+import co.kr.compig.global.code.TermsType;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -36,7 +39,8 @@ public class TermsRepositoryImpl implements TermsRepositoryCustom {
 		BooleanExpression predicate = createPredicate(request);
 
 		JPAQuery<Terms> query = createBaseQuery(predicate)
-			.select(terms);
+			.select(terms)
+			.orderBy(terms.createdAndModified.createdOn.desc());
 
 		Pageable pageable = request.pageable();
 
@@ -86,19 +90,21 @@ public class TermsRepositoryImpl implements TermsRepositoryCustom {
 	}
 
 	@Override
-	public List<TermsResponse> getTermsList(TermsSearchRequest termsSearchRequest) {
+	public Map<TermsType, List<TermsResponse>> getTermsList(TermsSearchRequest termsSearchRequest) {
 		BooleanExpression predicate = createPredicate(termsSearchRequest);
 
-		JPAQuery<TermsResponse> query = createBaseQuery(predicate)
-			.select(Projections.constructor(TermsResponse.class,
-				terms.id,
-				terms.termsType,
-				terms.createdAndModified.createdBy.userNm,
-				terms.createdAndModified.createdOn
-			))
+		JPAQuery<Terms> query = createBaseQuery(predicate)
+			.select(terms)
 			.orderBy(terms.createdAndModified.createdOn.desc());
 
-		return query.fetch();
+		List<TermsResponse> responses = query.fetch().stream()
+			.map(Terms::toResponse)
+			.collect(Collectors.toList());
+
+		Map<TermsType, List<TermsResponse>> collect = responses.stream()
+			.collect(groupingBy((TermsResponse::getTermsType)));
+
+		return collect;
 	}
 
 	private BooleanExpression cursorCursorId(Long cursorId) {
@@ -120,10 +126,6 @@ public class TermsRepositoryImpl implements TermsRepositoryCustom {
 		}
 		if (request.getTermsType() != null) {
 			predicate = predicate.and(terms.termsType.eq(request.getTermsType()));
-		}
-		if (request.getCreatedOn() != null) {
-			predicate = predicate.and(terms.createdAndModified.createdOn.between(request.getCreatedOn().atTime(0, 0, 0),
-				request.getCreatedOn().atTime(23, 59, 59)));
 		}
 
 		return predicate;

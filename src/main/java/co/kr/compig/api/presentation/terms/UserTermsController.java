@@ -1,6 +1,7 @@
 package co.kr.compig.api.presentation.terms;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,7 @@ import co.kr.compig.api.application.terms.TermsService;
 import co.kr.compig.api.presentation.terms.request.TermsSearchRequest;
 import co.kr.compig.api.presentation.terms.response.TermsDetailResponse;
 import co.kr.compig.api.presentation.terms.response.TermsResponse;
+import co.kr.compig.global.code.TermsType;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.dto.pagination.SliceResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,13 +25,12 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Tag(name = "간병인 게시판", description = "게시판 관련 API")
+@Tag(name = "사용자 이용약관", description = "이용약관 관련 API")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/partner/terms", produces = "application/json")
-public class PartnerTermsController {
-
+@RequestMapping(path = "/pv/terms", produces = "application/json")
+public class UserTermsController {
 	private final TermsService termsService;
 
 	@Operation(summary = "조회")
@@ -43,7 +44,7 @@ public class PartnerTermsController {
 
 	@Operation(summary = "조회", description = "리스트")
 	@GetMapping(path = "/list")
-	public ResponseEntity<List<TermsResponse>> getTermsList(
+	public ResponseEntity<Map<TermsType, List<TermsResponse>>> getTermsList(
 		@ParameterObject @ModelAttribute @Valid TermsSearchRequest termsSearchRequest
 	) {
 		return ResponseEntity.ok(termsService.getTermsList(termsSearchRequest));

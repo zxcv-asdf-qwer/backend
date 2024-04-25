@@ -75,9 +75,10 @@ public class Terms {
 		TermsResponse termsResponse = TermsResponse.builder()
 			.termsId(this.id)
 			.termsType(this.termsType)
+			.createdOn(this.createdAndModified.getCreatedOn().toLocalDate())
+			.createdBy(this.createdAndModified.getCreatedBy().getUserNm())
 			.build();
 
-		termsResponse.setCreatedAndUpdated(this.createdAndModified);
 		return termsResponse;
 	}
 }

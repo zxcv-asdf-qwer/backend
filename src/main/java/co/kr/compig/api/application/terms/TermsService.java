@@ -1,6 +1,7 @@
 package co.kr.compig.api.application.terms;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +17,7 @@ import co.kr.compig.api.presentation.terms.request.TermsCreateRequest;
 import co.kr.compig.api.presentation.terms.request.TermsSearchRequest;
 import co.kr.compig.api.presentation.terms.response.TermsDetailResponse;
 import co.kr.compig.api.presentation.terms.response.TermsResponse;
+import co.kr.compig.global.code.TermsType;
 import co.kr.compig.global.dto.pagination.SliceResponse;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import lombok.RequiredArgsConstructor;
@@ -64,7 +66,7 @@ public class TermsService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<TermsResponse> getTermsList(TermsSearchRequest termsSearchRequest) {
+	public Map<TermsType, List<TermsResponse>> getTermsList(TermsSearchRequest termsSearchRequest) {
 		return termsRepositoryCustom.getTermsList(termsSearchRequest);
 	}
 }
