@@ -35,19 +35,25 @@ public class BaseAudit extends PagingResult {
 
 	public void setCreatedAndUpdated(CreatedAndUpdated createdAndUpdated) {
 		if (createdAndUpdated != null) {
-			this.createdByName = createdAndUpdated.getCreatedBy().getUserNm();
-			this.createdByUserId = createdAndUpdated.getCreatedBy().getUserId();
+			if (createdAndUpdated.getCreatedBy() != null) {
+				this.createdByName = createdAndUpdated.getCreatedBy().getUserNm();
+				this.createdByUserId = createdAndUpdated.getCreatedBy().getUserId();
+			}
 			this.createdOn = createdAndUpdated.getCreatedOn();
-			this.updatedByName = createdAndUpdated.getUpdatedBy().getUserNm();
-			this.updatedByUserId = createdAndUpdated.getUpdatedBy().getUserId();
+			if (createdAndUpdated.getUpdatedBy() != null) {
+				this.updatedByName = createdAndUpdated.getUpdatedBy().getUserNm();
+				this.updatedByUserId = createdAndUpdated.getUpdatedBy().getUserId();
+			}
 			this.updatedOn = createdAndUpdated.getUpdatedOn();
 		}
 	}
 
 	public void setCreated(Created created) {
 		if (created != null) {
-			this.createdByName = created.getCreatedBy().getUserNm();
-			this.createdByUserId = created.getCreatedBy().getUserId();
+			if (created.getCreatedBy() != null) {
+				this.createdByName = created.getCreatedBy().getUserNm();
+				this.createdByUserId = created.getCreatedBy().getUserId();
+			}
 			this.createdOn = created.getCreatedOn();
 		}
 	}

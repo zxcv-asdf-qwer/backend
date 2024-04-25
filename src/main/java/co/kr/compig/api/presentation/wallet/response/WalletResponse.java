@@ -1,5 +1,8 @@
 package co.kr.compig.api.presentation.wallet.response;
 
+import java.util.List;
+
+import co.kr.compig.api.presentation.member.response.PartnerMemberResponse;
 import co.kr.compig.global.dto.BaseAudit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,6 +17,6 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 public class WalletResponse extends BaseAudit {
 
-	private String memberId; // 멤버 ID
-	private Long packingId; // 패킹 ID
+	private PartnerMemberResponse partnerMemberResponse;
+	private List<WalletDetailResponse> walletDetailResponsesList; //목록 조회일때 가장 최신 만 조회
 }

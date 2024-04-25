@@ -63,7 +63,7 @@ public class Wallet {
 	private Integer balance; //잔액
 
 	@Column
-	private String description; //비고
+	private String description; //사유
 
 	/* =================================================================
 	* Domain mapping
@@ -85,7 +85,8 @@ public class Wallet {
 	================================================================= */
 	@Embedded
 	@Builder.Default
-	private CreatedAndUpdated createdAndUpdated = new CreatedAndUpdated();
+	private CreatedAndUpdated createdAndModified = new CreatedAndUpdated();
+
 	/* =================================================================
 	* Relation method
 	================================================================= */
@@ -93,11 +94,21 @@ public class Wallet {
 	/* =================================================================
  	 * Business
        ================================================================= */
+
 	public WalletDetailResponse toWalletDetailResponse() {
-		return WalletDetailResponse.builder()
-			.memberId(this.member.getId())
-			.packingId(this.packing.getId())
+		WalletDetailResponse build = WalletDetailResponse.builder()
+			.walletId(this.id)
+			.exchangeType(this.exchangeType)
+			.transactionType(this.transactionType)
+			.transactionAmount(this.transactionAmount)
+			.balance(this.balance)
+			.description(this.description)
+			.orderId(this.packing != null ? this.packing.getCareOrder().getId() : null)
+			.partnerFee(this.packing != null ? this.packing.getSettle().getPartnerFees() : null)
 			.build();
+		build.setCreatedAndUpdated(this.createdAndModified);
+
+		return build;
 	}
 
 	public void update(Member member, Packing packing) {
