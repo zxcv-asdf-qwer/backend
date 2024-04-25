@@ -1,5 +1,7 @@
 package co.kr.compig.global.aspect;
 
+import static co.kr.compig.global.utils.ApplicationContextUtil.*;
+
 import java.time.Instant;
 import java.time.LocalDateTime;
 
@@ -56,7 +58,10 @@ public class LoggingAspect {
 		} finally {
 			final Instant end = Instant.now();
 			try {
-				apiLogService.inboundSave(tracer, context, start, end, createdOn, request, responseData, pjp, error);
+				if (!getActiveProfile().contains("local")) {
+					apiLogService.inboundSave(tracer, context, start, end, createdOn, request, responseData, pjp,
+						error);
+				}
 			} catch (Exception e) {
 				log.error("LoggingAspect Exception: {}", e.getMessage(), e);
 			}
