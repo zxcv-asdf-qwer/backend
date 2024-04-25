@@ -61,7 +61,6 @@ public class CookieUtil {
 			ByteArrayInputStream bais = new ByteArrayInputStream(data);
 			ObjectInputStream ois = new ObjectInputStream(bais);
 			deserializedObject = cls.cast(ois.readObject());
-			ois.close();
 		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
