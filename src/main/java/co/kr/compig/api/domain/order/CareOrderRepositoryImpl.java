@@ -24,7 +24,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import co.kr.compig.api.presentation.order.request.CareOrderSearchRequest;
-import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
+import co.kr.compig.api.presentation.order.response.CareOrderPageResponse;
 import co.kr.compig.api.presentation.order.response.CareOrderResponse;
 import lombok.RequiredArgsConstructor;
 
@@ -34,7 +34,7 @@ public class CareOrderRepositoryImpl implements CareOrderRepositoryCustom {
 	private final JPAQueryFactory jpaQueryFactory;
 
 	@Override
-	public Page<CareOrderDetailResponse> findPage(CareOrderSearchRequest request) {
+	public Page<CareOrderPageResponse> findPage(CareOrderSearchRequest request) {
 		BooleanExpression predicate = createPredicate(request);
 
 		JPAQuery<CareOrder> query = createBaseQuery(predicate)
@@ -48,8 +48,8 @@ public class CareOrderRepositoryImpl implements CareOrderRepositoryCustom {
 			.limit(pageable.getPageSize()) // 페이징 + 다음 페이지 존재 여부 확인을 위해 +1
 			.fetch();
 
-		List<CareOrderDetailResponse> responses = careOrders.stream()
-			.map(CareOrder::toCareOrderDetailResponse)
+		List<CareOrderPageResponse> responses = careOrders.stream()
+			.map(CareOrder::toCareOrderPageResponse)
 			.toList();
 
 		JPAQuery<Long> countQuery = createBaseQuery(predicate)

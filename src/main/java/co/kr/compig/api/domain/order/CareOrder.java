@@ -1,10 +1,13 @@
 package co.kr.compig.api.domain.order;
 
 import static co.kr.compig.global.code.OrderStatus.*;
+import static co.kr.compig.global.utils.CalculateUtil.*;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -20,9 +23,10 @@ import co.kr.compig.api.domain.packing.Packing;
 import co.kr.compig.api.domain.patient.OrderPatient;
 import co.kr.compig.api.domain.payment.Payment;
 import co.kr.compig.api.domain.review.Review;
+import co.kr.compig.api.presentation.order.request.CareOrderCalculateRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderExtensionsRequest;
 import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
-import co.kr.compig.api.presentation.patient.response.OrderPatientDetailResponse;
+import co.kr.compig.api.presentation.order.response.CareOrderPageResponse;
 import co.kr.compig.global.code.ApplyStatus;
 import co.kr.compig.global.code.CareOrderProcessType;
 import co.kr.compig.global.code.IsYn;
@@ -193,20 +197,103 @@ public class CareOrder {
 	   ================================================================= */
 
 	public CareOrderDetailResponse toCareOrderDetailResponse() {
-		OrderPatientDetailResponse orderPatientDetailResponse = this.orderPatient.toOrderPatientDetailResponse();
-		CareOrderDetailResponse build = CareOrderDetailResponse.builder()
+		if (this.orderType.equals(OrderType.GENERAL)) {
+			Optional<Packing> firstPacking = this.packages.stream()
+				.findFirst();
+			AtomicInteger totalPrice = new AtomicInteger();
+
+			this.packages.forEach(packing -> {
+				CareOrderCalculateRequest calculateRequest = CareOrderCalculateRequest.builder()
+					.amount(packing.getAmount())
+					.periodType(packing.getPeriodType())
+					.partTime(packing.getPartTime())
+					.build();
+				totalPrice.addAndGet(calculatePaymentPriceOneDay(calculateRequest,
+					packing.getSettle().getGuardianFees()));
+			});
+			CareOrderDetailResponse build = CareOrderDetailResponse.builder()
+				.orderId(this.id)
+				.memberId(this.member.getId())
+				.userNm(this.member.getUserNm())
+				.telNo(this.member.getTelNo())
+				.startDateTime(this.startDateTime)
+				.endDateTime(this.endDateTime)
+				.orderStatus(this.orderStatus)
+				.orderType(this.orderType)
+				.publishYn(this.publishYn)
+				.careOrderProcessType(this.careOrderProcessType)
+				.periodType(firstPacking
+					.map(Packing::getPeriodType)
+					.orElse(null))
+				.amount(firstPacking
+					.map(Packing::getAmount)
+					.orElse(null))
+				.totalPrice(totalPrice.get())
+				.orderRequest(this.orderRequest)
+				.orderPatient(this.orderPatient.toOrderPatientDetailResponse())
+				.build();
+			build.setCreatedAndUpdated(this.createdAndModified);
+			return build;
+		} else {
+			Optional<Facking> firstFacking = this.fackages.stream()
+				.findFirst();
+
+			AtomicInteger totalPrice = new AtomicInteger();
+
+			this.fackages.forEach(facking -> {
+				CareOrderCalculateRequest calculateRequest = CareOrderCalculateRequest.builder()
+					.amount(facking.getAmount())
+					.periodType(facking.getPeriodType())
+					.partTime(facking.getPartTime())
+					.build();
+				totalPrice.addAndGet(calculatePaymentPriceOneDay(calculateRequest,
+					facking.getSettle().getGuardianFees()));
+			});
+			CareOrderDetailResponse build = CareOrderDetailResponse.builder()
+				.orderId(this.id)
+				.memberId(this.member.getId())
+				.userNm(this.member.getUserNm())
+				.telNo(this.member.getTelNo())
+				.startDateTime(this.startDateTime)
+				.endDateTime(this.endDateTime)
+				.orderStatus(this.orderStatus)
+				.orderType(this.orderType)
+				.publishYn(this.publishYn)
+				.careOrderProcessType(this.careOrderProcessType)
+				.periodType(firstFacking.map(Facking::getPeriodType).orElse(null))
+				.amount(firstFacking.map(Facking::getAmount).orElse(null))
+				.totalPrice(totalPrice.get())
+				.orderRequest(this.orderRequest)
+				.fackingDetailResponse(firstFacking.map(Facking::toFackingDetailResponse).orElse(null))
+				.build();
+			build.setCreatedAndUpdated(this.createdAndModified);
+			return build;
+		}
+
+	}
+
+	public CareOrderPageResponse toCareOrderPageResponse() {
+		Optional<Packing> firstPacking = packages.stream()
+			.findFirst();
+		CareOrderPageResponse build = CareOrderPageResponse.builder()
 			.orderId(this.id)
 			.memberId(this.member.getId())
 			.userNm(this.member.getUserNm())
 			.telNo(this.member.getTelNo())
+			.locationType(this.orderPatient.getLocationType())
+			.address1(this.member.getAddress1())
+			.address2(this.member.getAddress2())
 			.startDateTime(this.startDateTime)
 			.endDateTime(this.endDateTime)
 			.orderStatus(this.orderStatus)
-			.orderType(this.orderType)
-			.publishYn(this.publishYn)
-			.careOrderProcessType(this.careOrderProcessType)
-			.orderRequest(this.orderRequest)
-			.orderPatient(orderPatientDetailResponse)
+			.periodType(firstPacking
+				.map(Packing::getPeriodType)
+				.orElse(null))
+			.amount(firstPacking
+				.map(Packing::getAmount)
+				.orElse(null))
+			.applyCount(this.applys.size())
+			.memoCount(this.memos.size())
 			.build();
 		build.setCreatedAndUpdated(this.createdAndModified);
 		return build;
@@ -225,8 +312,8 @@ public class CareOrder {
 			LocalDateTime existingStart = apply.getCareOrder().getStartDateTime();
 			LocalDateTime existingEnd = apply.getCareOrder().getEndDateTime();
 			// 겹치는 조건 검사: 요청 시작 시간이 기존 종료 시간 이전이고 요청 종료 시간이 기존 시작 시간 이후인 경우
-			return this.startDateTime.isBefore(existingEnd)
-				&& this.endDateTime.isAfter(existingStart);
+			return startDateTime.isBefore(existingEnd)
+				&& endDateTime.isAfter(existingStart);
 		});
 		if (hasOverlap) {
 			throw new BizException("매칭하고자 하는 간병인의 간병 기간이 겹칩니다.");

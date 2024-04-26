@@ -26,7 +26,6 @@ import co.kr.compig.api.domain.packing.Packing;
 import co.kr.compig.api.domain.payment.Payment;
 import co.kr.compig.api.domain.payment.PaymentRepository;
 import co.kr.compig.api.domain.payment.PaymentRepositoryCustom;
-import co.kr.compig.api.domain.settle.Settle;
 import co.kr.compig.api.infrastructure.pay.PayApi;
 import co.kr.compig.api.infrastructure.pay.model.SmsPayRequest;
 import co.kr.compig.api.infrastructure.pay.model.SmsPayResponse;
@@ -59,7 +58,6 @@ public class PaymentService {
 		CareOrder careOrder = careOrderService.getCareOrderById(orderId);
 		AtomicInteger totalPrice = new AtomicInteger();
 
-		Settle recentSettle = settleService.getRecentSettle();
 		Set<Packing> packages = careOrder.getPackages();
 		packages.forEach(packing -> {
 			CareOrderCalculateRequest calculateRequest = CareOrderCalculateRequest.builder()
@@ -68,7 +66,7 @@ public class PaymentService {
 				.partTime(packing.getPartTime())
 				.build();
 			totalPrice.addAndGet(calculatePaymentPriceOneDay(calculateRequest,
-				recentSettle.getGuardianFees()));
+				packing.getSettle().getGuardianFees()));
 		});
 
 		SmsPayRequest smsPayRequest = SmsPayRequest.builder()
