@@ -16,7 +16,6 @@ import com.google.common.base.CaseFormat;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Path;
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -98,42 +97,33 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
 		}
 	}
 
-	// cursor paging
 	@Override
 	public Slice<BoardResponse> getBoardSlice(
-		BoardSearchRequest boardSearchRequest, Pageable pageable) {
-		BooleanExpression predicate = createPredicate(boardSearchRequest);
-		JPAQuery<BoardResponse> query = createBaseQuery(predicate)
-			.select(Projections.constructor(BoardResponse.class,
-					board.id,
-					board.title,
-					board.smallTitle,
-					board.contents,
-					board.boardType,
-					board.contentsType,
-					board.viewCount,
-					board.createdAndModified.createdBy.userNm,
-					board.createdAndModified.createdOn,
-					board.startDate,
-					board.endDate,
-					board.thumbnailImageUrl
-				)
-			);
+		BoardSearchRequest request, Pageable pageable
+	) {
+		BooleanExpression predicate = createPredicate(request);
+
+		JPAQuery<Board> query = createBaseQuery(predicate)
+			.select(board);
 
 		applySorting(query, pageable);
 
-		List<BoardResponse> boards = query
-			.where(cursorCursorId(Long.valueOf(boardSearchRequest.getCursorId())))
+		List<Board> boards = query
+			.where(cursorCursorId(Long.valueOf(request.getCursorId())))
 			.offset(pageable.getOffset())
-			.limit(pageable.getPageSize() + 1) // 페이징 + 다음 페이지 존재 여부 확인을 위해 +1
+			.limit(pageable.getPageSize() + 1)
 			.fetch();
 
+		List<BoardResponse> responses = boards.stream()
+			.map(Board::toResponse)
+			.collect(Collectors.toList());
+
 		boolean hasNext = false;
-		if (boards.size() > pageable.getPageSize()) {
-			boards.remove(pageable.getPageSize());
+		if (responses.size() > pageable.getPageSize()) {
+			responses.remove(pageable.getPageSize());
 			hasNext = true;
 		}
-		return new SliceImpl<>(boards, pageable, hasNext);
+		return new SliceImpl<>(responses, pageable, hasNext);
 	}
 
 	private BooleanExpression cursorCursorId(Long cursorId) {

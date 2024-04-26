@@ -166,7 +166,7 @@ public class AdminMemberController {
 			.build());
 	}
 
-	@Operation(summary = "보호자 탈퇴, 간병인 탈퇴")
+	@Operation(summary = "관리자 탈퇴, 보호자 탈퇴, 간병인 탈퇴")
 	@PutMapping("/{memberId}/leave")
 	public ResponseEntity<Response<?>> updateGuardianById(@PathVariable String memberId,
 		@RequestBody(required = false) LeaveRequest leaveRequest) {
