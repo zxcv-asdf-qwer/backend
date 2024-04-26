@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.domain.settle.Settle;
 import co.kr.compig.api.presentation.packing.request.PackingUpdateRequest;
-import co.kr.compig.api.presentation.packing.response.PackingDetailResponse;
+import co.kr.compig.api.presentation.packing.response.FackingDetailResponse;
 import co.kr.compig.global.code.PeriodType;
 import co.kr.compig.global.code.converter.PeriodTypeConverter;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
@@ -117,10 +117,18 @@ public class Facking {
 	/* =================================================================
  	 * Business
        ================================================================= */
-	public PackingDetailResponse toPackingDetailResponse() {
-		return PackingDetailResponse.builder()
-			.packingId(this.id)
+	public FackingDetailResponse toFackingDetailResponse() {
+		return FackingDetailResponse.builder()
+			.fackingId(this.id)
 			.careOrderId(this.careOrder.getId())
+			.amount(this.amount)
+			.periodType(this.periodType)
+			.partTime(this.partTime)
+			.partnerNm(this.partnerNm)
+			.partnerTelNo(this.partnerTelNo)
+			.addressCd(this.addressCd)
+			.address1(this.address1)
+			.address2(this.address2)
 			.build();
 	}
 
