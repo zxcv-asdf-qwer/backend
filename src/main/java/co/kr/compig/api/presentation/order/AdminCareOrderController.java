@@ -22,6 +22,7 @@ import co.kr.compig.api.presentation.order.request.CareOrderExtensionsRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderSearchRequest;
 import co.kr.compig.api.presentation.order.request.FamilyCareOrderCreateRequest;
 import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
+import co.kr.compig.api.presentation.order.response.CareOrderPageResponse;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.dto.pagination.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -66,7 +67,7 @@ public class AdminCareOrderController {
 	@GetMapping("/pages")
 	public ResponseEntity<PageResponse> pageListCareOrder(
 		@ParameterObject @ModelAttribute CareOrderSearchRequest careOrderSearchRequest) {
-		Page<CareOrderDetailResponse> page = careOrderService.pageListCareOrder(
+		Page<CareOrderPageResponse> page = careOrderService.pageListCareOrder(
 			careOrderSearchRequest);
 		return PageResponse.ok(page.stream().toList(), page.getPageable().getOffset(), page.getTotalElements());
 	}

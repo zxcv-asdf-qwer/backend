@@ -4,6 +4,7 @@ import static co.kr.compig.global.code.OrderStatus.*;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -22,6 +23,7 @@ import co.kr.compig.api.domain.payment.Payment;
 import co.kr.compig.api.domain.review.Review;
 import co.kr.compig.api.presentation.order.request.CareOrderExtensionsRequest;
 import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
+import co.kr.compig.api.presentation.order.response.CareOrderPageResponse;
 import co.kr.compig.api.presentation.patient.response.OrderPatientDetailResponse;
 import co.kr.compig.global.code.ApplyStatus;
 import co.kr.compig.global.code.CareOrderProcessType;
@@ -207,6 +209,33 @@ public class CareOrder {
 			.careOrderProcessType(this.careOrderProcessType)
 			.orderRequest(this.orderRequest)
 			.orderPatient(orderPatientDetailResponse)
+			.build();
+		build.setCreatedAndUpdated(this.createdAndModified);
+		return build;
+	}
+
+	public CareOrderPageResponse toCareOrderPageResponse() {
+		Optional<Packing> firstPacking = packages.stream()
+			.findFirst();
+		CareOrderPageResponse build = CareOrderPageResponse.builder()
+			.orderId(this.id)
+			.memberId(this.member.getId())
+			.userNm(this.member.getUserNm())
+			.telNo(this.member.getTelNo())
+			.locationType(this.orderPatient.getLocationType())
+			.address1(this.member.getAddress1())
+			.address2(this.member.getAddress2())
+			.startDateTime(this.startDateTime)
+			.endDateTime(this.endDateTime)
+			.orderStatus(this.orderStatus)
+			.periodType(firstPacking
+				.map(Packing::getPeriodType)
+				.orElse(null))
+			.amount(firstPacking
+				.map(Packing::getAmount)
+				.orElse(null))
+			.applyCount(this.applys.size())
+			.memoCount(this.memos.size())
 			.build();
 		build.setCreatedAndUpdated(this.createdAndModified);
 		return build;

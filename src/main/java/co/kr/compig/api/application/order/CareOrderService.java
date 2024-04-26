@@ -39,6 +39,7 @@ import co.kr.compig.api.presentation.order.request.CareOrderExtensionsRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderSearchRequest;
 import co.kr.compig.api.presentation.order.request.FamilyCareOrderCreateRequest;
 import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
+import co.kr.compig.api.presentation.order.response.CareOrderPageResponse;
 import co.kr.compig.api.presentation.order.response.CareOrderResponse;
 import co.kr.compig.global.code.OrderStatus;
 import co.kr.compig.global.error.exception.BizException;
@@ -232,7 +233,7 @@ public class CareOrderService {
 	}
 
 	@Transactional(readOnly = true)
-	public Page<CareOrderDetailResponse> pageListCareOrder(CareOrderSearchRequest careOrderSearchRequest) {
+	public Page<CareOrderPageResponse> pageListCareOrder(CareOrderSearchRequest careOrderSearchRequest) {
 
 		return careOrderRepositoryCustom.findPage(careOrderSearchRequest);
 	}
