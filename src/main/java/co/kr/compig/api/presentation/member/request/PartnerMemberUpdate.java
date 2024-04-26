@@ -19,10 +19,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PartnerMemberUpdate {
 
-	@NotBlank
 	private String newUserPw;   // 새 비밀번호
-	@NotBlank
 	private String chkUserPw;   // 새 비밀번호 확인
+
 	@NotBlank
 	private String telNo; // 휴대폰번호
 
@@ -48,6 +47,17 @@ public class PartnerMemberUpdate {
 	@NotBlank
 	@Parameter(description = "자기소개")
 	private String introduce; //자기소개
+
+	@NotBlank
+	private String jumin1; // 주민등록번호 앞자리
+	@NotBlank
+	private String jumin2; // 주민등록번호 뒷자리
+	@NotBlank
+	private String accountNumber; // 계좌번호
+	@NotBlank
+	private String accountName; // 예금주
+	@NotBlank
+	private String bankName; // 은행 이름
 
 	//[간병인&&보호자] 회원 공통
 	@NotNull

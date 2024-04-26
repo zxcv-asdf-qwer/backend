@@ -276,6 +276,10 @@ public class Member {
 		menuPermission.setMember(this);
 	}
 
+	public void setAccount(final Account account) {
+		this.account = account;
+	}
+
 	public void setPicture(String picture) {
 		this.picture = picture;
 	}

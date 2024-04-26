@@ -67,6 +67,16 @@ public class PartnerMemberCreate {
 
 	@NotBlank
 	private String ci; //나이스 본인인증 ci 값
+	@NotBlank
+	private String jumin1; // 주민등록번호 앞자리
+	@NotBlank
+	private String jumin2; // 주민등록번호 뒷자리
+	@NotBlank
+	private String accountNumber; // 계좌번호
+	@NotBlank
+	private String accountName; // 예금주
+	@NotBlank
+	private String bankName; // 은행 이름
 
 	public Member convertEntity() {
 		return Member.builder()
