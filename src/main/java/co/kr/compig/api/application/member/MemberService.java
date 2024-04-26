@@ -30,6 +30,7 @@ import co.kr.compig.api.infrastructure.auth.keycloak.KeycloakAuthApi;
 import co.kr.compig.api.infrastructure.auth.keycloak.model.KeycloakAccessTokenRequest;
 import co.kr.compig.api.presentation.member.request.AdminMemberCreate;
 import co.kr.compig.api.presentation.member.request.AdminMemberUpdate;
+import co.kr.compig.api.presentation.member.request.AdminUseYnUpdate;
 import co.kr.compig.api.presentation.member.request.GuardianMemberCreate;
 import co.kr.compig.api.presentation.member.request.GuardianMemberUpdate;
 import co.kr.compig.api.presentation.member.request.LeaveRequest;
@@ -352,6 +353,12 @@ public class MemberService {
 	public String passUpdate(PassSaveRequest passSaveRequest) {
 		Member memberById = this.getMemberById(SecurityUtil.getMemberId());
 		memberById.passUpdate(passSaveRequest);
+		return memberById.getId();
+	}
+
+	public String updateUseYnAdminById(String memberId, AdminUseYnUpdate adminUseYnUpdate) {
+		Member memberById = this.getMemberById(memberId);
+		memberById.useYnUpdate(adminUseYnUpdate);
 		return memberById.getId();
 	}
 }

@@ -31,6 +31,7 @@ import co.kr.compig.api.domain.permission.MenuPermission;
 import co.kr.compig.api.domain.review.Review;
 import co.kr.compig.api.domain.wallet.Wallet;
 import co.kr.compig.api.presentation.member.request.AdminMemberUpdate;
+import co.kr.compig.api.presentation.member.request.AdminUseYnUpdate;
 import co.kr.compig.api.presentation.member.request.GuardianMemberUpdate;
 import co.kr.compig.api.presentation.member.request.MemberUpdateRequest;
 import co.kr.compig.api.presentation.member.request.PartnerMemberUpdate;
@@ -674,4 +675,7 @@ public class Member {
 		this.id = getRandomKey("compiglab");
 	}
 
+	public void useYnUpdate(AdminUseYnUpdate adminUseYnUpdate) {
+		this.useYn = adminUseYnUpdate.getUseYn();
+	}
 }

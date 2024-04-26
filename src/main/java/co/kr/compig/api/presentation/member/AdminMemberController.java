@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import co.kr.compig.api.application.member.MemberService;
 import co.kr.compig.api.presentation.member.request.AdminMemberCreate;
 import co.kr.compig.api.presentation.member.request.AdminMemberUpdate;
+import co.kr.compig.api.presentation.member.request.AdminUseYnUpdate;
 import co.kr.compig.api.presentation.member.request.GuardianMemberCreate;
 import co.kr.compig.api.presentation.member.request.GuardianMemberUpdate;
 import co.kr.compig.api.presentation.member.request.LeaveRequest;
@@ -119,7 +120,6 @@ public class AdminMemberController {
 		return ResponseEntity.ok(memberService.getUserList(memberSearchRequest));
 	}
 
-
 	@Operation(summary = "보호자 memberId 조회")
 	@GetMapping("/guardians/{memberId}")
 	public ResponseEntity<MemberResponse> getGuardianByMemberId(@PathVariable String memberId) {
@@ -173,6 +173,15 @@ public class AdminMemberController {
 		@RequestBody(required = false) LeaveRequest leaveRequest) {
 		memberService.doUserLeave(memberId, leaveRequest);
 		return ResponseEntity.ok().build();
+	}
+
+	@Operation(summary = "관리자 탈퇴")
+	@PutMapping("/{memberId}/adminLeave")
+	public ResponseEntity<Response<?>> updateUseYnAdminById(@PathVariable String memberId,
+		@RequestBody @Valid AdminUseYnUpdate adminUseYnUpdate) {
+		return ResponseEntity.ok().body(Response.<Map<String, String>>builder()
+			.data(Map.of("memberId", memberService.updateUseYnAdminById(memberId, adminUseYnUpdate)))
+			.build());
 	}
 
 }
