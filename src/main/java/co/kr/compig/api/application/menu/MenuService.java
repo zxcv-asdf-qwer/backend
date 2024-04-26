@@ -29,12 +29,7 @@ public class MenuService {
 	private final MenuMapper menuMapper;
 
 	public Long createMenu(MenuCreateRequest menuCreateRequest) {
-		Menu parentMenu = null;
-		if (menuCreateRequest.getParentMenuId() != null) {
-			parentMenu = menuRepository.findById(menuCreateRequest.getParentMenuId())
-				.orElseThrow(NotExistDataException::new);
-		}
-		Menu menu = menuCreateRequest.converterEntity(parentMenu);
+		Menu menu = menuCreateRequest.converterEntity();
 		return menuRepository.save(menu).getId();
 	}
 

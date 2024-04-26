@@ -28,15 +28,18 @@ public class MenuCreateRequest {
 	private UseYn useYn; // 사용 유무
 	private Long parentMenuId; // 부모 메뉴 ID
 
-	public Menu converterEntity(Menu parentMenu) {
-		return Menu.builder()
+	public Menu converterEntity() {
+		Menu menu = Menu.builder()
 			.menuDiv(this.menuDiv)
 			.menuNm(this.menuNm)
 			.menuUrl(this.menuUrl)
 			.seq(this.seq)
 			.menuType(this.menuType)
 			.useYn(this.useYn)
-			.parent(parentMenu)
 			.build();
+		if (parentMenuId != null) {
+			menu.setParent(Menu.builder().id(parentMenuId).build());
+		}
+		return menu;
 	}
 }
