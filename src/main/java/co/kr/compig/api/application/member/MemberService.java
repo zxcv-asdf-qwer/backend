@@ -23,7 +23,6 @@ import co.kr.compig.api.application.social.SocialLoginService;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.member.MemberGroup;
 import co.kr.compig.api.domain.member.MemberGroupRepository;
-import co.kr.compig.api.domain.member.MemberMapper;
 import co.kr.compig.api.domain.member.MemberRepository;
 import co.kr.compig.api.domain.member.MemberRepositoryCustom;
 import co.kr.compig.api.infrastructure.auth.keycloak.KeycloakAuthApi;
@@ -71,7 +70,6 @@ public class MemberService {
 
 	private final MemberRepositoryCustom memberRepositoryCustom;
 	private final MemberRepository memberRepository;
-	private final MemberMapper memberMapper;
 	private final MemberGroupRepository memberGroupRepository;
 	private final KeycloakHandler keycloakHandler;
 	private final S3Util s3Util;
