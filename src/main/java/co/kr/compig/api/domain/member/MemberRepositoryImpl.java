@@ -27,6 +27,7 @@ import co.kr.compig.api.presentation.member.response.GuardianMemberResponse;
 import co.kr.compig.api.presentation.member.response.MemberPageResponse;
 import co.kr.compig.api.presentation.member.response.MemberResponse;
 import co.kr.compig.api.presentation.member.response.PartnerMemberResponse;
+import co.kr.compig.global.code.UseYn;
 import co.kr.compig.global.code.UserType;
 import lombok.RequiredArgsConstructor;
 
@@ -148,7 +149,8 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 			.select(member)
 			.where(member.userType.eq(UserType.SYS_ADMIN)
 				.or(member.userType.eq(UserType.SYS_USER))
-			);
+			)
+			.where(member.useYn.eq(UseYn.Y));
 		Pageable pageable = request.pageable();
 
 		//정렬
@@ -177,7 +179,8 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 
 		JPAQuery<Member> query = createBaseQuery(predicate)
 			.select(member)
-			.where(predicate.and(member.userType.eq(UserType.PARTNER)));
+			.where(predicate.and(member.userType.eq(UserType.PARTNER))
+				.and(member.useYn.eq(UseYn.Y)));
 		Pageable pageable = request.pageable();
 
 		//정렬
@@ -205,7 +208,8 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 
 		JPAQuery<Member> query = createBaseQuery(predicate)
 			.select(member)
-			.where(predicate.and(member.userType.eq(UserType.GUARDIAN)));
+			.where(predicate.and(member.userType.eq(UserType.GUARDIAN))
+				.and(member.useYn.eq(UseYn.Y)));
 		Pageable pageable = request.pageable();
 
 		//정렬
@@ -232,7 +236,8 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 
 		JPAQuery<Member> query = createBaseQuery(predicate)
 			.select(member)
-			.where(predicate.and(member.userType.in(request.getUserType())));
+			.where(predicate.and(member.userType.in(request.getUserType()))
+				.and(member.useYn.eq(UseYn.Y)));
 		Pageable pageable = request.pageable();
 
 		//정렬
