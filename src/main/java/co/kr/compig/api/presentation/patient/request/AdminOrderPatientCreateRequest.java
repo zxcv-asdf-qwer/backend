@@ -13,6 +13,7 @@ import co.kr.compig.global.code.IsYn;
 import co.kr.compig.global.code.LocationType;
 import co.kr.compig.global.code.ToiletType;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,10 +41,10 @@ public class AdminOrderPatientCreateRequest {
 	@NotNull
 	private Integer weight; // 환자 몸무게
 
-	@NotBlank
+	@NotEmpty(message = "DiseaseCode must not be empty")
 	private List<DiseaseCode> diseaseNms; // 진단명
 
-	@NotNull
+	@NotEmpty(message = "ToiletType must not be empty")
 	private List<ToiletType> selfToiletAvailabilities; // 대소변 해결 여부
 
 	@NotNull

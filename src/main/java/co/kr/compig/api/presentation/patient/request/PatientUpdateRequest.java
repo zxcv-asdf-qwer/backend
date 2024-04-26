@@ -13,6 +13,7 @@ import co.kr.compig.global.code.ToiletType;
 import co.kr.compig.global.validator.annotaion.Conditional;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -58,10 +59,10 @@ public class PatientUpdateRequest {
 
 	private String hospitalName; // 병원명
 
-	@NotBlank
+	@NotEmpty(message = "DiseaseCode must not be empty")
 	private List<DiseaseCode> diseaseNms; // 질환
 
-	@NotNull
+	@NotEmpty(message = "ToiletType must not be empty")
 	private List<ToiletType> selfToiletAvailabilities; // 대소변 해결 여부
 
 	private GenderCode genderPreference; // 선호 성별
