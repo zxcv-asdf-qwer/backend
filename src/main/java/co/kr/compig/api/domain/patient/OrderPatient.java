@@ -121,6 +121,9 @@ public class OrderPatient {
 	@Column(length = 200)
 	private String address2; // 간병 장소 상세 주소
 
+	@Column(length = 100)
+	private String hospitalName; // 병원명
+
 	/* =================================================================
 	* Domain mapping
 	================================================================= */
@@ -154,6 +157,7 @@ public class OrderPatient {
 			.addressCd(this.addressCd)
 			.address1(this.address1)
 			.address2(this.address2)
+			.hospitalName(this.hospitalName)
 			.build();
 	}
 
@@ -173,5 +177,6 @@ public class OrderPatient {
 		this.addressCd = orderPatientUpdateRequest.getAddressCd();
 		this.address1 = orderPatientUpdateRequest.getAddress1();
 		this.address2 = orderPatientUpdateRequest.getAddress2();
+		this.hospitalName = orderPatientUpdateRequest.getHospitalName();
 	}
 }

@@ -118,6 +118,9 @@ public class Patient {
 	@Column(length = 200)
 	private String address2; // 간병 장소 상세 주소
 
+	@Column(length = 100)
+	private String hospitalName; // 병원명
+
 	/* =================================================================
 	* Domain mapping
 	================================================================= */
@@ -155,6 +158,7 @@ public class Patient {
 			.addressCd(this.addressCd)
 			.address1(this.address1)
 			.address2(this.address2)
+			.hospitalName(this.hospitalName)
 			.memberId(this.member.getId())
 			.build();
 	}
@@ -173,6 +177,7 @@ public class Patient {
 		this.addressCd = patientUpdateRequest.getAddressCd();
 		this.address1 = patientUpdateRequest.getAddress1();
 		this.address2 = patientUpdateRequest.getAddress2();
+		this.hospitalName = patientUpdateRequest.getHospitalName();
 	}
 
 	public PatientResponse toPatientResponse() {
@@ -200,6 +205,7 @@ public class Patient {
 			.addressCd(this.addressCd) // 간병 장소 우편 번호
 			.address1(this.address1) // 간병 장소 주소
 			.address2(this.address2) // 간병 장소 상세 주소
+			.hospitalName(this.hospitalName) //병원명
 			.member(this.member)
 			.build();
 	}

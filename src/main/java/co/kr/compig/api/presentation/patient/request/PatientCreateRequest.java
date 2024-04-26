@@ -12,6 +12,7 @@ import co.kr.compig.global.code.GenderCode;
 import co.kr.compig.global.code.IsYn;
 import co.kr.compig.global.code.LocationType;
 import co.kr.compig.global.code.ToiletType;
+import co.kr.compig.global.validator.annotaion.Conditional;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Conditional(selected = "locationType", values = {"HOSPITAL"}, required = {"hospitalName"})
 public class PatientCreateRequest {
 
 	@NotBlank
@@ -73,6 +75,8 @@ public class PatientCreateRequest {
 	@NotBlank
 	private String address2; // 간병 장소 상세 주소
 
+	private String hospitalName; // 병원명
+
 	public Patient converterEntity(Member member) {
 		return Patient.builder()
 			.name(this.name)
@@ -91,6 +95,7 @@ public class PatientCreateRequest {
 			.addressCd(this.addressCd)
 			.address1(this.address1)
 			.address2(this.address2)
+			.hospitalName(this.hospitalName)
 			.member(member)
 			.build();
 	}

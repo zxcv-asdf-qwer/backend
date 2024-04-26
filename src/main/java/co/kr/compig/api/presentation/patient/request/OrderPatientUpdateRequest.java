@@ -8,6 +8,7 @@ import co.kr.compig.global.code.GenderCode;
 import co.kr.compig.global.code.IsYn;
 import co.kr.compig.global.code.LocationType;
 import co.kr.compig.global.code.ToiletType;
+import co.kr.compig.global.validator.annotaion.Conditional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Conditional(selected = "locationType", values = {"HOSPITAL"}, required = {"hospitalName"})
 public class OrderPatientUpdateRequest {
 	private String name; // 환자 이름
 	private GenderCode gender; // 환자 성별
@@ -32,4 +34,5 @@ public class OrderPatientUpdateRequest {
 	private String addressCd; // 간병 장소 우편 번호
 	private String address1; // 간병 장소 주소
 	private String address2; // 간병 장소 상세 주소
+	private String hospitalName; // 병원명
 }

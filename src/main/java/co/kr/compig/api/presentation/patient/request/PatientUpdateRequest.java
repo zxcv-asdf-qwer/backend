@@ -10,6 +10,7 @@ import co.kr.compig.global.code.GenderCode;
 import co.kr.compig.global.code.IsYn;
 import co.kr.compig.global.code.LocationType;
 import co.kr.compig.global.code.ToiletType;
+import co.kr.compig.global.validator.annotaion.Conditional;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -21,6 +22,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Conditional(selected = "locationType", values = {"HOSPITAL"}, required = {"hospitalName"})
 public class PatientUpdateRequest {
 
 	@NotBlank
@@ -53,6 +55,8 @@ public class PatientUpdateRequest {
 
 	@NotBlank
 	private String address2; // 간병 장소 상세 주소
+
+	private String hospitalName; // 병원명
 
 	@NotBlank
 	private List<DiseaseCode> diseaseNms; // 질환
