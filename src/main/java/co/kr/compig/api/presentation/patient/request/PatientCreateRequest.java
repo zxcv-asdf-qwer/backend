@@ -55,7 +55,6 @@ public class PatientCreateRequest {
 	@NotNull
 	private IsYn mealAvailability; // 식사 가능 여부
 
-	@NotNull
 	private GenderCode genderPreference; // 선호 성별
 
 	@NotNull

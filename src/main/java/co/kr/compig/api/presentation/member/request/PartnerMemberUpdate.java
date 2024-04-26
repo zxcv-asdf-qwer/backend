@@ -28,25 +28,25 @@ public class PartnerMemberUpdate {
 
 	//간병인
 	@NotNull
-	@Parameter(description = "간병인")
+	@Parameter(description = "성별")
 	private GenderCode gender; // 성별
 	@NotBlank
-	@Parameter(description = "간병인")
+	@Parameter(description = "주소")
 	private String address1; //주소
 	@NotBlank
-	@Parameter(description = "간병인")
+	@Parameter(description = "주소")
 	private String address2; //주소
 	@NotNull
-	@Parameter(description = "간병인")
+	@Parameter(description = "외국인 내국인")
 	private DomesticForeignCode domesticForeignCode; //외국인 내국인
 	@NotNull
-	@Parameter(description = "간병인")
+	@Parameter(description = "신입 경력")
 	private CareerCode careerCode; //신입 경력
 	@NotNull
-	@Parameter(description = "간병인")
+	@Parameter(description = "근무 시작 연도")
 	private Integer careStartYear; //근무 시작 연도
 	@NotBlank
-	@Parameter(description = "간병인")
+	@Parameter(description = "자기소개")
 	private String introduce; //자기소개
 
 	//[간병인&&보호자] 회원 공통

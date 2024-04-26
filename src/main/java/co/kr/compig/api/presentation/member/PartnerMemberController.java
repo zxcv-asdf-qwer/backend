@@ -1,10 +1,12 @@
 package co.kr.compig.api.presentation.member;
 
 import java.net.URI;
+import java.util.Map;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,13 +17,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import co.kr.compig.api.application.member.MemberService;
 import co.kr.compig.api.presentation.member.request.LeaveRequest;
-import co.kr.compig.api.presentation.member.request.MemberUpdateRequest;
+import co.kr.compig.api.presentation.member.request.PartnerMemberUpdate;
 import co.kr.compig.api.presentation.member.response.MemberResponse;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.utils.SecurityUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,12 +38,13 @@ public class PartnerMemberController {
 
 	private final MemberService memberService;
 
-	@Operation(summary = "수정")
-	@PutMapping
-	public ResponseEntity<Response<?>> userUpdate(
-		@RequestBody MemberUpdateRequest memberUpdateRequest) {
-		memberService.updateMember(memberUpdateRequest);
-		return ResponseEntity.created(URI.create("/partner/members")).build();
+	@Operation(summary = "간병인 memberId 수정")
+	@PutMapping("/{memberId}")
+	public ResponseEntity<Response<?>> updatePartnerById(@PathVariable String memberId,
+		@RequestBody @Valid PartnerMemberUpdate partnerMemberUpdate) {
+		return ResponseEntity.ok().body(Response.<Map<String, String>>builder()
+			.data(Map.of("memberId", memberService.updatePartnerById(memberId, partnerMemberUpdate)))
+			.build());
 	}
 
 	@Operation(summary = "프로필 사진 수정")
