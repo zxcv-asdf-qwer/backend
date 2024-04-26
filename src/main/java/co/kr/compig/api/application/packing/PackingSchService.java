@@ -26,7 +26,7 @@ public class PackingSchService {
 	private final WalletService walletService;
 
 	public void transactionWallet(TransactionType transactionType, ExchangeType exchangeType, String description) {
-		List<Packing> packings = packingRepository.findByEndDateTimeLessThanEqualAndOrderStatusAndApplyStatus(
+		List<Packing> packings = packingRepository.findByEndDateTimeLessThanEqualAndOrderStatusAndApplyStatusAndWalletIsNull(
 			LocalDateTime.now(), OrderStatus.MATCHING_COMPLETE, ApplyStatus.MATCHING_COMPLETE);
 		packings.forEach(packing -> walletService.createWallet(packing, transactionType, exchangeType, description));
 	}

@@ -3,6 +3,7 @@ package co.kr.compig.api.domain.packing;
 import static co.kr.compig.api.domain.apply.QApply.*;
 import static co.kr.compig.api.domain.order.QCareOrder.*;
 import static co.kr.compig.api.domain.packing.QPacking.*;
+import static co.kr.compig.api.domain.wallet.QWallet.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -87,16 +88,18 @@ public class PackingRepositoryImpl implements PackingRepositoryCustom {
 	}
 
 	@Override
-	public List<Packing> findByEndDateTimeLessThanEqualAndOrderStatusAndApplyStatus(
+	public List<Packing> findByEndDateTimeLessThanEqualAndOrderStatusAndApplyStatusAndWalletIsNull(
 		LocalDateTime endDateTime, OrderStatus orderStatus, ApplyStatus applyStatus) {
 		return jpaQueryFactory
 			.selectFrom(packing)
 			.join(packing.careOrder, careOrder)
 			.join(careOrder.applys, apply)
+			.leftJoin(packing.wallets, wallet) // wallet이 null일 수 있음
 			.where(
 				packing.endDateTime.loe(endDateTime),
 				careOrder.orderStatus.eq(orderStatus),
-				apply.applyStatus.eq(applyStatus)
+				apply.applyStatus.eq(applyStatus),
+				wallet.isNull() // wallet이 null인 조건 추가
 			)
 			.fetch();
 	}

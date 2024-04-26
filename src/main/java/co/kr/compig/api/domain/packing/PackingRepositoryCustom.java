@@ -13,6 +13,6 @@ import co.kr.compig.global.code.OrderStatus;
 public interface PackingRepositoryCustom {
 	Page<PackingResponse> findPage(PackingSearchRequest packingSearchRequest);
 
-	List<Packing> findByEndDateTimeLessThanEqualAndOrderStatusAndApplyStatus(
+	List<Packing> findByEndDateTimeLessThanEqualAndOrderStatusAndApplyStatusAndWalletIsNull(
 		LocalDateTime endDateTime, OrderStatus orderStatus, ApplyStatus applyStatus);
 }
