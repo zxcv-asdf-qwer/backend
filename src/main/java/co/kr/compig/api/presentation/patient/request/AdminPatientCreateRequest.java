@@ -71,7 +71,6 @@ public class AdminPatientCreateRequest {
 	@NotNull
 	private List<ToiletType> selfToiletAvailabilities; // 대소변 해결 여부
 
-	@NotNull
 	private GenderCode genderPreference; // 선호 성별
 
 	@NotNull
