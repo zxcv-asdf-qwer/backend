@@ -1,8 +1,8 @@
 package co.kr.compig.api.presentation.review;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,7 +25,7 @@ public class AdminReviewController {
 	private final ReviewService reviewService;
 
 	@Operation(summary = "삭제")
-	@DeleteMapping(path = "/{reviewId}")
+	@PutMapping(path = "/delete/{reviewId}")
 	public ResponseEntity<Response<?>> deleteReview(
 		@PathVariable(name = "reviewId") Long reviewId
 	) {

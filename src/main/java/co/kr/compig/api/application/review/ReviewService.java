@@ -60,7 +60,7 @@ public class ReviewService {
 
 	public void deleteReview(Long reviewId) {
 		Review review = reviewRepository.findById(reviewId).orElseThrow(NotExistDataException::new);
-		reviewRepository.delete(review);
+		review.delete();
 	}
 
 	public Review getReviewById(Long reviewId) {

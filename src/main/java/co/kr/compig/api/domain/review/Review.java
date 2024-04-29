@@ -130,6 +130,10 @@ public class Review {
 		this.member = member;
 	}
 
+	public void delete() {
+		this.publish = IsYn.N;
+	}
+
 	/* =================================================================
  	 * Business
        ================================================================= */
