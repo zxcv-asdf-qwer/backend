@@ -43,7 +43,7 @@ public class AdminTermsController {
 	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createTerms(
-		@ParameterObject @RequestBody @Valid TermsCreateRequest adminTermsCreateRequest) {
+		@RequestBody @Valid TermsCreateRequest adminTermsCreateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
 			.data(Map.of("termsId", termsService.createTermsAdmin(adminTermsCreateRequest)))
 			.build());
