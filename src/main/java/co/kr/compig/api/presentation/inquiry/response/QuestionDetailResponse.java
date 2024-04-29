@@ -26,6 +26,8 @@ public class QuestionDetailResponse extends BaseAudit {
 	private String questionContent; // 질문 내용
 	@Schema(description = "답변 유무")
 	private IsYn isAnswer; // 답변 유무
+	@Schema(description = "답변 ID")
+	private Long answerId;
 	@Schema(description = "답변 내용")
 	private String answerContent; // 답변 내용
 	@Schema(description = "답변 업데이트 날짜")

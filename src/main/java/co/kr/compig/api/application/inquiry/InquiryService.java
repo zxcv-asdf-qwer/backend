@@ -51,6 +51,7 @@ public class InquiryService {
 			return response;
 		}
 		Answer answer = answerRepository.findByQuestion(question).orElseThrow(NotExistDataException::new);
+		response.setAnswerId(answer.getId());
 		response.setAnswerContent(answer.getAnswerContent());
 		response.setAnswerUpdateOn(answer.getCreatedAndModified().getUpdatedOn());
 		return response;
