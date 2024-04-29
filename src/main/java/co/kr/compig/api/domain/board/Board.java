@@ -173,4 +173,8 @@ public class Board {
 		boardResponse.setCreatedAndUpdated(this.createdAndModified);
 		return boardResponse;
 	}
+
+	public void delete() {
+		this.useYn = UseYn.N;
+	}
 }

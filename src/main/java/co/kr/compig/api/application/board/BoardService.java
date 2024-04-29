@@ -72,7 +72,7 @@ public class BoardService {
 
 	public void deleteBoard(Long boardId) {
 		Board board = boardRepository.findById(boardId).orElseThrow(NotExistDataException::new);
-		boardRepository.delete(board);
+		board.delete();
 	}
 
 	@Transactional(readOnly = true)

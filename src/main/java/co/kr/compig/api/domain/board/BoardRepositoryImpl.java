@@ -23,6 +23,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import co.kr.compig.api.presentation.board.request.BoardSearchRequest;
 import co.kr.compig.api.presentation.board.response.BoardResponse;
+import co.kr.compig.global.code.UseYn;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -64,6 +65,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
 
 	private BooleanExpression createPredicate(BoardSearchRequest request) {
 		BooleanExpression predicate = Expressions.asBoolean(true).isTrue();
+		predicate = predicate.and(board.useYn.eq(UseYn.Y));
 		if (request.getBoardType() != null) {
 			predicate = predicate.and(board.boardType.eq(request.getBoardType()));
 		}

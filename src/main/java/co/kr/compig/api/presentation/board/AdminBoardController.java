@@ -7,7 +7,6 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -91,9 +90,10 @@ public class AdminBoardController {
 	}
 
 	@Operation(summary = "삭제")
-	@DeleteMapping(path = "/{boardId}")
+	@PutMapping(path = "/delete/{boardId}")
 	public ResponseEntity<Response<?>> deleteBoard(
-		@PathVariable(name = "boardId") Long boardId) {
+		@PathVariable(name = "boardId") Long boardId
+	) {
 		boardService.deleteBoard(boardId);
 		return ResponseEntity.ok().build();
 	}
