@@ -5,12 +5,15 @@ import co.kr.compig.api.presentation.terms.response.TermsDetailResponse;
 import co.kr.compig.api.presentation.terms.response.TermsListResponse;
 import co.kr.compig.api.presentation.terms.response.TermsResponse;
 import co.kr.compig.global.code.TermsType;
+import co.kr.compig.global.code.UseYn;
 import co.kr.compig.global.code.converter.TermsTypeConverter;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -48,6 +51,11 @@ public class Terms {
 
 	@Column
 	private String contents;
+
+	@Column
+	@Enumerated(value = EnumType.STRING)
+	@Builder.Default
+	private UseYn useYn = UseYn.Y;
 
 	/* =================================================================
    * Default columns
@@ -91,5 +99,9 @@ public class Terms {
 			.build();
 
 		return termsListResponse;
+	}
+
+	public void delete() {
+		this.useYn = UseYn.N;
 	}
 }

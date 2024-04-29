@@ -57,7 +57,7 @@ public class TermsService {
 
 	public void deleteTerms(Long termsId) {
 		Terms terms = termsRepository.findById(termsId).orElseThrow(NotExistDataException::new);
-		termsRepository.delete(terms);
+		terms.delete();
 	}
 
 	@Transactional(readOnly = true)

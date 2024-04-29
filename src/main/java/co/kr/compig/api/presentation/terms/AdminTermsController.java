@@ -5,7 +5,6 @@ import java.util.Map;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -80,11 +79,12 @@ public class AdminTermsController {
 	}
 
 	@Operation(summary = "삭제")
-	@DeleteMapping(path = "/{termsId}")
+	@PutMapping(path = "/delete/{termsId}")
 	public ResponseEntity<Response<?>> deleteTerms(
 		@PathVariable(name = "termsId") Long termsId
 	) {
 		termsService.deleteTerms(termsId);
 		return ResponseEntity.ok().build();
 	}
+
 }
