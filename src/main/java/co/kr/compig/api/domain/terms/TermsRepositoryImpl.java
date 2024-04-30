@@ -8,8 +8,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
 
@@ -17,7 +15,6 @@ import com.google.common.base.CaseFormat;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Path;
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -59,34 +56,6 @@ public class TermsRepositoryImpl implements TermsRepositoryCustom {
 			.select(terms.count());
 
 		return PageableExecutionUtils.getPage(responses, pageable, countQuery::fetchOne);
-	}
-
-	@Override
-	public Slice<TermsResponse> getTermsSlice(TermsSearchRequest termsSearchRequest, Pageable pageable) {
-		BooleanExpression predicate = createPredicate(termsSearchRequest);
-
-		JPAQuery<TermsResponse> query = createBaseQuery(predicate)
-			.select(Projections.constructor(TermsResponse.class,
-				terms.id,
-				terms.termsType,
-				terms.createdAndModified.createdBy.userNm,
-				terms.createdAndModified.createdOn
-			));
-
-		applySorting(query, pageable);
-
-		List<TermsResponse> responses = query
-			.where(cursorCursorId(Long.valueOf(termsSearchRequest.getCursorId())))
-			.offset(pageable.getOffset())
-			.limit(pageable.getPageSize() + 1)
-			.fetch();
-
-		boolean hasNext = false;
-		if (responses.size() > pageable.getPageSize()) {
-			responses.remove(pageable.getPageSize());
-			hasNext = true;
-		}
-		return new SliceImpl<>(responses, pageable, hasNext);
 	}
 
 	@Override

@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +17,6 @@ import co.kr.compig.api.presentation.terms.response.TermsDetailResponse;
 import co.kr.compig.api.presentation.terms.response.TermsListResponse;
 import co.kr.compig.api.presentation.terms.response.TermsResponse;
 import co.kr.compig.global.code.TermsType;
-import co.kr.compig.global.dto.pagination.SliceResponse;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -58,12 +55,6 @@ public class TermsService {
 	public void deleteTerms(Long termsId) {
 		Terms terms = termsRepository.findById(termsId).orElseThrow(NotExistDataException::new);
 		terms.delete();
-	}
-
-	@Transactional(readOnly = true)
-	public SliceResponse<TermsResponse> getTermsSlice(TermsSearchRequest termsSearchRequest, Pageable pageable) {
-		Slice<TermsResponse> slice = termsRepositoryCustom.getTermsSlice(termsSearchRequest, pageable);
-		return new SliceResponse<>(slice.getContent(), pageable, slice.hasNext());
 	}
 
 	@Transactional(readOnly = true)
