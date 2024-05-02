@@ -25,6 +25,8 @@ public class SocialCreateRequest {
 	private MemberRegisterType memberRegisterType; //소셜로그인 타입
 	@NotBlank
 	private UserType userType; //유저타입
+	@NotBlank
+	private String telNo; // 핸드폰 번호
 
 	private boolean marketingEmail; // 이메일 수신동의
 	private boolean marketingAppPush; // 앱 푸시알림 수신동의
@@ -39,6 +41,7 @@ public class SocialCreateRequest {
 			.userPw(this.email + this.memberRegisterType + "compig")
 			.memberRegisterType(this.memberRegisterType)
 			.userType(this.userType)
+			.telNo(this.telNo)
 			.build();
 	}
 }
