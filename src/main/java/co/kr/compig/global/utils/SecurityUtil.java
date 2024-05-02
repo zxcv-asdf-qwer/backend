@@ -36,8 +36,11 @@ public class SecurityUtil {
 			return Member.builder().id("SCHEDULER").build();
 		}
 
-		Member memberById = memberService.getMemberById(memberId);
-		return memberById;
+		if (memberId != null) {
+			return memberService.getMemberById(memberId);
+		}
+
+		return null;
 	}
 
 	public final static String TEST_TOKEN = "testToken";
