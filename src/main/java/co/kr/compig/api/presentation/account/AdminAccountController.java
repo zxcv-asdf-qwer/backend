@@ -44,7 +44,7 @@ public class AdminAccountController {
 	@Operation(summary = "생성하기")
 	@PostMapping
 	public ResponseEntity<Response<?>> createAccount(
-		@ParameterObject @ModelAttribute @Valid AccountCreateRequest accountCreateRequest,
+		@ParameterObject @RequestBody @Valid AccountCreateRequest accountCreateRequest,
 		@RequestPart(value = "file") Map<String, String> files) {
 		return ResponseEntity.ok()
 			.body(Response.<Map<String, Long>>builder()
