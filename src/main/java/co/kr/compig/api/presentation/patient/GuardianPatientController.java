@@ -36,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/partner/patient", produces = "application/json")
+@RequestMapping(path = "/guardian/patient", produces = "application/json")
 public class GuardianPatientController {
 	private final PatientService patientService;
 
