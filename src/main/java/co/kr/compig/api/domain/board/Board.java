@@ -160,14 +160,8 @@ public class Board {
 		BoardResponse boardResponse = BoardResponse.builder()
 			.boardId(this.id)
 			.title(this.title)
-			.smallTitle(this.smallTitle)
-			.contents(this.contents)
 			.boardType(this.boardType)
 			.contentsType(this.contentsType)
-			.viewCount(this.viewCount)
-			.startDate(this.startDate)
-			.endDate(this.endDate)
-			.thumbNail(this.thumbnailImageUrl)
 			.build();
 
 		boardResponse.setCreatedAndUpdated(this.createdAndModified);
