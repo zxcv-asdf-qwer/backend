@@ -14,6 +14,7 @@ import co.kr.compig.global.code.OrderType;
 import co.kr.compig.global.code.PeriodType;
 import co.kr.compig.global.validator.annotaion.Conditional;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,14 +30,18 @@ public class CareOrderCreateRequest {
 
 	@NotNull
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH")
+	@Schema(description = "시작 날짜", example = "2024-05-03 15:44:10")
 	private LocalDateTime startDateTime; // 시작 날짜
 
 	@NotNull
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH")
+	@Schema(description = "종료 날짜", example = "2024-05-05 15:44:10")
 	private LocalDateTime endDateTime; // 종료 날짜
 
+	@Schema(description = "제목", example = "제목")
 	private String title; // 제목
 
+	@Schema(description = "요청 사항", example = "요청 사항")
 	private String orderRequest; // 요청 사항
 
 	@NotNull
@@ -45,15 +50,19 @@ public class CareOrderCreateRequest {
 	private IsYn publishYn = IsYn.Y; // 게시 여부 //작성자가 회원일 경우 무조건 게시
 
 	@NotNull
+	@Schema(description = "시간제, 기간제", example = "PART_TIME")
 	private PeriodType periodType;  // 시간제, 기간제
 
 	@Parameter(description = "파트타임 시간 시간제 일 경우 필수")
+	@Schema(description = "파트타임 시간(시간제일 경우 필수)", example = "5")
 	private Integer partTime; //파트타임 시간 시간제 일 경우 필수
 
 	@NotNull
+	@Schema(description = "금액", example = "180000")
 	private Integer amount; //금액 //보호자들이 입력한 금액, 수수료 계산전
 
 	@NotNull
+	@Schema(description = "간병공고 등록 시 환자 정보 ID", example = "46")
 	private Long patientId; // 간병공고 등록시 환자 정보 ID
 
 	public CareOrder converterEntity(Member member, OrderPatient orderPatient) {
