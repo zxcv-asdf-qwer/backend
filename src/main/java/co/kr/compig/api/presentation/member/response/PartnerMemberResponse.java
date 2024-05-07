@@ -1,8 +1,11 @@
 package co.kr.compig.api.presentation.member.response;
 
 import java.time.LocalDate;
+import java.util.List;
 
+import co.kr.compig.global.code.DiseaseCode;
 import co.kr.compig.global.code.MemberRegisterType;
+import co.kr.compig.global.code.ToiletType;
 import co.kr.compig.global.dto.BaseAudit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,5 +35,7 @@ public class PartnerMemberResponse extends BaseAudit {
 	private String address1; //주소1
 	private String address2; //상세주소
 	private String introduce; //자기소개
+	private List<DiseaseCode> diseaseNms; // 진단명
+	private List<ToiletType> selfToiletAvailabilities; // 대소변 해결 여부
 
 }

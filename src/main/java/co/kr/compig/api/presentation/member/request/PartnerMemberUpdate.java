@@ -3,8 +3,10 @@ package co.kr.compig.api.presentation.member.request;
 import java.util.List;
 
 import co.kr.compig.global.code.CareerCode;
+import co.kr.compig.global.code.DiseaseCode;
 import co.kr.compig.global.code.DomesticForeignCode;
 import co.kr.compig.global.code.GenderCode;
+import co.kr.compig.global.code.ToiletType;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -58,6 +60,9 @@ public class PartnerMemberUpdate {
 	private String accountName; // 예금주
 	@NotBlank
 	private String bankName; // 은행 이름
+
+	private List<DiseaseCode> diseaseNms; // 진단명
+	private List<ToiletType> selfToiletAvailabilities; // 대소변 해결 여부
 
 	//[간병인&&보호자] 회원 공통
 	@NotNull

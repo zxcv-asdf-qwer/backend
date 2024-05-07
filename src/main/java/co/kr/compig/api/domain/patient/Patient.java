@@ -17,7 +17,7 @@ import co.kr.compig.global.code.GenderCode;
 import co.kr.compig.global.code.IsYn;
 import co.kr.compig.global.code.LocationType;
 import co.kr.compig.global.code.ToiletType;
-import co.kr.compig.global.code.converter.DiseaseCodeListConverter;
+import co.kr.compig.global.code.converter.DiseaseCodeConverter;
 import co.kr.compig.global.code.converter.ToiletTypeListConverter;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.Column;
@@ -78,7 +78,7 @@ public class Patient {
 
 	@Column(columnDefinition = "json")
 	@JdbcTypeCode(SqlTypes.JSON)
-	@Convert(converter = DiseaseCodeListConverter.class)
+	@Convert(converter = DiseaseCodeConverter.class)
 	private List<DiseaseCode> diseaseNms; // 진단명 리스트
 
 	@Column(columnDefinition = "json")

@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.FederatedIdentityRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
@@ -40,16 +42,20 @@ import co.kr.compig.api.presentation.member.response.PartnerMemberResponse;
 import co.kr.compig.api.presentation.pass.request.PassSaveRequest;
 import co.kr.compig.global.code.CareerCode;
 import co.kr.compig.global.code.DeptCode;
+import co.kr.compig.global.code.DiseaseCode;
 import co.kr.compig.global.code.DomesticForeignCode;
 import co.kr.compig.global.code.GenderCode;
 import co.kr.compig.global.code.IsYn;
 import co.kr.compig.global.code.MemberRegisterType;
 import co.kr.compig.global.code.MemberType;
 import co.kr.compig.global.code.OrderStatus;
+import co.kr.compig.global.code.ToiletType;
 import co.kr.compig.global.code.UseYn;
 import co.kr.compig.global.code.UserType;
 import co.kr.compig.global.code.converter.DeptCodeConverter;
+import co.kr.compig.global.code.converter.DiseaseCodeConverter;
 import co.kr.compig.global.code.converter.MemberTypeConverter;
+import co.kr.compig.global.code.converter.ToiletTypeConverter;
 import co.kr.compig.global.code.converter.UserTypeConverter;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import co.kr.compig.global.error.exception.BizException;
@@ -158,6 +164,16 @@ public class Member {
 
 	@Column
 	private Integer careStartYear; //근무 시작 연도
+
+	@Column(columnDefinition = "json")
+	@JdbcTypeCode(SqlTypes.JSON)
+	@Convert(converter = DiseaseCodeConverter.class)
+	private List<DiseaseCode> diseaseNms; // 진단명 리스트
+
+	@Column(columnDefinition = "json")
+	@JdbcTypeCode(SqlTypes.JSON)
+	@Convert(converter = ToiletTypeConverter.class)
+	private List<ToiletType> selfToiletAvailabilities; // 대소변 해결 여부
 
 	@Column(columnDefinition = "TEXT")
 	private String introduce; //자기소개
@@ -475,6 +491,8 @@ public class Member {
 			.address1(this.address1)
 			.address2(this.address2)
 			.introduce(this.introduce)
+			.diseaseNms(this.diseaseNms)
+			.selfToiletAvailabilities(this.selfToiletAvailabilities)
 			.build();
 		partnerMemberResponse.setCreatedAndUpdated(this.createdAndModified);
 		return partnerMemberResponse;
@@ -564,6 +582,8 @@ public class Member {
 		this.careerCode = partnerMemberUpdate.getCareerCode();
 		this.careStartYear = partnerMemberUpdate.getCareStartYear();
 		this.introduce = partnerMemberUpdate.getIntroduce();
+		this.diseaseNms = partnerMemberUpdate.getDiseaseNms();
+		this.selfToiletAvailabilities = partnerMemberUpdate.getSelfToiletAvailabilities();
 
 		setMarketingDate(partnerMemberUpdate.isMarketingEmail(),
 			partnerMemberUpdate.isMarketingAppPush(),
@@ -676,6 +696,8 @@ public class Member {
 		this.userType = UserType.GUARDIAN;
 		this.memberType = MemberType.NO_MEMBER;
 		this.id = getRandomKey("compiglab");
+		this.createdAndModified.setCreatedBy(this);
+		this.createdAndModified.setUpdatedBy(this);
 	}
 
 }
