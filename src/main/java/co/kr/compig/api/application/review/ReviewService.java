@@ -47,6 +47,13 @@ public class ReviewService {
 	}
 
 	@Transactional(readOnly = true)
+	public SliceResponse<ReviewResponse> pageListReviewCursorByMemberId(ReviewSearchRequest reviewSearchRequest,
+		Pageable pageable) {
+		Slice<ReviewResponse> slice = reviewRepositoryCustom.findAllByMemberId(reviewSearchRequest, pageable);
+		return new SliceResponse<>(slice.getContent(), pageable, slice.hasNext());
+	}
+
+	@Transactional(readOnly = true)
 	public ReviewDetailResponse getReview(Long reviewId) {
 		Review review = reviewRepository.findById(reviewId).orElseThrow(NotExistDataException::new);
 		return review.toReviewDetailResponse();
