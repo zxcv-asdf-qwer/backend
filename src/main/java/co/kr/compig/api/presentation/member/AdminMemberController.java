@@ -120,8 +120,8 @@ public class AdminMemberController {
 
 	@Operation(summary = "보호자 memberId 조회")
 	@GetMapping("/guardians/{memberId}")
-	public ResponseEntity<MemberResponse> getGuardianByMemberId(@PathVariable String memberId) {
-		return ResponseEntity.ok(memberService.getMemberResponseByMemberId(memberId));
+	public ResponseEntity<GuardianMemberResponse> getGuardianByMemberId(@PathVariable String memberId) {
+		return ResponseEntity.ok(memberService.getGuardianMemberResponseByMemberId(memberId));
 	}
 
 	@Operation(summary = "간병인 리스트", description = "페이징")
@@ -134,8 +134,8 @@ public class AdminMemberController {
 
 	@Operation(summary = "간병인 memberId 조회")
 	@GetMapping("/partners/{memberId}")
-	public ResponseEntity<MemberResponse> getPartnerByMemberId(@PathVariable String memberId) {
-		return ResponseEntity.ok(memberService.getMemberResponseByMemberId(memberId));
+	public ResponseEntity<PartnerMemberResponse> getPartnerByMemberId(@PathVariable String memberId) {
+		return ResponseEntity.ok(memberService.getPartnerMemberResponseByMemberId(memberId));
 	}
 
 	@Operation(summary = "관리자 memberId 수정")
