@@ -356,9 +356,9 @@ public class MemberService {
 		return memberById.getId();
 	}
 
-	public void doUserLeave(String memberId, LeaveRequest leaveRequest) {
+	public void doUserLeave(String memberId) {
 		Member member = getMemberById(memberId);
-		doUserLeave(member, leaveRequest);
+		doUserLeave(member, null);
 	}
 
 	public void doUserLeave(Member member, LeaveRequest leaveRequest) {

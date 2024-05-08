@@ -20,7 +20,6 @@ import co.kr.compig.api.presentation.member.request.AdminMemberCreate;
 import co.kr.compig.api.presentation.member.request.AdminMemberUpdate;
 import co.kr.compig.api.presentation.member.request.GuardianMemberCreate;
 import co.kr.compig.api.presentation.member.request.GuardianMemberUpdate;
-import co.kr.compig.api.presentation.member.request.LeaveRequest;
 import co.kr.compig.api.presentation.member.request.MemberSearchRequest;
 import co.kr.compig.api.presentation.member.request.NoMemberCreate;
 import co.kr.compig.api.presentation.member.request.PartnerMemberCreate;
@@ -168,9 +167,8 @@ public class AdminMemberController {
 
 	@Operation(summary = "관리자 탈퇴, 보호자 탈퇴, 간병인 탈퇴")
 	@PutMapping("/{memberId}/leave")
-	public ResponseEntity<Response<?>> updateGuardianById(@PathVariable String memberId,
-		@RequestBody(required = false) LeaveRequest leaveRequest) {
-		memberService.doUserLeave(memberId, leaveRequest);
+	public ResponseEntity<Response<?>> updateGuardianById(@PathVariable String memberId) {
+		memberService.doUserLeave(memberId);
 		return ResponseEntity.ok().build();
 	}
 

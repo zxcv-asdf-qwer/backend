@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.member.MemberService;
-import co.kr.compig.api.presentation.member.request.LeaveRequest;
 import co.kr.compig.api.presentation.member.request.MemberUpdateRequest;
 import co.kr.compig.api.presentation.member.response.MemberResponse;
 import co.kr.compig.global.dto.Response;
@@ -49,8 +48,8 @@ public class UserMemberController {
 
 	@Operation(summary = "탈퇴")
 	@PutMapping(path = "/leave")
-	public ResponseEntity<Response<?>> userLeave(@RequestBody LeaveRequest leaveRequest) {
-		memberService.doUserLeave(SecurityUtil.getMemberId(), leaveRequest);
+	public ResponseEntity<Response<?>> userLeave() {
+		memberService.doUserLeave(SecurityUtil.getMemberId());
 		return ResponseEntity.ok().build();
 	}
 }
