@@ -441,8 +441,6 @@ public class Member {
 			.telNo(this.telNo)
 			.email(this.email)
 			.gender(this.gender)
-			.jumin1(this.jumin1)
-			.jumin2(this.jumin2)
 			.useYn(this.useYn)
 			.userType(this.userType)
 			.deptCode(this.deptCode)

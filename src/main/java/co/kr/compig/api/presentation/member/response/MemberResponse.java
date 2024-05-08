@@ -35,8 +35,6 @@ public class MemberResponse extends BaseAudit {
 	private String email; // 이메일
 	private String telNo; // 연락처
 	private GenderCode gender; // 성별
-	private String jumin1; // 주민번호 앞자리
-	private String jumin2; // 주민번호 뒷자리
 	private UseYn useYn; // 사용유무
 	private UserType userType; //사용자 타입
 	private DeptCode deptCode; // 부서 구분
