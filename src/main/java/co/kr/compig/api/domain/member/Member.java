@@ -53,9 +53,9 @@ import co.kr.compig.global.code.ToiletType;
 import co.kr.compig.global.code.UseYn;
 import co.kr.compig.global.code.UserType;
 import co.kr.compig.global.code.converter.DeptCodeConverter;
-import co.kr.compig.global.code.converter.DiseaseCodeConverter;
+import co.kr.compig.global.code.converter.DiseaseCodeListConverter;
 import co.kr.compig.global.code.converter.MemberTypeConverter;
-import co.kr.compig.global.code.converter.ToiletTypeConverter;
+import co.kr.compig.global.code.converter.ToiletTypeListConverter;
 import co.kr.compig.global.code.converter.UserTypeConverter;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import co.kr.compig.global.error.exception.BizException;
@@ -167,12 +167,12 @@ public class Member {
 
 	@Column(columnDefinition = "json")
 	@JdbcTypeCode(SqlTypes.JSON)
-	@Convert(converter = DiseaseCodeConverter.class)
+	@Convert(converter = DiseaseCodeListConverter.class)
 	private List<DiseaseCode> diseaseNms; // 진단명 리스트
 
 	@Column(columnDefinition = "json")
 	@JdbcTypeCode(SqlTypes.JSON)
-	@Convert(converter = ToiletTypeConverter.class)
+	@Convert(converter = ToiletTypeListConverter.class)
 	private List<ToiletType> selfToiletAvailabilities; // 대소변 해결 여부
 
 	@Column(columnDefinition = "TEXT")
