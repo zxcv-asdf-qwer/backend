@@ -15,9 +15,7 @@ import lombok.NoArgsConstructor;
 public class GuardianMemberUpdate {
 
 	@NotBlank
-	private String newUserPw;   // 새 비밀번호
-	@NotBlank
-	private String chkUserPw;   // 새 비밀번호 확인
+	private String userNm; // 사용자 이름
 	@NotBlank
 	private String telNo; // 휴대폰번호
 
