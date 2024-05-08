@@ -25,6 +25,9 @@ public class ToiletTypeListConverter implements AttributeConverter<List<ToiletTy
 
 	@Override
 	public String convertToDatabaseColumn(List<ToiletType> attribute) {
+		if (attribute == null) {
+			return null; // null일 경우 그대로 반환
+		}
 		try {
 			return objectMapper.writeValueAsString(attribute.stream()
 				.map(ToiletType::getCode).toList());
@@ -35,10 +38,13 @@ public class ToiletTypeListConverter implements AttributeConverter<List<ToiletTy
 
 	@Override
 	public List<ToiletType> convertToEntityAttribute(String dbData) {
+		if (dbData == null) {
+			return null; // null일 경우 그대로 반환
+		}
 		try {
-			List<String> diseaseCodes = objectMapper.readValue(dbData, new TypeReference<>() {
+			List<String> toiletCodes = objectMapper.readValue(dbData, new TypeReference<>() {
 			});
-			return diseaseCodes.stream()
+			return toiletCodes.stream()
 				.map(code -> code == null ? null : Arrays.stream(getValueList())
 					.filter(e -> e.getCode().equals(code))
 					.findFirst()

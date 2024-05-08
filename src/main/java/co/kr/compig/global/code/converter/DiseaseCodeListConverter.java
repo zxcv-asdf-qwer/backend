@@ -25,6 +25,9 @@ public class DiseaseCodeListConverter implements AttributeConverter<List<Disease
 
 	@Override
 	public String convertToDatabaseColumn(List<DiseaseCode> attribute) {
+		if (attribute == null) {
+			return null; // null일 경우 그대로 반환
+		}
 		try {
 			return objectMapper.writeValueAsString(attribute.stream()
 				.map(DiseaseCode::getCode).toList());
@@ -35,6 +38,9 @@ public class DiseaseCodeListConverter implements AttributeConverter<List<Disease
 
 	@Override
 	public List<DiseaseCode> convertToEntityAttribute(String dbData) {
+		if (dbData == null) {
+			return null; // null일 경우 그대로 반환
+		}
 		try {
 			List<String> diseaseCodes = objectMapper.readValue(dbData, new TypeReference<>() {
 			});
