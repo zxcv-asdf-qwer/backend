@@ -17,6 +17,8 @@ public enum ErrorCode {
 	// file
 	EXTRACT_INVALID(HttpStatus.BAD_REQUEST, "확장자를 추출할 수 없습니다."),
 	FILE_DECODE_FAIL(HttpStatus.BAD_REQUEST, "파일 이름 디코딩에 실패했습니다."),
+
+	NO_AUTH(HttpStatus.UNAUTHORIZED, "권한이 없습니다."),
 	;
 
 	private final HttpStatus httpStatus;

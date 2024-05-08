@@ -57,6 +57,7 @@ import co.kr.compig.global.code.UserType;
 import co.kr.compig.global.crypt.AES256;
 import co.kr.compig.global.error.exception.BizException;
 import co.kr.compig.global.error.exception.NotExistDataException;
+import co.kr.compig.global.error.model.ErrorCode;
 import co.kr.compig.global.keycloak.KeycloakHandler;
 import co.kr.compig.global.keycloak.KeycloakHolder;
 import co.kr.compig.global.keycloak.KeycloakProperties;
@@ -308,7 +309,28 @@ public class MemberService {
 	@Transactional(readOnly = true)
 	public MemberResponse getMemberResponseByMemberId(String memberId) {
 		Member member = this.getMemberById(memberId);
+		if (!(member.getUserType() == UserType.SYS_ADMIN || member.getUserType() == UserType.SYS_USER)) {
+			throw new BizException(ErrorCode.NO_AUTH);
+		}
 		return member.toResponse();
+	}
+
+	@Transactional(readOnly = true)
+	public PartnerMemberResponse getPartnerMemberResponseByMemberId(String memberId) {
+		Member member = this.getMemberById(memberId);
+		if (member.getUserType() != UserType.PARTNER) {
+			throw new BizException(ErrorCode.NO_AUTH);
+		}
+		return member.toPartnerMemberResponse();
+	}
+
+	@Transactional(readOnly = true)
+	public GuardianMemberResponse getGuardianMemberResponseByMemberId(String memberId) {
+		Member member = this.getMemberById(memberId);
+		if (member.getUserType() != UserType.GUARDIAN) {
+			throw new BizException(ErrorCode.NO_AUTH);
+		}
+		return member.toGuardianMemberResponse();
 	}
 
 	public void updateRecentLogin(String memberId) {
