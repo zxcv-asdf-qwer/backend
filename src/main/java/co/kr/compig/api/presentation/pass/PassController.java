@@ -45,8 +45,10 @@ public class PassController {
 	private String NICE_PASS_SITE_CODE;
 	@Value("${api.pass.site-password}")
 	private String NICE_PASS_SITE_PW;
-	@Value("${api.pass.redirect-url}")
-	private String clientUrl;
+	@Value("${api.pass.admin-redirect-url}")
+	private String adminClientUrl;
+	@Value("${api.pass.user-redirect-url}")
+	private String userClientUrl;
 	private final MemberService memberService;
 	private final NotifyMessage notifyMessage;
 
@@ -322,6 +324,106 @@ public class PassController {
 	}
 
 	@Operation(summary = "본인인증 성공", hidden = true)
+	@RequestMapping(value = "/admin/success", method = {RequestMethod.GET, RequestMethod.POST})
+	public ResponseEntity<?> adminPassSuccess(HttpServletRequest request, HttpServletResponse response,
+		ModelMap modelMap) {
+		CPClient niceCheck = new CPClient();
+
+		String sEncodeData = request.getParameter("EncodeData");
+
+		String sSiteCode = NICE_PASS_SITE_CODE;            // NICE로부터 부여받은 사이트 코드
+		String sSitePassword = NICE_PASS_SITE_PW;        // NICE로부터 부여받은 사이트 패스워드
+
+		String sCipherTime = "";            // 복호화한 시간
+		String sRequestNumber = "";            // 요청 번호
+		String sResponseNumber = "";        // 인증 고유번호
+		String sAuthType = "";                // 인증 수단
+		String sMessage = "";
+		String sPlainData = "";
+
+		int iReturn = niceCheck.fnDecode(sSiteCode, sSitePassword, sEncodeData);
+		// 추출한 정보를 이용하여 redirect URL 생성
+		String redirectUrlWithParams = adminClientUrl + "?";
+		if (iReturn == 0) {
+			sPlainData = niceCheck.getPlainData();
+			sCipherTime = niceCheck.getCipherDateTime();
+
+			// 데이타를 추출합니다.
+			HashMap mapresult = niceCheck.fnParse(sPlainData);
+			sRequestNumber = (String)mapresult.get("REQ_SEQ");
+			sResponseNumber = (String)mapresult.get("RES_SEQ");
+			sAuthType = (String)mapresult.get("AUTH_TYPE");
+
+			String session_sRequestNumber = (String)request.getSession().getAttribute("REQ_SEQ");
+			if (!sRequestNumber.equals(session_sRequestNumber)) {
+				sMessage = "세션값 불일치 오류입니다.";
+			}
+
+			PassResponse passResponse = PassResponse.builder()
+				.sRequestNumber(sRequestNumber)
+				.sResponseNumber(sResponseNumber)
+				.sAuthType(sAuthType)
+				.sCipherTime(sCipherTime)
+				.name((String)mapresult.get("NAME"))
+				.birth((String)mapresult.get("BIRTHDATE"))
+				.gender((String)mapresult.get("GENDER"))
+				.nationalInfo((String)mapresult.get("NATIONAINFO"))
+				.dupInfo((String)mapresult.get("DI"))
+				.connInfo((String)mapresult.get("CI"))
+				.phone((String)mapresult.get("MOBILE_NO"))
+				.mobileCompany((String)mapresult.get("MOBILE_CO"))
+				.build();
+
+			// modelMap.addAttribute("dto", passResponse);
+			redirectUrlWithParams += "requestnumber=" + passResponse.getSRequestNumber()
+				+ "&responsenumber=" + passResponse.getSResponseNumber()
+				+ "&authtype=" + passResponse.getSAuthType()
+				+ "&name=" + passResponse.getName()
+				+ "&birthdate=" + passResponse.getBirth()
+				+ "&gender=" + passResponse.getGender()
+				+ "&nationalInfo=" + passResponse.getNationalInfo()
+				+ "&dupInfo=" + passResponse.getDupInfo()
+				+ "&connInfo=" + passResponse.getConnInfo()
+				+ "&mobile=" + passResponse.getPhone()
+				+ "&mobileCo=" + passResponse.getMobileCompany();
+
+		} else if (iReturn == -1) {
+			sMessage = "복호화 시스템 오류입니다.";
+		} else if (iReturn == -4) {
+			sMessage = "복호화 처리 오류입니다.";
+		} else if (iReturn == -5) {
+			sMessage = "복호화 해쉬 오류입니다.";
+		} else if (iReturn == -6) {
+			sMessage = "복호화 데이터 오류입니다.";
+		} else if (iReturn == -9) {
+			sMessage = "입력 데이터 오류입니다.";
+		} else if (iReturn == -12) {
+			sMessage = "사이트 패스워드 오류입니다.";
+		} else {
+			sMessage = "알수 없는 에러 입니다. iReturn : " + iReturn;
+		}
+
+		StringBuilder stringBuilder = new StringBuilder();
+		if (!sMessage.isEmpty()) {
+			try {
+				stringBuilder.append(
+					"##################################### PASS 인증 오류 #####################################");
+				stringBuilder.append(String.format("sPlainData : %s,", sPlainData));
+				stringBuilder.append(String.format("sMessage : %s,", sMessage));
+				stringBuilder.append(
+					"##################################### PASS 인증 오류 #####################################");
+				throw new BizException(stringBuilder.toString());
+			} catch (BizException e) {
+				log.error(stringBuilder.toString());
+
+				notifyMessage.sendErrorMessage(e);
+			}
+		}
+		return ResponseEntity.status(HttpStatus.FOUND).header(HttpHeaders.LOCATION, redirectUrlWithParams).build();
+
+	}
+
+	@Operation(summary = "본인인증 성공", hidden = true)
 	@RequestMapping(value = "/success", method = {RequestMethod.GET, RequestMethod.POST})
 	public ResponseEntity<?> passSuccess(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		CPClient niceCheck = new CPClient();
@@ -340,7 +442,7 @@ public class PassController {
 
 		int iReturn = niceCheck.fnDecode(sSiteCode, sSitePassword, sEncodeData);
 		// 추출한 정보를 이용하여 redirect URL 생성
-		String redirectUrlWithParams = clientUrl + "?";
+		String redirectUrlWithParams = userClientUrl + "?";
 		if (iReturn == 0) {
 			sPlainData = niceCheck.getPlainData();
 			sCipherTime = niceCheck.getCipherDateTime();
@@ -421,8 +523,9 @@ public class PassController {
 	}
 
 	@Operation(summary = "본인인증 실패", hidden = true)
-	@RequestMapping(value = "/fail", method = {RequestMethod.GET, RequestMethod.POST})
-	public ResponseEntity<?> passFail(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+	@RequestMapping(value = "/admin/fail", method = {RequestMethod.GET, RequestMethod.POST})
+	public ResponseEntity<?> adminPassFail(HttpServletRequest request, HttpServletResponse response,
+		ModelMap modelMap) {
 		CPClient niceCheck = new CPClient();
 
 		String sEncodeData = request.getParameter("EncodeData");
@@ -439,7 +542,76 @@ public class PassController {
 
 		int iReturn = niceCheck.fnDecode(sSiteCode, sSitePassword, sEncodeData);
 		// 추출한 정보를 이용하여 redirect URL 생성
-		String redirectUrlWithParams = clientUrl + "?";
+		String redirectUrlWithParams = adminClientUrl + "?";
+		if (iReturn == 0) {
+			sPlainData = niceCheck.getPlainData();
+			sCipherTime = niceCheck.getCipherDateTime();
+
+			// 데이타를 추출합니다.
+			HashMap mapresult = niceCheck.fnParse(sPlainData);
+			sRequestNumber = (String)mapresult.get("REQ_SEQ");
+			sErrorCode = (String)mapresult.get("ERR_CODE");
+			sAuthType = (String)mapresult.get("AUTH_TYPE");
+
+		} else if (iReturn == -1) {
+			sMessage = "복호화 시스템 오류입니다.";
+		} else if (iReturn == -4) {
+			sMessage = "복호화 처리 오류입니다.";
+		} else if (iReturn == -5) {
+			sMessage = "복호화 해쉬 오류입니다.";
+		} else if (iReturn == -6) {
+			sMessage = "복호화 데이터 오류입니다.";
+		} else if (iReturn == -9) {
+			sMessage = "입력 데이터 오류입니다.";
+		} else if (iReturn == -12) {
+			sMessage = "사이트 패스워드 오류입니다.";
+		} else {
+			sMessage = "알수 없는 에러 입니다. iReturn : " + iReturn;
+		}
+		redirectUrlWithParams += "error=true";
+
+		StringBuilder stringBuilder = new StringBuilder();
+		if (!sMessage.isEmpty()) {
+			try {
+				stringBuilder.append(
+					"##################################### PASS 인증 오류 #####################################");
+				stringBuilder.append(String.format("sRequestNumber : %s,", sRequestNumber));
+				stringBuilder.append(String.format("sErrorCode : %s,", sErrorCode));
+				stringBuilder.append(String.format("sAuthType : %s,", sAuthType));
+				stringBuilder.append(String.format("sCipherTime : %s,", sCipherTime));
+				stringBuilder.append(String.format("sMessage : %s,", sMessage));
+				stringBuilder.append(
+					"##################################### PASS 인증 오류 #####################################");
+				throw new BizException(stringBuilder.toString());
+			} catch (BizException e) {
+				log.error(stringBuilder.toString());
+
+				notifyMessage.sendErrorMessage(e);
+			}
+		}
+		return ResponseEntity.status(HttpStatus.FOUND).header(HttpHeaders.LOCATION, redirectUrlWithParams).build();
+	}
+
+	@Operation(summary = "본인인증 실패", hidden = true)
+	@RequestMapping(value = "/user/fail", method = {RequestMethod.GET, RequestMethod.POST})
+	public ResponseEntity<?> userPassFail(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
+		CPClient niceCheck = new CPClient();
+
+		String sEncodeData = request.getParameter("EncodeData");
+
+		String sSiteCode = NICE_PASS_SITE_CODE;            // NICE로부터 부여받은 사이트 코드
+		String sSitePassword = NICE_PASS_SITE_PW;        // NICE로부터 부여받은 사이트 패스워드
+
+		String sCipherTime = "";            // 복호화한 시간
+		String sRequestNumber = "";         // 요청 번호
+		String sErrorCode = "";                // 인증 결과코드
+		String sAuthType = "";              // 인증 수단
+		String sMessage = "";
+		String sPlainData = "";
+
+		int iReturn = niceCheck.fnDecode(sSiteCode, sSitePassword, sEncodeData);
+		// 추출한 정보를 이용하여 redirect URL 생성
+		String redirectUrlWithParams = userClientUrl + "?";
 		if (iReturn == 0) {
 			sPlainData = niceCheck.getPlainData();
 			sCipherTime = niceCheck.getCipherDateTime();
