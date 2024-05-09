@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import co.kr.compig.api.application.member.MemberService;
 import co.kr.compig.api.presentation.member.request.PartnerMemberUpdate;
-import co.kr.compig.api.presentation.member.response.MemberResponse;
+import co.kr.compig.api.presentation.member.response.PartnerMemberResponse;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.utils.SecurityUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,7 +27,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Tag(name = "보호자 회원", description = "회원 관련 API")
+@Tag(name = "간병인 회원", description = "회원 관련 API")
 @SecurityRequirement(name = "Bearer Authentication")
 @Slf4j
 @RequiredArgsConstructor
@@ -55,9 +55,9 @@ public class PartnerMemberController {
 
 	@Operation(summary = "조회")
 	@GetMapping
-	public ResponseEntity<Response<MemberResponse>> getUser() {
-		return ResponseEntity.ok(Response.<MemberResponse>builder()
-			.data(memberService.getMemberResponseByMemberId(SecurityUtil.getMemberId()))
+	public ResponseEntity<Response<PartnerMemberResponse>> getUser() {
+		return ResponseEntity.ok(Response.<PartnerMemberResponse>builder()
+			.data(memberService.getPartnerMemberResponseByMemberId(SecurityUtil.getMemberId()))
 			.build());
 	}
 

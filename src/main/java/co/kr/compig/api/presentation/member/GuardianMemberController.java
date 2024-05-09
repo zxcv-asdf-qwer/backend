@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.member.MemberService;
 import co.kr.compig.api.presentation.member.request.GuardianMemberUpdate;
-import co.kr.compig.api.presentation.member.response.MemberResponse;
+import co.kr.compig.api.presentation.member.response.GuardianMemberResponse;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.utils.SecurityUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,7 +22,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Tag(name = "간병인 회원", description = "회원 관련 API")
+@Tag(name = "보호자 회원", description = "회원 관련 API")
 @SecurityRequirement(name = "Bearer Authentication")
 @Slf4j
 @RequiredArgsConstructor
@@ -43,9 +43,9 @@ public class GuardianMemberController {
 
 	@Operation(summary = "조회")
 	@GetMapping
-	public ResponseEntity<Response<MemberResponse>> getUser() {
-		return ResponseEntity.ok(Response.<MemberResponse>builder()
-			.data(memberService.getMemberResponseByMemberId(SecurityUtil.getMemberId()))
+	public ResponseEntity<Response<GuardianMemberResponse>> getUser() {
+		return ResponseEntity.ok(Response.<GuardianMemberResponse>builder()
+			.data(memberService.getGuardianMemberResponseByMemberId(SecurityUtil.getMemberId()))
 			.build());
 	}
 
