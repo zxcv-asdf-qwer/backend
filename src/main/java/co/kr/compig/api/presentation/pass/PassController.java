@@ -248,7 +248,79 @@ public class PassController {
 	}
 
 	@Operation(summary = "url 만들기")
-	@GetMapping
+	@GetMapping("/admin")
+	public ResponseEntity<Response<?>> getAdminPassTestPage(HttpServletRequest request, HttpServletResponse response,
+		ModelMap modelMap) {
+		CPClient niceCheck = new CPClient();
+
+		String sSiteCode = NICE_PASS_SITE_CODE;            // NICE로부터 부여받은 사이트 코드
+		String sSitePassword = NICE_PASS_SITE_PW;        // NICE로부터 부여받은 사이트 패스워드
+
+		String sRequestNumber = niceCheck.getRequestNO(sSiteCode);        // 요청 번호, 이는 성공/실패후에 같은 값으로 되돌려주게 되므로
+
+		String sAuthType = "";        // 없으면 기본 선택화면, M: 핸드폰, C: 신용카드, X: 공인인증서
+		String customize = "";        // 없으면 기본 웹페이지 / Mobile : 모바일페이지
+
+		String sReturnUrl = "";
+		String sErrorUrl = "";
+
+		if (getActiveProfile().contains("dev")) {
+			sReturnUrl = "https://api-dev.localhost.com/pass/admin/success"; // 성공시 이동될 URL
+			sErrorUrl = "https://api-dev.localhost.com/pass/admin/fail"; // 실패시 이동될 URL
+		}
+
+		// 입력될 plain 데이타를 만든다.
+		String sPlainData =
+			"7:REQ_SEQ" + sRequestNumber.getBytes().length + ":" + sRequestNumber +
+				"8:SITECODE" + sSiteCode.getBytes().length + ":" + sSiteCode +
+				"9:AUTH_TYPE" + sAuthType.getBytes().length + ":" + sAuthType +
+				"7:RTN_URL" + sReturnUrl.getBytes().length + ":" + sReturnUrl +
+				"7:ERR_URL" + sErrorUrl.getBytes().length + ":" + sErrorUrl +
+				"9:CUSTOMIZE" + customize.getBytes().length + ":" + customize;
+
+		String sMessage = "";
+		String sEncData = "";
+
+		int iReturn = niceCheck.fnEncode(sSiteCode, sSitePassword, sPlainData);
+		if (iReturn == 0) {
+			sEncData = niceCheck.getCipherData();
+		} else if (iReturn == -1) {
+			sMessage = "암호화 시스템 에러입니다.";
+		} else if (iReturn == -2) {
+			sMessage = "암호화 처리오류입니다.";
+		} else if (iReturn == -3) {
+			sMessage = "암호화 데이터 오류입니다.";
+		} else if (iReturn == -9) {
+			sMessage = "입력 데이터 오류입니다.";
+		} else {
+			sMessage = "알수 없는 에러 입니다. iReturn : " + iReturn;
+		}
+
+		request.getSession().setAttribute("REQ_SEQ", sRequestNumber);
+
+		StringBuilder stringBuilder = new StringBuilder();
+		if (!sMessage.isEmpty()) {
+			try {
+				stringBuilder.append(
+					"##################################### PASS 인증 오류 #####################################");
+				stringBuilder.append(String.format("sPlainData : %s,", sPlainData));
+				stringBuilder.append(String.format("sMessage : %s,", sMessage));
+				stringBuilder.append(
+					"##################################### PASS 인증 오류 #####################################");
+				throw new BizException(stringBuilder.toString());
+			} catch (BizException e) {
+				log.error(stringBuilder.toString());
+
+				notifyMessage.sendErrorMessage(e);
+			}
+		}
+
+		return ResponseEntity.ok().body(Response.builder().data(Map.of("passUrl", sEncData)).build());
+		// return "pass_test";
+	}
+
+	@Operation(summary = "url 만들기")
+	@GetMapping("/user")
 	public ResponseEntity<Response<?>> getPassTestPage(HttpServletRequest request, HttpServletResponse response,
 		ModelMap modelMap) {
 		CPClient niceCheck = new CPClient();
@@ -264,13 +336,9 @@ public class PassController {
 		String sReturnUrl = "";
 		String sErrorUrl = "";
 
-		if (getActiveProfile().contains("local")) {
-			sReturnUrl = "http://localhost:8080/pass/success"; // 성공시 이동될 URL
-			sErrorUrl = "http://localhost:8080/pass/fail"; // 실패시 이동될 URL
-		}
 		if (getActiveProfile().contains("dev")) {
-			sReturnUrl = "https://api-dev.localhost.com/pass/success"; // 성공시 이동될 URL
-			sErrorUrl = "https://api-dev.localhost.com/pass/fail"; // 실패시 이동될 URL
+			sReturnUrl = "https://api-dev.localhost.com/pass/user/success"; // 성공시 이동될 URL
+			sErrorUrl = "https://api-dev.localhost.com/pass/user/fail"; // 실패시 이동될 URL
 		}
 
 		// 입력될 plain 데이타를 만든다.
@@ -424,7 +492,7 @@ public class PassController {
 	}
 
 	@Operation(summary = "본인인증 성공", hidden = true)
-	@RequestMapping(value = "/success", method = {RequestMethod.GET, RequestMethod.POST})
+	@RequestMapping(value = "/user/success", method = {RequestMethod.GET, RequestMethod.POST})
 	public ResponseEntity<?> passSuccess(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		CPClient niceCheck = new CPClient();
 
