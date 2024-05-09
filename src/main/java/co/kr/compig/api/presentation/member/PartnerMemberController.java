@@ -27,7 +27,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Tag(name = "보호자 회원", description = "회원 관련 API")
+@Tag(name = "간병인 회원", description = "회원 관련 API")
 @SecurityRequirement(name = "Bearer Authentication")
 @Slf4j
 @RequiredArgsConstructor
