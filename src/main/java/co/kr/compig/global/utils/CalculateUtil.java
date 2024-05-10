@@ -35,7 +35,7 @@ public class CalculateUtil {
 	}
 
 	public static Integer calculateYearsFromStartYear(Integer startYear) {
-		if (startYear == null) {
+		if (startYear == 0) {
 			return null;
 		}
 		LocalDate currentDate = LocalDate.now();

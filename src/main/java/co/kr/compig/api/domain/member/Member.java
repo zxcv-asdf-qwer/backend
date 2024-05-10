@@ -483,7 +483,7 @@ public class Member {
 			.gender(getGenderDescription())
 			.registerDate(this.createdAndModified.getCreatedOn().toLocalDate())
 			.picture(this.picture)
-			.career(calculateYearsFromStartYear(this.careStartYear))
+			.careerYear(calculateYearsFromStartYear(this.careStartYear))
 			.matchingCount((int)this.careOrders.stream()
 				.filter(order -> order.getOrderStatus() == OrderStatus.ORDER_COMPLETE)
 				.count())

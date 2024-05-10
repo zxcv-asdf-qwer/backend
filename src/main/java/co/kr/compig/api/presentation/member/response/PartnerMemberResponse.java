@@ -29,7 +29,7 @@ public class PartnerMemberResponse extends BaseAudit {
 	private String gender; //성별
 	private LocalDate registerDate; //가입일자
 	private String picture; //s3 path
-	private Integer career; //경력
+	private Integer careerYear; //경력
 	private int matchingCount; //매칭수
 	private int starAverage; //리뷰 별 평균
 	private String address1; //주소1
