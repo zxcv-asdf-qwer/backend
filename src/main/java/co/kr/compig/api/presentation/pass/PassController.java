@@ -391,7 +391,7 @@ public class PassController {
 		// return "pass_test";
 	}
 
-	@Operation(summary = "본인인증 성공", hidden = true)
+	@Operation(summary = "본인인증 성공")
 	@RequestMapping(value = "/admin/success", method = {RequestMethod.GET, RequestMethod.POST})
 	public ResponseEntity<?> adminPassSuccess(HttpServletRequest request, HttpServletResponse response,
 		ModelMap modelMap) {
@@ -491,7 +491,7 @@ public class PassController {
 
 	}
 
-	@Operation(summary = "본인인증 성공", hidden = true)
+	@Operation(summary = "본인인증 성공")
 	@RequestMapping(value = "/user/success", method = {RequestMethod.GET, RequestMethod.POST})
 	public ResponseEntity<?> passSuccess(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		CPClient niceCheck = new CPClient();
@@ -590,7 +590,7 @@ public class PassController {
 
 	}
 
-	@Operation(summary = "본인인증 실패", hidden = true)
+	@Operation(summary = "본인인증 실패")
 	@RequestMapping(value = "/admin/fail", method = {RequestMethod.GET, RequestMethod.POST})
 	public ResponseEntity<?> adminPassFail(HttpServletRequest request, HttpServletResponse response,
 		ModelMap modelMap) {
@@ -660,7 +660,7 @@ public class PassController {
 		return ResponseEntity.status(HttpStatus.FOUND).header(HttpHeaders.LOCATION, redirectUrlWithParams).build();
 	}
 
-	@Operation(summary = "본인인증 실패", hidden = true)
+	@Operation(summary = "본인인증 실패")
 	@RequestMapping(value = "/user/fail", method = {RequestMethod.GET, RequestMethod.POST})
 	public ResponseEntity<?> userPassFail(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		CPClient niceCheck = new CPClient();
@@ -729,12 +729,12 @@ public class PassController {
 		return ResponseEntity.status(HttpStatus.FOUND).header(HttpHeaders.LOCATION, redirectUrlWithParams).build();
 	}
 
-	@Operation(summary = "pass 정보 저장", hidden = true)
+	@Operation(summary = "pass 정보 저장")
 	@PutMapping(value = "/pass")
 	public ResponseEntity<Response<Map<String, String>>> pass(@RequestBody @Valid PassSaveRequest passSaveRequest) {
 		return ResponseEntity.ok()
 			.body(Response.<Map<String, String>>builder()
-				.data(Map.of("memberId", memberService.passUpdate(passSaveRequest)))
+				.data(Map.of("memberId", memberService.passAdminUpdate(passSaveRequest)))
 				.build());
 	}
 }

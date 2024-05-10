@@ -402,6 +402,12 @@ public class MemberService {
 		}
 	}
 
+	public String passAdminUpdate(PassSaveRequest passSaveRequest) {
+		Member memberById = this.getMemberById(passSaveRequest.getMemberId());
+		memberById.passUpdate(passSaveRequest);
+		return memberById.getId();
+	}
+
 	public String passUpdate(PassSaveRequest passSaveRequest) {
 		Member memberById = this.getMemberById(SecurityUtil.getMemberId());
 		memberById.passUpdate(passSaveRequest);
