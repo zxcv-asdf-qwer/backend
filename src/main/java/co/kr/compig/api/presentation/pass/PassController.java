@@ -391,7 +391,7 @@ public class PassController {
 		// return "pass_test";
 	}
 
-	@Operation(summary = "본인인증 성공")
+	@Operation(summary = "본인인증 성공", hidden = true)
 	@RequestMapping(value = "/admin/success", method = {RequestMethod.GET, RequestMethod.POST})
 	public ResponseEntity<?> adminPassSuccess(HttpServletRequest request, HttpServletResponse response,
 		ModelMap modelMap) {
@@ -491,7 +491,7 @@ public class PassController {
 
 	}
 
-	@Operation(summary = "본인인증 성공")
+	@Operation(summary = "본인인증 성공", hidden = true)
 	@RequestMapping(value = "/user/success", method = {RequestMethod.GET, RequestMethod.POST})
 	public ResponseEntity<?> passSuccess(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		CPClient niceCheck = new CPClient();
@@ -590,7 +590,7 @@ public class PassController {
 
 	}
 
-	@Operation(summary = "본인인증 실패")
+	@Operation(summary = "본인인증 실패", hidden = true)
 	@RequestMapping(value = "/admin/fail", method = {RequestMethod.GET, RequestMethod.POST})
 	public ResponseEntity<?> adminPassFail(HttpServletRequest request, HttpServletResponse response,
 		ModelMap modelMap) {
@@ -660,7 +660,7 @@ public class PassController {
 		return ResponseEntity.status(HttpStatus.FOUND).header(HttpHeaders.LOCATION, redirectUrlWithParams).build();
 	}
 
-	@Operation(summary = "본인인증 실패")
+	@Operation(summary = "본인인증 실패", hidden = true)
 	@RequestMapping(value = "/user/fail", method = {RequestMethod.GET, RequestMethod.POST})
 	public ResponseEntity<?> userPassFail(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
 		CPClient niceCheck = new CPClient();
