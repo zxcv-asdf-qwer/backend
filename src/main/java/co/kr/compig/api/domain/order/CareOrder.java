@@ -283,6 +283,7 @@ public class CareOrder {
 			.locationType(this.orderPatient.getLocationType())
 			.address1(this.member.getAddress1())
 			.address2(this.member.getAddress2())
+			.hospitalNm(this.orderPatient.getHospitalName())
 			.startDateTime(this.startDateTime)
 			.endDateTime(this.endDateTime)
 			.orderStatus(this.orderStatus)
