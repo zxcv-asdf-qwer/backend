@@ -55,7 +55,7 @@ public class S3Util {
 			String imageUrl = generateUnsignedUrl(fileName);
 			return imageUrl;
 		} catch (IOException e) {
-			throw new UploadException(ErrorCode.PATH_VARIABLE_VALUE, e);
+			throw new UploadException(ErrorCode.INVALID_INPUT_VALUE, e);
 		}
 	}
 
@@ -71,7 +71,7 @@ public class S3Util {
 				String imageUrl = generateUnsignedUrl(fileName);
 				imageUrlList.add(imageUrl);
 			} catch (IOException e) {
-				throw new UploadException(ErrorCode.PATH_VARIABLE_VALUE, e);
+				throw new UploadException(ErrorCode.INVALID_INPUT_VALUE, e);
 			}
 		}
 		return imageUrlList;
@@ -95,7 +95,7 @@ public class S3Util {
 						amazonS3.deleteObject(bucket + "/" + folder, decodedFileName);
 					}
 				} catch (IllegalArgumentException e) {
-					throw new UploadException(ErrorCode.FILE_DECODE_FAIL, e);
+					throw new UploadException("파일 이름 디코딩에 실패했습니다.", e);
 				}
 			}
 		}
@@ -124,7 +124,7 @@ public class S3Util {
 				return originalFilename.substring(extensionIndex + 1);
 			}
 		}
-		throw new UploadException(ErrorCode.EXTRACT_INVALID);
+		throw new UploadException("확장자를 추출할 수 없습니다.");
 	}
 
 	public String generateUnsignedUrl(String objectKey) {
@@ -190,7 +190,7 @@ public class S3Util {
 					.build();
 				imageUrlList.add(systemFileResponse);
 			} catch (IOException e) {
-				throw new UploadException(ErrorCode.PATH_VARIABLE_VALUE, e);
+				throw new UploadException(ErrorCode.INVALID_INPUT_VALUE, e);
 			}
 		}
 		return imageUrlList;

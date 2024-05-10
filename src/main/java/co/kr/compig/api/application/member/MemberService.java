@@ -57,7 +57,6 @@ import co.kr.compig.global.code.UserType;
 import co.kr.compig.global.crypt.AES256;
 import co.kr.compig.global.error.exception.BizException;
 import co.kr.compig.global.error.exception.NotExistDataException;
-import co.kr.compig.global.error.model.ErrorCode;
 import co.kr.compig.global.keycloak.KeycloakHandler;
 import co.kr.compig.global.keycloak.KeycloakHolder;
 import co.kr.compig.global.keycloak.KeycloakProperties;
@@ -310,7 +309,7 @@ public class MemberService {
 	public MemberResponse getMemberResponseByMemberId(String memberId) {
 		Member member = this.getMemberById(memberId);
 		if (!(member.getUserType() == UserType.SYS_ADMIN || member.getUserType() == UserType.SYS_USER)) {
-			throw new BizException(ErrorCode.NO_AUTH);
+			throw new BizException("권한이 없습니다.");
 		}
 		return member.toResponse();
 	}
@@ -319,7 +318,7 @@ public class MemberService {
 	public PartnerMemberResponse getPartnerMemberResponseByMemberId(String memberId) {
 		Member member = this.getMemberById(memberId);
 		if (member.getUserType() != UserType.PARTNER) {
-			throw new BizException(ErrorCode.NO_AUTH);
+			throw new BizException("권한이 없습니다.");
 		}
 		return member.toPartnerMemberResponse();
 	}
@@ -328,7 +327,7 @@ public class MemberService {
 	public GuardianMemberResponse getGuardianMemberResponseByMemberId(String memberId) {
 		Member member = this.getMemberById(memberId);
 		if (member.getUserType() != UserType.GUARDIAN) {
-			throw new BizException(ErrorCode.NO_AUTH);
+			throw new BizException("권한이 없습니다.");
 		}
 		return member.toGuardianMemberResponse();
 	}
