@@ -8,11 +8,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import NiceID.Check.CPClient;
 import co.kr.compig.api.application.member.MemberService;
+import co.kr.compig.api.presentation.pass.request.PassSaveRequest;
 import co.kr.compig.api.presentation.pass.response.PassResponse;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.error.exception.BizException;
@@ -114,13 +117,12 @@ public class PassController {
 	}
 
 	@Operation(summary = "본인인증 성공", hidden = true)
-	@RequestMapping(value = "/success", method = {RequestMethod.GET, RequestMethod.POST})
-	public ResponseEntity<?> adminPassSuccess(HttpServletRequest request, HttpServletResponse response,
-		ModelMap modelMap) {
+	@PostMapping(value = "/success")
+	public ResponseEntity<?> passSuccess(@RequestBody PassSaveRequest passSaveRequest) {
 		CPClient niceCheck = new CPClient();
 
-		String sEncodeData = request.getParameter("EncodeData");
-		String memberId = request.getParameter("memberId");
+		String sEncodeData = passSaveRequest.getEncodeData();
+		String memberId = passSaveRequest.getMemberId();
 
 		String sSiteCode = NICE_PASS_SITE_CODE;            // NICE로부터 부여받은 사이트 코드
 		String sSitePassword = NICE_PASS_SITE_PW;        // NICE로부터 부여받은 사이트 패스워드
@@ -143,11 +145,11 @@ public class PassController {
 				sRequestNumber = (String)mapresult.get("REQ_SEQ");
 				sResponseNumber = (String)mapresult.get("RES_SEQ");
 				sAuthType = (String)mapresult.get("AUTH_TYPE");
-
-				String session_sRequestNumber = (String)request.getSession().getAttribute("REQ_SEQ");
-				if (!sRequestNumber.equals(session_sRequestNumber)) {
-					throw new BizException("세션값 불일치 오류입니다.");
-				}
+				//
+				// String session_sRequestNumber = (String)request.getSession().getAttribute("REQ_SEQ");
+				// if (!sRequestNumber.equals(session_sRequestNumber)) {
+				// 	throw new BizException("세션값 불일치 오류입니다.");
+				// }
 
 				PassResponse passResponse = PassResponse.builder()
 					.sRequestNumber(sRequestNumber)
@@ -189,7 +191,7 @@ public class PassController {
 					+ String.format("sPlainData : %s,", sPlainData)
 					+ String.format("sMessage : %s,", sMessage)
 					+ "##################################### PASS 인증 오류 #####################################";
-			log.error(stringBuilder);
+			log.error(stringBuilder, e);
 			notifyMessage.sendErrorMessage(e, stringBuilder);
 		}
 		return ResponseEntity.badRequest().body("PASS 인증 오류");
@@ -197,7 +199,7 @@ public class PassController {
 
 	@Operation(summary = "본인인증 실패", hidden = true)
 	@RequestMapping(value = "/fail", method = {RequestMethod.GET, RequestMethod.POST})
-	public ResponseEntity<?> adminPassFail(HttpServletRequest request, HttpServletResponse response,
+	public ResponseEntity<?> passFail(HttpServletRequest request, HttpServletResponse response,
 		ModelMap modelMap) {
 		CPClient niceCheck = new CPClient();
 
