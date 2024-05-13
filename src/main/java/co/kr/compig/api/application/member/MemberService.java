@@ -370,14 +370,20 @@ public class MemberService {
 			AES256 aes256 = encryptKeyService.getEncryptKey();
 			byte[] iv = aes256.generateIv();
 			try {
-				Account account = Account.builder()
-					.accountNumber(aes256.encrypt(accountUpdateRequest.getAccountNumber(), iv))
-					.accountName(aes256.encrypt(accountUpdateRequest.getAccountName(), iv))
-					.bankName(BankCode.of(accountUpdateRequest.getBankName()))
-					.iv(Base64.getUrlEncoder().encodeToString(iv))
-					.build();
-				account.setMember(memberById);
-				accountRepository.save(account);
+				Account account;
+				if (memberById.getAccount() != null) {
+					account = memberById.getAccount();
+					account.update(accountUpdateRequest, aes256, iv);
+				} else {
+					account = Account.builder()
+						.accountNumber(aes256.encrypt(accountUpdateRequest.getAccountNumber(), iv))
+						.accountName(aes256.encrypt(accountUpdateRequest.getAccountName(), iv))
+						.bankName(BankCode.of(accountUpdateRequest.getBankName()))
+						.iv(Base64.getUrlEncoder().encodeToString(iv))
+						.build();
+					account.setMember(memberById);
+					accountRepository.save(account);
+				}
 			} catch (Exception e) {
 				throw new RuntimeException("AES256 암호화 중 예외발생", e);
 			}
