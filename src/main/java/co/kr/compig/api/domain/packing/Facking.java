@@ -10,7 +10,9 @@ import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.domain.settle.Settle;
 import co.kr.compig.api.presentation.packing.request.PackingUpdateRequest;
 import co.kr.compig.api.presentation.packing.response.FackingDetailResponse;
+import co.kr.compig.global.code.LocationType;
 import co.kr.compig.global.code.PeriodType;
+import co.kr.compig.global.code.converter.LocationTypeConverter;
 import co.kr.compig.global.code.converter.PeriodTypeConverter;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.Column;
@@ -76,6 +78,10 @@ public class Facking {
 	@Column(length = 100)
 	private String partnerTelNo; // 간병인 전화번호
 
+	@Column
+	@Convert(converter = LocationTypeConverter.class)
+	private LocationType locationType = LocationType.HOME; // 간병 장소 종류
+
 	@Column(length = 10)
 	private String addressCd; // 간병 장소 우편 번호
 
@@ -118,7 +124,7 @@ public class Facking {
  	 * Business
        ================================================================= */
 	public FackingDetailResponse toFackingDetailResponse() {
-		return FackingDetailResponse.builder()
+		FackingDetailResponse build = FackingDetailResponse.builder()
 			.fackingId(this.id)
 			.careOrderId(this.careOrder.getId())
 			.amount(this.amount)
@@ -126,10 +132,13 @@ public class Facking {
 			.partTime(this.partTime)
 			.partnerNm(this.partnerNm)
 			.partnerTelNo(this.partnerTelNo)
+			.locationType(this.locationType)
 			.addressCd(this.addressCd)
 			.address1(this.address1)
 			.address2(this.address2)
 			.build();
+		build.setCreatedAndUpdated(this.createdAndModified);
+		return build;
 	}
 
 	public void update(PackingUpdateRequest packingUpdateRequest) {

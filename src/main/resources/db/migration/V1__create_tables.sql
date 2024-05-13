@@ -560,11 +560,11 @@ comment on column sms.ref1 is '비고|인증 번호';
 create sequence if not exists sms_template_seq start with 1 increment by 1;
 create table if not exists sms_template
 (
-    sms_template_id   bigint        not null primary key,
-    sms_type          varchar(3)    not null,
-    sms_template_type varchar(3)    not null,
-    at_template_code  varchar(25)   not null,
-    contents          text not null,
+    sms_template_id   bigint      not null primary key,
+    sms_type          varchar(3)  not null,
+    sms_template_type varchar(3)  not null,
+    at_template_code  varchar(25) not null,
+    contents          text        not null,
     created_by        varchar(50),
     created_on        timestamp(6) default CURRENT_TIMESTAMP,
     updated_by        varchar(50),
@@ -647,6 +647,7 @@ create table if not exists facking
     end_date_time   timestamp(6),
     partner_nm      varchar(100),
     partner_tel_no  varchar(100),
+    location_type   varchar(10),
     address_cd      varchar(10),
     address1        varchar(200),
     address2        varchar(200),

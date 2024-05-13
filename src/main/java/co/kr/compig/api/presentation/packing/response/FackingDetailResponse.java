@@ -1,6 +1,8 @@
 package co.kr.compig.api.presentation.packing.response;
 
+import co.kr.compig.global.code.LocationType;
 import co.kr.compig.global.code.PeriodType;
+import co.kr.compig.global.dto.BaseAudit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
-public class FackingDetailResponse {
+public class FackingDetailResponse extends BaseAudit {
 
 	private Long fackingId;
 	private Long careOrderId;
@@ -21,6 +23,7 @@ public class FackingDetailResponse {
 	private Integer partTime; //파트타임 시간 시간제 일 경우 필수
 	private String partnerNm; // 간병인 이름
 	private String partnerTelNo; // 간병인 전화번호
+	private LocationType locationType; // 간병 장소 종류
 	private String addressCd; // 간병 장소 우편 번호
 	private String address1; // 간병 장소 주소
 	private String address2; // 간병 장소 상세 주소
