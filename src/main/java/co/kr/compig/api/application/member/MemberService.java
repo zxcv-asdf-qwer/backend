@@ -49,7 +49,7 @@ import co.kr.compig.api.presentation.member.response.GuardianMemberResponse;
 import co.kr.compig.api.presentation.member.response.MemberPageResponse;
 import co.kr.compig.api.presentation.member.response.MemberResponse;
 import co.kr.compig.api.presentation.member.response.PartnerMemberResponse;
-import co.kr.compig.api.presentation.pass.request.PassSaveRequest;
+import co.kr.compig.api.presentation.pass.response.PassResponse;
 import co.kr.compig.api.presentation.social.request.SocialCreateRequest;
 import co.kr.compig.api.presentation.social.request.SocialLoginRequest;
 import co.kr.compig.api.presentation.social.response.SocialLoginResponse;
@@ -428,15 +428,9 @@ public class MemberService {
 		}
 	}
 
-	public String passAdminUpdate(PassSaveRequest passSaveRequest) {
-		Member memberById = this.getMemberById(passSaveRequest.getMemberId());
-		memberById.passUpdate(passSaveRequest);
-		return memberById.getId();
-	}
-
-	public String passUpdate(PassSaveRequest passSaveRequest) {
-		Member memberById = this.getMemberById(SecurityUtil.getMemberId());
-		memberById.passUpdate(passSaveRequest);
+	public String passUpdate(String memberId, PassResponse passResponse) {
+		Member memberById = this.getMemberById(memberId);
+		memberById.passUpdate(passResponse);
 		return memberById.getId();
 	}
 

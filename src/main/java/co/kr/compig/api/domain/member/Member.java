@@ -39,7 +39,7 @@ import co.kr.compig.api.presentation.member.request.PartnerMemberUpdate;
 import co.kr.compig.api.presentation.member.response.GuardianMemberResponse;
 import co.kr.compig.api.presentation.member.response.MemberResponse;
 import co.kr.compig.api.presentation.member.response.PartnerMemberResponse;
-import co.kr.compig.api.presentation.pass.request.PassSaveRequest;
+import co.kr.compig.api.presentation.pass.response.PassResponse;
 import co.kr.compig.global.code.CareerCode;
 import co.kr.compig.global.code.DeptCode;
 import co.kr.compig.global.code.DiseaseCode;
@@ -698,23 +698,23 @@ public class Member {
 		}
 	}
 
-	public void passUpdate(PassSaveRequest passSaveRequest) {
-		this.userNm = passSaveRequest.getName();
-		this.jumin1 = passSaveRequest.getBirthdate().substring(2); //951011
+	public void passUpdate(PassResponse passResponse) {
+		this.userNm = passResponse.getName();
+		this.jumin1 = passResponse.getBirth().substring(2); //951011
 		// gender 값이 0이면 "여성", 1이면 "남성"으로 변경
-		if ("0".equals(passSaveRequest.getGender())) {
+		if ("0".equals(passResponse.getGender())) {
 			this.gender = GenderCode.F;
-		} else if ("1".equals(passSaveRequest.getGender())) {
+		} else if ("1".equals(passResponse.getGender())) {
 			this.gender = GenderCode.M;
 		}
 		//0 내국인, 1 외국인
-		if ("0".equals(passSaveRequest.getNationalInfo())) {
+		if ("0".equals(passResponse.getNationalInfo())) {
 			this.domesticForeignCode = DomesticForeignCode.D;
-		} else if ("1".equals(passSaveRequest.getGender())) {
+		} else if ("1".equals(passResponse.getGender())) {
 			this.domesticForeignCode = DomesticForeignCode.F;
 		}
-		this.di = passSaveRequest.getDupInfo();
-		this.ci = passSaveRequest.getConnInfo();
+		this.di = passResponse.getDupInfo();
+		this.ci = passResponse.getConnInfo();
 	}
 
 	public void updateRecentLogin() {
