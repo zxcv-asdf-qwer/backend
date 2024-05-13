@@ -5,11 +5,10 @@ import org.apache.ibatis.type.MappedJdbcTypes;
 import org.apache.ibatis.type.MappedTypes;
 
 import co.kr.compig.global.code.MemberType;
-import co.kr.compig.global.code.UserType;
 import jakarta.persistence.Converter;
 
 @Converter(autoApply = true)
-@MappedTypes(UserType.class)
+@MappedTypes(MemberType.class)
 @MappedJdbcTypes(value = JdbcType.VARCHAR)
 public class MemberTypeConverter extends AbstractBaseEnumConverter<MemberType, String> {
 

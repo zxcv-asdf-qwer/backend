@@ -5,11 +5,10 @@ import org.apache.ibatis.type.MappedJdbcTypes;
 import org.apache.ibatis.type.MappedTypes;
 
 import co.kr.compig.global.code.BankCode;
-import co.kr.compig.global.code.BoardType;
 import jakarta.persistence.Converter;
 
 @Converter(autoApply = true)
-@MappedTypes(BoardType.class)
+@MappedTypes(BankCode.class)
 @MappedJdbcTypes(value = JdbcType.VARCHAR)
 public class BankCodeConverter extends AbstractBaseEnumConverter<BankCode, String> {
 

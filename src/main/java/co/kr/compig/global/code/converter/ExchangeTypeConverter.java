@@ -5,11 +5,10 @@ import org.apache.ibatis.type.MappedJdbcTypes;
 import org.apache.ibatis.type.MappedTypes;
 
 import co.kr.compig.global.code.ExchangeType;
-import co.kr.compig.global.code.SmsType;
 import jakarta.persistence.Converter;
 
 @Converter(autoApply = true)
-@MappedTypes(SmsType.class)
+@MappedTypes(ExchangeType.class)
 @MappedJdbcTypes(value = JdbcType.VARCHAR)
 public class ExchangeTypeConverter extends AbstractBaseEnumConverter<ExchangeType, String> {
 
