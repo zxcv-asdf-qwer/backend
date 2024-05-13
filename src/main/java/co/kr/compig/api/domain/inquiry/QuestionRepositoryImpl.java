@@ -23,6 +23,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import co.kr.compig.api.presentation.inquiry.request.QuestionSearchRequest;
 import co.kr.compig.api.presentation.inquiry.response.QuestionResponse;
+import co.kr.compig.global.utils.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -60,6 +61,7 @@ public class QuestionRepositoryImpl implements QuestionRepositoryCustom {
 
 		JPAQuery<Question> query = createBaseQuery(predicate)
 			.select(question)
+			.where(question.createdAndModified.createdBy.id.eq(SecurityUtil.getMemberId()))
 			.where(cursorCursorId(Long.valueOf(questionSearchRequest.getCursorId())));
 
 		applySorting(query, pageable);
@@ -82,11 +84,7 @@ public class QuestionRepositoryImpl implements QuestionRepositoryCustom {
 	}
 
 	private BooleanExpression createPredicate(QuestionSearchRequest request) {
-		BooleanExpression predicate = Expressions.asBoolean(true).isTrue();
-		if (request.getMemberId() != null) {
-			predicate = predicate.and(question.createdAndModified.createdBy.id.eq(request.getMemberId()));
-		}
-		return predicate;
+		return Expressions.asBoolean(true).isTrue();
 	}
 
 	private JPAQuery<?> createBaseQuery(BooleanExpression predicate) {
