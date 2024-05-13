@@ -17,12 +17,12 @@ import lombok.NoArgsConstructor;
 public class QuestionCreateRequest {
 
 	@NotBlank
-	@Length(min = 2, max = 100)
+	@Length(max = 30)
 	@Schema(description = "질문 제목")
 	private String questionTitle; // 질문 제목
 
 	@NotBlank
-	@Length(min = 2)
+	@Length(max = 300)
 	@Schema(description = "질문 내용")
 	private String questionContents; // 질문 내용
 
