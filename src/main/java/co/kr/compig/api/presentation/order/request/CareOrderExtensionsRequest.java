@@ -17,9 +17,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Conditional(selected = "periodType", values = {"PART_TIME"}, required = {"partTime"})
 public class CareOrderExtensionsRequest {
-
+	@Parameter(description = "시작 날짜", example = "2024-05-03 15:44:10")
 	private LocalDateTime startDateTime; // 시작 날짜
 
+	@Parameter(description = "시작 날짜", example = "2024-05-03 15:44:10")
 	private LocalDateTime endDateTime; // 종료 날짜
 
 	@NotNull

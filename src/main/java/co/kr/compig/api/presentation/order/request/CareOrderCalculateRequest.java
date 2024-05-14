@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import co.kr.compig.global.code.PeriodType;
 import co.kr.compig.global.validator.annotaion.Conditional;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,9 +19,11 @@ import lombok.NoArgsConstructor;
 public class CareOrderCalculateRequest {
 
 	@NotNull
+	@Schema(description = "2024-04-17T00:00:00")
 	private LocalDateTime startDateTime; // 시작 날짜
 
 	@NotNull
+	@Schema(description = "2024-04-17T00:00:00")
 	private LocalDateTime endDateTime; // 종료 날짜
 
 	@NotNull
