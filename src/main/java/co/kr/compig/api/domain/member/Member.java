@@ -497,14 +497,17 @@ public class Member {
 			.diseaseNms(this.diseaseNms)
 			.selfToiletAvailabilities(this.selfToiletAvailabilities)
 			.marketingEmail(
-				this.marketingEmailDate != null && this.marketingEmailDate.isBefore(LocalDate.now()))
+				this.marketingEmailDate != null && (this.marketingEmailDate.isEqual(LocalDate.now())
+					|| this.marketingEmailDate.isBefore(LocalDate.now())))
 			.marketingAppPush(
-				this.marketingAppPushDate != null && this.marketingAppPushDate.isBefore(
-					LocalDate.now()))
+				this.marketingAppPushDate != null && (this.marketingAppPushDate.isEqual(LocalDate.now())
+					|| this.marketingAppPushDate.isBefore(LocalDate.now())))
 			.marketingKakao(
-				this.marketingKakaoDate != null && this.marketingKakaoDate.isBefore(LocalDate.now()))
+				this.marketingKakaoDate != null && (this.marketingKakaoDate.isEqual(LocalDate.now())
+					|| this.marketingKakaoDate.isBefore(LocalDate.now())))
 			.marketingSms(
-				this.marketingSmsDate != null && this.marketingSmsDate.isBefore(LocalDate.now()))
+				this.marketingSmsDate != null && (this.marketingSmsDate.isEqual(LocalDate.now())
+					|| this.marketingSmsDate.isBefore(LocalDate.now())))
 			.build();
 		partnerMemberResponse.setGroups(
 			this.groups.stream().map(MemberGroup::converterDto).collect(Collectors.toSet()));
@@ -522,14 +525,17 @@ public class Member {
 			.memberType(this.memberType)
 			.registerDate(this.createdAndModified.getCreatedOn().toLocalDate())
 			.marketingEmail(
-				this.marketingEmailDate != null && this.marketingEmailDate.isBefore(LocalDate.now()))
+				this.marketingEmailDate != null && (this.marketingEmailDate.isEqual(LocalDate.now())
+					|| this.marketingEmailDate.isBefore(LocalDate.now())))
 			.marketingAppPush(
-				this.marketingAppPushDate != null && this.marketingAppPushDate.isBefore(
-					LocalDate.now()))
+				this.marketingAppPushDate != null && (this.marketingAppPushDate.isEqual(LocalDate.now())
+					|| this.marketingAppPushDate.isBefore(LocalDate.now())))
 			.marketingKakao(
-				this.marketingKakaoDate != null && this.marketingKakaoDate.isBefore(LocalDate.now()))
+				this.marketingKakaoDate != null && (this.marketingKakaoDate.isEqual(LocalDate.now())
+					|| this.marketingKakaoDate.isBefore(LocalDate.now())))
 			.marketingSms(
-				this.marketingSmsDate != null && this.marketingSmsDate.isBefore(LocalDate.now()))
+				this.marketingSmsDate != null && (this.marketingSmsDate.isEqual(LocalDate.now())
+					|| this.marketingSmsDate.isBefore(LocalDate.now())))
 			.build();
 		build.setCreatedAndUpdated(this.createdAndModified);
 		return build;
