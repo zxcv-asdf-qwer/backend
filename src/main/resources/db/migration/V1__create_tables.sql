@@ -69,26 +69,23 @@ create table if not exists app_version
 (
     app_version_id bigint      not null primary key,
     force_update   char(1)      default 'N',
-    last_ver       varchar(50) not null,
-    min_ver        varchar(50) not null,
     os_code        varchar(20) not null,
-    last_ver_nm    varchar(50) not null,
-    min_ver_nm     varchar(50) not null,
+    min_ver        varchar(50) not null,
+    update_url     varchar(50) not null,
+    contents       varchar(255),
     created_by     varchar(50),
     created_on     timestamp(6) default CURRENT_TIMESTAMP,
     updated_by     varchar(50),
     updated_on     timestamp(6) default CURRENT_TIMESTAMP,
-    constraint uk01_app_version unique (os_code, last_ver, min_ver)
+    constraint uk01_app_version unique (os_code, min_ver)
 );
 
 comment on table app_version is '앱 버전 체크';
 comment on column app_version.app_version_id is 'ID';
 comment on column app_version.os_code is '요청된 디바이스 os 이름';
-comment on column app_version.last_ver is '앱 사용 가능한 최신 버전 정보';
-comment on column app_version.last_ver_nm is '앱 사용 가능한 최신 버전 이름';
 comment on column app_version.min_ver is '앱 사용 가능한 최소 버전 정보';
-comment on column app_version.min_ver_nm is '앱 사용 가능한 최소 버전 이름';
 comment on column app_version.force_update is '강제 업데이트 여부';
+comment on column app_version.contents is '내용';
 
 create sequence if not exists apply_seq start with 1 increment by 1;
 create table if not exists apply
@@ -150,6 +147,7 @@ create table if not exists care_order
 (
     care_order_id           bigint not null primary key,
     end_date_time           timestamp(6),
+    real_end_date_time      timestamp(6),
     order_patient_id        bigint not null,
     start_date_time         timestamp(6),
     care_order_process_type varchar(255),
@@ -264,42 +262,44 @@ comment on column member_group.member_id is '회원 ID';
 create sequence if not exists member_seq start with 1 increment by 1;
 create table if not exists member
 (
-    member_id               varchar(255) not null primary key,
-    user_id                 varchar(150),
-    user_pw                 varchar(150),
-    user_nm                 varchar(100),
-    email                   varchar(150),
-    tel_no                  varchar(100),
-    gender                  varchar(255),
-    use_yn                  char(1)      default 'Y',
-    user_type               varchar(10),
-    member_type             varchar(10)  default 'MEMBER',
-    member_register_type    varchar(35),
-    jumin1                  varchar(6),
-    jumin2                  varchar(7),
-    address1                varchar(200),
-    address2                varchar(200),
-    picture                 varchar(255),
-    domestic_foreign_code   char(1),
-    career_code             char(1),
-    care_start_year         integer,
-    introduce               TEXT,
-    marketing_app_push_date date,
-    marketing_email_date    date,
-    marketing_kakao_date    date,
-    marketing_sms_date      date,
-    leave_reason            varchar(255),
-    leave_date              date,
-    real_name_yn            varchar(255) default 'N',
-    dept_code               varchar(35),
-    ci                      varchar(255),
-    di                      varchar(255),
-    recent_login_date       timestamp(6),
-    ip_address              varchar(255),
-    created_by              varchar(50),
-    created_on              timestamp(6) default CURRENT_TIMESTAMP,
-    updated_by              varchar(50),
-    updated_on              timestamp(6) default CURRENT_TIMESTAMP,
+    member_id                  varchar(255) not null primary key,
+    user_id                    varchar(150),
+    user_pw                    varchar(150),
+    user_nm                    varchar(100),
+    email                      varchar(150),
+    tel_no                     varchar(100),
+    gender                     varchar(255),
+    use_yn                     char(1)      default 'Y',
+    user_type                  varchar(10),
+    member_type                varchar(10)  default 'MEMBER',
+    member_register_type       varchar(35),
+    jumin1                     varchar(6),
+    jumin2                     varchar(7),
+    address1                   varchar(200),
+    address2                   varchar(200),
+    picture                    varchar(255),
+    domestic_foreign_code      char(1),
+    career_code                char(1),
+    care_start_year            integer,
+    introduce                  TEXT,
+    marketing_app_push_date    date,
+    marketing_email_date       date,
+    marketing_kakao_date       date,
+    marketing_sms_date         date,
+    leave_reason               varchar(255),
+    leave_date                 date,
+    real_name_yn               varchar(255) default 'N',
+    dept_code                  varchar(35),
+    ci                         varchar(255),
+    di                         varchar(255),
+    recent_login_date          timestamp(6),
+    ip_address                 varchar(255),
+    disease_nms                json,
+    self_toilet_availabilities json,
+    created_by                 varchar(50),
+    created_on                 timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by                 varchar(50),
+    updated_on                 timestamp(6) default CURRENT_TIMESTAMP,
     constraint uk01_member unique (user_id)
 );
 
@@ -611,6 +611,7 @@ create table if not exists terms
     terms_id   bigint not null,
     terms_type varchar(10),
     contents   text,
+    use_yn     char(1),
     created_by varchar(50),
     created_on timestamp(6) default CURRENT_TIMESTAMP,
     updated_by varchar(50),
@@ -692,13 +693,14 @@ create table if not exists review
 create sequence if not exists report_seq start with 1 increment by 1;
 create table if not exists report
 (
-    report_id  bigint not null,
-    review_id  bigint not null,
-    contents   text,
-    created_by varchar(50),
-    created_on timestamp(6) default CURRENT_TIMESTAMP,
-    updated_by varchar(50),
-    updated_on timestamp(6) default CURRENT_TIMESTAMP,
+    report_id   bigint not null,
+    review_id   bigint not null,
+    report_type varchar(10),
+    contents    text,
+    created_by  varchar(50),
+    created_on  timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by  varchar(50),
+    updated_on  timestamp(6) default CURRENT_TIMESTAMP,
     primary key (report_id)
 );
 

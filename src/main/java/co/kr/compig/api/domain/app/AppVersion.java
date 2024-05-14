@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 	uniqueConstraints = {
 		@UniqueConstraint(
 			name = "uk01_app_version",
-			columnNames = {"osCode", "lastVer", "minVer"})
+			columnNames = {"osCode", "minVer"})
 	})
 @SequenceGenerator(
 	name = "app_version_seq_gen", //시퀀스 제너레이터 이름

@@ -52,10 +52,10 @@ public class Terms {
 	@Column
 	private String contents;
 
-	@Column
-	@Enumerated(value = EnumType.STRING)
+	@Column(length = 1)
+	@Enumerated(EnumType.STRING)
 	@Builder.Default
-	private UseYn useYn = UseYn.Y;
+	private UseYn useYn = UseYn.Y; // 사용 여부
 
 	/* =================================================================
    * Default columns

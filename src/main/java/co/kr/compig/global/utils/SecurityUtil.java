@@ -37,7 +37,7 @@ public class SecurityUtil {
 		}
 
 		if (memberId != null) {
-			return memberService.getMemberById(memberId);
+			return memberService.getMemberByIdSecurity(memberId);
 		}
 
 		return null;

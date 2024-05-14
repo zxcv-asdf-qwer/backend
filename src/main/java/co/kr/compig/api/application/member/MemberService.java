@@ -301,6 +301,11 @@ public class MemberService {
 	}
 
 	@Transactional(readOnly = true)
+	public Member getMemberByIdSecurity(String memberId) {
+		return memberRepository.findById(memberId).orElse(null);
+	}
+
+	@Transactional(readOnly = true)
 	public MemberResponse getMemberResponseByMemberId(String memberId) {
 		Member member = this.getMemberById(memberId);
 		if (!(member.getUserType() == UserType.SYS_ADMIN || member.getUserType() == UserType.SYS_USER)) {
