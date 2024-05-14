@@ -521,8 +521,9 @@ public class Member {
 	}
 
 	public void setLeaveMember(String leaveReason) {
-		this.userId = "DEL_".concat(this.userId);
-		this.email = this.email != null ? "DEL_".concat(this.email) : null;
+		String del = getRandomKey("del");
+		this.userId = del.concat(this.userId);
+		this.email = this.email != null ? del.concat(this.email) : null;
 		if (StringUtils.isNotEmpty(leaveReason)) {
 			this.leaveReason = leaveReason;
 		}
