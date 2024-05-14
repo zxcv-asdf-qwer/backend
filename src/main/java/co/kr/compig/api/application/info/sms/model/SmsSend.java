@@ -1,10 +1,11 @@
-package co.kr.compig.api.presentation.sms.model;
+package co.kr.compig.api.application.info.sms.model;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
 import co.kr.compig.api.domain.sms.Sms;
+import co.kr.compig.api.domain.sms.SmsTemplate;
 import co.kr.compig.global.utils.SecurityUtil;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -27,7 +28,7 @@ public class SmsSend {
 	@Builder.Default
 	private String refkey = getNow(); //비즈뿌리오에 보내는 unique 값
 	private LocalDateTime sendtime; //발송시간 미입력 즉시발송
-	private String authNumber; //인증 번호
+	private SmsTemplate smsTemplate;
 
 	private static String getNow() {
 		// 현재 날짜와 시간을 구합니다.
@@ -55,7 +56,7 @@ public class SmsSend {
 			.contents(this.contents)
 			.refkey(this.refkey)
 			.sendtime(this.sendtime)
-			.ref1(authNumber)
+			.smsTemplate(this.smsTemplate)
 			.build();
 	}
 }

@@ -6,9 +6,7 @@ import java.util.Set;
 import co.kr.compig.api.presentation.sms.request.SmsTemplateUpdateRequest;
 import co.kr.compig.api.presentation.sms.response.SmsTemplateResponse;
 import co.kr.compig.global.code.SmsTemplateType;
-import co.kr.compig.global.code.SmsType;
 import co.kr.compig.global.code.converter.SmsTemplateTypeConverter;
-import co.kr.compig.global.code.converter.SmsTypeConverter;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -45,16 +43,9 @@ public class SmsTemplate {
 	@Column(name = "sms_template_id")
 	private Long id;
 
-	@Column(length = 1, nullable = false)
-	@Convert(converter = SmsTypeConverter.class)
-	private SmsType smsType; //SMS 종류
-
 	@Column(length = 3, nullable = false)
 	@Convert(converter = SmsTemplateTypeConverter.class)
 	private SmsTemplateType smsTemplateType; //SMS 템플릿 코드
-
-	@Column(length = 25)
-	private String atTemplateCode; //알림톡 템플릿 코드
 
 	@Column(columnDefinition = "TEXT")
 	private String contents; //내용
@@ -77,11 +68,15 @@ public class SmsTemplate {
 
 	public SmsTemplateResponse toSmsTemplateDetailResponse() {
 		return SmsTemplateResponse.builder()
+			.smsTemplateId(this.id)
+			.smsTemplateType(this.smsTemplateType)
+			.contents(this.contents)
 			.build();
 	}
 
 	public void update(SmsTemplateUpdateRequest smsTemplateUpdateRequest) {
-
+		this.smsTemplateType = smsTemplateUpdateRequest.getSmsTemplateType();
+		this.contents = smsTemplateUpdateRequest.getContents();
 	}
 
   /*====================================================================

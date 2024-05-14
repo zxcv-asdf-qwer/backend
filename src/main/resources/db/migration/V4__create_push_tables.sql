@@ -31,22 +31,20 @@ comment on column device.member_id is 'member id';
 create sequence if not exists push_seq start with 1 increment by 1;
 create table if not exists push
 (
-    push_id    bigint       not null primary key,
-    title      varchar(255) not null,
-    message    varchar(500),
-    recipients json         not null,
-    send_time  timestamp(6),
-    member_id  varchar(255) not null,
-    created_by varchar(50),
-    created_on timestamp(6) default CURRENT_TIMESTAMP
+    push_id     bigint       not null primary key,
+    title       varchar(255) not null,
+    message     varchar(500),
+    recipients  json         not null,
+    send_time   timestamp(6),
+    device_uuid varchar(250) not null,
+    created_by  varchar(50),
+    created_on  timestamp(6) default CURRENT_TIMESTAMP
 );
 
-alter table if exists push
-    add constraint fk01_member foreign key (member_id) references member;
 comment on table push is '앱 버전 체크';
 comment on column push.push_id is 'ID';
 comment on column push.title is '메시지 제목';
 comment on column push.message is '메시지 본문';
 comment on column push.recipients is 'JSON 형태의 수신자 목록';
 comment on column push.send_time is '예약된 발송 시간|실제 발송 시간';
-comment on column push.member_id is 'member id';
+comment on column push.device_uuid is 'devic token';

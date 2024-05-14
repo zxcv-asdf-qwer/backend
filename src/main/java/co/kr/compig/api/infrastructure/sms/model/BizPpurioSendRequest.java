@@ -16,7 +16,7 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 @JsonInclude(Include.NON_NULL) //null 이면 포함시키지 않음
-public class SmsPayload { //sms만 발송
+public class BizPpurioSendRequest { //sms만 발송
 
 	private String account; //비즈뿌리오 계정
 	private String type; //메세지데이터

@@ -8,5 +8,6 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 public interface SmsRepository extends JpaRepository<Sms, String>,
 	QuerydslPredicateExecutor<Sms> {
 
-	Optional<Sms> findTopByReceiverPhoneNumberAndRef1OrderByIdDesc(String receiverPhoneNumber, String authenticationNumber);
+	Optional<Sms> findTopByReceiverPhoneNumberAndSmsTemplateOrderByIdDesc(String receiverPhoneNumber,
+		SmsTemplate smsTemplate);
 }

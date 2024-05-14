@@ -4,7 +4,7 @@ create table if not exists access_key
     access_key_id       bigint       not null,
     system_service_type varchar(255) not null,
     service_name        varchar(255) not null,
-    access_key          varchar(255),
+    access_key          text,
     expired             timestamp(6),
     created_by          varchar(50),
     created_on          timestamp(6) default CURRENT_TIMESTAMP,
@@ -540,7 +540,6 @@ create table if not exists sms
     refkey                varchar(255),
     sendtime              timestamp(6),
     sms_template_id       bigint,
-    ref1                  varchar(255),
     created_by            varchar(50),
     created_on            timestamp(6) default CURRENT_TIMESTAMP,
     updated_by            varchar(50),
@@ -555,16 +554,13 @@ comment on column sms.contents is '내용';
 comment on column sms.refkey is '비즈뿌리오에 보내는 unique 값';
 comment on column sms.sendtime is '발송시간';
 comment on column sms.sms_template_id is 'sms 템플릿 ID';
-comment on column sms.ref1 is '비고|인증 번호';
 
 create sequence if not exists sms_template_seq start with 1 increment by 1;
 create table if not exists sms_template
 (
-    sms_template_id   bigint      not null primary key,
-    sms_type          varchar(3)  not null,
-    sms_template_type varchar(3)  not null,
-    at_template_code  varchar(25) not null,
-    contents          text        not null,
+    sms_template_id   bigint     not null primary key,
+    sms_template_type varchar(3) not null,
+    contents          text       not null,
     created_by        varchar(50),
     created_on        timestamp(6) default CURRENT_TIMESTAMP,
     updated_by        varchar(50),
@@ -573,9 +569,7 @@ create table if not exists sms_template
 
 comment on table sms_template is 'sms 템플릿 테이블';
 comment on column sms_template.sms_template_id is 'ID';
-comment on column sms_template.sms_type is 'SMS 종류';
 comment on column sms_template.sms_template_type is 'SMS 템플릿 종류';
-comment on column sms_template.at_template_code is '알림톡 템플릿 코드';
 comment on column sms_template.contents is '내용';
 
 create sequence if not exists public.system_file_seq INCREMENT BY 1 START WITH 1;

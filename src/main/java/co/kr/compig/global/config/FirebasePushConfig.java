@@ -19,13 +19,9 @@ public class FirebasePushConfig {
 	private String partnerServiceKeyPath;
 	@Value("${api.fcm.care-partner.projectId}")
 	private String partnerProjectId;
-	@Value("${api.fcm.care-guardian.serviceKeyPath}")
-	private String guardianServiceKeyPath;
-	@Value("${api.fcm.care-guardian.projectId}")
-	private String guardianProjectId;
 
 	@Bean
-	public FirebaseMessaging firebaseMessagingPartner() throws IOException {
+	public FirebaseMessaging firebaseMessaging() throws IOException {
 		GoogleCredentials googleCredentials = GoogleCredentials
 			.fromStream(new ClassPathResource(partnerServiceKeyPath).getInputStream());
 		FirebaseOptions firebaseOptions = FirebaseOptions
@@ -36,15 +32,4 @@ public class FirebasePushConfig {
 		return FirebaseMessaging.getInstance(app);
 	}
 
-	@Bean
-	public FirebaseMessaging firebaseMessagingGuardian() throws IOException {
-		GoogleCredentials googleCredentials = GoogleCredentials
-			.fromStream(new ClassPathResource(guardianServiceKeyPath).getInputStream());
-		FirebaseOptions firebaseOptions = FirebaseOptions
-			.builder()
-			.setCredentials(googleCredentials)
-			.build();
-		FirebaseApp app = FirebaseApp.initializeApp(firebaseOptions, guardianProjectId);
-		return FirebaseMessaging.getInstance(app);
-	}
 }

@@ -30,6 +30,7 @@ import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.domain.patient.OrderPatient;
 import co.kr.compig.api.domain.patient.Patient;
 import co.kr.compig.api.domain.permission.MenuPermission;
+import co.kr.compig.api.domain.push.Device;
 import co.kr.compig.api.domain.review.Review;
 import co.kr.compig.api.domain.wallet.Wallet;
 import co.kr.compig.api.presentation.member.request.AdminMemberUpdate;
@@ -247,6 +248,10 @@ public class Member {
 	@JsonManagedReference //연관관계 주인 반대 Entity 에 선언, 정상적으로 직렬화 수행
 	private Set<Apply> applys = new HashSet<>();
 
+	@Builder.Default
+	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+	private Set<Device> devices = new HashSet<>();
+
 	/* =================================================================
 	 * Relation method
 	   ================================================================= */
@@ -283,6 +288,11 @@ public class Member {
 	public void addRoles(final MenuPermission menuPermission) {
 		this.menuPermissions.add(menuPermission);
 		menuPermission.setMember(this);
+	}
+
+	public void addDevices(final Device device) {
+		this.devices.add(device);
+		device.setMember(this);
 	}
 
 	public void setAccount(final Account account) {

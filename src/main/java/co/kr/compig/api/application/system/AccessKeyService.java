@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 import co.kr.compig.api.domain.system.AccessKey;
 import co.kr.compig.api.domain.system.AccessKeyRepository;
 import co.kr.compig.api.infrastructure.sms.BizPpurioApi;
+import co.kr.compig.api.infrastructure.sms.model.BizPpurioApiProperties;
 import co.kr.compig.api.infrastructure.sms.model.BizPpurioTokenResponse;
-import co.kr.compig.api.infrastructure.sms.model.SmsApiProperties;
 import co.kr.compig.global.code.SystemServiceType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ public class AccessKeyService {
 	private final AccessKeyRepository accessKeyRepository;
 	private final BizPpurioApi
 		bizPpurioApi;
-	private final SmsApiProperties smsApiProperties;
+	private final BizPpurioApiProperties bizPpurioApiProperties;
 
 	public String getSecretKey(SystemServiceType systemServiceType) {
 		if (systemServiceType == null) {
@@ -42,7 +42,8 @@ public class AccessKeyService {
 	private String generateSmsAccessKey() {
 		// String basicToken = generateBasicToken(smsApiProperties.getServiceId(),
 		// 	smsApiProperties.getServiceKey());
-		BizPpurioTokenResponse accessToken = bizPpurioApi.getAccessToken("Basic " + smsApiProperties.getBasicToken());
+		BizPpurioTokenResponse accessToken = bizPpurioApi.getAccessToken(
+			"Basic " + bizPpurioApiProperties.getBasicToken());
 		AccessKey save = accessKeyRepository.save(accessToken.of());
 		return save.getAccessKey();
 	}

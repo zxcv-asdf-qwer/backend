@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @ConfigurationProperties(prefix = "api.sms")
-public class SmsApiProperties {
+public class BizPpurioApiProperties {
 
 	private String url;
 	private String serviceId;

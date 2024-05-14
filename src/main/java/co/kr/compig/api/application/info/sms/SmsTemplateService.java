@@ -1,4 +1,4 @@
-package co.kr.compig.api.application.sms;
+package co.kr.compig.api.application.info.sms;
 
 import java.util.Optional;
 
@@ -26,15 +26,13 @@ public class SmsTemplateService {
 	private final SmsTemplateRepositoryCustom smsTemplateRepositoryCustom;
 
 	public SmsTemplate getBySmsTemplateType(SmsTemplateType smsTemplateType) {
-		Optional<SmsTemplate> bySmsTemplateType = smsTemplateRepository.findBySmsTemplateType(
+		Optional<SmsTemplate> bySmsTemplateType = smsTemplateRepository.findTopBySmsTemplateTypeOrderByIdDesc(
 			smsTemplateType);
-		return null;
+		return bySmsTemplateType.orElse(new SmsTemplate());
 	}
 
 	public Long create(SmsTemplateCreateRequest smsTemplateCreateRequest) {
 		SmsTemplate smsTemplate = smsTemplateCreateRequest.converterEntity();
-		smsTemplateRepository.save(smsTemplate);
-
 		return smsTemplateRepository.save(smsTemplate).getId();
 	}
 

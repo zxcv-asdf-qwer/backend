@@ -3,8 +3,10 @@ package co.kr.compig.api.application.member;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
 
 import org.keycloak.representations.idm.GroupRepresentation;
@@ -19,11 +21,14 @@ import org.springframework.web.multipart.MultipartFile;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import co.kr.compig.api.application.info.InfoService;
+import co.kr.compig.api.application.info.push.model.MessageDto;
+import co.kr.compig.api.application.info.push.model.NoticeCode;
+import co.kr.compig.api.application.info.sms.SmsService;
 import co.kr.compig.api.application.social.LoginServiceImpl;
 import co.kr.compig.api.application.social.SocialLoginService;
 import co.kr.compig.api.application.system.EncryptKeyService;
 import co.kr.compig.api.domain.account.Account;
-import co.kr.compig.api.domain.account.AccountRepository;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.member.MemberGroup;
 import co.kr.compig.api.domain.member.MemberGroupRepository;
@@ -62,6 +67,7 @@ import co.kr.compig.global.code.UserType;
 import co.kr.compig.global.crypt.AES256;
 import co.kr.compig.global.error.exception.BizException;
 import co.kr.compig.global.error.exception.NotExistDataException;
+import co.kr.compig.global.error.model.ErrorCode;
 import co.kr.compig.global.keycloak.KeycloakHandler;
 import co.kr.compig.global.keycloak.KeycloakHolder;
 import co.kr.compig.global.keycloak.KeycloakProperties;
@@ -87,8 +93,9 @@ public class MemberService {
 	private final KeycloakAuthApi keycloakAuthApi;
 	private final KeycloakProperties keycloakProperties;
 	private final EncryptKeyService encryptKeyService;
-	private final AccountRepository accountRepository;
 	private final EncryptKeyRepository encryptKeyRepository;
+	private final SmsService smsService;
+	private final InfoService infoService;
 
 	public String adminCreate(AdminMemberCreate adminMemberCreate) {
 		Member member = adminMemberCreate.convertEntity();
@@ -418,4 +425,30 @@ public class MemberService {
 		memberById.juminUpdate(jumin1, jumin2);
 	}
 
+	public void sendSmsAuthentication(String receiverPhoneNumber) {
+		String authenticationNumber = String.valueOf(ThreadLocalRandom.current().nextInt(100000, 1000000));
+
+		try {
+			NoticeCode noticeCode = NoticeCode.PHONE_VERIFICATION;
+			Map<String, Object> data = Map.of("verificationCode", authenticationNumber);
+			MessageDto messageDto = MessageDto.builder()
+				.noticeCode(noticeCode)
+				.email(receiverPhoneNumber)
+				.phoneNumber(receiverPhoneNumber)
+				.data(data)
+				.build();
+
+			infoService.send(messageDto);
+		} catch (Exception e) {
+			throw new BizException(ErrorCode.ERROR, "메세지 전송 중 에러가 발생하였습니다.");
+		}
+	}
+
+	public void getAuthentication(String receiverPhoneNumber, String authenticationNumber) {
+		if (receiverPhoneNumber.isEmpty() || authenticationNumber.isEmpty()) {
+			throw new BizException("인증 실패");
+		}
+		NoticeCode noticeCode = NoticeCode.PHONE_VERIFICATION;
+		smsService.getAuthenticationTopByReceiverPhoneNumber(receiverPhoneNumber, authenticationNumber, noticeCode);
+	}
 }

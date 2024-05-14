@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import co.kr.compig.api.application.sms.SmsTemplateService;
+import co.kr.compig.api.application.info.sms.SmsTemplateService;
 import co.kr.compig.api.presentation.sms.request.SmsTemplateCreateRequest;
 import co.kr.compig.api.presentation.sms.request.SmsTemplateSearchRequest;
 import co.kr.compig.api.presentation.sms.request.SmsTemplateUpdateRequest;
@@ -59,7 +59,8 @@ public class AdminSmsTemplateController {
 
 	@Operation(summary = "조회")
 	@GetMapping
-	public ResponseEntity<PageResponse> getPage(@ParameterObject @ModelAttribute SmsTemplateSearchRequest smsTemplateSearchRequest) {
+	public ResponseEntity<PageResponse> getPage(
+		@ParameterObject @ModelAttribute SmsTemplateSearchRequest smsTemplateSearchRequest) {
 		Page<SmsTemplateResponse> page = smsTemplateService.getPage(smsTemplateSearchRequest);
 		return PageResponse.ok(page.stream().toList(), page.getPageable().getOffset(), page.getTotalElements());
 

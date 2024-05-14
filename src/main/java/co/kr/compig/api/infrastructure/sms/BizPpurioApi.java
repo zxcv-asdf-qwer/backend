@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
+import co.kr.compig.api.infrastructure.sms.model.BizPpurioSendRequest;
 import co.kr.compig.api.infrastructure.sms.model.BizPpurioSendResponse;
 import co.kr.compig.api.infrastructure.sms.model.BizPpurioTokenResponse;
-import co.kr.compig.api.infrastructure.sms.model.SmsPayload;
 
 @FeignClient(value = "BizPpurioApi", url = "https://api.bizppurio.com")
 public interface BizPpurioApi {
@@ -20,5 +20,5 @@ public interface BizPpurioApi {
 
 	@PostMapping(value = "/v3/message", consumes = MediaType.APPLICATION_JSON_VALUE + ";charset=utf-8")
 	BizPpurioSendResponse sendSms(@RequestHeader("Authorization") String bearerToken,
-		@RequestBody SmsPayload smsPayload);
+		@RequestBody BizPpurioSendRequest bizPpurioSendRequest);
 }

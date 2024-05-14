@@ -10,5 +10,5 @@ import co.kr.compig.global.code.SmsTemplateType;
 public interface SmsTemplateRepository extends JpaRepository<SmsTemplate, Long>,
 	QuerydslPredicateExecutor<SmsTemplate> {
 
-	Optional<SmsTemplate> findBySmsTemplateType(SmsTemplateType smsTemplateType);
+	Optional<SmsTemplate> findTopBySmsTemplateTypeOrderByIdDesc(SmsTemplateType smsTemplateType);
 }
