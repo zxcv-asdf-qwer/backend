@@ -452,15 +452,10 @@ public class Member {
 			.careerCode(this.careerCode)
 			.careStartYear(this.careStartYear)
 			.introduce(this.introduce)
-			.marketingEmail(
-				this.marketingEmailDate != null && this.marketingEmailDate.isBefore(LocalDate.now()))
-			.marketingAppPush(
-				this.marketingAppPushDate != null && this.marketingAppPushDate.isBefore(
-					LocalDate.now()))
-			.marketingKakao(
-				this.marketingKakaoDate != null && this.marketingKakaoDate.isBefore(LocalDate.now()))
-			.marketingSms(
-				this.marketingSmsDate != null && this.marketingSmsDate.isBefore(LocalDate.now()))
+			.marketingEmail(this.marketingEmailDate != null)
+			.marketingAppPush(this.marketingAppPushDate != null)
+			.marketingKakao(this.marketingKakaoDate != null)
+			.marketingSms(this.marketingSmsDate != null)
 			.realNameYn(this.realNameYn)
 			.recentLoginDate(this.recentLoginDate)
 			.ipAddress(this.ipAddress)
@@ -496,18 +491,10 @@ public class Member {
 			.introduce(this.introduce)
 			.diseaseNms(this.diseaseNms)
 			.selfToiletAvailabilities(this.selfToiletAvailabilities)
-			.marketingEmail(
-				this.marketingEmailDate != null && (this.marketingEmailDate.isEqual(LocalDate.now())
-					|| this.marketingEmailDate.isBefore(LocalDate.now())))
-			.marketingAppPush(
-				this.marketingAppPushDate != null && (this.marketingAppPushDate.isEqual(LocalDate.now())
-					|| this.marketingAppPushDate.isBefore(LocalDate.now())))
-			.marketingKakao(
-				this.marketingKakaoDate != null && (this.marketingKakaoDate.isEqual(LocalDate.now())
-					|| this.marketingKakaoDate.isBefore(LocalDate.now())))
-			.marketingSms(
-				this.marketingSmsDate != null && (this.marketingSmsDate.isEqual(LocalDate.now())
-					|| this.marketingSmsDate.isBefore(LocalDate.now())))
+			.marketingEmail(this.marketingEmailDate != null)
+			.marketingAppPush(this.marketingAppPushDate != null)
+			.marketingKakao(this.marketingKakaoDate != null)
+			.marketingSms(this.marketingSmsDate != null)
 			.build();
 		partnerMemberResponse.setGroups(
 			this.groups.stream().map(MemberGroup::converterDto).collect(Collectors.toSet()));
@@ -524,18 +511,10 @@ public class Member {
 			.memberRegisterType(this.memberRegisterType)
 			.memberType(this.memberType)
 			.registerDate(this.createdAndModified.getCreatedOn().toLocalDate())
-			.marketingEmail(
-				this.marketingEmailDate != null && (this.marketingEmailDate.isEqual(LocalDate.now())
-					|| this.marketingEmailDate.isBefore(LocalDate.now())))
-			.marketingAppPush(
-				this.marketingAppPushDate != null && (this.marketingAppPushDate.isEqual(LocalDate.now())
-					|| this.marketingAppPushDate.isBefore(LocalDate.now())))
-			.marketingKakao(
-				this.marketingKakaoDate != null && (this.marketingKakaoDate.isEqual(LocalDate.now())
-					|| this.marketingKakaoDate.isBefore(LocalDate.now())))
-			.marketingSms(
-				this.marketingSmsDate != null && (this.marketingSmsDate.isEqual(LocalDate.now())
-					|| this.marketingSmsDate.isBefore(LocalDate.now())))
+			.marketingEmail(this.marketingEmailDate != null)
+			.marketingAppPush(this.marketingAppPushDate != null)
+			.marketingKakao(this.marketingKakaoDate != null)
+			.marketingSms(this.marketingSmsDate != null)
 			.build();
 		build.setCreatedAndUpdated(this.createdAndModified);
 		return build;
