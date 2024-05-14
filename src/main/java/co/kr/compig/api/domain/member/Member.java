@@ -521,6 +521,15 @@ public class Member {
 			.memberRegisterType(this.memberRegisterType)
 			.memberType(this.memberType)
 			.registerDate(this.createdAndModified.getCreatedOn().toLocalDate())
+			.marketingEmail(
+				this.marketingEmailDate != null && this.marketingEmailDate.isBefore(LocalDate.now()))
+			.marketingAppPush(
+				this.marketingAppPushDate != null && this.marketingAppPushDate.isBefore(
+					LocalDate.now()))
+			.marketingKakao(
+				this.marketingKakaoDate != null && this.marketingKakaoDate.isBefore(LocalDate.now()))
+			.marketingSms(
+				this.marketingSmsDate != null && this.marketingSmsDate.isBefore(LocalDate.now()))
 			.build();
 		build.setCreatedAndUpdated(this.createdAndModified);
 		return build;
