@@ -3,6 +3,7 @@ package co.kr.compig.api.presentation.order.response;
 import java.time.LocalDateTime;
 
 import co.kr.compig.global.code.LocationType;
+import co.kr.compig.global.code.MemberType;
 import co.kr.compig.global.code.OrderStatus;
 import co.kr.compig.global.code.PeriodType;
 import co.kr.compig.global.dto.BaseAudit;
@@ -51,4 +52,6 @@ public class CareOrderPageResponse extends BaseAudit {
 	private Integer applyCount; //지원자 수
 	@Parameter(description = "메모 수")
 	private Integer memoCount; //메모 수
+	@Parameter(description = "회원 비회원")
+	private MemberType memberType; //회원 비회원
 }

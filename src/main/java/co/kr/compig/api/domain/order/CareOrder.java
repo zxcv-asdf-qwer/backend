@@ -281,8 +281,8 @@ public class CareOrder {
 			.userNm(this.member.getUserNm())
 			.telNo(this.member.getTelNo())
 			.locationType(this.orderPatient.getLocationType())
-			.address1(this.member.getAddress1())
-			.address2(this.member.getAddress2())
+			.address1(this.orderPatient.getAddress1())
+			.address2(this.orderPatient.getAddress2())
 			.hospitalNm(this.orderPatient.getHospitalName())
 			.startDateTime(this.startDateTime)
 			.endDateTime(this.endDateTime)
@@ -296,6 +296,7 @@ public class CareOrder {
 				.orElse(null))
 			.applyCount(this.applys.size())
 			.memoCount(this.memos.size())
+			.memberType(this.member.getMemberType())
 			.build();
 		build.setCreatedAndUpdated(this.createdAndModified);
 		return build;
