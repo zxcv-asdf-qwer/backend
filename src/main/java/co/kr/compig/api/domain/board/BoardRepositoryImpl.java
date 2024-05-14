@@ -111,7 +111,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
 		applySorting(query, pageable);
 
 		List<Board> boards = query
-			.where(cursorCursorId(Long.valueOf(request.getCursorId())))
+			.where(cursorCursorId(request.getCursorId()))
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize() + 1)
 			.fetch();
@@ -128,9 +128,9 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
 		return new SliceImpl<>(responses, pageable, hasNext);
 	}
 
-	private BooleanExpression cursorCursorId(Long cursorId) {
+	private BooleanExpression cursorCursorId(String cursorId) {
 		if (cursorId == null)
 			return null;
-		return board.id.lt(cursorId);
+		return board.id.lt(Long.parseLong(cursorId));
 	}
 }
