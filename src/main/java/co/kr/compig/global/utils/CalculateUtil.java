@@ -3,7 +3,6 @@ package co.kr.compig.global.utils;
 import static co.kr.compig.global.code.PeriodType.*;
 
 import java.time.LocalDate;
-import java.time.Period;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -11,27 +10,45 @@ import co.kr.compig.api.presentation.order.request.CareOrderCalculateRequest;
 import co.kr.compig.global.error.exception.BizException;
 
 public class CalculateUtil {
-	public static int calculateAgeFromJumin(String jumin) {
-		if (StringUtils.isEmpty(jumin)) {
+	public static int calculateAgeFromJumin(String jumin1, String jumin2) {
+		if (StringUtils.isEmpty(jumin1)) {
 			return 0;
 		}
-		// 주민등록번호에서 생년월일 추출
-		String birthYearStr = jumin.substring(0, 2); // 생년(YY)
-		String birthMonthStr = jumin.substring(2, 4); // 생월
-		String birthDayStr = jumin.substring(4, 6); // 생일
 
-		// 현재 년도 가져오기
-		int currentYear = LocalDate.now().getYear();
+		// 주민등록번호를 통해 입력 받은 날짜
+		int year = Integer.parseInt(jumin1.substring(0, 2));
+		int month = Integer.parseInt(jumin1.substring(2, 4));
+		int day = Integer.parseInt(jumin1.substring(4, 6));
 
-		// 생년월일을 현재 년도 기준으로 만 나이로 계산
-		int birthYear = Integer.parseInt(birthYearStr);
-		int birthMonth = Integer.parseInt(birthMonthStr);
-		int birthDay = Integer.parseInt(birthDayStr);
+		// 오늘 날짜
+		LocalDate today = LocalDate.now();
+		int todayYear = today.getYear();
+		int todayMonth = today.getMonthValue();
+		int todayDay = today.getDayOfMonth();
 
-		LocalDate birthDate = LocalDate.of(currentYear - 100 + birthYear, birthMonth, birthDay);
+		// 주민등록번호 뒷자리로 몇년대인지
+		String gender = jumin2.substring(0, 1);
+		if (gender.equals("1") || gender.equals("2")) {
+			year += 1900;
+		} else if (gender.equals("3") || gender.equals("4")) {
+			year += 2000;
+		} else if (gender.equals("0") || gender.equals("9")) {
+			year += 1800;
+		}
 
-		Period age = Period.between(birthDate, LocalDate.now());
-		return age.getYears();
+		// 올해 - 태어난년도
+		int americanAge = todayYear - year;
+
+		// 생일이 안지났으면 - 1
+		if (month > todayMonth) {
+			americanAge--;
+		} else if (month == todayMonth) {
+			if (day > todayDay) {
+				americanAge--;
+			}
+		}
+
+		return americanAge;
 	}
 
 	public static Integer calculateYearsFromStartYear(Integer startYear) {

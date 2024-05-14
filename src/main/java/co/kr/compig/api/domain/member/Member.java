@@ -477,10 +477,10 @@ public class Member {
 			.memberId(this.id)
 			.userNm(this.userNm)
 			.telNo(this.telNo)
-			.age(calculateAgeFromJumin(this.jumin1))
+			.age(calculateAgeFromJumin(this.jumin1, this.jumin2))
 			.email(this.email)
 			.memberRegisterType(this.memberRegisterType)
-			.gender(getGenderDescription())
+			.gender(this.gender)
 			.registerDate(this.createdAndModified.getCreatedOn().toLocalDate())
 			.picture(this.picture)
 			.careStartYear(this.careStartYear)
@@ -626,10 +626,10 @@ public class Member {
 		if (StringUtils.isNotEmpty(partnerMemberUpdate.getJumin2())) {
 			this.jumin2 = partnerMemberUpdate.getJumin2();
 		}
-		if (CollectionUtils.isEmpty(partnerMemberUpdate.getDiseaseNms())) {
+		if (CollectionUtils.isNotEmpty(partnerMemberUpdate.getDiseaseNms())) {
 			this.diseaseNms = partnerMemberUpdate.getDiseaseNms();
 		}
-		if (CollectionUtils.isEmpty(partnerMemberUpdate.getSelfToiletAvailabilities())) {
+		if (CollectionUtils.isNotEmpty(partnerMemberUpdate.getSelfToiletAvailabilities())) {
 			this.selfToiletAvailabilities = partnerMemberUpdate.getSelfToiletAvailabilities();
 		}
 

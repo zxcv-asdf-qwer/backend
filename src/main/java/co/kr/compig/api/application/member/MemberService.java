@@ -336,7 +336,7 @@ public class MemberService {
 			}
 
 		}
-		return member.toPartnerMemberResponse();
+		return partnerMemberResponse;
 	}
 
 	@Transactional(readOnly = true)

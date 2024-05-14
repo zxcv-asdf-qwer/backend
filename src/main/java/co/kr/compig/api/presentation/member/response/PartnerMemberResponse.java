@@ -8,6 +8,7 @@ import co.kr.compig.api.presentation.account.response.AccountDetailResponse;
 import co.kr.compig.api.presentation.member.model.GroupDto;
 import co.kr.compig.global.code.DiseaseCode;
 import co.kr.compig.global.code.DomesticForeignCode;
+import co.kr.compig.global.code.GenderCode;
 import co.kr.compig.global.code.MemberRegisterType;
 import co.kr.compig.global.code.ToiletType;
 import co.kr.compig.global.dto.BaseAudit;
@@ -37,7 +38,7 @@ public class PartnerMemberResponse extends BaseAudit {
 	@Parameter(description = "회원가입 유형")
 	private MemberRegisterType memberRegisterType; //회원가입 유형
 	@Parameter(description = "성별")
-	private String gender; //성별
+	private GenderCode gender; //성별
 	@Parameter(description = "가입일자")
 	private LocalDate registerDate; //가입일자
 	@Parameter(description = "s3 path")
