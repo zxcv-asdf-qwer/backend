@@ -62,7 +62,7 @@ public class QuestionRepositoryImpl implements QuestionRepositoryCustom {
 		JPAQuery<Question> query = createBaseQuery(predicate)
 			.select(question)
 			.where(question.createdAndModified.createdBy.id.eq(SecurityUtil.getMemberId()))
-			.where(cursorCursorId(Long.valueOf(questionSearchRequest.getCursorId())));
+			.where(cursorCursorId(questionSearchRequest.getCursorId()));
 
 		applySorting(query, pageable);
 
@@ -104,9 +104,9 @@ public class QuestionRepositoryImpl implements QuestionRepositoryCustom {
 		}
 	}
 
-	private BooleanExpression cursorCursorId(Long cursorId) {
+	private BooleanExpression cursorCursorId(String cursorId) {
 		if (cursorId == null)
 			return null;
-		return question.id.lt(cursorId);
+		return question.id.lt(Long.parseLong(cursorId));
 	}
 }
