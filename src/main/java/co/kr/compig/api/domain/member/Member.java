@@ -644,18 +644,17 @@ public class Member {
 	}
 
 	public void updateGuardianMember(GuardianMemberUpdate guardianMemberUpdate) {
-		// TODO 삭제
-		// if (isUpdateUserPw(guardianMemberUpdate.getNewUserPw(), guardianMemberUpdate.getChkUserPw())) { // 비밀번호 변경의사 있음
-		// 	if (!isUpdatableUserPw(guardianMemberUpdate.getNewUserPw(),
-		// 		guardianMemberUpdate.getChkUserPw())) { // 모든 비밀번호 영역 값 입력 확인
-		// 		throw new BizException("모든 비밀번호를 입력해주세요.");
-		// 	}
-		// 	if (!isEqualsNewUserPw(guardianMemberUpdate.getNewUserPw(),
-		// 		guardianMemberUpdate.getChkUserPw())) { // 새 비밀번호와 확인의 동일 확인
-		// 		throw new BizException("새 비밀번호와 비밀번호 확인의 내용이 다릅니다.");
-		// 	}
-		// 	this.userPw = guardianMemberUpdate.getNewUserPw();
-		// }
+		if (isUpdateUserPw(guardianMemberUpdate.getNewUserPw(), guardianMemberUpdate.getChkUserPw())) { // 비밀번호 변경의사 있음
+			if (!isUpdatableUserPw(guardianMemberUpdate.getNewUserPw(),
+				guardianMemberUpdate.getChkUserPw())) { // 모든 비밀번호 영역 값 입력 확인
+				throw new BizException("모든 비밀번호를 입력해주세요.");
+			}
+			if (!isEqualsNewUserPw(guardianMemberUpdate.getNewUserPw(),
+				guardianMemberUpdate.getChkUserPw())) { // 새 비밀번호와 확인의 동일 확인
+				throw new BizException("새 비밀번호와 비밀번호 확인의 내용이 다릅니다.");
+			}
+			this.userPw = guardianMemberUpdate.getNewUserPw();
+		}
 
 		this.userNm = guardianMemberUpdate.getUserNm();
 		this.telNo = guardianMemberUpdate.getTelNo();
