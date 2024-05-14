@@ -153,7 +153,7 @@ create table if not exists care_order
     care_order_process_type varchar(15),
     member_id               varchar(255),
     order_request           TEXT,
-    order_status            varchar(15)  default 'MATCHING_WAITING',
+    order_status            varchar(15)  default 'MATWAI',
     order_type              varchar(10)  default 'GENERAL',
     publish_yn              varchar(255),
     title                   varchar(255),
