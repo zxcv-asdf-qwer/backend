@@ -3,6 +3,7 @@ package co.kr.compig.global.utils;
 import static co.kr.compig.global.code.PeriodType.*;
 
 import java.time.LocalDate;
+import java.util.Calendar;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -49,6 +50,34 @@ public class CalculateUtil {
 		}
 
 		return americanAge;
+	}
+
+	public static int calculateAgeFromBirth(String birthDay) {
+		if (StringUtils.isEmpty(birthDay)) {
+			return 0;
+		}
+		// 년,월,일 자르기
+		int birth_year = Integer.parseInt(StringUtils.substring(birthDay, 0, 2));
+		int birth_month = Integer.parseInt(StringUtils.substring(birthDay, 2, 4));
+		int birth_day = Integer.parseInt(StringUtils.substring(birthDay, 4, 6));
+		Calendar current = Calendar.getInstance();
+		// 9로 시작할 경우 1900년대, 그 외의 경우 2000년대로 변경
+		if (birth_year < 10) {
+			birth_year += 2000;
+		} else {
+			birth_year += 1900;
+		}
+
+		// 현재년, 월, 일 get
+		int current_year = current.get(Calendar.YEAR);
+		int current_month = current.get(Calendar.MONTH) + 1;
+		int current_day = current.get(Calendar.DAY_OF_MONTH);
+		int age = current_year - birth_year;
+		// 만나이
+		if (birth_month * 100 + birth_day > current_month * 100 + current_day) {
+			age--;
+		}
+		return age;
 	}
 
 	public static Integer calculateYearsFromStartYear(Integer startYear) {
