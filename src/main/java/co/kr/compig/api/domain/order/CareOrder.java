@@ -10,8 +10,6 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -80,15 +78,12 @@ public class CareOrder {
 	private Long id;
 
 	@Column
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
 	private LocalDateTime startDateTime; // 시작 날짜
 
 	@Column
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
 	private LocalDateTime endDateTime; // 종료 날짜
 
 	@Column
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
 	private LocalDateTime realEndDateTime; //진짜 종료 날짜
 
 	@Column(length = 15)
@@ -110,7 +105,7 @@ public class CareOrder {
 	@Column(columnDefinition = "TEXT")
 	private String orderRequest; // 요청사항
 
-	@Column
+	@Column(length = 15)
 	@Convert(converter = CareOrderProcessTypeConverter.class)
 	private CareOrderProcessType careOrderProcessType; // 매칭 구분
 

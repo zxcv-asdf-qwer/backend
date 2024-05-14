@@ -48,8 +48,6 @@ public class CommonExceptionHandler {
 		log.error(e.getMessage(), e);
 		getSimpleExceptionMsg(e);
 
-		this.doSendSlackError(e);
-
 		return new ResponseEntity<>(ErrorResponse.of(e, er), e.getErrorCode().getHttpStatus());
 	}
 

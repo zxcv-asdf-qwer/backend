@@ -2,8 +2,6 @@ package co.kr.compig.api.presentation.order.request;
 
 import java.time.LocalDateTime;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import co.kr.compig.global.code.PeriodType;
 import co.kr.compig.global.validator.annotaion.Conditional;
 import jakarta.validation.constraints.NotNull;
@@ -20,11 +18,9 @@ import lombok.NoArgsConstructor;
 public class CareOrderCalculateRequest {
 
 	@NotNull
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH")
 	private LocalDateTime startDateTime; // 시작 날짜
 
 	@NotNull
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH")
 	private LocalDateTime endDateTime; // 종료 날짜
 
 	@NotNull

@@ -150,7 +150,7 @@ create table if not exists care_order
     real_end_date_time      timestamp(6),
     order_patient_id        bigint not null,
     start_date_time         timestamp(6),
-    care_order_process_type varchar(255),
+    care_order_process_type varchar(15),
     member_id               varchar(255),
     order_request           TEXT,
     order_status            varchar(15)  default 'MATCHING_WAITING',

@@ -2,8 +2,6 @@ package co.kr.compig.api.presentation.order.request;
 
 import java.time.LocalDateTime;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.domain.packing.Facking;
@@ -43,11 +41,9 @@ public class FamilyCareOrderCreateRequest {
 	private String address2; // 간병 장소 상세 주소
 
 	@NotNull
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH")
 	private LocalDateTime startDateTime; // 시작 날짜
 
 	@NotNull
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH")
 	private LocalDateTime endDateTime; // 종료 날짜
 
 	@NotBlank

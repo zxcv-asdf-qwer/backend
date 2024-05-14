@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.presentation.payment.response.PaymentDetailResponse;
 import co.kr.compig.global.code.PaymentType;
@@ -76,7 +74,6 @@ public class Payment {
 	private String buyerEmail; // 결제자 이메일 주소
 
 	@Column
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
 	private LocalDateTime payExpDate; //SMS 결제 마감기한
 
 	@Column

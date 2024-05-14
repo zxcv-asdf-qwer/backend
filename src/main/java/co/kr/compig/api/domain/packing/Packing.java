@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -59,11 +57,9 @@ public class Packing {
 	private Long id;
 
 	@Column
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
 	private LocalDateTime startDateTime; // 시작 날짜
 
 	@Column
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
 	private LocalDateTime endDateTime; // 종료 날짜
 
 	@Column(nullable = false)

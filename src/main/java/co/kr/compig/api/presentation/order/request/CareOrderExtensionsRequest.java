@@ -2,8 +2,6 @@ package co.kr.compig.api.presentation.order.request;
 
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import co.kr.compig.global.code.PeriodType;
 import co.kr.compig.global.validator.annotaion.Conditional;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -20,10 +18,8 @@ import lombok.NoArgsConstructor;
 @Conditional(selected = "periodType", values = {"PART_TIME"}, required = {"partTime"})
 public class CareOrderExtensionsRequest {
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
 	private LocalDateTime startDateTime; // 시작 날짜
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
 	private LocalDateTime endDateTime; // 종료 날짜
 
 	@NotNull

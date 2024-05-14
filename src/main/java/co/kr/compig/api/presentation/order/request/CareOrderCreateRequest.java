@@ -2,8 +2,6 @@ package co.kr.compig.api.presentation.order.request;
 
 import java.time.LocalDateTime;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.domain.packing.Packing;
@@ -29,13 +27,11 @@ import lombok.NoArgsConstructor;
 public class CareOrderCreateRequest {
 
 	@NotNull
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH")
-	@Schema(description = "시작 날짜", example = "2024-05-03 15:44:10")
+	@Parameter(description = "시작 날짜", example = "2024-05-03 15:44:10")
 	private LocalDateTime startDateTime; // 시작 날짜
 
 	@NotNull
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH")
-	@Schema(description = "종료 날짜", example = "2024-05-05 15:44:10")
+	@Parameter(description = "시작 날짜", example = "2024-05-03 15:44:10")
 	private LocalDateTime endDateTime; // 종료 날짜
 
 	@Schema(description = "제목", example = "제목")
