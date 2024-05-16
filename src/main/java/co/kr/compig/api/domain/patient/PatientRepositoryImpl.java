@@ -40,7 +40,7 @@ public class PatientRepositoryImpl implements PatientRepositoryCustom {
 		applySorting(query, pageable);
 
 		List<PatientResponse> patients = query
-			.where(cursorCursorId(Long.valueOf(patientSearchRequest.getCursorId())))
+			.where(cursorCursorId(patientSearchRequest.getCursorId()))
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize() + 1)
 			.fetch();
@@ -78,9 +78,9 @@ public class PatientRepositoryImpl implements PatientRepositoryCustom {
 		}
 	}
 
-	private BooleanExpression cursorCursorId(Long cursorId) {
+	private BooleanExpression cursorCursorId(String cursorId) {
 		if (cursorId == null)
 			return null;
-		return patient.id.lt(cursorId);
+		return patient.id.lt(Long.parseLong(cursorId));
 	}
 }
