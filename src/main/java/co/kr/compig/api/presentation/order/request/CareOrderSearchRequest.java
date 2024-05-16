@@ -14,6 +14,8 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public class CareOrderSearchRequest extends PageableRequest {
 
+	private String guardianMemberId; // 보호자 id
+	private String partnerMemberId; // 간병인 id
 	private IsYn publishYn; // 신규 여부
 	@Parameter(description = "MATCHING_WAITING(매칭대기), MATCHING_COMPLETE(매칭완료), ORDER_CANCEL(매칭취소), ORDER_COMPLETE(간병완료)")
 	private OrderStatus orderStatus; // 공고 상태

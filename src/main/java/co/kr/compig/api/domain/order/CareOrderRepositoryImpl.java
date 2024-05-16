@@ -1,6 +1,5 @@
 package co.kr.compig.api.domain.order;
 
-import static co.kr.compig.api.domain.board.QBoard.*;
 import static co.kr.compig.api.domain.member.QMember.*;
 import static co.kr.compig.api.domain.order.QCareOrder.*;
 
@@ -71,7 +70,7 @@ public class CareOrderRepositoryImpl implements CareOrderRepositoryCustom {
 		applySorting(query, pageable);
 
 		List<CareOrderResponse> careOrders = query.where(
-				cursorCursorId(Long.valueOf(careOrderSearchRequest.getCursorId())))
+				cursorCursorId(careOrderSearchRequest.getCursorId()))
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize() + 1) // 페이징 + 다음 페이지 존재 여부 확인을 위해 +1
 			.fetch();
@@ -84,16 +83,22 @@ public class CareOrderRepositoryImpl implements CareOrderRepositoryCustom {
 		return new SliceImpl<>(careOrders, pageable, hasNext);
 	}
 
-	private BooleanExpression cursorCursorId(Long cursorId) {
+	private BooleanExpression cursorCursorId(String cursorId) {
 		if (cursorId == null)
 			return null;
-		return board.id.lt(cursorId);
+		return careOrder.id.lt(Long.parseLong(cursorId));
 	}
 
 	private BooleanExpression createPredicate(CareOrderSearchRequest request) {
 		BooleanExpression predicate = Expressions.asBoolean(true).isTrue();
 		if (request == null) {
 			return predicate;
+		}
+		if (request.getGuardianMemberId() != null) {
+			predicate = predicate.and(careOrder.member.id.eq(request.getGuardianMemberId()));
+		}
+		if (request.getPartnerMemberId() != null) {
+			predicate = predicate.and(careOrder.applys.any().member.id.eq(request.getPartnerMemberId()));
 		}
 		if (request.getPublishYn() != null) {
 			predicate = predicate.and(careOrder.publishYn.eq(request.getPublishYn()));
