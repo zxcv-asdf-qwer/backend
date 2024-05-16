@@ -33,7 +33,7 @@ public class GuardianMemberController {
 	private final MemberService memberService;
 
 	@Operation(summary = "보호자 memberId 수정")
-	@PutMapping("/guardians/{memberId}")
+	@PutMapping("/{memberId}")
 	public ResponseEntity<Response<?>> updateGuardianById(@PathVariable String memberId,
 		@RequestBody @Valid GuardianMemberUpdate guardianMemberUpdate) {
 		return ResponseEntity.ok().body(Response.<Map<String, String>>builder()
