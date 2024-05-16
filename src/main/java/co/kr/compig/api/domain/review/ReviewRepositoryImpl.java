@@ -21,7 +21,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import co.kr.compig.api.presentation.review.request.ReviewSearchRequest;
 import co.kr.compig.api.presentation.review.response.ReviewResponse;
-import co.kr.compig.global.utils.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -55,35 +54,11 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
 		return new SliceImpl<>(responses, pageable, hasNext);
 	}
 
-	@Override
-	public Slice<ReviewResponse> findAllByMemberId(ReviewSearchRequest reviewSearchRequest, Pageable pageable) {
-		BooleanExpression predicate = createPredicate(reviewSearchRequest);
-		JPAQuery<Review> query = createBaseQuery(predicate)
-			.select(review)
-			.where(review.member.id.eq(SecurityUtil.getMemberId()));
-
-		applySorting(query, pageable);
-
-		List<Review> reviews = query.where(
-				cursorCursorId(Long.valueOf(reviewSearchRequest.getCursorId())))
-			.offset(pageable.getOffset())
-			.limit(pageable.getPageSize() + 1)
-			.fetch();
-
-		List<ReviewResponse> responses = reviews.stream()
-			.map(Review::toReview)
-			.collect(Collectors.toList());
-
-		boolean hasNext = false;
-		if (reviews.size() > pageable.getPageSize()) {
-			reviews.remove(pageable.getPageSize());
-			hasNext = true;
-		}
-		return new SliceImpl<>(responses, pageable, hasNext);
-	}
-
 	private BooleanExpression createPredicate(ReviewSearchRequest request) {
 		BooleanExpression predicate = Expressions.asBoolean(true).isTrue();
+		if (request.getPartnerMemberId() != null) {
+			predicate = predicate.and(review.member.id.eq(request.getPartnerMemberId()));
+		}
 		if (request.getOrderId() != null) {
 			predicate = predicate.and(review.careOrder.id.eq(request.getOrderId()));
 		}

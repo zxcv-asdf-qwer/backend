@@ -11,5 +11,4 @@ import co.kr.compig.api.presentation.review.response.ReviewResponse;
 public interface ReviewRepositoryCustom {
 	Slice<ReviewResponse> findAllByCondition(ReviewSearchRequest reviewSearchRequest, Pageable pageable);
 
-	Slice<ReviewResponse> findAllByMemberId(ReviewSearchRequest reviewSearchRequest, Pageable pageable);
 }

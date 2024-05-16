@@ -38,7 +38,7 @@ public class PartnerReviewController {
 		@ParameterObject @ModelAttribute @Valid ReviewSearchRequest reviewSearchRequest,
 		Pageable pageable
 	) {
-		return ResponseEntity.ok(reviewService.pageListReviewCursorByMemberId(reviewSearchRequest, pageable));
+		return ResponseEntity.ok(reviewService.pageListReviewCursor(reviewSearchRequest, pageable));
 	}
 
 	@Operation(summary = "상세 조회")

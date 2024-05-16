@@ -9,5 +9,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @AllArgsConstructor
 public class ReviewSearchRequest extends PageableRequest {
+
+	private String partnerMemberId;
 	private Long orderId;
 }
