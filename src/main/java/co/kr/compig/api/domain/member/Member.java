@@ -480,6 +480,7 @@ public class Member {
 			.address2(this.address2)
 			.domesticForeignCode(this.domesticForeignCode)
 			.jumin1(this.jumin1)
+			.isJumin2(StringUtils.isNotEmpty(this.jumin2)) //있으면 true, 없으면 false
 			.introduce(this.introduce)
 			.diseaseNms(this.diseaseNms)
 			.selfToiletAvailabilities(this.selfToiletAvailabilities)
@@ -600,9 +601,6 @@ public class Member {
 		}
 		if (StringUtils.isNotEmpty(partnerMemberUpdate.getJumin1())) {
 			this.jumin1 = partnerMemberUpdate.getJumin1();
-		}
-		if (StringUtils.isNotEmpty(partnerMemberUpdate.getJumin2())) {
-			this.jumin2 = partnerMemberUpdate.getJumin2();
 		}
 		if (CollectionUtils.isNotEmpty(partnerMemberUpdate.getDiseaseNms())) {
 			this.diseaseNms = partnerMemberUpdate.getDiseaseNms();

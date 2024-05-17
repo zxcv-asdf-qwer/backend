@@ -59,6 +59,8 @@ public class PartnerMemberResponse extends BaseAudit {
 	private DomesticForeignCode domesticForeignCode; //외국인 내국인
 	@Parameter(description = "주민등록번호 앞자리")
 	private String jumin1; // 주민등록번호 앞자리
+	@Parameter(description = "주민등록번호 뒷자리")
+	private boolean isJumin2; //주민등록번호 뒷자리
 	@Parameter(description = "계좌")
 	private AccountDetailResponse accountDetailResponse; // 계좌번호
 	@Parameter(description = "자기소개")

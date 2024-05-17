@@ -3,7 +3,7 @@ package co.kr.compig.api.domain.account;
 import java.util.Base64;
 
 import co.kr.compig.api.domain.member.Member;
-import co.kr.compig.api.presentation.account.request.AccountUpdateRequest;
+import co.kr.compig.api.presentation.account.request.AccountSaveRequest;
 import co.kr.compig.api.presentation.account.response.AccountDetailResponse;
 import co.kr.compig.global.code.BankCode;
 import co.kr.compig.global.code.converter.BankCodeConverter;
@@ -91,11 +91,11 @@ public class Account {
 			.build();
 	}
 
-	public void update(AccountUpdateRequest accountUpdateRequest, AES256 aes256, byte[] iv)
+	public void update(AccountSaveRequest accountSaveRequest, AES256 aes256, byte[] iv)
 		throws Exception {
-		this.accountNumber = aes256.encrypt(accountUpdateRequest.getAccountNumber(), iv);
-		this.accountName = aes256.encrypt(accountUpdateRequest.getAccountName(), iv);
-		this.bankName = BankCode.of(accountUpdateRequest.getBankName());
+		this.accountNumber = aes256.encrypt(accountSaveRequest.getAccountNumber(), iv);
+		this.accountName = aes256.encrypt(accountSaveRequest.getAccountName(), iv);
+		this.bankName = accountSaveRequest.getBankName();
 		this.iv = Base64.getUrlEncoder().encodeToString(iv);
 	}
 
