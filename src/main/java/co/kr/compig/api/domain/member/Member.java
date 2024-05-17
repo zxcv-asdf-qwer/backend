@@ -472,7 +472,7 @@ public class Member {
 			.memberId(this.id)
 			.userNm(this.userNm)
 			.telNo(this.telNo)
-			.age(calculateAgeFromJumin(this.jumin1, this.jumin2))
+			.age(calculateAgeFromBirth(this.jumin1))
 			.email(this.email)
 			.memberRegisterType(this.memberRegisterType)
 			.gender(this.gender)
