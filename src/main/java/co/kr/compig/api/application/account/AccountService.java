@@ -73,8 +73,7 @@ public class AccountService {
 				.accountId(account.getId())
 				.accountNumber(aes256.decrypt(account.getAccountNumber(), account.getIv()))
 				.accountName(aes256.decrypt(account.getAccountName(), account.getIv()))
-				.bankName(account.getBankName().getCode())
-				.passBookUrl(account.getPassBookUrl())
+				.bankName(account.getBankName())
 				.build();
 		} catch (Exception e) {
 			throw new RuntimeException("AES256 복호화 중 예외발생", e);

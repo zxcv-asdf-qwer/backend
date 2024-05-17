@@ -330,8 +330,7 @@ public class MemberService {
 					.accountId(member.getAccount().getId())
 					.accountNumber(aes256.decrypt(member.getAccount().getAccountNumber(), member.getAccount().getIv()))
 					.accountName(aes256.decrypt(member.getAccount().getAccountName(), member.getAccount().getIv()))
-					.bankName(member.getAccount().getBankName().getCode())
-					.passBookUrl(member.getAccount().getPassBookUrl())
+					.bankName(member.getAccount().getBankName())
 					.build();
 				partnerMemberResponse.setAccountDetailResponse(accountDetailResponse);
 

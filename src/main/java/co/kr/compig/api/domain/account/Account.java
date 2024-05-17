@@ -87,7 +87,7 @@ public class Account {
 			.accountId(this.id)
 			.accountNumber(this.accountNumber)
 			.accountName(this.accountName)
-			.bankName(this.bankName.getCode())
+			.bankName(this.bankName)
 			.build();
 	}
 

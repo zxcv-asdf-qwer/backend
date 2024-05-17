@@ -1,5 +1,6 @@
 package co.kr.compig.api.presentation.account.response;
 
+import co.kr.compig.global.code.BankCode;
 import co.kr.compig.global.dto.BaseAudit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,6 +18,5 @@ public class AccountDetailResponse extends BaseAudit {
 	private Long accountId; // 계좌 id
 	private String accountNumber; // 계좌번호
 	private String accountName; // 예금주
-	private String bankName; // 은행 이름
-	private String passBookUrl; // 통장 사본 url
+	private BankCode bankName; // 은행 이름
 }
