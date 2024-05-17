@@ -52,12 +52,12 @@ public class PagingRequest {
 						.map(
 							s -> {
 								String[] sort = s.split(" ");
-								if (sort[0].equals("createdOn")
-									|| sort[0].equals("updatedOn")
-									|| sort[0].equals("createdBy")
-									|| sort[0].equals("updatedBy")) {
+								if (sort[0].equals("created_on")
+									|| sort[0].equals("updated_on")
+									|| sort[0].equals("created_by")
+									|| sort[0].equals("updated_by")) {
 									return new Sort.Order(
-										Sort.Direction.fromString(sort[1]), "createdAndModified." + sort[0]);
+										Sort.Direction.fromString(sort[1]), "created_and_modified." + sort[0]);
 								} else {
 									return new Sort.Order(Sort.Direction.fromString(sort[1]), sort[0]);
 								}
