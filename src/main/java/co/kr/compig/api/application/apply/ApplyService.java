@@ -3,6 +3,7 @@ package co.kr.compig.api.application.apply;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.flywaydb.core.internal.util.CollectionsUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -88,7 +89,8 @@ public class ApplyService {
 		Slice<ApplyResponse> slice = applyRepositoryCustom.getApplySlice(orderId, request, pageable);
 		slice.getContent();
 		return new SliceResponse<>(slice.getContent(), pageable, slice.hasNext(),
-			slice.getContent() != null ? slice.getContent().get(slice.getContent().size() - 1).getApplyId().toString() :
+			CollectionsUtils.hasItems(slice.getContent()) ?
+				slice.getContent().get(slice.getContent().size() - 1).getApplyId().toString() :
 				"");
 	}
 

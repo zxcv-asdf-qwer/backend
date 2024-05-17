@@ -1,5 +1,6 @@
 package co.kr.compig.api.application.board;
 
+import org.flywaydb.core.internal.util.CollectionsUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -99,7 +100,8 @@ public class BoardService {
 		Pageable pageable = request.pageable();
 		Slice<BoardResponse> slice = boardRepositoryCustom.getBoardSlice(request, pageable);
 		return new SliceResponse<>(slice.getContent(), pageable, slice.hasNext(),
-			slice.getContent() != null ? slice.getContent().get(slice.getContent().size() - 1).getBoardId().toString() :
+			CollectionsUtils.hasItems(slice.getContent()) ?
+				slice.getContent().get(slice.getContent().size() - 1).getBoardId().toString() :
 				"");
 	}
 

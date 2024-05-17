@@ -8,6 +8,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.flywaydb.core.internal.util.CollectionsUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -111,7 +112,8 @@ public class PaymentService {
 		Pageable pageable) {
 		Slice<PaymentResponse> slice = paymentRepositoryCustom.getPaymentSlice(paymentSearchRequest, pageable);
 		return new SliceResponse<>(slice.getContent(), pageable, slice.hasNext(),
-			slice.getContent() != null ? slice.getContent().get(slice.getContent().size() - 1).getId().toString() : "");
+			CollectionsUtils.hasItems(slice.getContent()) ?
+				slice.getContent().get(slice.getContent().size() - 1).getId().toString() : "");
 	}
 
 	@Transactional(readOnly = true)

@@ -2,6 +2,7 @@ package co.kr.compig.api.presentation.patient;
 
 import java.util.Map;
 
+import org.flywaydb.core.internal.util.CollectionsUtils;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -56,7 +57,8 @@ public class GuardianPatientController {
 		Slice<PatientResponse> slice = patientService.pageListPatientCursor(patientSearchRequest, pageable);
 		SliceResponse<PatientResponse> sliceResponse = new SliceResponse<>(slice.getContent(), pageable,
 			slice.hasNext(),
-			slice.getContent() != null ? slice.getContent().get(slice.getContent().size() - 1).getId().toString() : "");
+			CollectionsUtils.hasItems(slice.getContent()) ?
+				slice.getContent().get(slice.getContent().size() - 1).getId().toString() : "");
 		return ResponseEntity.ok(sliceResponse);
 	}
 

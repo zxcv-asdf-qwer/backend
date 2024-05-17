@@ -1,5 +1,6 @@
 package co.kr.compig.api.application.review;
 
+import org.flywaydb.core.internal.util.CollectionsUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -49,7 +50,7 @@ public class ReviewService {
 		Pageable pageable) {
 		Slice<ReviewResponse> slice = reviewRepositoryCustom.findAllByCondition(reviewSearchRequest, pageable);
 		return new SliceResponse<>(slice.getContent(), pageable, slice.hasNext(),
-			slice.getContent() != null ?
+			CollectionsUtils.hasItems(slice.getContent()) ?
 				slice.getContent().get(slice.getContent().size() - 1).getReviewId().toString() : "");
 	}
 
