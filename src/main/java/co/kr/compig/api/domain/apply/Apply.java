@@ -81,7 +81,7 @@ public class Apply {
 			.memberId(this.member.getId())
 			.userNm(this.member.getUserNm())
 			.gender(this.member.getGender())
-			.age(calculateAgeFromJumin(this.member.getJumin1(), this.member.getJumin2()))
+			.age(calculateAgeFromBirth(this.member.getJumin1()))
 			.telNo(this.member.getTelNo())
 			.careOrderId(this.careOrder.getId())
 			.applyStatus(this.applyStatus)
