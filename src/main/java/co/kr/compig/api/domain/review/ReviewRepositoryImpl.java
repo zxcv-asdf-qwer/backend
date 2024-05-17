@@ -37,7 +37,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
 		applySorting(query, pageable);
 
 		List<Review> reviews = query.where(
-				cursorCursorId(Long.valueOf(reviewSearchRequest.getCursorId())))
+				cursorCursorId(reviewSearchRequest.getCursorId()))
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize() + 1)
 			.fetch();
@@ -82,10 +82,10 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
 		}
 	}
 
-	private BooleanExpression cursorCursorId(Long cursorId) {
+	private BooleanExpression cursorCursorId(String cursorId) {
 		if (cursorId == null) {
 			return null;
 		}
-		return review.id.lt(cursorId);
+		return review.id.lt(Long.parseLong(cursorId));
 	}
 }
