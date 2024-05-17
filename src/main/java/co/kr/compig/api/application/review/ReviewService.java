@@ -17,7 +17,9 @@ import co.kr.compig.api.presentation.review.request.ReviewSearchRequest;
 import co.kr.compig.api.presentation.review.request.ReviewUpdateRequest;
 import co.kr.compig.api.presentation.review.response.ReviewDetailResponse;
 import co.kr.compig.api.presentation.review.response.ReviewResponse;
+import co.kr.compig.global.code.OrderStatus;
 import co.kr.compig.global.dto.pagination.SliceResponse;
+import co.kr.compig.global.error.exception.BizException;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import lombok.RequiredArgsConstructor;
 
@@ -34,6 +36,9 @@ public class ReviewService {
 	public Long createReviewGuardian(ReviewCreateRequest reviewCreateRequest) {
 		Member member = memberService.getMemberById(reviewCreateRequest.getMemberId());
 		CareOrder careOrder = careOrderService.getCareOrderById(reviewCreateRequest.getCareOrderId());
+		if (careOrder.getOrderStatus() != OrderStatus.ORDER_COMPLETE) {
+			throw new BizException("아직 간병이 끝나지 않은 공고입니다.");
+		}
 		Review review = reviewCreateRequest.converterEntity(member, careOrder);
 		reviewRepository.save(review);
 		return review.getId();

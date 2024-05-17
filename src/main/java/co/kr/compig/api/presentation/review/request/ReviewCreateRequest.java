@@ -30,7 +30,7 @@ public class ReviewCreateRequest {
 	private Long careOrderId; // 공고 ID
 
 	@NotNull
-	private String memberId; // 멤버 ID
+	private String memberId; // 간병인 ID
 
 	public Review converterEntity(Member member, CareOrder careOrder) {
 		return Review.builder()
