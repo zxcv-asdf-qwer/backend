@@ -4,12 +4,10 @@ import static co.kr.compig.api.domain.apply.QApply.*;
 
 import java.util.List;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.support.PageableExecutionUtils;
 
 import com.google.common.base.CaseFormat;
 import com.querydsl.core.types.Order;
@@ -79,7 +77,7 @@ public class ApplyRepositoryImpl implements ApplyRepositoryCustom {
 	private void applySorting(JPAQuery<?> query, Pageable pageable) {
 		for (Sort.Order order : pageable.getSort()) {
 			Path<Object> target = Expressions.path(Object.class, apply,
-				CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, order.getProperty()));
+				CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_CAMEL, order.getProperty()));
 			@SuppressWarnings({"rawtypes", "unchecked"})
 			OrderSpecifier<?> orderSpecifier = new OrderSpecifier(
 				order.isAscending() ? Order.ASC : Order.DESC, target);

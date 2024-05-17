@@ -134,7 +134,7 @@ public class CareOrderRepositoryImpl implements CareOrderRepositoryCustom {
 	private void applySorting(JPAQuery<?> query, Pageable pageable) {
 		for (Sort.Order order : pageable.getSort()) {
 			Path<Object> target = Expressions.path(Object.class, careOrder,
-				CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, order.getProperty()));
+				CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_CAMEL, order.getProperty()));
 			@SuppressWarnings({"rawtypes", "unchecked"}) OrderSpecifier<?> orderSpecifier = new OrderSpecifier(
 				order.isAscending() ? Order.ASC : Order.DESC, target);
 			query.orderBy(orderSpecifier);

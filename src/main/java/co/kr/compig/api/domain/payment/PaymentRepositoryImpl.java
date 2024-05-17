@@ -91,7 +91,7 @@ public class PaymentRepositoryImpl implements PaymentRepositoryCustom {
 	private void applySorting(JPAQuery<?> query, Pageable pageable) {
 		for (Sort.Order order : pageable.getSort()) {
 			Path<Object> target = Expressions.path(Object.class, payment,
-				CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, order.getProperty()));
+				CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_CAMEL, order.getProperty()));
 			@SuppressWarnings({"rawtypes", "unchecked"})
 			OrderSpecifier<?> orderSpecifier = new OrderSpecifier(
 				order.isAscending() ? Order.ASC : Order.DESC, target);
