@@ -17,4 +17,6 @@ public class CheckNameRequest {
 	private String jumin2;
 	@NotBlank
 	private String name;
+	@NotBlank
+	private String memberId;
 }

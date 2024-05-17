@@ -439,4 +439,9 @@ public class MemberService {
 		return memberById.getId();
 	}
 
+	public void checkNameUpdate(String memberId, String jumin1, String jumin2) {
+		Member memberById = this.getMemberById(memberId);
+		memberById.juminUpdate(jumin1, jumin2);
+	}
+
 }

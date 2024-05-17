@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import co.kr.compig.api.application.member.MemberService;
 import co.kr.compig.api.presentation.check.request.CheckNameRequest;
 import co.kr.compig.global.error.exception.BizException;
 import co.kr.compig.global.notify.NotifyMessage;
@@ -34,6 +35,8 @@ public class CheckController {
 	private String NAME_CHECK_SITE_PASSWORD_OUTER;
 
 	private final NotifyMessage notifyMessage;
+
+	private final MemberService memberService;
 
 	@GetMapping(value = "/name")
 	public ResponseEntity<?> checkName(
@@ -96,6 +99,7 @@ public class CheckController {
 		// 실명인증 결과코드 확인
 		if (Rtn.equals("1")) {
 			sRtnMsg = "인증성공";
+			memberService.checkNameUpdate(checkNameRequest.getMemberId(), sJumin1, sJumin2);
 		} else if (Rtn.equals("2")) {
 			sRtnMsg = "성명불일치 오류: 주민번호와 성명이 일치하지 않습니다.<br>www.niceid.co.kr 에서 실명정보를 재등록하시거나 NICE 고객센터(1600-1522)로 문의해주십시오.";
 		} else if (Rtn.equals("3")) {
@@ -140,7 +144,7 @@ public class CheckController {
 				throw new BizException(stringBuilder.toString());
 			} catch (BizException e) {
 				log.error(stringBuilder.toString());
-				notifyMessage.sendErrorMessage(e);
+				notifyMessage.sendErrorMessage(e, stringBuilder);
 			}
 			return ResponseEntity.badRequest().body(Map.of("msg", sRtnMsg));
 		}
