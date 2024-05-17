@@ -86,8 +86,10 @@ public class ApplyService {
 	public SliceResponse<ApplyResponse> getApplySlice(Long orderId, ApplySearchRequest request) {
 		Pageable pageable = request.pageable();
 		Slice<ApplyResponse> slice = applyRepositoryCustom.getApplySlice(orderId, request, pageable);
+		slice.getContent();
 		return new SliceResponse<>(slice.getContent(), pageable, slice.hasNext(),
-			slice.getContent().getLast().getApplyId().toString());
+			slice.getContent() != null ? slice.getContent().get(slice.getContent().size() - 1).getApplyId().toString() :
+				"");
 	}
 
 	public void updateMatchingComplete(Long orderId, String memberId) {

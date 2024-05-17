@@ -68,7 +68,8 @@ public class GuardianCareOrderController {
 	) {
 		Slice<CareOrderResponse> slice = careOrderService.pageListCareOrderCursor(careOrderSearchRequest, pageable);
 		SliceResponse<CareOrderResponse> sliceResponse = new SliceResponse<>(slice.getContent(), pageable,
-			slice.hasNext(), slice.getContent().getLast().getId().toString());
+			slice.hasNext(),
+			slice.getContent() != null ? slice.getContent().get(slice.getContent().size() - 1).getId().toString() : "");
 		return ResponseEntity.ok(sliceResponse);
 	}
 

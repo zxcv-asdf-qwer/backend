@@ -111,7 +111,7 @@ public class PaymentService {
 		Pageable pageable) {
 		Slice<PaymentResponse> slice = paymentRepositoryCustom.getPaymentSlice(paymentSearchRequest, pageable);
 		return new SliceResponse<>(slice.getContent(), pageable, slice.hasNext(),
-			slice.getContent().getLast().getId().toString());
+			slice.getContent() != null ? slice.getContent().get(slice.getContent().size() - 1).getId().toString() : "");
 	}
 
 	@Transactional(readOnly = true)

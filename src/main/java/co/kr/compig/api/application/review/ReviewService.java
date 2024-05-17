@@ -49,7 +49,8 @@ public class ReviewService {
 		Pageable pageable) {
 		Slice<ReviewResponse> slice = reviewRepositoryCustom.findAllByCondition(reviewSearchRequest, pageable);
 		return new SliceResponse<>(slice.getContent(), pageable, slice.hasNext(),
-			slice.getContent().getLast().getReviewId().toString());
+			slice.getContent() != null ?
+				slice.getContent().get(slice.getContent().size() - 1).getReviewId().toString() : "");
 	}
 
 	@Transactional(readOnly = true)
