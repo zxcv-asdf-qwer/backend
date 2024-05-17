@@ -1,8 +1,5 @@
 package co.kr.compig.api.presentation.account.request;
 
-import java.util.Base64;
-
-import co.kr.compig.api.domain.account.Account;
 import co.kr.compig.global.code.BankCode;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -24,14 +21,5 @@ public class AccountSaveRequest {
 
 	@NotBlank
 	private BankCode bankName; // 은행 이름
-
-	public Account converterEntity(byte[] iv) {
-		return Account.builder()
-			.accountNumber(this.accountNumber)
-			.accountName(this.accountName)
-			.bankName(bankName)
-			.iv(Base64.getUrlEncoder().encodeToString(iv))
-			.build();
-	}
 
 }

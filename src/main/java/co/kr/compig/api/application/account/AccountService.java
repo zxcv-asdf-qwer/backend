@@ -5,6 +5,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -92,7 +93,12 @@ public class AccountService {
 				account = member.getAccount();
 				account.update(accountSaveRequest, aes256, iv);
 			} else {
-				account = accountSaveRequest.converterEntity(iv);
+				account = Account.builder()
+					.accountNumber(aes256.encrypt(accountSaveRequest.getAccountNumber(), iv))
+					.accountName(aes256.encrypt(accountSaveRequest.getAccountName(), iv))
+					.bankName(accountSaveRequest.getBankName())
+					.iv(Base64.getUrlEncoder().encodeToString(iv))
+					.build();
 				account.setMember(member);
 				accountRepository.save(account);
 			}
