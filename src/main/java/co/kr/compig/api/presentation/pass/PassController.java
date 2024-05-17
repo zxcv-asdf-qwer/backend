@@ -109,7 +109,7 @@ public class PassController {
 			} catch (BizException e) {
 				log.error(stringBuilder.toString());
 
-				notifyMessage.sendErrorMessage(e);
+				notifyMessage.sendErrorMessage(e, stringBuilder);
 			}
 		}
 
