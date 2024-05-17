@@ -110,7 +110,8 @@ public class PaymentService {
 	public SliceResponse<PaymentResponse> getPaymentSlice(PaymentSearchRequest paymentSearchRequest,
 		Pageable pageable) {
 		Slice<PaymentResponse> slice = paymentRepositoryCustom.getPaymentSlice(paymentSearchRequest, pageable);
-		return new SliceResponse<>(slice.getContent(), pageable, slice.hasNext());
+		return new SliceResponse<>(slice.getContent(), pageable, slice.hasNext(),
+			slice.getContent().getLast().getId().toString());
 	}
 
 	@Transactional(readOnly = true)

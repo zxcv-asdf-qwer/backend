@@ -55,7 +55,7 @@ public class GuardianPatientController {
 		@ParameterObject @ModelAttribute @Valid PatientSearchRequest patientSearchRequest, Pageable pageable) {
 		Slice<PatientResponse> slice = patientService.pageListPatientCursor(patientSearchRequest, pageable);
 		SliceResponse<PatientResponse> sliceResponse = new SliceResponse<>(slice.getContent(), pageable,
-			slice.hasNext());
+			slice.hasNext(), slice.getContent().getLast().getId().toString());
 		return ResponseEntity.ok(sliceResponse);
 	}
 

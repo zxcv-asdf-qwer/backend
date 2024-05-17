@@ -98,7 +98,8 @@ public class BoardService {
 	public SliceResponse<BoardResponse> getBoardSlice(@Valid BoardSearchRequest request) {
 		Pageable pageable = request.pageable();
 		Slice<BoardResponse> slice = boardRepositoryCustom.getBoardSlice(request, pageable);
-		return new SliceResponse<>(slice.getContent(), pageable, slice.hasNext());
+		return new SliceResponse<>(slice.getContent(), pageable, slice.hasNext(),
+			slice.getContent().getLast().getBoardId().toString());
 	}
 
 }

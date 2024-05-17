@@ -72,7 +72,8 @@ public class InquiryService {
 	public SliceResponse<QuestionResponse> getQuestionSlice(QuestionSearchRequest request) {
 		Pageable pageable = request.pageable();
 		Slice<QuestionResponse> slice = questionRepositoryCustom.getQuestionSlice(request, pageable);
-		return new SliceResponse<>(slice.getContent(), pageable, slice.hasNext());
+		return new SliceResponse<>(slice.getContent(), pageable, slice.hasNext(),
+			slice.getContent().getLast().getQuestionId().toString());
 	}
 
 	public Long createAnswer(Long questionId, AnswerCreateRequest answerCreateRequest) {
