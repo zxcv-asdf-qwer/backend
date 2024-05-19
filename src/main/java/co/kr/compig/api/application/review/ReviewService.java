@@ -37,6 +37,11 @@ public class ReviewService {
 	public Long createReviewGuardian(ReviewCreateRequest reviewCreateRequest) {
 		Member member = memberService.getMemberById(reviewCreateRequest.getMemberId());
 		CareOrder careOrder = careOrderService.getCareOrderById(reviewCreateRequest.getCareOrderId());
+
+		if (reviewRepository.existsByMemberAndCareOrder(member, careOrder)) {
+			throw new BizException("이미 존재하는 리뷰입니다.");
+		}
+
 		if (careOrder.getOrderStatus() != OrderStatus.ORDER_COMPLETE) {
 			throw new BizException("아직 간병이 끝나지 않은 공고입니다.");
 		}
