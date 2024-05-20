@@ -44,7 +44,7 @@ public class ApplyRepositoryImpl implements ApplyRepositoryCustom {
 		applySorting(query, pageable);
 
 		List<ApplyResponse> applies = query
-			.where(cursorCursorId(Long.valueOf(applySearchRequest.getCursorId())))
+			.where(cursorCursorId(applySearchRequest.getCursorId()))
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize() + 1)
 			.fetch();
@@ -85,9 +85,9 @@ public class ApplyRepositoryImpl implements ApplyRepositoryCustom {
 		}
 	}
 
-	private BooleanExpression cursorCursorId(Long cursorId) {
+	private BooleanExpression cursorCursorId(String cursorId) {
 		if (cursorId == null)
 			return null;
-		return apply.id.lt(cursorId);
+		return apply.id.lt(Long.parseLong(cursorId));
 	}
 }
