@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.flywaydb.core.internal.util.CollectionsUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import co.kr.compig.api.application.info.push.FirebasePushService;
 import co.kr.compig.api.application.info.push.model.MessageDto;
@@ -25,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class InfoService {
 
 	private final SmsService smsService;

@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import co.kr.compig.api.domain.sms.SmsTemplate;
 import co.kr.compig.api.domain.sms.SmsTemplateRepository;
@@ -20,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class SmsTemplateService {
 
 	private final SmsTemplateRepository smsTemplateRepository;

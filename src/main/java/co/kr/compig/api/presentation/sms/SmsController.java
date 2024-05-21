@@ -1,6 +1,7 @@
 package co.kr.compig.api.presentation.sms;
 
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,7 +23,8 @@ public class SmsController {
 	private final SmsService smsService;
 
 	@PostMapping("/result")
-	public void smsSendResultFeedBack(SmsResultRequest smsResultRequest) {
+	public void smsSendResultFeedBack(@RequestBody SmsResultRequest smsResultRequest) {
 		log.debug(smsResultRequest.toString());
+		smsService.smsSendResultFeedBack(smsResultRequest);
 	}
 }

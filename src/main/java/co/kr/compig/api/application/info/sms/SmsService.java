@@ -8,7 +8,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import co.kr.compig.api.application.info.push.model.NoticeCode;
 import co.kr.compig.api.application.info.sms.model.SmsSend;
@@ -24,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class SmsService {
 
 	private final SmsSendService smsSendService;
@@ -77,5 +80,17 @@ public class SmsService {
 	}
 
 	public void smsSendResultFeedBack(SmsResultRequest smsResultRequest) {
+		if (StringUtils.isNotEmpty(smsResultRequest.getRefkey())) {
+			Optional<Sms> byRefkey = smsRepository.findByRefkey(smsResultRequest.getRefkey());
+			byRefkey.ifPresent(sms -> {
+				smsSendResultUpdate(sms, smsResultRequest.getResult());
+			});
+		}
+	}
+
+	private void smsSendResultUpdate(Sms sms, String result) {
+		if (StringUtils.containsAny(result, "4100", "6600", "7000")) {
+			sms.updateSmsResult("1000");
+		}
 	}
 }

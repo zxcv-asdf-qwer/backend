@@ -10,4 +10,6 @@ public interface SmsRepository extends JpaRepository<Sms, String>,
 
 	Optional<Sms> findTopByReceiverPhoneNumberAndSmsTemplateOrderByIdDesc(String receiverPhoneNumber,
 		SmsTemplate smsTemplate);
+
+	Optional<Sms> findByRefkey(String refKey);
 }
