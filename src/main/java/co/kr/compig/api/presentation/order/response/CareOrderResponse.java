@@ -20,6 +20,6 @@ public class CareOrderResponse extends BaseAudit {
 	private UserType userType; // 회원구분
 	private String userNm; // 보호자 이름
 	private String telNo; // 전화번호
-	private LocationType locationType; // 간병 장소 종료
+	private LocationType locationType; // 간병 장소 종류
 	private String address1; // 간병 주소
 }
