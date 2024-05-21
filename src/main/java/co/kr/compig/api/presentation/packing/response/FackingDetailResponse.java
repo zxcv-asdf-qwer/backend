@@ -24,7 +24,6 @@ public class FackingDetailResponse extends BaseAudit {
 	private String partnerNm; // 간병인 이름
 	private String partnerTelNo; // 간병인 전화번호
 	private LocationType locationType; // 간병 장소 종류
-	private String addressCd; // 간병 장소 우편 번호
 	private String address1; // 간병 장소 주소
 	private String address2; // 간병 장소 상세 주소
 }

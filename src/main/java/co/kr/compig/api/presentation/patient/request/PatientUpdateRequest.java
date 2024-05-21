@@ -49,9 +49,6 @@ public class PatientUpdateRequest {
 	private LocationType locationType; // 간병 장소 종류
 
 	@NotBlank
-	private String addressCd; // 간병 장소 우편 번호
-
-	@NotBlank
 	private String address1; // 간병 장소 주소
 
 	@NotBlank

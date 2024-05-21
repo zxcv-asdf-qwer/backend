@@ -56,9 +56,6 @@ public class AdminPatientCreateRequest {
 	private LocationType locationType; // 간병 장소 종류
 
 	@NotBlank
-	private String addressCd; // 간병 장소 우편 번호
-
-	@NotBlank
 	private String address1; // 간병 장소 주소
 
 	@NotBlank
@@ -92,7 +89,6 @@ public class AdminPatientCreateRequest {
 			.covid19Test(this.covid19Test)
 			.patientRequest(this.patientRequest)
 			.locationType(this.locationType)
-			.addressCd(this.addressCd)
 			.address1(this.address1)
 			.address2(this.address2)
 			.hospitalName(this.hospitalName)

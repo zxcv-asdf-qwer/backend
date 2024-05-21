@@ -112,9 +112,6 @@ public class OrderPatient {
 	@Enumerated(EnumType.STRING)
 	private LocationType locationType; // 간병 장소 종류
 
-	@Column(length = 10)
-	private String addressCd; // 간병 장소 우편 번호
-
 	@Column(length = 200)
 	private String address1; // 간병 장소 주소
 
@@ -154,7 +151,6 @@ public class OrderPatient {
 			.covid19Test(this.covid19Test)
 			.patientRequest(this.patientRequest)
 			.locationType(this.locationType)
-			.addressCd(this.addressCd)
 			.address1(this.address1)
 			.address2(this.address2)
 			.hospitalName(this.hospitalName)
@@ -174,7 +170,6 @@ public class OrderPatient {
 		this.genderPreference = orderPatientUpdateRequest.getGenderPreference();
 		this.covid19Test = orderPatientUpdateRequest.getCovid19Test();
 		this.patientRequest = orderPatientUpdateRequest.getPatientRequest();
-		this.addressCd = orderPatientUpdateRequest.getAddressCd();
 		this.address1 = orderPatientUpdateRequest.getAddress1();
 		this.address2 = orderPatientUpdateRequest.getAddress2();
 		this.hospitalName = orderPatientUpdateRequest.getHospitalName();

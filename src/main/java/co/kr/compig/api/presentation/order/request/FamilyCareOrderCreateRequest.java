@@ -32,9 +32,6 @@ public class FamilyCareOrderCreateRequest {
 	private String partnerTelNo; // 간병인 전화번호
 
 	@NotBlank
-	private String addressCd; // 간병 장소 우편 번호
-
-	@NotBlank
 	private String address1; // 간병 장소 주소
 
 	@NotBlank
@@ -83,7 +80,6 @@ public class FamilyCareOrderCreateRequest {
 			.settle(settle)
 			.partnerNm(this.partnerNm)
 			.partnerTelNo(this.partnerTelNo)
-			.addressCd(this.addressCd)
 			.address1(this.address1)
 			.address2(this.address2)
 			.startDateTime(this.startDateTime)

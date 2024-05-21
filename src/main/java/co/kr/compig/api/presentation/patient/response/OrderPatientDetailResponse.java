@@ -34,7 +34,6 @@ public class OrderPatientDetailResponse {
 	private IsYn covid19Test; // 코로나 검사 필요 여부
 	private String patientRequest; // 요청 사항
 	private LocationType locationType; // 간병 장소 종류
-	private String addressCd; // 간병 장소 우편 번호
 	private String address1; // 간병 장소 주소
 	private String address2; // 간병 장소 상세 주소
 	private String hospitalName; // 병원명

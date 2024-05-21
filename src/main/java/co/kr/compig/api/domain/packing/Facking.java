@@ -78,9 +78,6 @@ public class Facking {
 	@Convert(converter = LocationTypeConverter.class)
 	private LocationType locationType = LocationType.HOME; // 간병 장소 종류
 
-	@Column(length = 10)
-	private String addressCd; // 간병 장소 우편 번호
-
 	@Column(length = 200)
 	private String address1; // 간병 장소 주소
 
@@ -129,7 +126,6 @@ public class Facking {
 			.partnerNm(this.partnerNm)
 			.partnerTelNo(this.partnerTelNo)
 			.locationType(this.locationType)
-			.addressCd(this.addressCd)
 			.address1(this.address1)
 			.address2(this.address2)
 			.build();
