@@ -11,5 +11,6 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public class SmsTemplateSearchRequest extends PageableRequest {
 	private SmsTemplateType smsTemplateType; //SMS 템플릿 코드
+	private String templateCode; //카카오 알림톡 템플릿 코드
 	private String contents; //내용
 }

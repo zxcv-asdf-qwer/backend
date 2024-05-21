@@ -33,7 +33,11 @@ public class SmsTemplateRepositoryImpl implements SmsTemplateRepositoryCustom {
 		BooleanExpression predicate = createPredicate(request);
 
 		JPAQuery<SmsTemplateResponse> query = createBaseQuery(predicate)
-			.select(Projections.constructor(SmsTemplateResponse.class
+			.select(Projections.constructor(SmsTemplateResponse.class,
+					smsTemplate.id,
+					smsTemplate.smsTemplateType,
+					smsTemplate.templateCode,
+					smsTemplate.contents
 				)
 			);
 		Pageable pageable = request.pageable();

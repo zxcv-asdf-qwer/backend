@@ -72,12 +72,14 @@ public class SmsTemplate {
 		return SmsTemplateResponse.builder()
 			.smsTemplateId(this.id)
 			.smsTemplateType(this.smsTemplateType)
+			.templateCode(this.templateCode)
 			.contents(this.contents)
 			.build();
 	}
 
 	public void update(SmsTemplateUpdateRequest smsTemplateUpdateRequest) {
 		this.smsTemplateType = smsTemplateUpdateRequest.getSmsTemplateType();
+		this.templateCode = smsTemplateUpdateRequest.getTemplateCode();
 		this.contents = smsTemplateUpdateRequest.getContents();
 	}
 

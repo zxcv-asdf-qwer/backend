@@ -1,9 +1,11 @@
 package co.kr.compig.api.presentation.sms;
 
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.info.sms.SmsService;
+import co.kr.compig.api.presentation.sms.request.SmsResultRequest;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -19,4 +21,8 @@ public class SmsController {
 
 	private final SmsService smsService;
 
+	@PostMapping("/result")
+	public void smsSendResultFeedBack(SmsResultRequest smsResultRequest) {
+		log.debug(smsResultRequest.toString());
+	}
 }
