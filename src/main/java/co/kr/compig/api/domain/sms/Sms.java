@@ -52,7 +52,10 @@ public class Sms {
 	private String refkey; //비즈뿌리오에 보내는 unique 값
 	@Column
 	private LocalDateTime sendtime; //발송시간 미입력 즉시발송
-
+	@Column
+	private String resultCode; //결과코드
+	@Column(columnDefinition = "TEXT")
+	private String failCause; //실패 사유
 	/* =================================================================
    * Default columns
 	 ================================================================= */
@@ -73,5 +76,13 @@ public class Sms {
 
 	public void setSmsTemplate(final SmsTemplate smsTemplate) {
 		this.smsTemplate = smsTemplate;
+	}
+
+	/* =================================================================
+     * Business login
+     ================================================================= */
+
+	public void updateSmsResult(String result) {
+		this.resultCode = result;
 	}
 }

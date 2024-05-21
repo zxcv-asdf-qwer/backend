@@ -5,12 +5,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 //비즈뿌리오-> 백엔드 결과전송
 @Getter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class SmsRedirectRequest {
+public class SmsResultRequest {
 
 	@JsonProperty("DEVICE")
 	private String device; //메시지 유형

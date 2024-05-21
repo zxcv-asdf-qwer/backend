@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import co.kr.compig.api.domain.sms.SmsTemplate;
 import co.kr.compig.api.domain.sms.SmsTemplateRepository;
@@ -20,11 +21,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class SmsTemplateService {
 
 	private final SmsTemplateRepository smsTemplateRepository;
 	private final SmsTemplateRepositoryCustom smsTemplateRepositoryCustom;
 
+	@Transactional(readOnly = true)
 	public SmsTemplate getBySmsTemplateType(SmsTemplateType smsTemplateType) {
 		Optional<SmsTemplate> bySmsTemplateType = smsTemplateRepository.findTopBySmsTemplateTypeOrderByIdDesc(
 			smsTemplateType);
@@ -41,6 +44,7 @@ public class SmsTemplateService {
 		return smsTemplate.toSmsTemplateDetailResponse();
 	}
 
+	@Transactional(readOnly = true)
 	public Page<SmsTemplateResponse> getPage(SmsTemplateSearchRequest smsTemplateSearchRequest) {
 		return smsTemplateRepositoryCustom.findPage(smsTemplateSearchRequest);
 	}
