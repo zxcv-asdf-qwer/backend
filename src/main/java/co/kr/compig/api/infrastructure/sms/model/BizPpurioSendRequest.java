@@ -36,7 +36,6 @@ public class BizPpurioSendRequest { //sms만 발송
 	@JsonInclude(Include.NON_NULL)
 	public static class Content {
 
-		private Sms sms;
 		private At at;
 	}
 
@@ -44,6 +43,14 @@ public class BizPpurioSendRequest { //sms만 발송
 	@Builder
 	@JsonInclude(Include.NON_NULL)
 	public static class Sms {
+
+		private String message;
+	}
+
+	@Getter
+	@Builder
+	@JsonInclude(Include.NON_NULL)
+	public static class Lms {
 
 		private String message;
 	}
@@ -78,7 +85,8 @@ public class BizPpurioSendRequest { //sms만 발송
 	@JsonInclude(Include.NON_NULL)
 	public static class Resend {
 
-		private String first;// 1치 대체 발송 메세지 유형 *sms, mms, Ims, at, ai, res
+		private String first; // 1치 대체 발송 메세지 유형 *sms, mms, Ims, at, ai, rcs
+		private String second; // 2차 대체 발송sms, mms
 	}
 
 	@Getter
@@ -87,5 +95,6 @@ public class BizPpurioSendRequest { //sms만 발송
 	public static class Recontent {
 
 		private Sms sms;
+		private Lms lms;
 	}
 }

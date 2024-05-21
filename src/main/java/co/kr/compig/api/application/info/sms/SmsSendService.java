@@ -1,5 +1,6 @@
 package co.kr.compig.api.application.info.sms;
 
+import java.nio.charset.StandardCharsets;
 import java.time.ZoneOffset;
 
 import org.springframework.scheduling.annotation.Async;
@@ -38,8 +39,7 @@ public class SmsSendService {
 			.userinfo("")
 			.resllercode("")
 			.sendtime(smsSend.getSendtime() != null ?
-				String.valueOf(smsSend.getSendtime().toEpochSecond(ZoneOffset.ofHours(9))) : null
-			)
+				String.valueOf(smsSend.getSendtime().toEpochSecond(ZoneOffset.ofHours(9))) : null)
 			.content(BizPpurioSendRequest.Content.builder()
 				.at(BizPpurioSendRequest.At.builder()
 					.senderkey(bizPpurioApiProperties.getSenderKey())
@@ -48,17 +48,27 @@ public class SmsSendService {
 					.build())
 				.build())
 			.resend(BizPpurioSendRequest.Resend.builder()
-				.first("sms")
+				.first(smsSend.getContents().getBytes(StandardCharsets.UTF_8).length > 90 ? "lms" : "sms")
 				.build())
-			.recontent(BizPpurioSendRequest.Recontent.builder()
-				.sms(Sms.builder()
-					.message(smsSend.getContents())
-					.build())
-				.build())
+			.recontent(getRecontent(smsSend))
 			.build();
 
-		bizPpurioApi.sendSms("Bearer " + accessToken,
-			bizPpurioSendRequest);
+		bizPpurioApi.sendSms("Bearer " + accessToken, bizPpurioSendRequest);
 	}
 
+	private BizPpurioSendRequest.Recontent getRecontent(SmsSend smsSend) {
+		// 문자열의 바이트 크기 확인
+		byte[] contentBytes = smsSend.getContents().getBytes(StandardCharsets.UTF_8);
+		BizPpurioSendRequest.Recontent recontent;
+		if (contentBytes.length > 90) {
+			recontent = BizPpurioSendRequest.Recontent.builder()
+				.lms(BizPpurioSendRequest.Lms.builder().message(smsSend.getContents()).build())
+				.build();
+		} else {
+			recontent = BizPpurioSendRequest.Recontent.builder()
+				.sms(Sms.builder().message(smsSend.getContents()).build())
+				.build();
+		}
+		return recontent;
+	}
 }
