@@ -31,6 +31,7 @@ public class ReportService {
 		return reportRepository.save(report).getId();
 	}
 
+	@Transactional(readOnly = true)
 	public Page<ReportResponse> getReportPage(ReportSearchRequest reportSearchRequest) {
 		return reportRepositoryCustom.getReportPage(reportSearchRequest);
 	}

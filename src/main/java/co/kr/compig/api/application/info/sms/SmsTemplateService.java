@@ -27,6 +27,7 @@ public class SmsTemplateService {
 	private final SmsTemplateRepository smsTemplateRepository;
 	private final SmsTemplateRepositoryCustom smsTemplateRepositoryCustom;
 
+	@Transactional(readOnly = true)
 	public SmsTemplate getBySmsTemplateType(SmsTemplateType smsTemplateType) {
 		Optional<SmsTemplate> bySmsTemplateType = smsTemplateRepository.findTopBySmsTemplateTypeOrderByIdDesc(
 			smsTemplateType);
@@ -43,6 +44,7 @@ public class SmsTemplateService {
 		return smsTemplate.toSmsTemplateDetailResponse();
 	}
 
+	@Transactional(readOnly = true)
 	public Page<SmsTemplateResponse> getPage(SmsTemplateSearchRequest smsTemplateSearchRequest) {
 		return smsTemplateRepositoryCustom.findPage(smsTemplateSearchRequest);
 	}
