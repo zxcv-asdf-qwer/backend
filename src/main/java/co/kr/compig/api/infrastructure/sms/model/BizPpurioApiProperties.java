@@ -13,4 +13,6 @@ public class BizPpurioApiProperties {
 	private String url;
 	private String serviceId;
 	private String basicToken;
+	private String senderKey;
+	private String senderPhoneNumber;
 }

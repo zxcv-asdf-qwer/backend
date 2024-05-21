@@ -45,7 +45,9 @@ public class SmsTemplate {
 
 	@Column(length = 3, nullable = false)
 	@Convert(converter = SmsTemplateTypeConverter.class)
-	private SmsTemplateType smsTemplateType; //SMS 템플릿 코드
+	private SmsTemplateType smsTemplateType; //SMS 템플릿 종류
+
+	private String templateCode; //카카오 알림톡 템플릿 코드
 
 	@Column(columnDefinition = "TEXT")
 	private String contents; //내용

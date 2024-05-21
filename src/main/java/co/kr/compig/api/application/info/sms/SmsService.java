@@ -15,6 +15,7 @@ import co.kr.compig.api.application.info.sms.model.SmsSend;
 import co.kr.compig.api.domain.sms.Sms;
 import co.kr.compig.api.domain.sms.SmsRepository;
 import co.kr.compig.api.domain.sms.SmsTemplate;
+import co.kr.compig.api.presentation.sms.request.SmsRedirectRequest;
 import co.kr.compig.global.error.exception.BizException;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
@@ -62,7 +63,7 @@ public class SmsService {
 		String contents = result.get().getContents();
 		String extractedNumber = extractNumberFromString(contents);
 		if (!extractedNumber.equals(authenticationNumber)) {
-			throw new BizException("인증 실패");
+			throw new BizException("인증번호가 일치하지 않습니다.");
 		}
 	}
 
@@ -73,5 +74,9 @@ public class SmsService {
 			return matcher.group();
 		}
 		throw new BizException("인증번호를 찾을 수 없습니다.");
+	}
+
+	public void smsSendResultFeedBack(SmsRedirectRequest smsRedirectRequest) {
+
 	}
 }

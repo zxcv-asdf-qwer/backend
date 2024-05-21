@@ -1,4 +1,4 @@
-package co.kr.compig.api.presentation.sms.response;
+package co.kr.compig.api.presentation.sms.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SmsRedirectResponse {
+public class SmsRedirectRequest {
 
 	@JsonProperty("DEVICE")
 	private String device; //메시지 유형

@@ -19,8 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AccessKeyService {
 
 	private final AccessKeyRepository accessKeyRepository;
-	private final BizPpurioApi
-		bizPpurioApi;
+	private final BizPpurioApi bizPpurioApi;
 	private final BizPpurioApiProperties bizPpurioApiProperties;
 
 	public String getSecretKey(SystemServiceType systemServiceType) {
