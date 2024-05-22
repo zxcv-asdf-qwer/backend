@@ -7,6 +7,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import co.kr.compig.api.domain.member.Member;
+import co.kr.compig.api.presentation.push.response.PushResponse;
 import co.kr.compig.global.embedded.Created;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -75,5 +76,14 @@ public class Push {
 
 	public void setDefaultCreated() {
 		this.created = new Created(Member.builder().id("PUSH_SERVICE").build(), LocalDateTime.now());
+	}
+
+	public PushResponse toPushResponse() {
+		PushResponse pushResponse = PushResponse.builder()
+			.pushId(this.id)
+			.message(this.message)
+			.build();
+		pushResponse.setCreated(this.created);
+		return pushResponse;
 	}
 }
