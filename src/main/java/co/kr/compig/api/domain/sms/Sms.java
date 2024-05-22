@@ -2,6 +2,7 @@ package co.kr.compig.api.domain.sms;
 
 import java.time.LocalDateTime;
 
+import co.kr.compig.global.code.BizPpurioResultCode;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -82,7 +83,9 @@ public class Sms {
      * Business login
      ================================================================= */
 
-	public void updateSmsResult(String result) {
-		this.resultCode = result;
+	public void updateResultCode(BizPpurioResultCode failCause) {
+		this.resultCode = failCause.getCode();
+		this.failCause = failCause.getDesc();
 	}
+
 }

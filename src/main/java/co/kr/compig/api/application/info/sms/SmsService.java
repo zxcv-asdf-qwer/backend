@@ -18,6 +18,7 @@ import co.kr.compig.api.domain.sms.Sms;
 import co.kr.compig.api.domain.sms.SmsRepository;
 import co.kr.compig.api.domain.sms.SmsTemplate;
 import co.kr.compig.api.presentation.sms.request.SmsResultRequest;
+import co.kr.compig.global.code.BizPpurioResultCode;
 import co.kr.compig.global.error.exception.BizException;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
@@ -83,14 +84,9 @@ public class SmsService {
 		if (StringUtils.isNotEmpty(smsResultRequest.getRefkey())) {
 			Optional<Sms> byRefkey = smsRepository.findByRefkey(smsResultRequest.getRefkey());
 			byRefkey.ifPresent(sms -> {
-				smsSendResultUpdate(sms, smsResultRequest.getResult());
+				sms.updateResultCode(
+					BizPpurioResultCode.of(smsResultRequest.getTelres())); //성공 at 7000, sms 4100, lms 6600
 			});
-		}
-	}
-
-	private void smsSendResultUpdate(Sms sms, String result) {
-		if (StringUtils.containsAny(result, "4100", "6600", "7000")) {
-			sms.updateSmsResult("1000");
 		}
 	}
 }
