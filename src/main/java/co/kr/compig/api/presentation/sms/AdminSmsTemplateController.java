@@ -40,7 +40,7 @@ public class AdminSmsTemplateController {
 	private final SmsTemplateService smsTemplateService;
 
 	@Operation(summary = "생성하기")
-	@PostMapping(path = "/smsTemplate")
+	@PostMapping
 	public ResponseEntity<Response<?>> createSmsTemplate(
 		@RequestBody @Valid SmsTemplateCreateRequest smsTemplateCreateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
@@ -57,8 +57,8 @@ public class AdminSmsTemplateController {
 			.build());
 	}
 
-	@Operation(summary = "조회")
-	@GetMapping
+	@Operation(summary = "목록 조회 SmsTemplateResponse")
+	@GetMapping("/pages")
 	public ResponseEntity<PageResponse> getPage(
 		@ParameterObject @ModelAttribute SmsTemplateSearchRequest smsTemplateSearchRequest) {
 		Page<SmsTemplateResponse> page = smsTemplateService.getPage(smsTemplateSearchRequest);
