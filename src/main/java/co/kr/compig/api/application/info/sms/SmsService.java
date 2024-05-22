@@ -84,9 +84,21 @@ public class SmsService {
 		if (StringUtils.isNotEmpty(smsResultRequest.getRefkey())) {
 			Optional<Sms> byRefkey = smsRepository.findByRefkey(smsResultRequest.getRefkey());
 			byRefkey.ifPresent(sms -> {
-				sms.updateResultCode(
-					BizPpurioResultCode.of(smsResultRequest.getTelres())); //성공 at 7000, sms 4100, lms 6600
+				smsSendResultUpdate(sms, smsResultRequest);
 			});
 		}
+	}
+
+	private void smsSendResultUpdate(Sms sms, SmsResultRequest smsResultRequest) {
+		if (smsResultRequest.getTelres().equals("0")) { // 알림톡 발송 성공 -> 대체발송 안함
+			if (smsResultRequest.getResult().equals("7000")) { //at 7000
+				sms.updateResultCode(
+					BizPpurioResultCode.of(smsResultRequest.getResult()));
+			}
+		} else { // 알림톡 발송 실패 -> 대체발송 함
+			sms.updateResultCode(
+				BizPpurioResultCode.of(smsResultRequest.getTelres())); //성공 at 7000, sms 4100, lms 6600
+		}
+
 	}
 }
