@@ -2,11 +2,10 @@ package co.kr.compig.global.dto;
 
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 import co.kr.compig.global.dto.pagination.PagingResult;
 import co.kr.compig.global.embedded.Created;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,29 +19,33 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 public class BaseAudit extends PagingResult {
 
-	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private String createdByName; // 등록자 아이디
-	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private String createdByUserId; // 등록자 아이디
-	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private LocalDateTime createdOn; // 등록일시
-	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private String updatedByName; // 수정자 아이디
-	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private String updatedByUserId; // 수정자 아이디
-	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private LocalDateTime updatedOn; // 수정일시
 
 	public void setCreatedAndUpdated(CreatedAndUpdated createdAndUpdated) {
 		if (createdAndUpdated != null) {
 			if (createdAndUpdated.getCreatedBy() != null) {
-				this.createdByName = createdAndUpdated.getCreatedBy().getUserNm();
-				this.createdByUserId = createdAndUpdated.getCreatedBy().getUserId();
+				try {
+					this.createdByName = createdAndUpdated.getCreatedBy().getUserNm();
+					this.createdByUserId = createdAndUpdated.getCreatedBy().getUserId();
+				} catch (EntityNotFoundException e) {
+					this.createdByName = null;
+					this.createdByUserId = null;
+				}
 			}
 			this.createdOn = createdAndUpdated.getCreatedOn();
 			if (createdAndUpdated.getUpdatedBy() != null) {
-				this.updatedByName = createdAndUpdated.getUpdatedBy().getUserNm();
-				this.updatedByUserId = createdAndUpdated.getUpdatedBy().getUserId();
+				try {
+					this.updatedByName = createdAndUpdated.getUpdatedBy().getUserNm();
+					this.updatedByUserId = createdAndUpdated.getUpdatedBy().getUserId();
+				} catch (EntityNotFoundException e) {
+					this.updatedByName = null;
+					this.updatedByUserId = null;
+				}
 			}
 			this.updatedOn = createdAndUpdated.getUpdatedOn();
 		}
@@ -51,8 +54,13 @@ public class BaseAudit extends PagingResult {
 	public void setCreated(Created created) {
 		if (created != null) {
 			if (created.getCreatedBy() != null) {
-				this.createdByName = created.getCreatedBy().getUserNm();
-				this.createdByUserId = created.getCreatedBy().getUserId();
+				try {
+					this.createdByName = created.getCreatedBy().getUserNm();
+					this.createdByUserId = created.getCreatedBy().getUserId();
+				} catch (EntityNotFoundException e) {
+					this.createdByName = null;
+					this.createdByUserId = null;
+				}
 			}
 			this.createdOn = created.getCreatedOn();
 		}

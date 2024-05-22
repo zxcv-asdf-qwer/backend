@@ -63,9 +63,6 @@ public class SettleRepositoryImpl implements SettleRepositoryCustom {
 
 	private BooleanExpression createPredicate(SettleSearchRequest request) {
 		BooleanExpression predicate = Expressions.asBoolean(true).isTrue();
-		if (request == null) {
-			return predicate;
-		}
 		if (request.getToCreatedOn() != null) {
 			predicate = predicate.and(
 				settle.created.createdOn.loe(request.getToCreatedOn()));
