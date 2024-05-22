@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,8 +17,11 @@ import co.kr.compig.api.application.info.push.model.NoticeCode;
 import co.kr.compig.api.application.info.sms.model.SmsSend;
 import co.kr.compig.api.domain.sms.Sms;
 import co.kr.compig.api.domain.sms.SmsRepository;
+import co.kr.compig.api.domain.sms.SmsRepositoryCustom;
 import co.kr.compig.api.domain.sms.SmsTemplate;
-import co.kr.compig.api.presentation.sms.request.SmsResultRequest;
+import co.kr.compig.api.presentation.sms.request.BizPpurioResultRequest;
+import co.kr.compig.api.presentation.sms.request.SmsSearchRequest;
+import co.kr.compig.api.presentation.sms.response.SmsResponse;
 import co.kr.compig.global.code.BizPpurioResultCode;
 import co.kr.compig.global.error.exception.BizException;
 import feign.FeignException;
@@ -33,6 +37,7 @@ public class SmsService {
 	private final SmsSendService smsSendService;
 	private final SmsRepository smsRepository;
 	private final SmsTemplateService smsTemplateService;
+	private final SmsRepositoryCustom smsRepositoryCustom;
 
 	public void create(List<SmsSend> smsSends) {
 		List<Sms> smsList = smsSends.stream()
@@ -80,25 +85,30 @@ public class SmsService {
 		throw new BizException("인증번호를 찾을 수 없습니다.");
 	}
 
-	public void smsSendResultFeedBack(SmsResultRequest smsResultRequest) {
-		if (StringUtils.isNotEmpty(smsResultRequest.getRefkey())) {
-			Optional<Sms> byRefkey = smsRepository.findByRefkey(smsResultRequest.getRefkey());
+	public void smsSendResultFeedBack(BizPpurioResultRequest bizPpurioResultRequest) {
+		if (StringUtils.isNotEmpty(bizPpurioResultRequest.getRefkey())) {
+			Optional<Sms> byRefkey = smsRepository.findByRefkey(bizPpurioResultRequest.getRefkey());
 			byRefkey.ifPresent(sms -> {
-				smsSendResultUpdate(sms, smsResultRequest);
+				smsSendResultUpdate(sms, bizPpurioResultRequest);
 			});
 		}
 	}
 
-	private void smsSendResultUpdate(Sms sms, SmsResultRequest smsResultRequest) {
-		if (smsResultRequest.getTelres().equals("0")) { // 알림톡 발송 성공 -> 대체발송 안함
-			if (smsResultRequest.getResult().equals("7000")) { //at 7000
+	private void smsSendResultUpdate(Sms sms, BizPpurioResultRequest bizPpurioResultRequest) {
+		if (bizPpurioResultRequest.getTelres().equals("0")) { // 알림톡 발송 성공 -> 대체발송 안함
+			if (bizPpurioResultRequest.getResult().equals("7000")) { //at 7000
 				sms.updateResultCode(
-					BizPpurioResultCode.of(smsResultRequest.getResult()));
+					BizPpurioResultCode.of(bizPpurioResultRequest.getResult()));
 			}
 		} else { // 알림톡 발송 실패 -> 대체발송 함
 			sms.updateResultCode(
-				BizPpurioResultCode.of(smsResultRequest.getTelres())); //성공 at 7000, sms 4100, lms 6600
+				BizPpurioResultCode.of(bizPpurioResultRequest.getTelres())); //성공 at 7000, sms 4100, lms 6600
 		}
 
+	}
+
+	@Transactional(readOnly = true)
+	public Page<SmsResponse> getPage(SmsSearchRequest smsSearchRequest) {
+		return smsRepositoryCustom.findPage(smsSearchRequest);
 	}
 }

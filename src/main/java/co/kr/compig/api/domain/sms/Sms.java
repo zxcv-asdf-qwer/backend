@@ -2,6 +2,7 @@ package co.kr.compig.api.domain.sms;
 
 import java.time.LocalDateTime;
 
+import co.kr.compig.api.presentation.sms.response.SmsResponse;
 import co.kr.compig.global.code.BizPpurioResultCode;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.Column;
@@ -86,6 +87,17 @@ public class Sms {
 	public void updateResultCode(BizPpurioResultCode failCause) {
 		this.resultCode = failCause.getCode();
 		this.failCause = failCause.getDesc();
+	}
+
+	public SmsResponse toSmsResponse() {
+		SmsResponse smsResponse = SmsResponse.builder()
+			.smsId(this.id)
+			.contents(this.contents)
+			.receivedPhoneNumber(this.receiverPhoneNumber)
+			.sendResult(this.failCause)
+			.build();
+		smsResponse.setCreatedAndUpdated(this.createdAndModified);
+		return smsResponse;
 	}
 
 }

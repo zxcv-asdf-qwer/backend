@@ -6,7 +6,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.info.sms.SmsService;
-import co.kr.compig.api.presentation.sms.request.SmsResultRequest;
+import co.kr.compig.api.presentation.sms.request.BizPpurioResultRequest;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +23,10 @@ public class SmsController {
 
 	private final SmsService smsService;
 
+	@Operation(summary = "비즈뿌리오 메세지 결과 피드백", hidden = true)
 	@PostMapping("/result")
-	public void smsSendResultFeedBack(@RequestBody SmsResultRequest smsResultRequest) {
-		log.debug(smsResultRequest.toString());
-		smsService.smsSendResultFeedBack(smsResultRequest);
+	public void smsSendResultFeedBack(@RequestBody BizPpurioResultRequest bizPpurioResultRequest) {
+		log.debug(bizPpurioResultRequest.toString());
+		smsService.smsSendResultFeedBack(bizPpurioResultRequest);
 	}
 }

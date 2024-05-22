@@ -12,7 +12,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class SmsResultRequest {
+public class BizPpurioResultRequest {
 
 	@JsonProperty("DEVICE")
 	private String device; //메시지 유형

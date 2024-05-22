@@ -63,7 +63,6 @@ public class AdminSmsTemplateController {
 		@ParameterObject @ModelAttribute SmsTemplateSearchRequest smsTemplateSearchRequest) {
 		Page<SmsTemplateResponse> page = smsTemplateService.getPage(smsTemplateSearchRequest);
 		return PageResponse.ok(page.stream().toList(), page.getPageable().getOffset(), page.getTotalElements());
-
 	}
 
 	@Operation(summary = "정보 수정하기")
