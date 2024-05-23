@@ -78,10 +78,12 @@ public class Push {
 		this.created = new Created(Member.builder().id("PUSH_SERVICE").build(), LocalDateTime.now());
 	}
 
-	public PushResponse toPushResponse() {
+	public PushResponse toPushResponse(Member member) {
 		PushResponse pushResponse = PushResponse.builder()
 			.pushId(this.id)
 			.message(this.message)
+			.receiverMemberId(member != null ? member.getId() : null)
+			.receiverMemberName(member != null ? member.getUserNm() : null)
 			.build();
 		pushResponse.setCreated(this.created);
 		return pushResponse;

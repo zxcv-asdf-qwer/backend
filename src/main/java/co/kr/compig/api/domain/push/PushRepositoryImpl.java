@@ -1,5 +1,6 @@
 package co.kr.compig.api.domain.push;
 
+import static co.kr.compig.api.domain.push.QDevice.*;
 import static co.kr.compig.api.domain.push.QPush.*;
 
 import java.util.List;
@@ -45,7 +46,13 @@ public class PushRepositoryImpl implements PushRepositoryCustom {
 			.fetch();
 
 		List<PushResponse> responses = pushes.stream()
-			.map(Push::toPushResponse)
+			.map(push -> {
+				Device deviceByUUid = jpaQueryFactory
+					.selectFrom(device)
+					.where(device.deviceUuid.eq(push.getDeviceUuid()))
+					.fetchOne();
+				return push.toPushResponse(deviceByUUid != null ? deviceByUUid.getMember() : null);
+			})
 			.collect(Collectors.toList());
 
 		JPAQuery<Long> countQuery = createBaseQuery(predicate)

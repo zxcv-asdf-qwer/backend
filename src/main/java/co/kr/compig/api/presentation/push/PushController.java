@@ -40,8 +40,8 @@ public class PushController {
 			.data(Map.of("pushId", pushService.create(pushCreate)))
 			.build());
 	}
-	//푸시 내역 조회
-	@Operation(summary = "메세지 내역 관리")
+
+	@Operation(summary = "푸시 내역 관리")
 	@GetMapping("/pages")
 	public ResponseEntity<PageResponse> getPage(
 		@ParameterObject @ModelAttribute PushSearchRequest pushSearchRequest) {

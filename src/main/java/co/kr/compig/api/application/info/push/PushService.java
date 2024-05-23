@@ -26,6 +26,7 @@ public class PushService {
 		Push save = pushRepository.save(push);
 		return save.getId();
 	}
+
 	@Transactional(readOnly = true)
 	public Page<PushResponse> getPage(PushSearchRequest pushSearchRequest) {
 		return pushRepositoryCustom.findPage(pushSearchRequest);

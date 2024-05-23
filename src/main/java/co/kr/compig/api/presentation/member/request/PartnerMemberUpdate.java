@@ -57,18 +57,13 @@ public class PartnerMemberUpdate {
 	private List<ToiletType> selfToiletAvailabilities; // 대소변 해결 여부
 
 	//[간병인&&보호자] 회원 공통
-	@NotNull
 	@Parameter(description = "[간병인&&보호자]회원 공통")
 	private boolean marketingEmail; // 이메일 수신동의
-	@NotNull
 	@Parameter(description = "[간병인&&보호자]회원 공통")
 	private boolean marketingAppPush; // 앱 푸시알림 수신동의
-	@NotNull
 	@Parameter(description = "[간병인&&보호자]회원 공통")
 	private boolean marketingKakao; // 알림톡 수신동의
-	@NotNull
 	@Parameter(description = "[간병인&&보호자]회원 공통")
 	private boolean marketingSms; // 문자 수신동의
-	@NotNull
 	private List<String> groupKeys;
 }
