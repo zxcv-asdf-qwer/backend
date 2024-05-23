@@ -181,31 +181,6 @@ comment on column encrypt_key.encrypt_type is 'encrypt key type';
 comment on column encrypt_key.encrypt_key is 'encrypt key';
 comment on column encrypt_key.encrypt_target is 'encrypt target';
 
-create sequence if not exists public.hospital_seq INCREMENT BY 1 START WITH 1;
-create table if not exists hospital
-(
-    hospital_id              bigint not null primary key,
-    hospital_nm              varchar(100),
-    hospital_code            varchar(10),
-    hospital_address1        varchar(200),
-    hospital_address2        varchar(200),
-    hospital_tel_no          varchar(100),
-    hospital_operation_hours varchar(255),
-    created_by               varchar(50),
-    created_on               timestamp(6) default CURRENT_TIMESTAMP,
-    updated_by               varchar(50),
-    updated_on               timestamp(6) default CURRENT_TIMESTAMP
-);
-
-comment on table hospital is '병원정보 테이블';
-comment on column hospital.hospital_id is 'ID';
-comment on column hospital.hospital_nm is '병원 명';
-comment on column hospital.hospital_code is '병원 우편번호';
-comment on column hospital.hospital_address1 is '병원 주소';
-comment on column hospital.hospital_address2 is '병원 상세 주소';
-comment on column hospital.hospital_tel_no is '병원 전화번호';
-comment on column hospital.hospital_operation_hours is '병원 운영 시간';
-
 create sequence if not exists inbound_api_seq start with 1 increment by 1;
 create table if not exists public.inbound_api
 (
