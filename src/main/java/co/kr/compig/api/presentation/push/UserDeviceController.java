@@ -27,8 +27,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "/devices", produces = "application/json")
-public class DeviceController {
+@RequestMapping(path = "/user/devices", produces = "application/json")
+public class UserDeviceController {
 
 	private final DeviceService deviceService;
 
