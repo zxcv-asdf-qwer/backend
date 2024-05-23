@@ -13,4 +13,5 @@ public interface PaymentRepositoryCustom {
 	Slice<PaymentResponse> getPaymentSlice(PaymentSearchRequest paymentSearchRequest, Pageable pageable);
 
 	Page<PaymentResponse> findPage(PaymentSearchRequest paymentSearchRequest);
+
 }

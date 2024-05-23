@@ -1,6 +1,5 @@
 package co.kr.compig.api.domain.packing;
 
-import static co.kr.compig.api.domain.apply.QApply.*;
 import static co.kr.compig.api.domain.order.QCareOrder.*;
 import static co.kr.compig.api.domain.packing.QPacking.*;
 
@@ -17,62 +16,22 @@ import com.google.common.base.CaseFormat;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Path;
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
-import co.kr.compig.api.presentation.packing.request.PackingSearchRequest;
-import co.kr.compig.api.presentation.packing.response.PackingResponse;
-import co.kr.compig.global.code.ApplyStatus;
+import co.kr.compig.api.presentation.payment.request.PaymentExchangeOneDaySearchRequest;
 import co.kr.compig.global.code.OrderStatus;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class PackingRepositoryImpl implements PackingRepositoryCustom {
 
 	private final JPAQueryFactory jpaQueryFactory;
-
-	@Override
-	public Page<PackingResponse> findPage(PackingSearchRequest request) {
-		BooleanExpression predicate = createPredicate(request);
-
-		JPAQuery<PackingResponse> query = createBaseQuery(predicate)
-			.select(Projections.constructor(PackingResponse.class,
-				packing.id,
-				packing.careOrder.id
-			));
-		Pageable pageable = request.pageable();
-
-		applySorting(query, pageable);
-
-		List<PackingResponse> packings = query
-			.offset(pageable.getOffset())
-			.limit(pageable.getPageSize())
-			.fetch();
-
-		JPAQuery<Long> countQuery = createBaseQuery(predicate)
-			.select(packing.count());
-
-		return PageableExecutionUtils.getPage(packings, pageable, countQuery::fetchOne);
-	}
-
-	private BooleanExpression createPredicate(PackingSearchRequest request) {
-		BooleanExpression predicate = Expressions.asBoolean(true).isTrue();
-		if (request.getCareOrderId() != null) {
-			predicate = predicate.and(packing.careOrder.id.eq(request.getCareOrderId()));
-		}
-
-		return predicate;
-	}
-
-	private JPAQuery<?> createBaseQuery(BooleanExpression predicate) {
-		return jpaQueryFactory
-			.from(packing)
-			.where(predicate);
-	}
 
 	private void applySorting(JPAQuery<?> query, Pageable pageable) {
 		for (Sort.Order order : pageable.getSort()) {
@@ -87,17 +46,50 @@ public class PackingRepositoryImpl implements PackingRepositoryCustom {
 	}
 
 	@Override
-	public List<Packing> findByEndDateTimeLessThanEqualAndOrderStatusAndApplyStatusAndWalletIsNull(
-		LocalDateTime endDateTime, OrderStatus orderStatus, ApplyStatus applyStatus) {
-		return jpaQueryFactory
-			.selectFrom(packing)
-			.join(packing.careOrder, careOrder)
-			.join(careOrder.applys, apply)
+	public Page<Packing> getExchangeOneDayPage(PaymentExchangeOneDaySearchRequest request) {
+		BooleanExpression predicate = createPredicate(request);
+
+		JPAQuery<Packing> query = jpaQueryFactory
+			.select(packing)
+			.from(packing)
+			.leftJoin(packing.careOrder, careOrder)
 			.where(
-				packing.endDateTime.loe(endDateTime),
-				careOrder.orderStatus.eq(orderStatus),
-				apply.applyStatus.eq(applyStatus)
+				packing.endDateTime.loe(LocalDateTime.now()),
+				careOrder.orderStatus.in(OrderStatus.MATCHING_WAITING, OrderStatus.MATCHING_COMPLETE,
+					OrderStatus.ORDER_COMPLETE)
 			)
+			.where(predicate) // 추가적인 필터 조건
+			.orderBy(packing.id.desc());  // 지갑 ID에 따라 내림차순 정렬
+
+		Pageable pageable = request.pageable();
+
+		//정렬
+		applySorting(query, pageable);
+
+		List<Packing> packages = query
+			.offset(pageable.getOffset())
+			.limit(pageable.getPageSize())
 			.fetch();
+
+		JPAQuery<Long> countQuery = jpaQueryFactory
+			.select(packing.count())
+			.leftJoin(packing.careOrder, careOrder)
+			.where(
+				packing.endDateTime.loe(LocalDateTime.now()),
+				careOrder.orderStatus.in(OrderStatus.MATCHING_WAITING, OrderStatus.MATCHING_COMPLETE,
+					OrderStatus.ORDER_COMPLETE)
+			)
+			.where(predicate); // 추가적인 필터 조건
+
+		return PageableExecutionUtils.getPage(packages, pageable, countQuery::fetchOne);
+	}
+
+	private BooleanExpression createPredicate(PaymentExchangeOneDaySearchRequest request) {
+		BooleanExpression predicate = Expressions.asBoolean(true).isTrue();
+		if (request.getCareOrderId() != null) {
+			predicate = predicate.and(packing.careOrder.id.eq(request.getCareOrderId()));
+		}
+
+		return predicate;
 	}
 }

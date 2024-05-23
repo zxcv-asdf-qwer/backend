@@ -65,19 +65,6 @@ public class PartnerMemberCreate {
 	private boolean marketingKakao; // 알림톡 수신동의
 	private boolean marketingSms; // 문자 수신동의
 
-	@NotBlank
-	private String ci; //나이스 본인인증 ci 값
-	@NotBlank
-	private String jumin1; // 주민등록번호 앞자리
-	@NotBlank
-	private String jumin2; // 주민등록번호 뒷자리
-	@NotBlank
-	private String accountNumber; // 계좌번호
-	@NotBlank
-	private String accountName; // 예금주
-	@NotBlank
-	private String bankName; // 은행 이름
-
 	public Member convertEntity() {
 		return Member.builder()
 			.userId(this.email)
@@ -99,7 +86,6 @@ public class PartnerMemberCreate {
 			.marketingAppPushDate(this.marketingAppPush ? LocalDate.now() : null)
 			.marketingKakaoDate(this.marketingKakao ? LocalDate.now() : null)
 			.marketingSmsDate(this.marketingSms ? LocalDate.now() : null)
-			.ci(this.ci)
 			.build();
 	}
 }

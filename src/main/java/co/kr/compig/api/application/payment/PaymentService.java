@@ -4,10 +4,13 @@ import static co.kr.compig.global.utils.CalculateUtil.*;
 import static co.kr.compig.global.utils.KeyGen.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.flywaydb.core.internal.util.CollectionsUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -21,9 +24,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import co.kr.compig.api.application.order.CareOrderService;
-import co.kr.compig.api.application.settle.SettleService;
+import co.kr.compig.api.application.system.EncryptKeyService;
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.domain.packing.Packing;
+import co.kr.compig.api.domain.packing.PackingRepository;
 import co.kr.compig.api.domain.payment.Payment;
 import co.kr.compig.api.domain.payment.PaymentRepository;
 import co.kr.compig.api.domain.payment.PaymentRepositoryCustom;
@@ -31,9 +35,13 @@ import co.kr.compig.api.infrastructure.pay.PayApi;
 import co.kr.compig.api.infrastructure.pay.model.SmsPayRequest;
 import co.kr.compig.api.infrastructure.pay.model.SmsPayResponse;
 import co.kr.compig.api.presentation.order.request.CareOrderCalculateRequest;
+import co.kr.compig.api.presentation.payment.request.PaymentExchangeOneDaySearchRequest;
 import co.kr.compig.api.presentation.payment.request.PaymentSearchRequest;
 import co.kr.compig.api.presentation.payment.response.PaymentDetailResponse;
+import co.kr.compig.api.presentation.payment.response.PaymentExchangeOneDayResponse;
 import co.kr.compig.api.presentation.payment.response.PaymentResponse;
+import co.kr.compig.global.crypt.AES256;
+import co.kr.compig.global.dto.pagination.PageResponse;
 import co.kr.compig.global.dto.pagination.SliceResponse;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import co.kr.compig.global.utils.GsonLocalDateTimeAdapter;
@@ -48,9 +56,10 @@ public class PaymentService {
 
 	private final PaymentRepository paymentRepository;
 	private final PaymentRepositoryCustom paymentRepositoryCustom;
+	private final PackingRepository packingRepository;
 	private final CareOrderService careOrderService;
-	private final SettleService settleService;
 	private final PayApi payApi;
+	private final EncryptKeyService encryptKeyService;
 
 	@Value("${api.pay.mid}")
 	private String payMid;
@@ -124,5 +133,54 @@ public class PaymentService {
 	@Transactional(readOnly = true)
 	public Payment getPaymentById(Long paymentId) {
 		return paymentRepository.findById(paymentId).orElseThrow(NotExistDataException::new);
+	}
+
+	@Transactional(readOnly = true)
+	public ResponseEntity<PageResponse> getExchangeOneDayPage(PaymentExchangeOneDaySearchRequest request) {
+		Page<Packing> page = packingRepository.getExchangeOneDayPage(request);
+		if (CollectionUtils.isEmpty(page.getContent())) {
+			return PageResponse.noResult();
+		}
+		AES256 aes256 = encryptKeyService.getEncryptKey();
+
+		List<PaymentExchangeOneDayResponse> responses =
+			page.get().map(packing -> {
+				CareOrderCalculateRequest calculateRequest = CareOrderCalculateRequest.builder()
+					.amount(packing.getAmount())
+					.periodType(packing.getPeriodType())
+					.partTime(packing.getPartTime())
+					.build();
+				String accountName;
+				String accountNumber;
+
+				try {
+					accountName = aes256.decrypt(packing.getCareOrder().getMember().getAccount().getAccountName(),
+						packing.getCareOrder().getMember().getAccount().getIv());
+				} catch (Exception e) {
+					accountName = null;
+					log.error("Decryption error for account name: {}", e.getMessage());
+				}
+
+				try {
+					accountNumber = aes256.decrypt(packing.getCareOrder().getMember().getAccount().getAccountNumber(),
+						packing.getCareOrder().getMember().getAccount().getIv());
+				} catch (Exception e) {
+					accountNumber = null;
+					log.error("Decryption error for account number: {}", e.getMessage());
+				}
+				return PaymentExchangeOneDayResponse.builder()
+					.userNm(packing.getCareOrder().getMember().getUserNm())
+					.price(calculatePriceOneDay(calculateRequest))
+					.partnerFee(packing.getSettle().getPartnerFees())
+					.transactionAmount(
+						calculatePriceOneDay(calculateRequest) - packing.getSettle().getPartnerFees())//간병하루 - 간병인 수수료
+					.orderId(packing.getCareOrder().getId())
+					.accountName(accountName)
+					.bankName(packing.getCareOrder().getMember().getAccount() != null ?
+						packing.getCareOrder().getMember().getAccount().getBankName() : null)
+					.accountNumber(accountNumber)
+					.build();
+			}).collect(Collectors.toList());
+		return PageResponse.ok(responses.stream().toList(), page.getPageable().getOffset(), page.getTotalElements());
 	}
 }

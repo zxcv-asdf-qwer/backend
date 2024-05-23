@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.payment.PaymentService;
+import co.kr.compig.api.presentation.payment.request.PaymentExchangeOneDaySearchRequest;
 import co.kr.compig.api.presentation.payment.request.PaymentSearchRequest;
 import co.kr.compig.api.presentation.payment.response.PaymentDetailResponse;
 import co.kr.compig.api.presentation.payment.response.PaymentResponse;
@@ -68,10 +69,10 @@ public class AdminPaymentController {
 		return ResponseEntity.ok().build();
 	}
 
-	// @Operation(summary = "간병인 일일 정산내역 WalletResponseWithSecret")
-	// @GetMapping("/exchange-one-day")
-	// public ResponseEntity<PageResponse> getExchangeOneDayWalletPage(
-	// 	@ParameterObject @ModelAttribute WalletSearchRequest walletSearchRequest) {
-	// 	return walletService.getExchangeOneDayWalletPage(walletSearchRequest);
-	// }
+	@Operation(summary = "간병인 일일 정산내역", description = "페이징 PackingExchangeOneDayResponse")
+	@GetMapping("/exchange-one-day")
+	public ResponseEntity<PageResponse> getExchangeOneDayPage(
+		@ParameterObject @ModelAttribute PaymentExchangeOneDaySearchRequest request) {
+		return paymentService.getExchangeOneDayPage(request);
+	}
 }
