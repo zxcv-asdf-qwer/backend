@@ -15,9 +15,9 @@ import com.google.firebase.messaging.FirebaseMessaging;
 @Configuration
 public class FirebasePushConfig {
 
-	@Value("${api.fcm.care-partner.serviceKeyPath}")
+	@Value("${api.fcm.user.serviceKeyPath}")
 	private String partnerServiceKeyPath;
-	@Value("${api.fcm.care-partner.projectId}")
+	@Value("${api.fcm.user.projectId}")
 	private String partnerProjectId;
 
 	@Bean
