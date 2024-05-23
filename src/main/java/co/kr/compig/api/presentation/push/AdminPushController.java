@@ -24,12 +24,12 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Tag(name = "푸시", description = "푸시 관련 API")
+@Tag(name = "푸시", description = "푸시 관리 관련 API")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "/pushes", produces = "application/json")
-public class PushController {
+@RequestMapping(path = "/admin/pushes", produces = "application/json")
+public class AdminPushController {
 
 	private final PushService pushService;
 
