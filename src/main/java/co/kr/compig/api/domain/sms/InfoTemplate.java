@@ -3,8 +3,8 @@ package co.kr.compig.api.domain.sms;
 import java.util.HashSet;
 import java.util.Set;
 
-import co.kr.compig.api.presentation.info.request.InfoTemplateUpdateRequest;
-import co.kr.compig.api.presentation.info.response.InfoTemplateResponse;
+import co.kr.compig.api.presentation.infotemplate.request.InfoTemplateUpdateRequest;
+import co.kr.compig.api.presentation.infotemplate.response.InfoTemplateResponse;
 import co.kr.compig.global.code.converter.InfoTemplateTypeConverter;
 import co.kr.compig.global.code.infoTemplateType;
 import co.kr.compig.global.embedded.CreatedAndUpdated;

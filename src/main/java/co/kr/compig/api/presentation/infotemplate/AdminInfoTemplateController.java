@@ -1,4 +1,4 @@
-package co.kr.compig.api.presentation.info;
+package co.kr.compig.api.presentation.infotemplate;
 
 import java.util.Map;
 
@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.info.InfoTemplateService;
-import co.kr.compig.api.presentation.info.request.InfoTemplateCreateRequest;
-import co.kr.compig.api.presentation.info.request.InfoTemplateSearchRequest;
-import co.kr.compig.api.presentation.info.request.InfoTemplateUpdateRequest;
-import co.kr.compig.api.presentation.info.response.InfoTemplateResponse;
+import co.kr.compig.api.presentation.infotemplate.request.InfoTemplateCreateRequest;
+import co.kr.compig.api.presentation.infotemplate.request.InfoTemplateSearchRequest;
+import co.kr.compig.api.presentation.infotemplate.request.InfoTemplateUpdateRequest;
+import co.kr.compig.api.presentation.infotemplate.response.InfoTemplateResponse;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.dto.pagination.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;

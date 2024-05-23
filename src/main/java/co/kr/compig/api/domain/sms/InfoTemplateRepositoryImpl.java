@@ -19,8 +19,8 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
-import co.kr.compig.api.presentation.info.request.InfoTemplateSearchRequest;
-import co.kr.compig.api.presentation.info.response.InfoTemplateResponse;
+import co.kr.compig.api.presentation.infotemplate.request.InfoTemplateSearchRequest;
+import co.kr.compig.api.presentation.infotemplate.response.InfoTemplateResponse;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
