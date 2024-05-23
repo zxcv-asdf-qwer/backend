@@ -32,7 +32,6 @@ import co.kr.compig.api.domain.patient.Patient;
 import co.kr.compig.api.domain.permission.MenuPermission;
 import co.kr.compig.api.domain.push.Device;
 import co.kr.compig.api.domain.review.Review;
-import co.kr.compig.api.domain.wallet.Wallet;
 import co.kr.compig.api.presentation.member.request.AdminMemberUpdate;
 import co.kr.compig.api.presentation.member.request.GuardianMemberUpdate;
 import co.kr.compig.api.presentation.member.request.MemberUpdateRequest;
@@ -227,11 +226,6 @@ public class Member {
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JsonManagedReference //연관관계 주인 반대 Entity 에 선언, 정상적으로 직렬화 수행
 	private Set<OrderPatient> orderPatients = new HashSet<>();
-
-	@Builder.Default
-	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JsonManagedReference //연관관계 주인 반대 Entity 에 선언, 정상적으로 직렬화 수행
-	private Set<Wallet> wallets = new HashSet<>();
 
 	@Builder.Default
 	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

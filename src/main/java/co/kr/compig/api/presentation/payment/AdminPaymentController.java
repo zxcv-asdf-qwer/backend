@@ -67,4 +67,11 @@ public class AdminPaymentController {
 		paymentService.deletePayment(paymentId);
 		return ResponseEntity.ok().build();
 	}
+
+	// @Operation(summary = "간병인 일일 정산내역 WalletResponseWithSecret")
+	// @GetMapping("/exchange-one-day")
+	// public ResponseEntity<PageResponse> getExchangeOneDayWalletPage(
+	// 	@ParameterObject @ModelAttribute WalletSearchRequest walletSearchRequest) {
+	// 	return walletService.getExchangeOneDayWalletPage(walletSearchRequest);
+	// }
 }

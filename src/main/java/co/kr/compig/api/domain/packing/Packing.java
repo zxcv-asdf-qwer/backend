@@ -1,21 +1,16 @@
 package co.kr.compig.api.domain.packing;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.domain.settle.Settle;
-import co.kr.compig.api.domain.wallet.Wallet;
 import co.kr.compig.api.presentation.packing.request.PackingUpdateRequest;
 import co.kr.compig.api.presentation.packing.response.PackingDetailResponse;
 import co.kr.compig.global.code.PeriodType;
 import co.kr.compig.global.code.converter.PeriodTypeConverter;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Embedded;
@@ -27,7 +22,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -85,12 +79,6 @@ public class Packing {
 	@JoinColumn(name = "settle_id", nullable = false, foreignKey = @ForeignKey(name = "fk02_packing"))
 	@JsonBackReference//연관관계의 주인 Entity 에 선언, 직렬화가 되지 않도록 수행
 	private Settle settle = new Settle();
-
-	@Builder.Default
-	@OneToMany(
-		mappedBy = "packing", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonManagedReference //연관관계 주인 반대 Entity 에 선언, 정상적으로 직렬화 수행
-	private Set<Wallet> wallets = new HashSet<>();
 
 	/* =================================================================
 	* Relation method

@@ -617,24 +617,6 @@ create table if not exists terms
     primary key (terms_id)
 );
 
-create sequence if not exists wallet_seq start with 1 increment by 1;
-create table if not exists wallet
-(
-    wallet_id          bigint       not null,
-    member_id          varchar(255) not null,
-    packing_id         bigint,
-    transaction_type   varchar(15),
-    transaction_amount integer,
-    balance            integer,
-    exchange_type      varchar(15),
-    description        varchar(255),
-    created_by         varchar(50),
-    created_on         timestamp(6) default CURRENT_TIMESTAMP,
-    updated_by         varchar(50),
-    updated_on         timestamp(6) default CURRENT_TIMESTAMP,
-    primary key (wallet_id)
-);
-
 create sequence if not exists facking_seq start with 1 increment by 1;
 create table if not exists facking
 (
@@ -792,15 +774,7 @@ alter table if exists system_file
         foreign key (board_id)
             references board
 ;
-alter table if exists wallet
-    add constraint fk01_wallet
-        foreign key (member_id)
-            references member
-;
-alter table if exists wallet
-    add constraint fk02_wallet
-        foreign key (packing_id)
-            references packing;
+
 alter table if exists facking
     add constraint fk01_facking
         foreign key (care_order_id)
