@@ -537,7 +537,7 @@ create table if not exists sms
     contents              text,
     refkey                varchar(255),
     sendtime              timestamp(6),
-    sms_template_id       bigint,
+    info_template_id      bigint,
     result_code           varchar(10),
     fail_cause            text,
     created_by            varchar(50),
@@ -553,28 +553,28 @@ comment on column sms.receiver_phone_number is '받는 전화번호';
 comment on column sms.contents is '내용';
 comment on column sms.refkey is '비즈뿌리오에 보내는 unique 값';
 comment on column sms.sendtime is '발송시간';
-comment on column sms.sms_template_id is 'sms 템플릿 ID';
+comment on column sms.info_template_id is 'sms 템플릿 ID';
 comment on column sms.result_code is '결과코드';
 comment on column sms.fail_cause is '실패사유';
 
-create sequence if not exists sms_template_seq start with 1 increment by 1;
-create table if not exists sms_template
+create sequence if not exists info_template_seq start with 1 increment by 1;
+create table if not exists info_template
 (
-    sms_template_id   bigint     not null primary key,
-    sms_template_type varchar(3) not null,
-    template_code     varchar(50),
-    contents          text       not null,
-    created_by        varchar(50),
-    created_on        timestamp(6) default CURRENT_TIMESTAMP,
-    updated_by        varchar(50),
-    updated_on        timestamp(6) default CURRENT_TIMESTAMP
+    info_template_id   bigint     not null primary key,
+    info_template_type varchar(3) not null,
+    template_code      varchar(50),
+    contents           text       not null,
+    created_by         varchar(50),
+    created_on         timestamp(6) default CURRENT_TIMESTAMP,
+    updated_by         varchar(50),
+    updated_on         timestamp(6) default CURRENT_TIMESTAMP
 );
 
-comment on table sms_template is 'sms 템플릿 테이블';
-comment on column sms_template.sms_template_id is 'ID';
-comment on column sms_template.sms_template_type is 'SMS 템플릿 종류';
-comment on column sms_template.template_code is '카카오 알림톡 템플릿 코드';
-comment on column sms_template.contents is '내용';
+comment on table info_template is 'sms 템플릿 테이블';
+comment on column info_template.info_template_id is 'ID';
+comment on column info_template.info_template_type is 'SMS 템플릿 종류';
+comment on column info_template.template_code is '카카오 알림톡 템플릿 코드';
+comment on column info_template.contents is '내용';
 
 create sequence if not exists public.system_file_seq INCREMENT BY 1 START WITH 1;
 create table if not exists system_file
@@ -766,8 +766,8 @@ alter table if exists payment_cancel
 ;
 alter table if exists sms
     add constraint fk01_sms
-        foreign key (sms_template_id)
-            references sms_template
+        foreign key (info_template_id)
+            references info_template
 ;
 alter table if exists system_file
     add constraint fk01_system_file

@@ -16,9 +16,8 @@ import co.kr.compig.api.application.info.push.FirebasePushService;
 import co.kr.compig.api.application.info.push.model.MessageDto;
 import co.kr.compig.api.application.info.push.model.NotificationRequest;
 import co.kr.compig.api.application.info.sms.SmsService;
-import co.kr.compig.api.application.info.sms.SmsTemplateService;
 import co.kr.compig.api.application.info.sms.model.SmsSend;
-import co.kr.compig.api.domain.sms.SmsTemplate;
+import co.kr.compig.api.domain.sms.InfoTemplate;
 import co.kr.compig.api.infrastructure.sms.model.BizPpurioApiProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +30,7 @@ public class InfoService {
 
 	private final SmsService smsService;
 	private final FirebasePushService firebasePushService;
-	private final SmsTemplateService smsTemplateService;
+	private final InfoTemplateService infoTemplateService;
 	private final BizPpurioApiProperties bizPpurioApiProperties;
 
 	@Async
@@ -49,22 +48,22 @@ public class InfoService {
 		messageDtoList.forEach(messageDto -> {
 			if (hasPushMessage(messageDto)) {
 				log.info("### Send push");
-				SmsTemplate bySmsTemplateType = smsTemplateService.getBySmsTemplateType(
+				InfoTemplate byInfoTemplateType = infoTemplateService.getByInfoTemplateType(
 					messageDto.getNoticeCode().getPushTemplate());
 				messageDto.getTargetTokens().forEach(targetToken -> {
 					firebasePushService.sendMessageTo(NotificationRequest.builder()
 						.deviceToken(targetToken)
 						.title(messageDto.getNoticeCode().getTitle())
-						.body(getContents(bySmsTemplateType.getContents(), messageDto.getData()))
+						.body(getContents(byInfoTemplateType.getContents(), messageDto.getData()))
 						.build());
 				});
 			}
 
 			if (hasSmsAlertMessage(messageDto)) {
 				log.info("### Send alert");
-				SmsTemplate bySmsTemplateType = smsTemplateService.getBySmsTemplateType(
+				InfoTemplate byInfoTemplateType = infoTemplateService.getByInfoTemplateType(
 					messageDto.getNoticeCode().getAlertTemplate());
-				smsSends.add(getSmsSend((messageDto), bySmsTemplateType));
+				smsSends.add(getSmsSend((messageDto), byInfoTemplateType));
 			}
 		});
 
@@ -73,12 +72,12 @@ public class InfoService {
 		}
 	}
 
-	private SmsSend getSmsSend(MessageDto messageDto, SmsTemplate smsTemplate) {
+	private SmsSend getSmsSend(MessageDto messageDto, InfoTemplate infoTemplate) {
 		return SmsSend.builder()
 			.senderPhoneNumber(bizPpurioApiProperties.getSenderPhoneNumber())
 			.receiverPhoneNumber(messageDto.getPhoneNumber())
-			.contents(getContents(smsTemplate.getContents(), messageDto.getData()))
-			.smsTemplate(smsTemplate)
+			.contents(getContents(infoTemplate.getContents(), messageDto.getData()))
+			.infoTemplate(infoTemplate)
 			.build();
 	}
 

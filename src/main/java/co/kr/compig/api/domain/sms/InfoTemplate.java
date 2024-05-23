@@ -3,10 +3,10 @@ package co.kr.compig.api.domain.sms;
 import java.util.HashSet;
 import java.util.Set;
 
-import co.kr.compig.api.presentation.sms.request.SmsTemplateUpdateRequest;
-import co.kr.compig.api.presentation.sms.response.SmsTemplateResponse;
-import co.kr.compig.global.code.SmsTemplateType;
-import co.kr.compig.global.code.converter.SmsTemplateTypeConverter;
+import co.kr.compig.api.presentation.info.request.InfoTemplateUpdateRequest;
+import co.kr.compig.api.presentation.info.response.InfoTemplateResponse;
+import co.kr.compig.global.code.converter.InfoTemplateTypeConverter;
+import co.kr.compig.global.code.infoTemplateType;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -31,21 +31,21 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table
 @SequenceGenerator(
-	name = "sms_template_seq_gen", //시퀀스 제너레이터 이름
-	sequenceName = "sms_template_seq", //시퀀스 이름
+	name = "info_template_seq_gen", //시퀀스 제너레이터 이름
+	sequenceName = "info_template_seq", //시퀀스 이름
 	initialValue = 1, //시작값
 	allocationSize = 1 //메모리를 통해 할당 할 범위 사이즈
 )
-public class SmsTemplate {
+public class InfoTemplate {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sms_template_seq_gen")
-	@Column(name = "sms_template_id")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "info_template_seq_gen")
+	@Column(name = "info_template_id")
 	private Long id;
 
 	@Column(length = 3, nullable = false)
-	@Convert(converter = SmsTemplateTypeConverter.class)
-	private SmsTemplateType smsTemplateType; //SMS 템플릿 종류
+	@Convert(converter = InfoTemplateTypeConverter.class)
+	private infoTemplateType infoTemplateType; //SMS 템플릿 종류
 
 	private String templateCode; //카카오 알림톡 템플릿 코드
 
@@ -64,23 +64,23 @@ public class SmsTemplate {
   * Domain mapping
   ===================================================================*/
 
-	@OneToMany(mappedBy = "smsTemplate", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "infoTemplate", cascade = CascadeType.ALL, orphanRemoval = true)
 	@Builder.Default
 	private final Set<Sms> sms = new HashSet<>();
 
-	public SmsTemplateResponse toSmsTemplateDetailResponse() {
-		return SmsTemplateResponse.builder()
-			.smsTemplateId(this.id)
-			.smsTemplateType(this.smsTemplateType)
+	public InfoTemplateResponse toInfoTemplateDetailResponse() {
+		return InfoTemplateResponse.builder()
+			.infoTemplateId(this.id)
+			.infoTemplateType(this.infoTemplateType)
 			.templateCode(this.templateCode)
 			.contents(this.contents)
 			.build();
 	}
 
-	public void update(SmsTemplateUpdateRequest smsTemplateUpdateRequest) {
-		this.smsTemplateType = smsTemplateUpdateRequest.getSmsTemplateType();
-		this.templateCode = smsTemplateUpdateRequest.getTemplateCode();
-		this.contents = smsTemplateUpdateRequest.getContents();
+	public void update(InfoTemplateUpdateRequest infoTemplateUpdateRequest) {
+		this.infoTemplateType = infoTemplateUpdateRequest.getInfoTemplateType();
+		this.templateCode = infoTemplateUpdateRequest.getTemplateCode();
+		this.contents = infoTemplateUpdateRequest.getContents();
 	}
 
   /*====================================================================

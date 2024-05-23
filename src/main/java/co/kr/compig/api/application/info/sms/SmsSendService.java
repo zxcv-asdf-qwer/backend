@@ -45,7 +45,7 @@ public class SmsSendService {
 			.content(BizPpurioSendRequest.Content.builder()
 				.at(BizPpurioSendRequest.At.builder()
 					.senderkey(bizPpurioApiProperties.getSenderKey())
-					.templatecode(smsSend.getSmsTemplate().getTemplateCode())
+					.templatecode(smsSend.getInfoTemplate().getTemplateCode())
 					.message(smsSend.getContents())
 					.build())
 				.build())

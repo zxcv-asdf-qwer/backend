@@ -13,12 +13,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import co.kr.compig.api.application.info.InfoTemplateService;
 import co.kr.compig.api.application.info.push.model.NoticeCode;
 import co.kr.compig.api.application.info.sms.model.SmsSend;
+import co.kr.compig.api.domain.sms.InfoTemplate;
 import co.kr.compig.api.domain.sms.Sms;
 import co.kr.compig.api.domain.sms.SmsRepository;
 import co.kr.compig.api.domain.sms.SmsRepositoryCustom;
-import co.kr.compig.api.domain.sms.SmsTemplate;
 import co.kr.compig.api.presentation.sms.request.BizPpurioResultRequest;
 import co.kr.compig.api.presentation.sms.request.SmsSearchRequest;
 import co.kr.compig.api.presentation.sms.response.SmsResponse;
@@ -36,7 +37,7 @@ public class SmsService {
 
 	private final SmsSendService smsSendService;
 	private final SmsRepository smsRepository;
-	private final SmsTemplateService smsTemplateService;
+	private final InfoTemplateService infoTemplateService;
 	private final SmsRepositoryCustom smsRepositoryCustom;
 
 	public void create(List<SmsSend> smsSends) {
@@ -55,11 +56,11 @@ public class SmsService {
 
 	public void getAuthenticationTopByReceiverPhoneNumber(String receiverPhoneNumber, String authenticationNumber,
 		NoticeCode noticeCode) {
-		SmsTemplate smsTemplate = smsTemplateService.getBySmsTemplateType(noticeCode.getAlertTemplate());
-		Optional.ofNullable(smsTemplate.getSmsTemplateType()).orElseThrow(() -> new BizException("인증 실패"));
-		Optional<Sms> result = smsRepository.findTopByReceiverPhoneNumberAndSmsTemplateOrderByIdDesc(
+		InfoTemplate infoTemplate = infoTemplateService.getByInfoTemplateType(noticeCode.getAlertTemplate());
+		Optional.ofNullable(infoTemplate.getInfoTemplateType()).orElseThrow(() -> new BizException("인증 실패"));
+		Optional<Sms> result = smsRepository.findTopByReceiverPhoneNumberAndInfoTemplateOrderByIdDesc(
 			receiverPhoneNumber,
-			smsTemplate);
+			infoTemplate);
 		result.orElseThrow(() -> new BizException("인증 실패"));
 
 		LocalDateTime createdOn = result.get().getCreatedAndModified().getCreatedOn();

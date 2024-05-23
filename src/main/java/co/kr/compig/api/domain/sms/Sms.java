@@ -69,15 +69,15 @@ public class Sms {
 	 * Domain mapping
 	 ================================================================= */
 	@ManyToOne
-	@JoinColumn(name = "sms_template_id", foreignKey = @ForeignKey(name = "fk01_sms"))
-	private SmsTemplate smsTemplate;
+	@JoinColumn(name = "info_template_id", foreignKey = @ForeignKey(name = "fk01_sms"))
+	private InfoTemplate infoTemplate;
 
   /* =================================================================
    * Relation method
    ================================================================= */
 
-	public void setSmsTemplate(final SmsTemplate smsTemplate) {
-		this.smsTemplate = smsTemplate;
+	public void setInfoTemplate(final InfoTemplate infoTemplate) {
+		this.infoTemplate = infoTemplate;
 	}
 
 	/* =================================================================

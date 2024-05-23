@@ -1,6 +1,6 @@
-package co.kr.compig.api.presentation.sms.response;
+package co.kr.compig.api.presentation.info.response;
 
-import co.kr.compig.global.code.SmsTemplateType;
+import co.kr.compig.global.code.infoTemplateType;
 import co.kr.compig.global.dto.BaseAudit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,9 +13,9 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
-public class SmsTemplateResponse extends BaseAudit {
-	private Long smsTemplateId;
-	private SmsTemplateType smsTemplateType; //SMS 템플릿 코드
+public class InfoTemplateResponse extends BaseAudit {
+	private Long infoTemplateId;
+	private infoTemplateType infoTemplateType; //SMS 템플릿 코드
 	private String templateCode; //카카오 알림톡 템플릿 코드
 	private String contents; //내용
 }

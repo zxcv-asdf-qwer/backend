@@ -1,6 +1,6 @@
 package co.kr.compig.api.domain.sms;
 
-import static co.kr.compig.api.domain.sms.QSmsTemplate.*;
+import static co.kr.compig.api.domain.sms.QInfoTemplate.*;
 
 import java.util.List;
 
@@ -19,25 +19,25 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
-import co.kr.compig.api.presentation.sms.request.SmsTemplateSearchRequest;
-import co.kr.compig.api.presentation.sms.response.SmsTemplateResponse;
+import co.kr.compig.api.presentation.info.request.InfoTemplateSearchRequest;
+import co.kr.compig.api.presentation.info.response.InfoTemplateResponse;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class SmsTemplateRepositoryImpl implements SmsTemplateRepositoryCustom {
+public class InfoTemplateRepositoryImpl implements InfoTemplateRepositoryCustom {
 
 	private final JPAQueryFactory jpaQueryFactory;
 
 	@Override
-	public Page<SmsTemplateResponse> findPage(SmsTemplateSearchRequest request) {
+	public Page<InfoTemplateResponse> findPage(InfoTemplateSearchRequest request) {
 		BooleanExpression predicate = createPredicate(request);
 
-		JPAQuery<SmsTemplateResponse> query = createBaseQuery(predicate)
-			.select(Projections.constructor(SmsTemplateResponse.class,
-					smsTemplate.id,
-					smsTemplate.smsTemplateType,
-					smsTemplate.templateCode,
-					smsTemplate.contents
+		JPAQuery<InfoTemplateResponse> query = createBaseQuery(predicate)
+			.select(Projections.constructor(InfoTemplateResponse.class,
+					infoTemplate.id,
+					infoTemplate.infoTemplateType,
+					infoTemplate.templateCode,
+					infoTemplate.contents
 				)
 			);
 		Pageable pageable = request.pageable();
@@ -45,27 +45,27 @@ public class SmsTemplateRepositoryImpl implements SmsTemplateRepositoryCustom {
 		//정렬
 		applySorting(query, pageable);
 
-		List<SmsTemplateResponse> responses = query
+		List<InfoTemplateResponse> responses = query
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize()) //페이징
 			.fetch();
 
 		JPAQuery<Long> countQuery = createBaseQuery(predicate)
-			.select(smsTemplate.count());
+			.select(infoTemplate.count());
 
 		return PageableExecutionUtils.getPage(responses, pageable, countQuery::fetchOne);
 	}
 
 	private JPAQuery<?> createBaseQuery(BooleanExpression predicate) {
 		return jpaQueryFactory
-			.from(smsTemplate)
+			.from(infoTemplate)
 			.where(predicate);
 	}
 
-	private BooleanExpression createPredicate(SmsTemplateSearchRequest request) {
+	private BooleanExpression createPredicate(InfoTemplateSearchRequest request) {
 		BooleanExpression predicate = Expressions.asBoolean(true).isTrue();
 		if (request.getKeyword() != null) {
-			predicate = predicate.and(smsTemplate.contents.eq(request.getKeyword()));
+			predicate = predicate.and(infoTemplate.contents.eq(request.getKeyword()));
 		}
 
 		return predicate;
@@ -73,7 +73,7 @@ public class SmsTemplateRepositoryImpl implements SmsTemplateRepositoryCustom {
 
 	private void applySorting(JPAQuery<?> query, Pageable pageable) {
 		for (Sort.Order order : pageable.getSort()) {
-			Path<Object> target = Expressions.path(Object.class, smsTemplate,
+			Path<Object> target = Expressions.path(Object.class, infoTemplate,
 				CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_CAMEL, order.getProperty()));
 			@SuppressWarnings({"rawtypes", "unchecked"})
 			OrderSpecifier<?> orderSpecifier = new OrderSpecifier(

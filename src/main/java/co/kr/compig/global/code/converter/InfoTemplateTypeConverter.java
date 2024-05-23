@@ -4,21 +4,21 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.MappedJdbcTypes;
 import org.apache.ibatis.type.MappedTypes;
 
-import co.kr.compig.global.code.SmsTemplateType;
+import co.kr.compig.global.code.infoTemplateType;
 import jakarta.persistence.Converter;
 
 @Converter(autoApply = true)
-@MappedTypes(SmsTemplateType.class)
+@MappedTypes(infoTemplateType.class)
 @MappedJdbcTypes(value = JdbcType.VARCHAR)
-public class SmsTemplateTypeConverter extends AbstractBaseEnumConverter<SmsTemplateType, String> {
+public class InfoTemplateTypeConverter extends AbstractBaseEnumConverter<infoTemplateType, String> {
 
 	@Override
 	protected String getEnumName() {
-		return "SmsTemplateType";
+		return "infoTemplateType";
 	}
 
 	@Override
-	protected SmsTemplateType[] getValueList() {
-		return SmsTemplateType.values();
+	protected infoTemplateType[] getValueList() {
+		return infoTemplateType.values();
 	}
 }
