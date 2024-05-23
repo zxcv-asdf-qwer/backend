@@ -22,6 +22,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
@@ -42,9 +43,15 @@ import lombok.extern.slf4j.Slf4j;
 			name = "uk01_device",
 			columnNames = {"deviceUuid"})
 	})
+@SequenceGenerator(
+	name = "device_seq_gen", //시퀀스 제너레이터 이름
+	sequenceName = "device_seq", //시퀀스 이름
+	initialValue = 1, //시작값
+	allocationSize = 1 //메모리를 통해 할당 할 범위 사이즈
+)
 public class Device {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "device_seq_gen")
 	@Column(name = "device_id")
 	private Long id;
 

@@ -1,5 +1,7 @@
 package co.kr.compig.api.presentation.push.request;
 
+import static co.kr.compig.global.utils.SecurityUtil.*;
+
 import java.time.LocalDate;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -40,6 +42,7 @@ public class DeviceCreate {
 			.osVersion(osVersion)
 			.isAgreeReceive(isAgreeReceive)
 			.agreeReceiveDate(ObjectUtils.isNotEmpty(isAgreeReceive) ? LocalDate.now() : null)
+			.member(getCurrentMember())
 			.build();
 	}
 }
