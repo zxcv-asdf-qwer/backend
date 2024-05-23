@@ -560,10 +560,10 @@ comment on column sms.fail_cause is '실패사유';
 create sequence if not exists sms_template_seq start with 1 increment by 1;
 create table if not exists sms_template
 (
-    sms_template_id   bigint      not null primary key,
-    sms_template_type varchar(3)  not null,
-    template_code     varchar(50) not null,
-    contents          text        not null,
+    sms_template_id   bigint     not null primary key,
+    sms_template_type varchar(3) not null,
+    template_code     varchar(50),
+    contents          text       not null,
     created_by        varchar(50),
     created_on        timestamp(6) default CURRENT_TIMESTAMP,
     updated_by        varchar(50),

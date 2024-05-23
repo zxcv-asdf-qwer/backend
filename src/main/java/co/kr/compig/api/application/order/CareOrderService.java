@@ -5,7 +5,10 @@ import static co.kr.compig.global.utils.KeyGen.*;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -17,11 +20,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 
+import co.kr.compig.api.application.info.InfoService;
+import co.kr.compig.api.application.info.push.model.MessageDto;
+import co.kr.compig.api.application.info.push.model.NoticeCode;
 import co.kr.compig.api.application.member.MemberService;
 import co.kr.compig.api.application.patient.OrderPatientService;
 import co.kr.compig.api.application.settle.SettleService;
 import co.kr.compig.api.domain.member.Member;
+import co.kr.compig.api.domain.member.QMember;
 import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.domain.order.CareOrderRepository;
 import co.kr.compig.api.domain.order.CareOrderRepositoryCustom;
@@ -29,6 +37,7 @@ import co.kr.compig.api.domain.packing.Facking;
 import co.kr.compig.api.domain.packing.Packing;
 import co.kr.compig.api.domain.patient.OrderPatient;
 import co.kr.compig.api.domain.patient.Patient;
+import co.kr.compig.api.domain.push.Device;
 import co.kr.compig.api.domain.settle.Settle;
 import co.kr.compig.api.infrastructure.pay.PayApi;
 import co.kr.compig.api.infrastructure.pay.model.SmsPayRequest;
@@ -41,9 +50,13 @@ import co.kr.compig.api.presentation.order.request.FamilyCareOrderCreateRequest;
 import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
 import co.kr.compig.api.presentation.order.response.CareOrderPageResponse;
 import co.kr.compig.api.presentation.order.response.CareOrderResponse;
+import co.kr.compig.global.code.LocationType;
 import co.kr.compig.global.code.OrderStatus;
+import co.kr.compig.global.code.UseYn;
+import co.kr.compig.global.code.UserType;
 import co.kr.compig.global.error.exception.BizException;
 import co.kr.compig.global.error.exception.NotExistDataException;
+import co.kr.compig.global.error.model.ErrorCode;
 import co.kr.compig.global.utils.GsonLocalDateTimeAdapter;
 import co.kr.compig.global.utils.SecurityUtil;
 import lombok.RequiredArgsConstructor;
@@ -61,6 +74,8 @@ public class CareOrderService {
 	private final CareOrderRepository careOrderRepository;
 	private final CareOrderRepositoryCustom careOrderRepositoryCustom;
 	private final PayApi payApi;
+	private final InfoService infoService;
+	private final JPAQueryFactory jpaQueryFactory;
 
 	@Value("${api.pay.mid}")
 	private String payMid;
@@ -88,6 +103,41 @@ public class CareOrderService {
 			Packing build = careOrderCreateRequest.toEntity(careOrder, recentSettle, startDateTime, endDateTime);
 
 			careOrder.addPacking(build);
+		}
+
+		try {
+			NoticeCode noticeCode = NoticeCode.NEW_CREATE_ORDER;
+			Map<String, Object> data = Map.of(
+				"location", careOrder.getOrderPatient().getLocationType() != LocationType.HOME ?
+					careOrder.getOrderPatient().getHospitalName() :
+					careOrder.getOrderPatient().getLocationType().getDesc(),
+				"periodType",
+				careOrder.getPackages()
+					.stream()
+					.findFirst()
+					.map(packing -> packing.getPeriodType().getDesc())
+					.orElse(null),
+				"price", careOrder.getPackages().stream().findFirst().map(packing -> packing.getAmount()).orElse(null)
+			);
+			List<Member> partners = jpaQueryFactory.selectFrom(QMember.member)
+				.where(QMember.member.userType.eq(UserType.PARTNER)
+					.and(QMember.member.devices.isNotEmpty())
+					.and(QMember.member.useYn.eq(UseYn.Y))).fetch();
+
+			MessageDto messageDto = MessageDto.builder()
+				.noticeCode(noticeCode)
+				.targetTokens(
+					partners.stream()
+						.flatMap(partner -> partner.getDevices().stream())
+						.map(Device::getDeviceUuid)
+						.collect(Collectors.toList())
+				)
+				.data(data)
+				.build();
+
+			infoService.send(messageDto);
+		} catch (Exception e) {
+			throw new BizException(ErrorCode.ERROR, "메세지 전송 중 에러가 발생하였습니다.");
 		}
 		return careOrder.getId();
 	}
@@ -117,7 +167,40 @@ public class CareOrderService {
 
 			careOrder.addPacking(build);
 		}
+		try {
+			NoticeCode noticeCode = NoticeCode.NEW_CREATE_ORDER;
+			Map<String, Object> data = Map.of(
+				"location", careOrder.getOrderPatient().getLocationType() != LocationType.HOME ?
+					careOrder.getOrderPatient().getHospitalName() :
+					careOrder.getOrderPatient().getLocationType().getDesc(),
+				"periodType",
+				careOrder.getPackages()
+					.stream()
+					.findFirst()
+					.map(packing -> packing.getPeriodType().getDesc())
+					.orElse(null),
+				"price", careOrder.getPackages().stream().findFirst().map(packing -> packing.getAmount()).orElse(null)
+			);
+			List<Member> partners = jpaQueryFactory.selectFrom(QMember.member)
+				.where(QMember.member.userType.eq(UserType.PARTNER)
+					.and(QMember.member.devices.isNotEmpty())
+					.and(QMember.member.useYn.eq(UseYn.Y))).fetch();
 
+			MessageDto messageDto = MessageDto.builder()
+				.noticeCode(noticeCode)
+				.targetTokens(
+					partners.stream()
+						.flatMap(partner -> partner.getDevices().stream())
+						.map(Device::getDeviceUuid)
+						.collect(Collectors.toList())
+				)
+				.data(data)
+				.build();
+
+			infoService.send(messageDto);
+		} catch (Exception e) {
+			throw new BizException(ErrorCode.ERROR, "메세지 전송 중 에러가 발생하였습니다.");
+		}
 		return careOrder.getId();
 	}
 

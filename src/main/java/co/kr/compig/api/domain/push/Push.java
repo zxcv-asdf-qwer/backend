@@ -1,10 +1,6 @@
 package co.kr.compig.api.domain.push;
 
 import java.time.LocalDateTime;
-import java.util.List;
-
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.presentation.push.response.PushResponse;
@@ -45,10 +41,6 @@ public class Push {
 
 	@Column(name = "message", length = 500)
 	private String message; // 메시지 본문
-
-	@JdbcTypeCode(SqlTypes.JSON)
-	@Column(columnDefinition = "json", name = "recipients", nullable = false)
-	private List<String> recipients; // JSON 형태의 수신자 목록
 
 	@Column(name = "send_time")
 	private LocalDateTime sendTime; // 예약된 발송 시간 또는 실제 발송 시간

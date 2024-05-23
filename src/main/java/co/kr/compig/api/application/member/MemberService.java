@@ -1,7 +1,6 @@
 package co.kr.compig.api.application.member;
 
 import java.time.LocalDateTime;
-import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -28,7 +27,6 @@ import co.kr.compig.api.application.info.sms.SmsService;
 import co.kr.compig.api.application.social.LoginServiceImpl;
 import co.kr.compig.api.application.social.SocialLoginService;
 import co.kr.compig.api.application.system.EncryptKeyService;
-import co.kr.compig.api.domain.account.Account;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.member.MemberGroup;
 import co.kr.compig.api.domain.member.MemberGroupRepository;
@@ -59,7 +57,6 @@ import co.kr.compig.api.presentation.social.request.SocialLoginRequest;
 import co.kr.compig.api.presentation.social.response.SocialLoginResponse;
 import co.kr.compig.api.presentation.social.response.SocialUserResponse;
 import co.kr.compig.global.code.ApplicationType;
-import co.kr.compig.global.code.BankCode;
 import co.kr.compig.global.code.EncryptTarget;
 import co.kr.compig.global.code.MemberRegisterType;
 import co.kr.compig.global.code.UseYn;
@@ -117,20 +114,6 @@ public class MemberService {
 
 	public String partnerCreate(PartnerMemberCreate partnerMemberCreate) {
 		Member member = partnerMemberCreate.convertEntity();
-		AES256 aes256 = encryptKeyService.getEncryptKey();
-		byte[] iv = aes256.generateIv();
-		try {
-			Account account = Account.builder()
-				.accountNumber(aes256.encrypt(partnerMemberCreate.getAccountNumber(), iv))
-				.accountName(aes256.encrypt(partnerMemberCreate.getAccountName(), iv))
-				.bankName(BankCode.of(partnerMemberCreate.getBankName()))
-				.iv(Base64.getUrlEncoder().encodeToString(iv))
-				.build();
-			member.setAccount(account);
-		} catch (Exception e) {
-			throw new RuntimeException("AES256 암호화 중 예외발생", e);
-		}
-
 		setReferenceDomain(member.getUserType(), member);
 		member.createUserKeyCloak(null, null);
 		member.passwordEncode();
