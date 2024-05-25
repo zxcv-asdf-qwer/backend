@@ -3,9 +3,7 @@ package co.kr.compig.api.presentation.payment;
 import java.util.Map;
 
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,9 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.payment.PaymentService;
 import co.kr.compig.api.presentation.payment.request.PaymentExchangeOneDaySearchRequest;
-import co.kr.compig.api.presentation.payment.request.PaymentSearchRequest;
 import co.kr.compig.api.presentation.payment.response.PaymentDetailResponse;
-import co.kr.compig.api.presentation.payment.response.PaymentResponse;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.dto.pagination.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,7 +32,7 @@ public class AdminPaymentController {
 
 	private final PaymentService paymentService;
 
-	@Operation(summary = "생성하기")
+	@Operation(summary = "결제 url 생성하기")
 	@PostMapping("/orderId/{orderId}")
 	public ResponseEntity<Response<?>> createPayment(@PathVariable(name = "orderId") Long orderId) {
 		return ResponseEntity.ok().body(Response.<Map<String, String>>builder()
@@ -44,29 +40,13 @@ public class AdminPaymentController {
 			.build());
 	}
 
-	@Operation(summary = "조회", description = "페이징")
-	@GetMapping
-	public ResponseEntity<PageResponse> getPaymentPage(
-		@ParameterObject @ModelAttribute PaymentSearchRequest paymentSearchRequest) {
-		Page<PaymentResponse> page = paymentService.getPaymentPage(paymentSearchRequest);
-		return PageResponse.ok(page.stream().toList(), page.getPageable().getOffset(), page.getTotalElements());
-	}
-
-	@Operation(summary = "상세 조회")
-	@GetMapping(path = "/{paymentId}")
+	@Operation(summary = "orderId 로 상세 조회")
+	@GetMapping(path = "/{orderId}")
 	public ResponseEntity<Response<PaymentDetailResponse>> getPayment(
-		@PathVariable(name = "paymentId") Long paymentId) {
+		@PathVariable(name = "orderId") Long orderId) {
 		return ResponseEntity.ok(Response.<PaymentDetailResponse>builder()
-			.data(paymentService.getPayment(paymentId))
+			.data(paymentService.getPaymentByOrderId(orderId))
 			.build());
-	}
-
-	@Operation(summary = "삭제")
-	@DeleteMapping(path = "/{paymentId}")
-	public ResponseEntity<Response<?>> deletePayment(
-		@PathVariable(name = "paymentId") Long paymentId) {
-		paymentService.deletePayment(paymentId);
-		return ResponseEntity.ok().build();
 	}
 
 	@Operation(summary = "간병인 일일 정산내역", description = "페이징 PackingExchangeOneDayResponse")

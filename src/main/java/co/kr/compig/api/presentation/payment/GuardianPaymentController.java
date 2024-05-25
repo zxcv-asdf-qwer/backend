@@ -5,15 +5,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.payment.PaymentService;
 import co.kr.compig.api.presentation.payment.request.PaymentSearchRequest;
-import co.kr.compig.api.presentation.payment.response.PaymentDetailResponse;
 import co.kr.compig.api.presentation.payment.response.PaymentResponse;
-import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.dto.pagination.SliceResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -38,15 +35,6 @@ public class GuardianPaymentController {
 		@ParameterObject @ModelAttribute @Valid PaymentSearchRequest paymentSearchRequest,
 		@ParameterObject Pageable pageable) {
 		return ResponseEntity.ok(paymentService.getPaymentSlice(paymentSearchRequest, pageable));
-	}
-
-	@Operation(summary = "상세 조회")
-	@GetMapping(path = "/{paymentId}")
-	public ResponseEntity<Response<PaymentDetailResponse>> getPayment(
-		@PathVariable(name = "paymentId") Long paymentId) {
-		return ResponseEntity.ok(Response.<PaymentDetailResponse>builder()
-			.data(paymentService.getPayment(paymentId))
-			.build());
 	}
 
 }

@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import co.kr.compig.api.application.order.CareOrderService;
 import co.kr.compig.api.application.system.EncryptKeyService;
@@ -61,7 +60,6 @@ public class PaymentService {
 	private final CareOrderService careOrderService;
 	private final PayApi payApi;
 	private final EncryptKeyService encryptKeyService;
-	private final JPAQueryFactory jpaQueryFactory;
 
 	@Value("${api.pay.mid}")
 	private String payMid;
@@ -113,11 +111,6 @@ public class PaymentService {
 		return payment.toPaymentDetailResponse();
 	}
 
-	public void deletePayment(Long paymentId) {
-		Payment payment = paymentRepository.findById(paymentId).orElseThrow(NotExistDataException::new);
-		paymentRepository.delete(payment);
-	}
-
 	@Transactional(readOnly = true)
 	public SliceResponse<PaymentResponse> getPaymentSlice(PaymentSearchRequest paymentSearchRequest,
 		Pageable pageable) {
@@ -128,13 +121,10 @@ public class PaymentService {
 	}
 
 	@Transactional(readOnly = true)
-	public Page<PaymentResponse> getPaymentPage(PaymentSearchRequest paymentSearchRequest) {
-		return paymentRepositoryCustom.findPage(paymentSearchRequest);
-	}
-
-	@Transactional(readOnly = true)
-	public Payment getPaymentById(Long paymentId) {
-		return paymentRepository.findById(paymentId).orElseThrow(NotExistDataException::new);
+	public PaymentDetailResponse getPaymentByOrderId(Long orderId) {
+		return paymentRepository.findByCareOrderId(orderId)
+			.orElseThrow(NotExistDataException::new)
+			.toPaymentDetailResponse();
 	}
 
 	@Transactional(readOnly = true)
