@@ -80,13 +80,6 @@ public class PaymentService {
 				packing.getSettle().getGuardianFees()));
 		});
 
-		Optional<Payment> paymentOptional = paymentRepository.findByCareOrderId(orderId)
-			.filter(payment -> payment.getPayRequestResultCode() == null && payment.getPayExpDate()
-				.isAfter(LocalDateTime.now()));
-		if (paymentOptional.isPresent()) {
-			return paymentOptional.get().getOrderUrl();
-		}
-
 		SmsPayRequest smsPayRequest = SmsPayRequest.builder()
 			.mid(payMid)
 			.moid("CARE" + getRandomTimeKey())
