@@ -8,9 +8,11 @@ import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.presentation.payment.response.PaymentDetailResponse;
 import co.kr.compig.global.code.PaymentType;
 import co.kr.compig.global.code.converter.PaymentTypeConverter;
+import co.kr.compig.global.embedded.CreatedAndUpdated;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
@@ -74,10 +76,16 @@ public class Payment {
 	private String buyerEmail; // 결제자 이메일 주소
 
 	@Column
-	private LocalDateTime payExpDate; //SMS 결제 마감기한
+	private LocalDateTime payExpDate; //결제 url 마감기한
 
 	@Column
-	private String payRequestResultCode; // 결과코드
+	private LocalDateTime payCompleteDate; //결제일
+
+	@Column
+	private String payRequestResultCode; // 결제요청 결과코드
+
+	@Column
+	private String payResponseResultCode; // 결제 결과코드
 
 	/* =================================================================
 	 * Domain mapping
@@ -93,6 +101,13 @@ public class Payment {
 	private Set<PaymentCancel> paymentCancels = new HashSet<>();
 
 	/* =================================================================
+ 	 * Default columns
+   	 ================================================================= */
+	@Embedded
+	@Builder.Default
+	private CreatedAndUpdated createdAndModified = new CreatedAndUpdated();
+
+	/* =================================================================
 	* Relation method
 	================================================================= */
 	public void setCareOrder(CareOrder careOrder) {
@@ -100,9 +115,16 @@ public class Payment {
 	}
 
 	public PaymentDetailResponse toPaymentDetailResponse() {
-		return PaymentDetailResponse.builder()
+		PaymentDetailResponse build = PaymentDetailResponse.builder()
 			.id(this.id)
 			.careOrderId(this.careOrder.getId())
+			.paymentExpireDate(this.payExpDate)
+			.paymentCompleteDate(this.payCompleteDate)
+			.paymentRequestResult(this.payRequestResultCode)
+			.paymentResponseResult(this.payResponseResultCode)
+			.paymentAmount(this.price)
 			.build();
+		build.setCreatedAndUpdated(this.createdAndModified);
+		return build;
 	}
 }

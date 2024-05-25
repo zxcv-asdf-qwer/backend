@@ -6,6 +6,7 @@ import static co.kr.compig.global.utils.KeyGen.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -79,6 +80,13 @@ public class PaymentService {
 				packing.getSettle().getGuardianFees()));
 		});
 
+		Optional<Payment> paymentOptional = paymentRepository.findByCareOrderId(orderId)
+			.filter(payment -> payment.getPayRequestResultCode() == null && payment.getPayExpDate()
+				.isAfter(LocalDateTime.now()));
+		if (paymentOptional.isPresent()) {
+			return paymentOptional.get().getOrderUrl();
+		}
+
 		SmsPayRequest smsPayRequest = SmsPayRequest.builder()
 			.mid(payMid)
 			.moid("CARE" + getRandomTimeKey())
@@ -122,9 +130,8 @@ public class PaymentService {
 
 	@Transactional(readOnly = true)
 	public PaymentDetailResponse getPaymentByOrderId(Long orderId) {
-		return paymentRepository.findByCareOrderId(orderId)
-			.orElseThrow(NotExistDataException::new)
-			.toPaymentDetailResponse();
+		Optional<Payment> paymentOptional = paymentRepository.findByCareOrderId(orderId);
+		return paymentOptional.map(Payment::toPaymentDetailResponse).orElse(null);
 	}
 
 	@Transactional(readOnly = true)
