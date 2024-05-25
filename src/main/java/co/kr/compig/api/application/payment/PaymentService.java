@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import co.kr.compig.api.application.order.CareOrderService;
 import co.kr.compig.api.application.system.EncryptKeyService;
@@ -60,6 +61,7 @@ public class PaymentService {
 	private final CareOrderService careOrderService;
 	private final PayApi payApi;
 	private final EncryptKeyService encryptKeyService;
+	private final JPAQueryFactory jpaQueryFactory;
 
 	@Value("${api.pay.mid}")
 	private String payMid;

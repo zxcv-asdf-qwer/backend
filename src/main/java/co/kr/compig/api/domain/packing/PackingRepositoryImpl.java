@@ -50,8 +50,7 @@ public class PackingRepositoryImpl implements PackingRepositoryCustom {
 		BooleanExpression predicate = createPredicate(request);
 
 		JPAQuery<Packing> query = jpaQueryFactory
-			.select(packing)
-			.from(packing)
+			.selectFrom(packing)
 			.leftJoin(packing.careOrder, careOrder)
 			.where(
 				packing.endDateTime.loe(LocalDateTime.now()),
@@ -71,17 +70,17 @@ public class PackingRepositoryImpl implements PackingRepositoryCustom {
 			.limit(pageable.getPageSize())
 			.fetch();
 
-		JPAQuery<Long> countQuery = jpaQueryFactory
-			.select(packing.count())
-			.leftJoin(packing.careOrder, careOrder)
-			.where(
-				packing.endDateTime.loe(LocalDateTime.now()),
-				careOrder.orderStatus.in(OrderStatus.MATCHING_WAITING, OrderStatus.MATCHING_COMPLETE,
-					OrderStatus.ORDER_COMPLETE)
-			)
-			.where(predicate); // 추가적인 필터 조건
+		// JPAQuery<Long> countQuery = jpaQueryFactory
+		// 	.select(packing.count())
+		// 	.leftJoin(packing.careOrder, careOrder)
+		// 	.where(
+		// 		packing.endDateTime.loe(LocalDateTime.now()),
+		// 		careOrder.orderStatus.in(OrderStatus.MATCHING_WAITING, OrderStatus.MATCHING_COMPLETE,
+		// 			OrderStatus.ORDER_COMPLETE)
+		// 	)
+		// 	.where(predicate); // 추가적인 필터 조건
 
-		return PageableExecutionUtils.getPage(packages, pageable, countQuery::fetchOne);
+		return PageableExecutionUtils.getPage(packages, pageable, query::fetchCount);
 	}
 
 	private BooleanExpression createPredicate(PaymentExchangeOneDaySearchRequest request) {

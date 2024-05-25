@@ -215,6 +215,7 @@ public class Member {
 	private Set<MenuPermission> menuPermissions = new HashSet<>();
 
 	@OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
+	@JsonManagedReference //연관관계 주인 반대 Entity 에 선언, 정상적으로 직렬화 수행
 	private Account account;
 
 	@Builder.Default
