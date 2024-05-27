@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import co.kr.compig.api.application.order.CareOrderService;
 import co.kr.compig.api.presentation.order.request.CareOrderCreateRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderSearchRequest;
+import co.kr.compig.api.presentation.order.request.CareOrderTerminateRequest;
 import co.kr.compig.api.presentation.order.request.FamilyCareOrderCreateRequest;
 import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
 import co.kr.compig.api.presentation.order.response.CareOrderResponse;
@@ -76,20 +77,21 @@ public class GuardianCareOrderController {
 	}
 
 	@Operation(summary = "상세 조회")
-	@GetMapping(path = "/{careOrderId}")
+	@GetMapping(path = "/{orderId}")
 	public ResponseEntity<Response<CareOrderDetailResponse>> getCareOrder(
-		@PathVariable(name = "careOrderId") Long careOrderId
+		@PathVariable(name = "orderId") Long careOrderId
 	) {
 		return ResponseEntity.ok(Response.<CareOrderDetailResponse>builder()
 			.data(careOrderService.getCareOrder(careOrderId))
 			.build());
 	}
 
-	@Operation(summary = "간병 취소하기")
-	@DeleteMapping(path = "/{careOrderId}")
+	@Operation(summary = "간병 종료하기, 취소하기")
+	@DeleteMapping(path = "/{orderId}")
 	public ResponseEntity<Response<?>> cancelCareOrder(
-		@PathVariable(name = "careOrderId") Long careOrderId) {
-		careOrderService.cancelCareOrderForGuardian(careOrderId);
+		@PathVariable(name = "orderId") Long careOrderId,
+		@ModelAttribute @Valid CareOrderTerminateRequest careOrderTerminateRequest) {
+		careOrderService.cancelCareOrderForGuardian(careOrderId, careOrderTerminateRequest);
 		return ResponseEntity.ok().build();
 	}
 }

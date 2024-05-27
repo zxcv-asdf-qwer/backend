@@ -46,6 +46,7 @@ import co.kr.compig.api.presentation.order.request.CareOrderCalculateRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderCreateRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderExtensionsRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderSearchRequest;
+import co.kr.compig.api.presentation.order.request.CareOrderTerminateRequest;
 import co.kr.compig.api.presentation.order.request.FamilyCareOrderCreateRequest;
 import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
 import co.kr.compig.api.presentation.order.response.CareOrderPageResponse;
@@ -406,15 +407,16 @@ public class CareOrderService {
 		return smsPayResponse.getOrderUrl();
 	}
 
-	public void cancelCareOrder(Long careOrderId) {
+	public void cancelCareOrder(Long careOrderId, CareOrderTerminateRequest careOrderTerminateRequest) {
 		CareOrder careOrder = careOrderRepository.findById(careOrderId).orElseThrow(NotExistDataException::new);
-		careOrder.cancelOrder();
+		careOrder.cancelOrder(careOrderTerminateRequest);
 	}
 
-	public void cancelCareOrderForGuardian(Long careOrderId) {
+	public void cancelCareOrderForGuardian(Long careOrderId, CareOrderTerminateRequest careOrderTerminateRequest) {
 		CareOrder careOrder = careOrderRepository.findById(careOrderId).orElseThrow(NotExistDataException::new);
 		if (careOrder.getOrderStatus().equals(OrderStatus.MATCHING_WAITING)) {
-			careOrder.cancelOrder();
+			careOrder.cancelOrder(careOrderTerminateRequest);
+			return;
 		}
 		throw new BizException("매칭 대기 상태가 아닙니다.");
 	}
