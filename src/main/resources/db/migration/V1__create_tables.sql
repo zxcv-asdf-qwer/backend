@@ -788,3 +788,8 @@ CREATE TABLE IF NOT EXISTS shedlock
     locked_by  VARCHAR(255) NOT NULL,
     PRIMARY KEY (name)
 );
+
+INSERT INTO public.encrypt_key (encrypt_id, encrypt_type, encrypt_key, encrypt_target, created_by, created_on,
+                                updated_by, updated_on)
+VALUES (1, 'AES256', 'compiglabAccountEncryptKey', 'ACCOUNT', null, '2024-05-16 01:27:24.001032', null,
+        '2024-05-16 01:27:24.001032');

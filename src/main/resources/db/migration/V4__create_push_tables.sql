@@ -46,3 +46,13 @@ comment on column push.title is '메시지 제목';
 comment on column push.message is '메시지 본문';
 comment on column push.send_time is '예약된 발송 시간|실제 발송 시간';
 comment on column push.device_uuid is 'devic token';
+
+INSERT INTO public.info_template (info_template_id, info_template_type, template_code, contents, created_by, created_on,
+                                  updated_by, updated_on)
+VALUES (1, 'PVT', 'bizp_2024052109032518990001128', e'인증번호를 입력하세요
+{verificationCode}', '2024-05-21 11:23:06.124512 +00:00', null, '2024-05-21 11:23:06.124789 +00:00', null);
+
+INSERT INTO public.info_template (info_template_id, info_template_type, template_code, contents, created_by, created_on,
+                                  updated_by, updated_on)
+VALUES (2, 'NCO', null, e'신규 공고가 등록되었습니다. {location}
+{periodType} {price}', '2024-05-21 11:23:06.124512 +00:00', null, '2024-05-21 11:23:06.124789 +00:00', null);
