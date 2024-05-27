@@ -51,6 +51,7 @@ import co.kr.compig.global.code.OrderStatus;
 import co.kr.compig.global.code.ToiletType;
 import co.kr.compig.global.code.UseYn;
 import co.kr.compig.global.code.UserType;
+import co.kr.compig.global.code.converter.CareerCodeConverter;
 import co.kr.compig.global.code.converter.DeptCodeConverter;
 import co.kr.compig.global.code.converter.DiseaseCodeListConverter;
 import co.kr.compig.global.code.converter.MemberTypeConverter;
@@ -153,12 +154,12 @@ public class Member {
 	@Column
 	private String picture; //프로필사진 s3 저장소 Path
 
-	@Column(length = 1)
-	@Enumerated(EnumType.STRING)
+	@Column(length = 10)
+	@Convert(converter = CareerCodeConverter.class)
 	private DomesticForeignCode domesticForeignCode; //외국인 내국인
 
-	@Column(length = 1)
-	@Enumerated(EnumType.STRING)
+	@Column(length = 5)
+	@Convert(converter = CareerCodeConverter.class)
 	private CareerCode careerCode; //신입 경력
 
 	@Column
