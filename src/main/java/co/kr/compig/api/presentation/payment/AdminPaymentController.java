@@ -1,5 +1,6 @@
 package co.kr.compig.api.presentation.payment;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springdoc.core.annotations.ParameterObject;
@@ -40,12 +41,12 @@ public class AdminPaymentController {
 			.build());
 	}
 
-	@Operation(summary = "orderId 로 상세 조회")
+	@Operation(summary = "orderId 로 상세 조회", description = "createdOn 결제요청일")
 	@GetMapping(path = "/{orderId}")
-	public ResponseEntity<Response<PaymentDetailResponse>> getPayment(
+	public ResponseEntity<Response<List<PaymentDetailResponse>>> getPaymentsByOrderId(
 		@PathVariable(name = "orderId") Long orderId) {
-		return ResponseEntity.ok(Response.<PaymentDetailResponse>builder()
-			.data(paymentService.getPaymentByOrderId(orderId))
+		return ResponseEntity.ok(Response.<List<PaymentDetailResponse>>builder()
+			.data(paymentService.getPaymentsByOrderId(orderId))
 			.build());
 	}
 
