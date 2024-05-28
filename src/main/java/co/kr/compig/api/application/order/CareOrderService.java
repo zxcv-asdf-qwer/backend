@@ -1,5 +1,6 @@
 package co.kr.compig.api.application.order;
 
+import static co.kr.compig.global.code.PeriodType.*;
 import static co.kr.compig.global.utils.CalculateUtil.*;
 import static co.kr.compig.global.utils.KeyGen.*;
 
@@ -95,15 +96,35 @@ public class CareOrderService {
 		CareOrder careOrder = careOrderRepository.save(
 			careOrderCreateRequest.converterEntity(member, orderPatient));
 		Settle recentSettle = settleService.getRecentSettle();
-		// 종료 날짜(2024-04-17 10:00:00) - 시작 날짜(2024-04-12 10:00:00)
-		// 시작 날짜부터 종료 날짜까지 5일 Packing 객체 생성
-		long daysBetween = ChronoUnit.DAYS.between(careOrder.getStartDateTime(), careOrder.getEndDateTime());
-		for (int i = 0; i < daysBetween; i++) {
-			LocalDateTime startDateTime = careOrder.getStartDateTime().plusDays(i);
-			LocalDateTime endDateTime = startDateTime.plusDays(1);
-			Packing build = careOrderCreateRequest.toEntity(careOrder, recentSettle, startDateTime, endDateTime);
 
-			careOrder.addPacking(build);
+		long daysBetween;
+		if (careOrderCreateRequest.getPeriodType().equals(PART_TIME)) { //시간제
+			// 종료 날짜(2024-05-20 22:00:00) - 시작 날짜(2024-05-22 02:00:00)
+			// 시작 날짜부터 종료 날짜까지 2일 Packing 객체 생성
+			// 종료 날짜(2024-05-20 10:00:00) - 시작 날짜(2024-05-22 15:00:00)
+			// 시작 날짜부터 종료 날짜까지 3일 Packing 객체 생성
+			daysBetween = ChronoUnit.DAYS.between(careOrder.getStartDateTime(), careOrder.getEndDateTime()) + 1;
+
+			for (int i = 0; i < daysBetween; i++) {
+				LocalDateTime startDateTime = careOrder.getStartDateTime().plusDays(i);
+				LocalDateTime endDateTime = startDateTime.plusHours(careOrderCreateRequest.getPartTime());
+				Packing build = careOrderCreateRequest.toEntity(careOrder, recentSettle, startDateTime, endDateTime);
+
+				careOrder.addPacking(build);
+			}
+		}
+
+		if (careOrderCreateRequest.getPeriodType().equals(PERIOD)) { //기간제
+			// 종료 날짜(2024-04-17 10:00:00) - 시작 날짜(2024-04-12 10:00:00)
+			// 시작 날짜부터 종료 날짜까지 5일 Packing 객체 생성
+			daysBetween = ChronoUnit.DAYS.between(careOrder.getStartDateTime(), careOrder.getEndDateTime());
+			for (int i = 0; i < daysBetween; i++) {
+				LocalDateTime startDateTime = careOrder.getStartDateTime().plusDays(i);
+				LocalDateTime endDateTime = startDateTime.plusDays(1);
+				Packing build = careOrderCreateRequest.toEntity(careOrder, recentSettle, startDateTime, endDateTime);
+
+				careOrder.addPacking(build);
+			}
 		}
 
 		try {
