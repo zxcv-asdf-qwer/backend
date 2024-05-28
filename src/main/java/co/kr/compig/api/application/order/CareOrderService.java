@@ -99,9 +99,9 @@ public class CareOrderService {
 
 		long daysBetween;
 		if (careOrderCreateRequest.getPeriodType().equals(PART_TIME)) { //시간제
-			// 종료 날짜(2024-05-20 22:00:00) - 시작 날짜(2024-05-22 02:00:00)
+			// 종료 날짜(2024-05-20 22:00:00) - 시작 날짜(2024-05-22 02:00:00), 파트타임 시간: 4시간
 			// 시작 날짜부터 종료 날짜까지 2일 Packing 객체 생성
-			// 종료 날짜(2024-05-20 10:00:00) - 시작 날짜(2024-05-22 15:00:00)
+			// 종료 날짜(2024-05-20 10:00:00) - 시작 날짜(2024-05-22 15:00:00), 파트타임 시간: 5시간
 			// 시작 날짜부터 종료 날짜까지 3일 Packing 객체 생성
 			daysBetween = ChronoUnit.DAYS.between(careOrder.getStartDateTime(), careOrder.getEndDateTime()) + 1;
 
