@@ -32,6 +32,6 @@ public class PaymentDetailResponse extends BaseAudit {
 	@Schema(description = "결제 결과")
 	private String paymentResponseResult; // 결제 결과
 	@Schema(description = "결제금액")
-	private Integer paymentAmount; // 결제금액
+	private String paymentAmount; // 결제금액
 	//+결제요청
 }

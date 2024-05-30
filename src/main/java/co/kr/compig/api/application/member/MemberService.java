@@ -26,7 +26,6 @@ import co.kr.compig.api.application.info.push.model.NoticeCode;
 import co.kr.compig.api.application.info.sms.SmsService;
 import co.kr.compig.api.application.social.LoginServiceImpl;
 import co.kr.compig.api.application.social.SocialLoginService;
-import co.kr.compig.api.application.system.EncryptKeyService;
 import co.kr.compig.api.domain.member.Member;
 import co.kr.compig.api.domain.member.MemberGroup;
 import co.kr.compig.api.domain.member.MemberGroupRepository;
@@ -89,7 +88,6 @@ public class MemberService {
 	private final List<SocialLoginService> loginServices;
 	private final KeycloakAuthApi keycloakAuthApi;
 	private final KeycloakProperties keycloakProperties;
-	private final EncryptKeyService encryptKeyService;
 	private final EncryptKeyRepository encryptKeyRepository;
 	private final SmsService smsService;
 	private final InfoService infoService;

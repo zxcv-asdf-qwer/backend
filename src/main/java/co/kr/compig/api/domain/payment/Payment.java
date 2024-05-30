@@ -36,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table
+@Table(name = "payment1")
 @SequenceGenerator(
 	name = "payment_seq_gen", //시퀀스 제너레이터 이름
 	sequenceName = "payment_seq", //시퀀스 이름
@@ -49,43 +49,51 @@ public class Payment {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "payment_seq_gen")
 	@Column(name = "payment_id")
 	private Long id;
-
-	@Column(length = 250)
-	private String goodsName; // 상품명
-
-	@Column(nullable = false)
-	private Integer price; // 결제금액 amt
-
-	@Column(length = 250)
-	private String moid; //상점주문번호 (고유값)
-
 	@Column(length = 15)
 	@Convert(converter = PaymentTypeConverter.class)
 	private PaymentType paymentType;
-
 	@Column(length = 250)
-	private String orderUrl; // 결제 URL
-
+	private String moid; // 상점주문번호(고유값)
 	@Column(length = 250)
-	private String buyerName; // 결제자 이름
-
+	private String goodsName; //상품명
+	@Column(length = 50, nullable = false)
+	private String amt; //결제요청금액
+	@Column(length = 50)
+	private String buyerName; //결제자 이름
+	@Column(length = 50)
+	private String buyerTel; //결제자 휴대폰번호
 	@Column(length = 250)
-	private String buyerTel; // 결제자 휴대폰번호
-
-	@Column(length = 250)
-	private String buyerEmail; // 결제자 이메일 주소
-
+	private String buyerEmail; //결제자 이메일 주소(선택)
 	@Column
-	private LocalDateTime payExpDate; //결제 url 마감기한
-
+	private LocalDateTime payExpDate; //SMS 카드 결제 or 가상계좌 마감기한
+	@Column(length = 250)
+	private String smsCardOrderUrl; //SMS 카드 결제 URL
+	@Column(length = 250)
+	private String vbankTid; //거래고유번호
+	@Column(length = 250)
+	private String vbankAccountTel; //입금자 연락처
+	@Column(length = 250)
+	private String vbankBankCode; //가상계좌 은행코드
+	@Column(length = 250)
+	private String vbankNum; //가상계좌 번호
+	@Column(length = 30)
+	private String vbankAccountName; //가상계좌 입금자명
+	@Column(length = 5)
+	private String vbankCountryCode; //국적
+	@Column(length = 250)
+	private String vbankSocNo; //생년월일(여권번호)
+	@Column(length = 250)
+	private String payRequestResultCode; //결과코드
+	@Column(length = 250)
+	private String payRequestResultMsg; //결과메시지
 	@Column
 	private LocalDateTime payCompleteDate; //결제일
-
 	@Column
-	private String payRequestResultCode; // 결제요청 결과코드
-
+	private String payNotiResultCode; // 입금결과코드(결제완료, 결제취소)
 	@Column
-	private String payResponseResultCode; // 결제 결과코드
+	private String payNotiResultMsg; // 입금결과메시지
+	@Column
+	private String notiTransSeq; // 거래번호
 
 	/* =================================================================
 	 * Domain mapping
@@ -121,8 +129,8 @@ public class Payment {
 			.paymentExpireDate(this.payExpDate)
 			.paymentCompleteDate(this.payCompleteDate)
 			.paymentRequestResult(this.payRequestResultCode)
-			.paymentResponseResult(this.payResponseResultCode)
-			.paymentAmount(this.price)
+			.paymentResponseResult(this.payNotiResultCode)
+			.paymentAmount(this.amt)
 			.build();
 		build.setCreatedAndUpdated(this.createdAndModified);
 		return build;

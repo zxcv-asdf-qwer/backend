@@ -21,6 +21,7 @@ import co.kr.compig.api.domain.packing.Packing;
 import co.kr.compig.api.domain.patient.OrderPatient;
 import co.kr.compig.api.domain.payment.Payment;
 import co.kr.compig.api.domain.review.Review;
+import co.kr.compig.api.domain.settle.Settle;
 import co.kr.compig.api.presentation.order.request.CareOrderCalculateRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderTerminateRequest;
 import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
@@ -32,9 +33,11 @@ import co.kr.compig.global.code.CareOrderProcessType;
 import co.kr.compig.global.code.IsYn;
 import co.kr.compig.global.code.OrderStatus;
 import co.kr.compig.global.code.OrderType;
+import co.kr.compig.global.code.PeriodType;
 import co.kr.compig.global.code.converter.CareOrderProcessTypeConverter;
 import co.kr.compig.global.code.converter.OrderStatusConverter;
 import co.kr.compig.global.code.converter.OrderTypeConverter;
+import co.kr.compig.global.code.converter.PeriodTypeConverter;
 import co.kr.compig.global.embedded.CreatedAndUpdated;
 import co.kr.compig.global.error.exception.BizException;
 import jakarta.persistence.CascadeType;
@@ -96,7 +99,7 @@ public class CareOrder {
 
 	@Column(length = 10)
 	@Convert(converter = OrderTypeConverter.class)
-	private OrderType orderType; // 공고 상태
+	private OrderType orderType; // 공고 종류
 
 	@Column
 	@Enumerated(EnumType.STRING)
@@ -111,6 +114,16 @@ public class CareOrder {
 	@Column(length = 15)
 	@Convert(converter = CareOrderProcessTypeConverter.class)
 	private CareOrderProcessType careOrderProcessType; // 매칭 구분
+
+	@Column(nullable = false)
+	private Integer amount; //금액 //보호자들이 입력한 금액, 수수료 계산전
+
+	@Column
+	@Convert(converter = PeriodTypeConverter.class)
+	private PeriodType periodType; // 시간제, 기간제
+
+	@Column
+	private Integer partTime; //파트타임 시간 시간제 일 경우 필수
 
   /* =================================================================
    * Domain mapping
@@ -134,12 +147,12 @@ public class CareOrder {
 	private OrderPatient orderPatient = new OrderPatient();
 
 	@Builder.Default
-	@OneToMany(mappedBy = "careOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "careOrder", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonManagedReference //연관관계 주인 반대 Entity 에 선언, 정상적으로 직렬화 수행
 	private final Set<Packing> packages = new HashSet<>();
 
 	@Builder.Default
-	@OneToMany(mappedBy = "careOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "careOrder", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonManagedReference //연관관계 주인 반대 Entity 에 선언, 정상적으로 직렬화 수행
 	private final Set<Facking> fackages = new HashSet<>();
 
@@ -150,14 +163,20 @@ public class CareOrder {
 	private Set<Payment> payments = new HashSet<>();
 
 	@Builder.Default
-	@OneToMany(mappedBy = "careOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "careOrder", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonManagedReference //연관관계 주인 반대 Entity 에 선언, 정상적으로 직렬화 수행
 	private final Set<Memo> memos = new HashSet<>();
 
 	@Builder.Default
-	@OneToMany(mappedBy = "careOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "careOrder", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonManagedReference //연관관계 주인 반대 Entity 에 선언, 정상적으로 직렬화 수행
 	private final Set<Review> reviews = new HashSet<>();
+
+	@Builder.Default
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "settle_id", foreignKey = @ForeignKey(name = "fk04_care_order"))
+	@JsonBackReference//연관관계의 주인 Entity 에 선언, 직렬화가 되지 않도록 수행
+	private Settle settle = new Settle();
 	/* =================================================================
 	 * Relation method
 	   ================================================================= */

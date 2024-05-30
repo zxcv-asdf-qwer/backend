@@ -31,9 +31,9 @@ public class SmsPayResponse {
 	public Payment toEntity(int totalPrice) {
 		return Payment.builder()
 			.goodsName(this.goodsName)
-			.price(totalPrice)//보호자 수수료 적용한 금액(보호자가 지불해야 하는 금액)(간병일 전체)
+			.amt(String.valueOf(totalPrice))//보호자 수수료 적용한 금액(보호자가 지불해야 하는 금액)(간병일 전체)
 			.moid(this.moid)
-			.orderUrl(this.orderUrl)
+			.smsCardOrderUrl(this.orderUrl)
 			.buyerName(this.buyerName)
 			.buyerTel(this.buyerTel)
 			.buyerEmail(this.buyerEmail)

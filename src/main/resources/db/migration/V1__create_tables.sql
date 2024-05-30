@@ -145,10 +145,10 @@ comment on column board.thumbnail_image_url is '썸네일 이미지 url';
 create sequence if not exists care_order_seq start with 1 increment by 1;
 create table if not exists care_order
 (
-    care_order_id           bigint not null primary key,
+    care_order_id           bigint  not null primary key,
     end_date_time           timestamp(6),
     real_end_date_time      timestamp(6),
-    order_patient_id        bigint not null,
+    order_patient_id        bigint  not null,
     start_date_time         timestamp(6),
     care_order_process_type varchar(15),
     member_id               varchar(255),
@@ -157,6 +157,10 @@ create table if not exists care_order
     order_type              varchar(10)  default 'GENERAL',
     publish_yn              varchar(255),
     title                   varchar(255),
+    amount                  integer not null,
+    period_type             varchar(255),
+    part_time               integer,
+    settle_id               bigint  not null,
     created_by              varchar(50),
     created_on              timestamp(6) default CURRENT_TIMESTAMP,
     updated_by              varchar(50),
@@ -689,6 +693,11 @@ alter table if exists care_order
     add constraint fk03_care_order
         foreign key (order_patient_id)
             references order_patient
+;
+alter table if exists care_order
+    add constraint fk04_care_order
+        foreign key (settle_id)
+            references settle
 ;
 alter table if exists member_group
     add constraint fk01_member_group
