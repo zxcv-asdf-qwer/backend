@@ -22,6 +22,7 @@ import co.kr.compig.api.domain.patient.OrderPatient;
 import co.kr.compig.api.domain.payment.Payment;
 import co.kr.compig.api.domain.review.Review;
 import co.kr.compig.api.presentation.order.request.CareOrderCalculateRequest;
+import co.kr.compig.api.presentation.order.request.CareOrderTerminateRequest;
 import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
 import co.kr.compig.api.presentation.order.response.CareOrderPageResponse;
 import co.kr.compig.global.code.ApplyStatus;
@@ -339,8 +340,9 @@ public class CareOrder {
 			.build();
 	}
 
-	public void cancelOrder() {
+	public void cancelOrder(CareOrderTerminateRequest request) {
 		this.orderStatus = ORDER_CANCEL;
+		this.realEndDateTime = request.getRealEndDateTime();
 	}
 
 	public boolean isPayment() {

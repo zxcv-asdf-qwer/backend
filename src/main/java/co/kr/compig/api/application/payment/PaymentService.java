@@ -6,7 +6,6 @@ import static co.kr.compig.global.utils.KeyGen.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -122,9 +121,9 @@ public class PaymentService {
 	}
 
 	@Transactional(readOnly = true)
-	public PaymentDetailResponse getPaymentByOrderId(Long orderId) {
-		Optional<Payment> paymentOptional = paymentRepository.findByCareOrderId(orderId);
-		return paymentOptional.map(Payment::toPaymentDetailResponse).orElse(null);
+	public List<PaymentDetailResponse> getPaymentsByOrderId(Long orderId) {
+		List<Payment> paymentOptional = paymentRepository.findByCareOrderId(orderId);
+		return paymentOptional.stream().map(Payment::toPaymentDetailResponse).collect(Collectors.toList());
 	}
 
 	@Transactional(readOnly = true)

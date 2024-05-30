@@ -1,5 +1,6 @@
 package co.kr.compig.api.application.order;
 
+import static co.kr.compig.global.code.PeriodType.*;
 import static co.kr.compig.global.utils.CalculateUtil.*;
 import static co.kr.compig.global.utils.KeyGen.*;
 
@@ -46,6 +47,7 @@ import co.kr.compig.api.presentation.order.request.CareOrderCalculateRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderCreateRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderExtensionsRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderSearchRequest;
+import co.kr.compig.api.presentation.order.request.CareOrderTerminateRequest;
 import co.kr.compig.api.presentation.order.request.FamilyCareOrderCreateRequest;
 import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
 import co.kr.compig.api.presentation.order.response.CareOrderPageResponse;
@@ -94,15 +96,35 @@ public class CareOrderService {
 		CareOrder careOrder = careOrderRepository.save(
 			careOrderCreateRequest.converterEntity(member, orderPatient));
 		Settle recentSettle = settleService.getRecentSettle();
-		// 종료 날짜(2024-04-17 10:00:00) - 시작 날짜(2024-04-12 10:00:00)
-		// 시작 날짜부터 종료 날짜까지 5일 Packing 객체 생성
-		long daysBetween = ChronoUnit.DAYS.between(careOrder.getStartDateTime(), careOrder.getEndDateTime());
-		for (int i = 0; i < daysBetween; i++) {
-			LocalDateTime startDateTime = careOrder.getStartDateTime().plusDays(i);
-			LocalDateTime endDateTime = startDateTime.plusDays(1);
-			Packing build = careOrderCreateRequest.toEntity(careOrder, recentSettle, startDateTime, endDateTime);
 
-			careOrder.addPacking(build);
+		long daysBetween;
+		if (careOrderCreateRequest.getPeriodType().equals(PART_TIME)) { //시간제
+			// 종료 날짜(2024-05-20 22:00:00) - 시작 날짜(2024-05-22 02:00:00), 파트타임 시간: 4시간
+			// 시작 날짜부터 종료 날짜까지 2일 Packing 객체 생성
+			// 종료 날짜(2024-05-20 10:00:00) - 시작 날짜(2024-05-22 15:00:00), 파트타임 시간: 5시간
+			// 시작 날짜부터 종료 날짜까지 3일 Packing 객체 생성
+			daysBetween = ChronoUnit.DAYS.between(careOrder.getStartDateTime(), careOrder.getEndDateTime()) + 1;
+
+			for (int i = 0; i < daysBetween; i++) {
+				LocalDateTime startDateTime = careOrder.getStartDateTime().plusDays(i);
+				LocalDateTime endDateTime = startDateTime.plusHours(careOrderCreateRequest.getPartTime());
+				Packing build = careOrderCreateRequest.toEntity(careOrder, recentSettle, startDateTime, endDateTime);
+
+				careOrder.addPacking(build);
+			}
+		}
+
+		if (careOrderCreateRequest.getPeriodType().equals(PERIOD)) { //기간제
+			// 종료 날짜(2024-04-17 10:00:00) - 시작 날짜(2024-04-12 10:00:00)
+			// 시작 날짜부터 종료 날짜까지 5일 Packing 객체 생성
+			daysBetween = ChronoUnit.DAYS.between(careOrder.getStartDateTime(), careOrder.getEndDateTime());
+			for (int i = 0; i < daysBetween; i++) {
+				LocalDateTime startDateTime = careOrder.getStartDateTime().plusDays(i);
+				LocalDateTime endDateTime = startDateTime.plusDays(1);
+				Packing build = careOrderCreateRequest.toEntity(careOrder, recentSettle, startDateTime, endDateTime);
+
+				careOrder.addPacking(build);
+			}
 		}
 
 		try {
@@ -406,15 +428,16 @@ public class CareOrderService {
 		return smsPayResponse.getOrderUrl();
 	}
 
-	public void cancelCareOrder(Long careOrderId) {
+	public void cancelCareOrder(Long careOrderId, CareOrderTerminateRequest careOrderTerminateRequest) {
 		CareOrder careOrder = careOrderRepository.findById(careOrderId).orElseThrow(NotExistDataException::new);
-		careOrder.cancelOrder();
+		careOrder.cancelOrder(careOrderTerminateRequest);
 	}
 
-	public void cancelCareOrderForGuardian(Long careOrderId) {
+	public void cancelCareOrderForGuardian(Long careOrderId, CareOrderTerminateRequest careOrderTerminateRequest) {
 		CareOrder careOrder = careOrderRepository.findById(careOrderId).orElseThrow(NotExistDataException::new);
 		if (careOrder.getOrderStatus().equals(OrderStatus.MATCHING_WAITING)) {
-			careOrder.cancelOrder();
+			careOrder.cancelOrder(careOrderTerminateRequest);
+			return;
 		}
 		throw new BizException("매칭 대기 상태가 아닙니다.");
 	}

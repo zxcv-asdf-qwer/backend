@@ -49,9 +49,9 @@ public class PartnerCareOrderController {
 	}
 
 	@Operation(summary = "상세 조회")
-	@GetMapping(path = "/{careOrderId}")
+	@GetMapping(path = "/{orderId}")
 	public ResponseEntity<Response<CareOrderDetailResponse>> getCareOrder(
-		@PathVariable(name = "careOrderId") Long careOrderId
+		@PathVariable(name = "orderId") Long careOrderId
 	) {
 		return ResponseEntity.ok(Response.<CareOrderDetailResponse>builder()
 			.data(careOrderService.getCareOrder(careOrderId))

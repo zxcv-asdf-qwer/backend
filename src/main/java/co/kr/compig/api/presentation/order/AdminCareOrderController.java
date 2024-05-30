@@ -20,6 +20,7 @@ import co.kr.compig.api.presentation.order.request.CareOrderCalculateRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderCreateRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderExtensionsRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderSearchRequest;
+import co.kr.compig.api.presentation.order.request.CareOrderTerminateRequest;
 import co.kr.compig.api.presentation.order.request.FamilyCareOrderCreateRequest;
 import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
 import co.kr.compig.api.presentation.order.response.CareOrderPageResponse;
@@ -102,11 +103,12 @@ public class AdminCareOrderController {
 			.build());
 	}
 
-	@Operation(summary = "간병 취소하기")
+	@Operation(summary = "간병 종료하기, 취소하기")
 	@DeleteMapping(path = "/{orderId}")
-	public ResponseEntity<Response<?>> cancelCareOrder(
-		@PathVariable(name = "orderId") Long orderId) {
-		careOrderService.cancelCareOrder(orderId);
+	public ResponseEntity<Response<?>> terminateCareOrder(
+		@PathVariable(name = "orderId") Long orderId,
+		@ModelAttribute @Valid CareOrderTerminateRequest careOrderTerminateRequest) {
+		careOrderService.cancelCareOrder(orderId, careOrderTerminateRequest);
 		return ResponseEntity.ok().build();
 	}
 }
