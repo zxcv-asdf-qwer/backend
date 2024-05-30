@@ -50,12 +50,6 @@ public class PatientCreateRequest {
 	@NotEmpty(message = "ToiletType must not be empty")
 	private List<ToiletType> selfToiletAvailabilities; // 대소변 해결 여부
 
-	@NotNull
-	private IsYn moveAvailability; // 거동 가능 여부
-
-	@NotNull
-	private IsYn mealAvailability; // 식사 가능 여부
-
 	private GenderCode genderPreference; // 선호 성별
 
 	@NotNull
@@ -83,8 +77,6 @@ public class PatientCreateRequest {
 			.weight(this.weight)
 			.diseaseNms(this.diseaseNms)
 			.selfToiletAvailabilities(this.selfToiletAvailabilities)
-			.moveAvailability(this.moveAvailability)
-			.mealAvailability(this.mealAvailability)
 			.genderPreference(this.genderPreference)
 			.covid19Test(this.covid19Test)
 			.patientRequest(this.patientRequest)
