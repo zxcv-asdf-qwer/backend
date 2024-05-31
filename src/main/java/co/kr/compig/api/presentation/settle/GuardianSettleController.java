@@ -1,17 +1,13 @@
 package co.kr.compig.api.presentation.settle;
 
-import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.settle.SettleService;
-import co.kr.compig.api.presentation.settle.request.SettleSearchRequest;
 import co.kr.compig.api.presentation.settle.response.SettleResponse;
-import co.kr.compig.global.dto.pagination.PageResponse;
+import co.kr.compig.global.dto.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,11 +23,12 @@ import lombok.extern.slf4j.Slf4j;
 public class GuardianSettleController {
 	private final SettleService settleService;
 
-	@Operation(summary = "페이지 조회")
-	@GetMapping("/pages")
-	public ResponseEntity<PageResponse> pageListSettle(
-		@ParameterObject @ModelAttribute SettleSearchRequest settleSearchRequest) {
-		Page<SettleResponse> page = settleService.getSettlePage(settleSearchRequest);
-		return PageResponse.ok(page.stream().toList(), page.getPageable().getOffset(), page.getTotalElements());
+	@Operation(summary = "가장 최근 수수료 조회")
+	@GetMapping()
+	public ResponseEntity<Response<SettleResponse>> getSettle() {
+		return ResponseEntity.ok(Response.<SettleResponse>builder()
+			.data(settleService.getRecentSettle().toSettleResponse())
+			.build());
 	}
+
 }
