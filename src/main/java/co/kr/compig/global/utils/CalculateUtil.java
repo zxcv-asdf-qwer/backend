@@ -3,6 +3,7 @@ package co.kr.compig.global.utils;
 import static co.kr.compig.global.code.PeriodType.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 
 import org.apache.commons.lang3.StringUtils;
@@ -141,5 +142,12 @@ public class CalculateUtil {
 			return careOrderCalculateRequest.getAmount();
 		}
 		throw new BizException("계산 될 수 없습니다.");
+	}
+
+	public Long calculateDaysBetween(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+		LocalDate startDate = startDateTime.toLocalDate();
+		LocalDate endDate = endDateTime.toLocalDate();
+
+		return endDate.toEpochDay() - startDate.toEpochDay();
 	}
 }
