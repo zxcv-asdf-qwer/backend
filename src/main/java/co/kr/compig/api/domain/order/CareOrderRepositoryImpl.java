@@ -24,7 +24,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import co.kr.compig.api.presentation.order.request.CareOrderSearchRequest;
 import co.kr.compig.api.presentation.order.response.CareOrderPageResponse;
-import co.kr.compig.api.presentation.order.response.CareOrderResponse;
+import co.kr.compig.api.presentation.order.response.UserCareOrderResponse;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -59,17 +59,18 @@ public class CareOrderRepositoryImpl implements CareOrderRepositoryCustom {
 	}
 
 	@Override
-	public Slice<CareOrderResponse> findAllByCondition(CareOrderSearchRequest careOrderSearchRequest,
+	public Slice<UserCareOrderResponse> findAllByCondition(CareOrderSearchRequest careOrderSearchRequest,
 		Pageable pageable) {
 		BooleanExpression predicate = createPredicate(careOrderSearchRequest);
-		JPAQuery<CareOrderResponse> query = createBaseQuery(predicate).select(
-			Projections.constructor(CareOrderResponse.class, careOrder.id, careOrder.member.userType,
-				careOrder.member.userNm, careOrder.member.telNo, careOrder.orderPatient.locationType,
-				careOrder.orderPatient.address1));
+		JPAQuery<UserCareOrderResponse> query = createBaseQuery(predicate).select(
+			Projections.constructor(UserCareOrderResponse.class, careOrder.id, careOrder.orderStatus,
+				careOrder.orderType, careOrder.applys.size(),
+				careOrder.orderPatient.address1, careOrder.orderPatient.address2, careOrder.packages.any().periodType
+				, careOrder.packages.any().amount, careOrder.startDateTime, careOrder.endDateTime));
 
 		applySorting(query, pageable);
 
-		List<CareOrderResponse> careOrders = query.where(
+		List<UserCareOrderResponse> careOrders = query.where(
 				cursorCursorId(careOrderSearchRequest.getCursorId()))
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize() + 1) // 페이징 + 다음 페이지 존재 여부 확인을 위해 +1

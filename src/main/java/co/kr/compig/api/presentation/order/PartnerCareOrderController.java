@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import co.kr.compig.api.application.order.CareOrderService;
 import co.kr.compig.api.presentation.order.request.CareOrderSearchRequest;
 import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
-import co.kr.compig.api.presentation.order.response.CareOrderResponse;
+import co.kr.compig.api.presentation.order.response.UserCareOrderResponse;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.dto.pagination.SliceResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,12 +36,13 @@ public class PartnerCareOrderController {
 
 	@Operation(summary = "조회")
 	@GetMapping
-	public ResponseEntity<SliceResponse<CareOrderResponse>> pageListCareOrder(
+	public ResponseEntity<SliceResponse<UserCareOrderResponse>> pageListCareOrder(
 		@ParameterObject @ModelAttribute @Valid CareOrderSearchRequest careOrderSearchRequest,
 		Pageable pageable
 	) {
-		Slice<CareOrderResponse> slice = careOrderService.pageListCareOrderCursor(careOrderSearchRequest, pageable);
-		SliceResponse<CareOrderResponse> sliceResponse = new SliceResponse<>(slice.getContent(), pageable,
+		Slice<UserCareOrderResponse> slice = careOrderService.pageListCareOrderCursor(careOrderSearchRequest,
+			pageable);
+		SliceResponse<UserCareOrderResponse> sliceResponse = new SliceResponse<>(slice.getContent(), pageable,
 			slice.hasNext(),
 			CollectionsUtils.hasItems(slice.getContent()) ?
 				slice.getContent().get(slice.getContent().size() - 1).getId().toString() : "");

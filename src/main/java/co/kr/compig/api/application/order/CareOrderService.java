@@ -51,7 +51,7 @@ import co.kr.compig.api.presentation.order.request.CareOrderTerminateRequest;
 import co.kr.compig.api.presentation.order.request.FamilyCareOrderCreateRequest;
 import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
 import co.kr.compig.api.presentation.order.response.CareOrderPageResponse;
-import co.kr.compig.api.presentation.order.response.CareOrderResponse;
+import co.kr.compig.api.presentation.order.response.UserCareOrderResponse;
 import co.kr.compig.global.code.LocationType;
 import co.kr.compig.global.code.OrderStatus;
 import co.kr.compig.global.code.UseYn;
@@ -442,7 +442,7 @@ public class CareOrderService {
 		throw new BizException("매칭 대기 상태가 아닙니다.");
 	}
 
-	public Slice<CareOrderResponse> pageListCareOrderCursor(CareOrderSearchRequest careOrderSearchRequest,
+	public Slice<UserCareOrderResponse> pageListCareOrderCursor(CareOrderSearchRequest careOrderSearchRequest,
 		Pageable pageable) {
 		return careOrderRepositoryCustom.findAllByCondition(careOrderSearchRequest, pageable);
 	}
