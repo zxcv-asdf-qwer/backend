@@ -12,12 +12,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.kr.compig.api.application.order.CareOrderService;
 import co.kr.compig.api.presentation.order.request.CareOrderCreateRequest;
+import co.kr.compig.api.presentation.order.request.CareOrderExtensionsRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderSearchRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderTerminateRequest;
 import co.kr.compig.api.presentation.order.request.FamilyCareOrderCreateRequest;
@@ -84,6 +86,17 @@ public class GuardianCareOrderController {
 	) {
 		return ResponseEntity.ok(Response.<CareOrderDetailResponse>builder()
 			.data(careOrderService.getCareOrder(careOrderId))
+			.build());
+	}
+
+	@Operation(summary = "간병 공고 연장하기")
+	@PutMapping(path = "/{orderId}/extensions")
+	public ResponseEntity<Response<?>> extensionsCareOrder(
+		@PathVariable(name = "orderId") Long orderId,
+		@RequestBody @Valid CareOrderExtensionsRequest careOrderExtensionsRequest
+	) {
+		return ResponseEntity.ok().body(Response.<Map<String, String>>builder()
+			.data(Map.of("orderUrl", careOrderService.extensionsCareOrder(orderId, careOrderExtensionsRequest)))
 			.build());
 	}
 
