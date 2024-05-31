@@ -58,8 +58,8 @@ public class AdminCareOrderController {
 	public ResponseEntity<Response<?>> createFamilyCareOrder(@PathVariable String memberId,
 		@RequestBody @Valid FamilyCareOrderCreateRequest familyCareOrderCreateRequest
 	) {
-		return ResponseEntity.ok().body(Response.<Map<String, String>>builder()
-			.data(Map.of("orderUrl",
+		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
+			.data(Map.of("orderId",
 				careOrderService.createFamilyCareOrderAdmin(memberId, familyCareOrderCreateRequest)))
 			.build());
 	}

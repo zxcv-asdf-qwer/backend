@@ -59,8 +59,8 @@ public class GuardianCareOrderController {
 	public ResponseEntity<Response<?>> createFamilyCareOrder(
 		@RequestBody @Valid FamilyCareOrderCreateRequest familyCareOrderCreateRequest
 	) {
-		return ResponseEntity.ok().body(Response.<Map<String, String>>builder()
-			.data(Map.of("orderUrl", careOrderService.createFamilyCareOrderGuardian(familyCareOrderCreateRequest)))
+		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
+			.data(Map.of("orderId", careOrderService.createFamilyCareOrderGuardian(familyCareOrderCreateRequest)))
 			.build());
 	}
 

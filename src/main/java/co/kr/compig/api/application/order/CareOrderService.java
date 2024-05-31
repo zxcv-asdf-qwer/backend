@@ -231,9 +231,9 @@ public class CareOrderService {
 	 * 관리자 가족 간병공고 등록
 	 * 1 patient -> order_patient
 	 * 2 order save
-	 * 3 send noti
+	 * 3 create facking
 	 */
-	public String createFamilyCareOrderAdmin(String memberId,
+	public Long createFamilyCareOrderAdmin(String memberId,
 		FamilyCareOrderCreateRequest familyCareOrderCreateRequest) {
 		Member member = memberService.getMemberById(memberId);
 		//start 1 patient -> order_patient
@@ -253,54 +253,59 @@ public class CareOrderService {
 			familyCareOrderCreateRequest.converterEntity(member, orderPatient));
 		//end 2 order save
 
-		//start 3 create packing
+		//start 3 create facking
 		Settle recentSettle = settleService.getRecentSettle();
-		int totalPrice = 0;
-
 		Facking build = familyCareOrderCreateRequest.toEntity(careOrder, recentSettle);
-
 		careOrder.addFacking(build);
-		// 종료 날짜(2024-04-17 10:00:00) - 시작 날짜(2024-04-12 10:00:00)
-		// 시작 날짜부터 종료 날짜까지 5일 Packing 객체 생성
-		long daysBetween = ChronoUnit.DAYS.between(careOrder.getStartDateTime(), careOrder.getEndDateTime());
-		for (int i = 0; i < daysBetween; i++) {
-			totalPrice += calculatePaymentPriceOneDay(familyCareOrderCreateRequest.toCareOrderCalculateRequest(),
-				recentSettle.getGuardianFees());
-		}
-		//end 3 create packing
-		SmsPayRequest smsPayRequest = SmsPayRequest.builder()
-			.mid(payMid)
-			.moid("CARE" + getRandomTimeKey())
-			.goodsName(" " + daysBetween + "일") //상품명
-			.amt(String.valueOf(totalPrice))
-			.buyerName(member.getUserNm())
-			.buyerTel(member.getTelNo())
-			.build();
+		//end 3 create facking
 
-		// 결제pg요청 프로세스
-		ResponseEntity<String> response = payApi.requestSmsPay(smsPayRequest);
-		Gson gson = new GsonBuilder()
-			.setPrettyPrinting()
-			.registerTypeAdapter(LocalDateTime.class, new GsonLocalDateTimeAdapter())
-			.create();
+		// Settle recentSettle = settleService.getRecentSettle();
+		// int totalPrice = 0;
+		//
+		// Facking build = familyCareOrderCreateRequest.toEntity(careOrder, recentSettle);
+		//
+		// careOrder.addFacking(build);
+		// // 종료 날짜(2024-04-17 10:00:00) - 시작 날짜(2024-04-12 10:00:00)
+		// // 시작 날짜부터 종료 날짜까지 5일 Packing 객체 생성
+		// long daysBetween = ChronoUnit.DAYS.between(careOrder.getStartDateTime(), careOrder.getEndDateTime());
+		// for (int i = 0; i < daysBetween; i++) {
+		// 	totalPrice += calculatePaymentPriceOneDay(familyCareOrderCreateRequest.toCareOrderCalculateRequest(),
+		// 		recentSettle.getGuardianFees());
+		// }
 
-		SmsPayResponse smsPayResponse = gson.fromJson(
-			Objects.requireNonNull(response.getBody()),
-			SmsPayResponse.class
-		);
-		//return을 결제 url 로 넘기기
-		careOrder.addPayment(smsPayResponse.toEntity(totalPrice));
+		// SmsPayRequest smsPayRequest = SmsPayRequest.builder()
+		// 	.mid(payMid)
+		// 	.moid("CARE" + getRandomTimeKey())
+		// 	.goodsName(" " + daysBetween + "일") //상품명
+		// 	.amt(String.valueOf(totalPrice))
+		// 	.buyerName(member.getUserNm())
+		// 	.buyerTel(member.getTelNo())
+		// 	.build();
+		//
+		// // 결제pg요청 프로세스
+		// ResponseEntity<String> response = payApi.requestSmsPay(smsPayRequest);
+		// Gson gson = new GsonBuilder()
+		// 	.setPrettyPrinting()
+		// 	.registerTypeAdapter(LocalDateTime.class, new GsonLocalDateTimeAdapter())
+		// 	.create();
+		//
+		// SmsPayResponse smsPayResponse = gson.fromJson(
+		// 	Objects.requireNonNull(response.getBody()),
+		// 	SmsPayResponse.class
+		// );
+		// //return을 결제 url 로 넘기기
+		// careOrder.addPayment(smsPayResponse.toEntity(totalPrice));
 		//start 3 send noti
-		return smsPayResponse.getOrderUrl();
+		return careOrder.getId();
 	}
 
 	/**
 	 * 유저(보호자) 가족 간병공고 등록
 	 * 1 patient -> order_patient
 	 * 2 order save
-	 * 3 send noti
+	 * 3 create facking
 	 */
-	public String createFamilyCareOrderGuardian(FamilyCareOrderCreateRequest familyCareOrderCreateRequest) {
+	public Long createFamilyCareOrderGuardian(FamilyCareOrderCreateRequest familyCareOrderCreateRequest) {
 		Member member = memberService.getMemberById(SecurityUtil.getMemberId());
 		//start 1 patient -> order_patient
 		Patient patientById = member.getPatients()
@@ -316,46 +321,50 @@ public class CareOrderService {
 			familyCareOrderCreateRequest.converterEntity(member, orderPatient));
 		//end 2 order save
 
-		//start 3 send noti
+		//start 3 create facking
 		Settle recentSettle = settleService.getRecentSettle();
-
-		int totalPrice = 0;
-
 		Facking build = familyCareOrderCreateRequest.toEntity(careOrder, recentSettle);
-
 		careOrder.addFacking(build);
-		// 종료 날짜(2024-04-17 10:00:00) - 시작 날짜(2024-04-12 10:00:00)
-		// 시작 날짜부터 종료 날짜까지 5일 Packing 객체 생성
-		long daysBetween = ChronoUnit.DAYS.between(careOrder.getStartDateTime(), careOrder.getEndDateTime());
-		for (int i = 0; i < daysBetween; i++) {
-			totalPrice += calculatePaymentPriceOneDay(familyCareOrderCreateRequest.toCareOrderCalculateRequest(),
-				recentSettle.getGuardianFees());
-		}
+		//end 3 create facking
 
-		SmsPayRequest smsPayRequest = SmsPayRequest.builder()
-			.mid(payMid)
-			.moid("CARE" + getRandomTimeKey())
-			.goodsName(" " + daysBetween + "일") //상품명
-			.amt(String.valueOf(totalPrice))
-			.buyerName(member.getUserNm())
-			.buyerTel(member.getTelNo())
-			.build();
+		// // Settle recentSettle = settleService.getRecentSettle();
+		// // int totalPrice = 0;
+		//
+		// Facking build = familyCareOrderCreateRequest.toEntity(careOrder, recentSettle);
+		//
+		// careOrder.addFacking(build);
+		// // 종료 날짜(2024-04-17 10:00:00) - 시작 날짜(2024-04-12 10:00:00)
+		// // 시작 날짜부터 종료 날짜까지 5일 Packing 객체 생성
+		// long daysBetween = ChronoUnit.DAYS.between(careOrder.getStartDateTime(), careOrder.getEndDateTime());
+		// for (int i = 0; i < daysBetween; i++) {
+		// 	totalPrice += calculatePaymentPriceOneDay(familyCareOrderCreateRequest.toCareOrderCalculateRequest(),
+		// 		recentSettle.getGuardianFees());
+		// }
+		//
+		// SmsPayRequest smsPayRequest = SmsPayRequest.builder()
+		// 	.mid(payMid)
+		// 	.moid("CARE" + getRandomTimeKey())
+		// 	.goodsName(" " + daysBetween + "일") //상품명
+		// 	.amt(String.valueOf(totalPrice))
+		// 	.buyerName(member.getUserNm())
+		// 	.buyerTel(member.getTelNo())
+		// 	.build();
+		//
+		// // 결제pg요청 프로세스
+		// ResponseEntity<String> response = payApi.requestSmsPay(smsPayRequest);
+		// Gson gson = new GsonBuilder()
+		// 	.setPrettyPrinting()
+		// 	.registerTypeAdapter(LocalDateTime.class, new GsonLocalDateTimeAdapter())
+		// 	.create();
+		//
+		// SmsPayResponse smsPayResponse = gson.fromJson(
+		// 	Objects.requireNonNull(response.getBody()),
+		// 	SmsPayResponse.class
+		// );
+		// //return을 결제 url 로 넘기기
+		// careOrder.addPayment(smsPayResponse.toEntity(totalPrice));
 
-		// 결제pg요청 프로세스
-		ResponseEntity<String> response = payApi.requestSmsPay(smsPayRequest);
-		Gson gson = new GsonBuilder()
-			.setPrettyPrinting()
-			.registerTypeAdapter(LocalDateTime.class, new GsonLocalDateTimeAdapter())
-			.create();
-
-		SmsPayResponse smsPayResponse = gson.fromJson(
-			Objects.requireNonNull(response.getBody()),
-			SmsPayResponse.class
-		);
-		//return을 결제 url 로 넘기기
-		careOrder.addPayment(smsPayResponse.toEntity(totalPrice));
-
-		return smsPayResponse.getOrderUrl();
+		return careOrder.getId();
 	}
 
 	@Transactional(readOnly = true)
