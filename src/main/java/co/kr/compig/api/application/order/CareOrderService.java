@@ -144,8 +144,7 @@ public class CareOrderService {
 				"location", careOrder.getOrderPatient().getLocationType() != LocationType.HOME ?
 					careOrder.getOrderPatient().getHospitalName() :
 					careOrder.getOrderPatient().getLocationType().getDesc(),
-				"periodType",
-				careOrder.getPeriodType(),
+				"periodType", careOrder.getPeriodType(),
 				"price", careOrder.getAmount()
 			);
 			List<Member> partners = jpaQueryFactory.selectFrom(QMember.member)
@@ -186,9 +185,6 @@ public class CareOrderService {
 			.filter(patient -> patient.getId().equals(careOrderCreateRequest.getPatientId()))
 			.findFirst()
 			.orElseThrow(NotExistDataException::new);
-		// ModelMapper modelMapper = new ModelMapper();
-		// modelMapper.getConfiguration().setFieldAccessLevel(Configuration.AccessLevel.PRIVATE).setFieldMatchingEnabled(true).setMatchingStrategy(MatchingStrategies.LOOSE);
-
 		OrderPatient orderPatient = orderPatientService.save(patientById.toOrderPatient());
 		//end 1 patient -> order_patient
 
@@ -197,18 +193,6 @@ public class CareOrderService {
 			careOrderCreateRequest.converterEntity(member, orderPatient));
 		//end 2 order save
 
-		// Settle recentSettle = settleService.getRecentSettle();
-		// // 종료 날짜(2024-04-17 10:00:00) - 시작 날짜(2024-04-12 10:00:00)
-		// // 시작 날짜부터 종료 날짜까지 5일 Packing 객체 생성
-		// long daysBetween = ChronoUnit.DAYS.between(careOrder.getStartDateTime(), careOrder.getEndDateTime());
-		// for (int i = 0; i < daysBetween; i++) {
-		// 	LocalDateTime startDateTime = careOrder.getStartDateTime().plusDays(i);
-		// 	LocalDateTime endDateTime = startDateTime.plusDays(1);
-		// 	Packing build = careOrderCreateRequest.toEntity(careOrder, recentSettle, startDateTime, endDateTime);
-		//
-		// 	careOrder.addPacking(build);
-		// }
-
 		//start 3 send noti
 		try {
 			NoticeCode noticeCode = NoticeCode.NEW_CREATE_ORDER;
@@ -216,13 +200,8 @@ public class CareOrderService {
 				"location", careOrder.getOrderPatient().getLocationType() != LocationType.HOME ?
 					careOrder.getOrderPatient().getHospitalName() :
 					careOrder.getOrderPatient().getLocationType().getDesc(),
-				"periodType",
-				careOrder.getPackages()
-					.stream()
-					.findFirst()
-					.map(packing -> packing.getPeriodType().getDesc())
-					.orElse(null),
-				"price", careOrder.getPackages().stream().findFirst().map(packing -> packing.getAmount()).orElse(null)
+				"periodType", careOrder.getPeriodType(),
+				"price", careOrder.getAmount()
 			);
 			List<Member> partners = jpaQueryFactory.selectFrom(QMember.member)
 				.where(QMember.member.userType.eq(UserType.PARTNER)
@@ -248,9 +227,16 @@ public class CareOrderService {
 		return careOrder.getId();
 	}
 
+	/**
+	 * 관리자 가족 간병공고 등록
+	 * 1 patient -> order_patient
+	 * 2 order save
+	 * 3 send noti
+	 */
 	public String createFamilyCareOrderAdmin(String memberId,
 		FamilyCareOrderCreateRequest familyCareOrderCreateRequest) {
 		Member member = memberService.getMemberById(memberId);
+		//start 1 patient -> order_patient
 		Patient patientById = member.getPatients()
 			.stream()
 			.filter(patient -> patient.getId().equals(familyCareOrderCreateRequest.getPatientId()))
@@ -260,11 +246,15 @@ public class CareOrderService {
 		// modelMapper.getConfiguration().setFieldAccessLevel(Configuration.AccessLevel.PRIVATE).setFieldMatchingEnabled(true).setMatchingStrategy(MatchingStrategies.LOOSE);
 
 		OrderPatient orderPatient = orderPatientService.save(patientById.toOrderPatient());
+		//end 2 patient -> order_patient
 
+		//start 2 order save
 		CareOrder careOrder = careOrderRepository.save(
 			familyCareOrderCreateRequest.converterEntity(member, orderPatient));
-		Settle recentSettle = settleService.getRecentSettle();
+		//end 2 order save
 
+		//start 3 create packing
+		Settle recentSettle = settleService.getRecentSettle();
 		int totalPrice = 0;
 
 		Facking build = familyCareOrderCreateRequest.toEntity(careOrder, recentSettle);
@@ -277,7 +267,7 @@ public class CareOrderService {
 			totalPrice += calculatePaymentPriceOneDay(familyCareOrderCreateRequest.toCareOrderCalculateRequest(),
 				recentSettle.getGuardianFees());
 		}
-
+		//end 3 create packing
 		SmsPayRequest smsPayRequest = SmsPayRequest.builder()
 			.mid(payMid)
 			.moid("CARE" + getRandomTimeKey())
@@ -300,24 +290,33 @@ public class CareOrderService {
 		);
 		//return을 결제 url 로 넘기기
 		careOrder.addPayment(smsPayResponse.toEntity(totalPrice));
-
+		//start 3 send noti
 		return smsPayResponse.getOrderUrl();
 	}
 
+	/**
+	 * 유저(보호자) 가족 간병공고 등록
+	 * 1 patient -> order_patient
+	 * 2 order save
+	 * 3 send noti
+	 */
 	public String createFamilyCareOrderGuardian(FamilyCareOrderCreateRequest familyCareOrderCreateRequest) {
 		Member member = memberService.getMemberById(SecurityUtil.getMemberId());
+		//start 1 patient -> order_patient
 		Patient patientById = member.getPatients()
 			.stream()
 			.filter(patient -> patient.getId().equals(familyCareOrderCreateRequest.getPatientId()))
 			.findFirst()
 			.orElseThrow(NotExistDataException::new);
-		// ModelMapper modelMapper = new ModelMapper();
-		// modelMapper.getConfiguration().setFieldAccessLevel(Configuration.AccessLevel.PRIVATE).setFieldMatchingEnabled(true).setMatchingStrategy(MatchingStrategies.LOOSE);
-
 		OrderPatient orderPatient = orderPatientService.save(patientById.toOrderPatient());
+		//end 1 patient -> order_patient
 
+		//start 2 order save
 		CareOrder careOrder = careOrderRepository.save(
 			familyCareOrderCreateRequest.converterEntity(member, orderPatient));
+		//end 2 order save
+
+		//start 3 send noti
 		Settle recentSettle = settleService.getRecentSettle();
 
 		int totalPrice = 0;
