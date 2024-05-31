@@ -11,7 +11,6 @@ import co.kr.compig.global.code.IsYn;
 import co.kr.compig.global.code.OrderType;
 import co.kr.compig.global.code.PeriodType;
 import co.kr.compig.global.validator.annotaion.Conditional;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -27,11 +26,11 @@ import lombok.NoArgsConstructor;
 public class CareOrderCreateRequest {
 
 	@NotNull
-	@Parameter(description = "시작 날짜", example = "2024-05-03 15:44:10")
+	@Schema(description = "시작 날짜", example = "2024-05-03 15:44:10")
 	private LocalDateTime startDateTime; // 시작 날짜
 
 	@NotNull
-	@Parameter(description = "시작 날짜", example = "2024-05-03 15:44:10")
+	@Schema(description = "시작 날짜", example = "2024-05-03 15:44:10")
 	private LocalDateTime endDateTime; // 종료 날짜
 
 	@Schema(description = "제목", example = "제목")
@@ -40,16 +39,14 @@ public class CareOrderCreateRequest {
 	@Schema(description = "요청 사항", example = "요청 사항")
 	private String orderRequest; // 요청 사항
 
-	@NotNull
 	@Builder.Default
-	@Parameter(description = "게시 여부/작성자가 회원일 경우(=/admin/orders가 아니면) 보내지 않음")
+	@Schema(description = "게시 여부/작성자가 회원일 경우(=/admin/orders가 아니면) 보내지 않음")
 	private IsYn publishYn = IsYn.Y; // 게시 여부 //작성자가 회원일 경우 무조건 게시
 
 	@NotNull
 	@Schema(description = "시간제, 기간제", example = "PART_TIME")
 	private PeriodType periodType;  // 시간제, 기간제
 
-	@Parameter(description = "파트타임 시간 시간제 일 경우 필수")
 	@Schema(description = "파트타임 시간(시간제일 경우 필수)", example = "5")
 	private Integer partTime; //파트타임 시간 시간제 일 경우 필수
 
@@ -70,6 +67,9 @@ public class CareOrderCreateRequest {
 			.orderRequest(this.orderRequest)
 			.publishYn(this.publishYn)
 			.orderType(OrderType.GENERAL)
+			.amount(this.amount)
+			.periodType(this.periodType)
+			.partTime(this.partTime)
 			.member(member)
 			.orderPatient(orderPatient)
 			.build();

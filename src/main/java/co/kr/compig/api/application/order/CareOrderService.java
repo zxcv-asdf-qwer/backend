@@ -1,6 +1,5 @@
 package co.kr.compig.api.application.order;
 
-import static co.kr.compig.global.code.PeriodType.*;
 import static co.kr.compig.global.utils.CalculateUtil.*;
 import static co.kr.compig.global.utils.KeyGen.*;
 
@@ -83,8 +82,15 @@ public class CareOrderService {
 	@Value("${api.pay.mid}")
 	private String payMid;
 
+	/**
+	 * 관리자 간병공고 등록
+	 * 1 patient -> order_patient
+	 * 2 order save
+	 * 3 send noti
+	 */
 	public Long createCareOrderAdmin(String memberId, CareOrderCreateRequest careOrderCreateRequest) {
 		Member member = memberService.getMemberById(memberId);
+		//start 1 patient -> order_patient
 		Patient patientById = member.getPatients()
 			.stream()
 			.filter(patient -> patient.getId().equals(careOrderCreateRequest.getPatientId()))
@@ -93,41 +99,45 @@ public class CareOrderService {
 		// ModelMapper modelMapper = new ModelMapper();
 		// modelMapper.getConfiguration().setFieldAccessLevel(Configuration.AccessLevel.PRIVATE).setFieldMatchingEnabled(true).setMatchingStrategy(MatchingStrategies.LOOSE);
 		OrderPatient orderPatient = orderPatientService.save(patientById.toOrderPatient());
+		//end 1 patient -> order_patient
 
+		//start 2 order save
 		CareOrder careOrder = careOrderRepository.save(
 			careOrderCreateRequest.converterEntity(member, orderPatient));
-		Settle recentSettle = settleService.getRecentSettle();
+		//end 2 order save
 
-		long daysBetween;
-		if (careOrderCreateRequest.getPeriodType().equals(PART_TIME)) { //시간제
-			// 종료 날짜(2024-05-20 22:00:00) - 시작 날짜(2024-05-22 02:00:00), 파트타임 시간: 4시간
-			// 시작 날짜부터 종료 날짜까지 2일 Packing 객체 생성
-			// 종료 날짜(2024-05-20 10:00:00) - 시작 날짜(2024-05-22 15:00:00), 파트타임 시간: 5시간
-			// 시작 날짜부터 종료 날짜까지 3일 Packing 객체 생성
-			daysBetween = ChronoUnit.DAYS.between(careOrder.getStartDateTime(), careOrder.getEndDateTime()) + 1;
+		// Settle recentSettle = settleService.getRecentSettle();
+		// long daysBetween;
+		// if (careOrderCreateRequest.getPeriodType().equals(PART_TIME)) { //시간제
+		// 	// 종료 날짜(2024-05-20 22:00:00) - 시작 날짜(2024-05-22 02:00:00), 파트타임 시간: 4시간
+		// 	// 시작 날짜부터 종료 날짜까지 2일 Packing 객체 생성
+		// 	// 종료 날짜(2024-05-20 10:00:00) - 시작 날짜(2024-05-22 15:00:00), 파트타임 시간: 5시간
+		// 	// 시작 날짜부터 종료 날짜까지 3일 Packing 객체 생성
+		// 	daysBetween = ChronoUnit.DAYS.between(careOrder.getStartDateTime(), careOrder.getEndDateTime()) + 1;
+		//
+		// 	for (int i = 0; i < daysBetween; i++) {
+		// 		LocalDateTime startDateTime = careOrder.getStartDateTime().plusDays(i);
+		// 		LocalDateTime endDateTime = startDateTime.plusHours(careOrderCreateRequest.getPartTime());
+		// 		Packing build = careOrderCreateRequest.toEntity(careOrder, recentSettle, startDateTime, endDateTime);
+		//
+		// 		careOrder.addPacking(build);
+		// 	}
+		// }
+		//
+		// if (careOrderCreateRequest.getPeriodType().equals(PERIOD)) { //기간제
+		// 	// 종료 날짜(2024-04-17 10:00:00) - 시작 날짜(2024-04-12 10:00:00)
+		// 	// 시작 날짜부터 종료 날짜까지 5일 Packing 객체 생성
+		// 	daysBetween = ChronoUnit.DAYS.between(careOrder.getStartDateTime(), careOrder.getEndDateTime());
+		// 	for (int i = 0; i < daysBetween; i++) {
+		// 		LocalDateTime startDateTime = careOrder.getStartDateTime().plusDays(i);
+		// 		LocalDateTime endDateTime = startDateTime.plusDays(1);
+		// 		Packing build = careOrderCreateRequest.toEntity(careOrder, recentSettle, startDateTime, endDateTime);
+		//
+		// 		careOrder.addPacking(build);
+		// 	}
+		// }
 
-			for (int i = 0; i < daysBetween; i++) {
-				LocalDateTime startDateTime = careOrder.getStartDateTime().plusDays(i);
-				LocalDateTime endDateTime = startDateTime.plusHours(careOrderCreateRequest.getPartTime());
-				Packing build = careOrderCreateRequest.toEntity(careOrder, recentSettle, startDateTime, endDateTime);
-
-				careOrder.addPacking(build);
-			}
-		}
-
-		if (careOrderCreateRequest.getPeriodType().equals(PERIOD)) { //기간제
-			// 종료 날짜(2024-04-17 10:00:00) - 시작 날짜(2024-04-12 10:00:00)
-			// 시작 날짜부터 종료 날짜까지 5일 Packing 객체 생성
-			daysBetween = ChronoUnit.DAYS.between(careOrder.getStartDateTime(), careOrder.getEndDateTime());
-			for (int i = 0; i < daysBetween; i++) {
-				LocalDateTime startDateTime = careOrder.getStartDateTime().plusDays(i);
-				LocalDateTime endDateTime = startDateTime.plusDays(1);
-				Packing build = careOrderCreateRequest.toEntity(careOrder, recentSettle, startDateTime, endDateTime);
-
-				careOrder.addPacking(build);
-			}
-		}
-
+		//start 3 send noti
 		try {
 			NoticeCode noticeCode = NoticeCode.NEW_CREATE_ORDER;
 			Map<String, Object> data = Map.of(
@@ -135,12 +145,8 @@ public class CareOrderService {
 					careOrder.getOrderPatient().getHospitalName() :
 					careOrder.getOrderPatient().getLocationType().getDesc(),
 				"periodType",
-				careOrder.getPackages()
-					.stream()
-					.findFirst()
-					.map(packing -> packing.getPeriodType().getDesc())
-					.orElse(null),
-				"price", careOrder.getPackages().stream().findFirst().map(packing -> packing.getAmount()).orElse(null)
+				careOrder.getPeriodType(),
+				"price", careOrder.getAmount()
 			);
 			List<Member> partners = jpaQueryFactory.selectFrom(QMember.member)
 				.where(QMember.member.userType.eq(UserType.PARTNER)
@@ -162,11 +168,19 @@ public class CareOrderService {
 		} catch (Exception e) {
 			throw new BizException(ErrorCode.ERROR, "메세지 전송 중 에러가 발생하였습니다.");
 		}
+		//end 3 send noti
 		return careOrder.getId();
 	}
 
+	/**
+	 * 유저(보호자) 간병공고 등록
+	 * 1 patient -> order_patient
+	 * 2 order save
+	 * 3 send noti
+	 */
 	public Long createCareOrderGuardian(CareOrderCreateRequest careOrderCreateRequest) {
 		Member member = memberService.getMemberById(SecurityUtil.getMemberId());
+		//start 1 patient -> order_patient
 		Patient patientById = member.getPatients()
 			.stream()
 			.filter(patient -> patient.getId().equals(careOrderCreateRequest.getPatientId()))
@@ -176,20 +190,26 @@ public class CareOrderService {
 		// modelMapper.getConfiguration().setFieldAccessLevel(Configuration.AccessLevel.PRIVATE).setFieldMatchingEnabled(true).setMatchingStrategy(MatchingStrategies.LOOSE);
 
 		OrderPatient orderPatient = orderPatientService.save(patientById.toOrderPatient());
+		//end 1 patient -> order_patient
 
+		//start 2 order save
 		CareOrder careOrder = careOrderRepository.save(
 			careOrderCreateRequest.converterEntity(member, orderPatient));
-		Settle recentSettle = settleService.getRecentSettle();
-		// 종료 날짜(2024-04-17 10:00:00) - 시작 날짜(2024-04-12 10:00:00)
-		// 시작 날짜부터 종료 날짜까지 5일 Packing 객체 생성
-		long daysBetween = ChronoUnit.DAYS.between(careOrder.getStartDateTime(), careOrder.getEndDateTime());
-		for (int i = 0; i < daysBetween; i++) {
-			LocalDateTime startDateTime = careOrder.getStartDateTime().plusDays(i);
-			LocalDateTime endDateTime = startDateTime.plusDays(1);
-			Packing build = careOrderCreateRequest.toEntity(careOrder, recentSettle, startDateTime, endDateTime);
+		//end 2 order save
 
-			careOrder.addPacking(build);
-		}
+		// Settle recentSettle = settleService.getRecentSettle();
+		// // 종료 날짜(2024-04-17 10:00:00) - 시작 날짜(2024-04-12 10:00:00)
+		// // 시작 날짜부터 종료 날짜까지 5일 Packing 객체 생성
+		// long daysBetween = ChronoUnit.DAYS.between(careOrder.getStartDateTime(), careOrder.getEndDateTime());
+		// for (int i = 0; i < daysBetween; i++) {
+		// 	LocalDateTime startDateTime = careOrder.getStartDateTime().plusDays(i);
+		// 	LocalDateTime endDateTime = startDateTime.plusDays(1);
+		// 	Packing build = careOrderCreateRequest.toEntity(careOrder, recentSettle, startDateTime, endDateTime);
+		//
+		// 	careOrder.addPacking(build);
+		// }
+
+		//start 3 send noti
 		try {
 			NoticeCode noticeCode = NoticeCode.NEW_CREATE_ORDER;
 			Map<String, Object> data = Map.of(
@@ -224,6 +244,7 @@ public class CareOrderService {
 		} catch (Exception e) {
 			throw new BizException(ErrorCode.ERROR, "메세지 전송 중 에러가 발생하였습니다.");
 		}
+		//end 3 send noti
 		return careOrder.getId();
 	}
 
