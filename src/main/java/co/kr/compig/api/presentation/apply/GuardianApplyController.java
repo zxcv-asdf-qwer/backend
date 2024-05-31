@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -44,6 +45,14 @@ public class GuardianApplyController {
 		return ResponseEntity.ok(Response.<ApplyDetailResponse>builder()
 			.data(applyService.getApply(orderId, memberId))
 			.build());
+	}
+
+	@Operation(summary = "매칭완료")
+	@PutMapping(path = "/matching-complete/orders/{orderId}/memberId/{partnerId}")
+	public ResponseEntity<Response<?>> updateMatchingComplete(
+		@PathVariable(name = "orderId") Long orderId, @PathVariable(name = "partnerId") String memberId) {
+		applyService.updateMatchingComplete(orderId, memberId);
+		return ResponseEntity.ok().build();
 	}
 
 }
