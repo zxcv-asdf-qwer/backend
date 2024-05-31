@@ -4,6 +4,7 @@ import static co.kr.compig.global.code.PeriodType.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 
 import org.apache.commons.lang3.StringUtils;
@@ -145,9 +146,6 @@ public class CalculateUtil {
 	}
 
 	public Long calculateDaysBetween(LocalDateTime startDateTime, LocalDateTime endDateTime) {
-		LocalDate startDate = startDateTime.toLocalDate();
-		LocalDate endDate = endDateTime.toLocalDate();
-
-		return endDate.toEpochDay() - startDate.toEpochDay();
+		return ChronoUnit.DAYS.between(startDateTime, endDateTime);
 	}
 }
