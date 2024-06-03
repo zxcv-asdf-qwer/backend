@@ -61,7 +61,7 @@ public class FamilyCareOrderCreateRequest {
 	@NotNull
 	private Long patientId; // 간병공고 등록시 환자 정보 ID
 
-	public CareOrder converterEntity(Member member, OrderPatient orderPatient) {
+	public CareOrder converterEntity(Member member, OrderPatient orderPatient, Settle settle) {
 		return CareOrder.builder()
 			.startDateTime(this.startDateTime)
 			.endDateTime(this.endDateTime)
@@ -71,13 +71,13 @@ public class FamilyCareOrderCreateRequest {
 			.orderType(OrderType.FAMILY)
 			.member(member)
 			.orderPatient(orderPatient)
+			.settle(settle)
 			.build();
 	}
 
-	public Facking toEntity(CareOrder careOrder, Settle settle) {
+	public Facking toEntity(CareOrder careOrder) {
 		return Facking.builder()
 			.careOrder(careOrder)
-			.settle(settle)
 			.partnerNm(this.partnerNm)
 			.partnerTelNo(this.partnerTelNo)
 			.address1(this.address1)

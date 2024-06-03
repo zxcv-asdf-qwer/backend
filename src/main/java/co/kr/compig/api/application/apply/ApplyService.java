@@ -38,6 +38,9 @@ public class ApplyService {
 	private final CareOrderService careOrderService;
 	private final MemberService memberService;
 
+	/**
+	 * 간병인 지원 시키기
+	 */
 	public Long createApplyByAdmin(Long orderId, ApplyCreateRequest applyCreateRequest) {
 		return applyRepository.findByCareOrder_idAndMember_id(orderId, applyCreateRequest.getMemberId())
 			.map(Apply::getId)
@@ -50,7 +53,7 @@ public class ApplyService {
 			});
 	}
 
-	public Long createApply(Long orderId, ApplyCreateRequest applyCreateRequest) {
+	public Long createApplyByGuardian(Long orderId, ApplyCreateRequest applyCreateRequest) {
 		return applyRepository.findByCareOrder_idAndMember_id(orderId, SecurityUtil.getMemberId())
 			.map(Apply::getId)
 			.orElseGet(() -> {

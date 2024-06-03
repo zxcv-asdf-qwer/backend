@@ -41,7 +41,7 @@ public class PartnerApplyController {
 	public ResponseEntity<Response<?>> createApply(@PathVariable Long orderId,
 		@RequestBody @Valid ApplyCreateRequest applyCreateRequest) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-			.data(Map.of("applyId", applyService.createApply(orderId, applyCreateRequest)))
+			.data(Map.of("applyId", applyService.createApplyByGuardian(orderId, applyCreateRequest)))
 			.build());
 	}
 
@@ -60,7 +60,6 @@ public class PartnerApplyController {
 			.data(applyService.getApply(orderId, memberId))
 			.build());
 	}
-
 
 	@Operation(summary = "지원 취소 시키기")
 	@DeleteMapping(path = "/matching-cancel/orders/{orderId}/memberId/{partnerId}")

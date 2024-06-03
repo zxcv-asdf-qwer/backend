@@ -58,7 +58,7 @@ public class CareOrderCreateRequest {
 	@Schema(description = "간병공고 등록 시 환자 정보 ID", example = "46")
 	private Long patientId; // 간병공고 등록시 환자 정보 ID
 
-	public CareOrder converterEntity(Member member, OrderPatient orderPatient) {
+	public CareOrder converterEntity(Member member, OrderPatient orderPatient, Settle settle) {
 		return CareOrder.builder()
 			.startDateTime(this.startDateTime)
 			.endDateTime(this.endDateTime)
@@ -72,14 +72,14 @@ public class CareOrderCreateRequest {
 			.partTime(this.partTime)
 			.member(member)
 			.orderPatient(orderPatient)
+			.settle(settle)
 			.build();
 	}
 
-	public Packing toEntity(CareOrder careOrder, Settle settle, LocalDateTime startDateTime,
+	public Packing toEntity(CareOrder careOrder, LocalDateTime startDateTime,
 		LocalDateTime endDateTime) {
 		return Packing.builder()
 			.careOrder(careOrder)
-			.settle(settle)
 			.periodType(this.periodType)
 			.amount(this.amount)
 			.partTime(this.partTime)

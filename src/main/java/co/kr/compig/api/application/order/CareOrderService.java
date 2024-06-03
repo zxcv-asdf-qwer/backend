@@ -1,25 +1,19 @@
 package co.kr.compig.api.application.order;
 
 import static co.kr.compig.global.utils.CalculateUtil.*;
-import static co.kr.compig.global.utils.KeyGen.*;
 
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import co.kr.compig.api.application.info.InfoService;
@@ -34,14 +28,11 @@ import co.kr.compig.api.domain.order.CareOrder;
 import co.kr.compig.api.domain.order.CareOrderRepository;
 import co.kr.compig.api.domain.order.CareOrderRepositoryCustom;
 import co.kr.compig.api.domain.packing.Facking;
-import co.kr.compig.api.domain.packing.Packing;
 import co.kr.compig.api.domain.patient.OrderPatient;
 import co.kr.compig.api.domain.patient.Patient;
 import co.kr.compig.api.domain.push.Device;
 import co.kr.compig.api.domain.settle.Settle;
 import co.kr.compig.api.infrastructure.pay.PayApi;
-import co.kr.compig.api.infrastructure.pay.model.SmsPayRequest;
-import co.kr.compig.api.infrastructure.pay.model.SmsPayResponse;
 import co.kr.compig.api.presentation.order.request.CareOrderCalculateRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderCreateRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderExtensionsRequest;
@@ -59,7 +50,6 @@ import co.kr.compig.global.code.UserType;
 import co.kr.compig.global.error.exception.BizException;
 import co.kr.compig.global.error.exception.NotExistDataException;
 import co.kr.compig.global.error.model.ErrorCode;
-import co.kr.compig.global.utils.GsonLocalDateTimeAdapter;
 import co.kr.compig.global.utils.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -90,7 +80,7 @@ public class CareOrderService {
 	 */
 	public Long createCareOrderAdmin(String memberId, CareOrderCreateRequest careOrderCreateRequest) {
 		Member member = memberService.getMemberById(memberId);
-		//start 1 patient -> order_patient
+		//1 start patient -> order_patient
 		Patient patientById = member.getPatients()
 			.stream()
 			.filter(patient -> patient.getId().equals(careOrderCreateRequest.getPatientId()))
@@ -99,14 +89,14 @@ public class CareOrderService {
 		// ModelMapper modelMapper = new ModelMapper();
 		// modelMapper.getConfiguration().setFieldAccessLevel(Configuration.AccessLevel.PRIVATE).setFieldMatchingEnabled(true).setMatchingStrategy(MatchingStrategies.LOOSE);
 		OrderPatient orderPatient = orderPatientService.save(patientById.toOrderPatient());
-		//end 1 patient -> order_patient
+		//1 end patient -> order_patient
 
-		//start 2 order save
+		//2 start order save
+		Settle recentSettle = settleService.getRecentSettle();
 		CareOrder careOrder = careOrderRepository.save(
-			careOrderCreateRequest.converterEntity(member, orderPatient));
-		//end 2 order save
+			careOrderCreateRequest.converterEntity(member, orderPatient, recentSettle));
+		//2 end order save
 
-		// Settle recentSettle = settleService.getRecentSettle();
 		// long daysBetween;
 		// if (careOrderCreateRequest.getPeriodType().equals(PART_TIME)) { //시간제
 		// 	// 종료 날짜(2024-05-20 22:00:00) - 시작 날짜(2024-05-22 02:00:00), 파트타임 시간: 4시간
@@ -137,7 +127,7 @@ public class CareOrderService {
 		// 	}
 		// }
 
-		//start 3 send noti
+		//3 start send noti
 		try {
 			NoticeCode noticeCode = NoticeCode.NEW_CREATE_ORDER;
 			Map<String, Object> data = Map.of(
@@ -167,7 +157,7 @@ public class CareOrderService {
 		} catch (Exception e) {
 			throw new BizException(ErrorCode.ERROR, "메세지 전송 중 에러가 발생하였습니다.");
 		}
-		//end 3 send noti
+		//3 end send noti
 		return careOrder.getId();
 	}
 
@@ -179,7 +169,7 @@ public class CareOrderService {
 	 */
 	public Long createCareOrderGuardian(CareOrderCreateRequest careOrderCreateRequest) {
 		Member member = memberService.getMemberById(SecurityUtil.getMemberId());
-		//start 1 patient -> order_patient
+		//1 start patient -> order_patient
 		Patient patientById = member.getPatients()
 			.stream()
 			.filter(patient -> patient.getId().equals(careOrderCreateRequest.getPatientId()))
@@ -188,12 +178,13 @@ public class CareOrderService {
 		OrderPatient orderPatient = orderPatientService.save(patientById.toOrderPatient());
 		//end 1 patient -> order_patient
 
-		//start 2 order save
+		//2 start order save
+		Settle recentSettle = settleService.getRecentSettle();
 		CareOrder careOrder = careOrderRepository.save(
-			careOrderCreateRequest.converterEntity(member, orderPatient));
-		//end 2 order save
+			careOrderCreateRequest.converterEntity(member, orderPatient, recentSettle));
+		//2 end order save
 
-		//start 3 send noti
+		//3 start send noti
 		try {
 			NoticeCode noticeCode = NoticeCode.NEW_CREATE_ORDER;
 			Map<String, Object> data = Map.of(
@@ -223,7 +214,7 @@ public class CareOrderService {
 		} catch (Exception e) {
 			throw new BizException(ErrorCode.ERROR, "메세지 전송 중 에러가 발생하였습니다.");
 		}
-		//end 3 send noti
+		//3 end send noti
 		return careOrder.getId();
 	}
 
@@ -236,7 +227,7 @@ public class CareOrderService {
 	public Long createFamilyCareOrderAdmin(String memberId,
 		FamilyCareOrderCreateRequest familyCareOrderCreateRequest) {
 		Member member = memberService.getMemberById(memberId);
-		//start 1 patient -> order_patient
+		//1 start patient -> order_patient
 		Patient patientById = member.getPatients()
 			.stream()
 			.filter(patient -> patient.getId().equals(familyCareOrderCreateRequest.getPatientId()))
@@ -246,18 +237,18 @@ public class CareOrderService {
 		// modelMapper.getConfiguration().setFieldAccessLevel(Configuration.AccessLevel.PRIVATE).setFieldMatchingEnabled(true).setMatchingStrategy(MatchingStrategies.LOOSE);
 
 		OrderPatient orderPatient = orderPatientService.save(patientById.toOrderPatient());
-		//end 2 patient -> order_patient
+		//1 end patient -> order_patient
 
-		//start 2 order save
-		CareOrder careOrder = careOrderRepository.save(
-			familyCareOrderCreateRequest.converterEntity(member, orderPatient));
-		//end 2 order save
-
-		//start 3 create facking
+		//2 start order save
 		Settle recentSettle = settleService.getRecentSettle();
-		Facking build = familyCareOrderCreateRequest.toEntity(careOrder, recentSettle);
+		CareOrder careOrder = careOrderRepository.save(
+			familyCareOrderCreateRequest.converterEntity(member, orderPatient, recentSettle));
+		//2 end order save
+
+		//3 start create facking
+		Facking build = familyCareOrderCreateRequest.toEntity(careOrder);
 		careOrder.addFacking(build);
-		//end 3 create facking
+		//3 end create facking
 
 		// Settle recentSettle = settleService.getRecentSettle();
 		// int totalPrice = 0;
@@ -307,25 +298,25 @@ public class CareOrderService {
 	 */
 	public Long createFamilyCareOrderGuardian(FamilyCareOrderCreateRequest familyCareOrderCreateRequest) {
 		Member member = memberService.getMemberById(SecurityUtil.getMemberId());
-		//start 1 patient -> order_patient
+		//1 start patient -> order_patient
 		Patient patientById = member.getPatients()
 			.stream()
 			.filter(patient -> patient.getId().equals(familyCareOrderCreateRequest.getPatientId()))
 			.findFirst()
 			.orElseThrow(NotExistDataException::new);
 		OrderPatient orderPatient = orderPatientService.save(patientById.toOrderPatient());
-		//end 1 patient -> order_patient
+		//1 end patient -> order_patient
 
-		//start 2 order save
-		CareOrder careOrder = careOrderRepository.save(
-			familyCareOrderCreateRequest.converterEntity(member, orderPatient));
-		//end 2 order save
-
-		//start 3 create facking
+		//2 start order save
 		Settle recentSettle = settleService.getRecentSettle();
-		Facking build = familyCareOrderCreateRequest.toEntity(careOrder, recentSettle);
+		CareOrder careOrder = careOrderRepository.save(
+			familyCareOrderCreateRequest.converterEntity(member, orderPatient, recentSettle));
+		//2 end order save
+
+		//3 start create facking
+		Facking build = familyCareOrderCreateRequest.toEntity(careOrder);
 		careOrder.addFacking(build);
-		//end 3 create facking
+		//3 end create facking
 
 		// // Settle recentSettle = settleService.getRecentSettle();
 		// // int totalPrice = 0;
@@ -402,66 +393,72 @@ public class CareOrderService {
 		return careOrderRepository.findById(careOrderId).orElseThrow(NotExistDataException::new);
 	}
 
-	public String extensionsCareOrder(Long careOrderId, CareOrderExtensionsRequest careOrderExtensionsRequest) {
+	/**
+	 * 유저(보호자) 가족 간병공고 등록
+	 * 1 order save
+	 */
+	public Long extensionsCareOrder(Long careOrderId, CareOrderExtensionsRequest careOrderExtensionsRequest) {
 		CareOrder careOrder = careOrderRepository.findById(careOrderId).orElseThrow(NotExistDataException::new);
+		//1 start order save
 		//간병 연장
-		CareOrder extensionOrder = careOrder.extension(careOrderExtensionsRequest.getStartDateTime(),
-			careOrderExtensionsRequest.getEndDateTime());
-
-		int totalPrice = 0;
-		long daysBetween = ChronoUnit.DAYS.between(careOrderExtensionsRequest.getStartDateTime(),
-			careOrderExtensionsRequest.getEndDateTime());
 		Settle recentSettle = settleService.getRecentSettle();
+		CareOrder extensionOrder = careOrder.extension(careOrderExtensionsRequest.getStartDateTime(),
+			careOrderExtensionsRequest.getEndDateTime(), recentSettle);
+		//1 end order save
 
-		for (int i = 0; i < daysBetween; i++) {
-			// 지원자 o, packing
-			// 종료 날짜(2024-04-17 10:00:00) - 시작 날짜(2024-04-12 10:00:00)
-			// 시작 날짜부터 종료 날짜까지 5일 Packing 객체 생성
-			LocalDateTime startDateTime = extensionOrder.getStartDateTime().plusDays(i);
-			LocalDateTime endDateTime = startDateTime.plusDays(1);
-
-			Packing build = Packing.builder()
-				.careOrder(extensionOrder)
-				.settle(recentSettle)
-				.periodType(careOrderExtensionsRequest.getPeriodType())
-				.partTime(careOrderExtensionsRequest.getPartTime())
-				.amount(careOrderExtensionsRequest.getAmount())
-				.startDateTime(startDateTime)
-				.endDateTime(endDateTime)
-				.build();
-			extensionOrder.addPacking(build);
-
-			CareOrderCalculateRequest calculateRequest = CareOrderCalculateRequest.builder()
-				.amount(careOrderExtensionsRequest.getAmount())
-				.periodType(careOrderExtensionsRequest.getPeriodType())
-				.partTime(careOrderExtensionsRequest.getPartTime())
-				.build();
-			totalPrice += calculatePaymentPriceOneDay(calculateRequest, recentSettle.getGuardianFees());
-		}
-		log.info(String.valueOf(totalPrice));
-
-		SmsPayRequest smsPayRequest = SmsPayRequest.builder()
-			.mid(payMid)
-			.moid("CARE" + getRandomTimeKey())
-			.goodsName(" " + daysBetween + "일") //상품명
-			.amt(String.valueOf(totalPrice))
-			.buyerName(careOrder.getMember().getUserNm())
-			.buyerTel(careOrder.getMember().getTelNo())
-			.build();
-		// 결제pg요청 프로세스
-		ResponseEntity<String> response = payApi.requestSmsPay(smsPayRequest);
-		Gson gson = new GsonBuilder()
-			.setPrettyPrinting()
-			.registerTypeAdapter(LocalDateTime.class, new GsonLocalDateTimeAdapter())
-			.create();
-
-		SmsPayResponse smsPayResponse = gson.fromJson(
-			Objects.requireNonNull(response.getBody()),
-			SmsPayResponse.class
-		);
-		//return을 결제 url 로 넘기기
-		careOrder.addPayment(smsPayResponse.toEntity(totalPrice));
-		return smsPayResponse.getOrderUrl();
+		// int totalPrice = 0;
+		// long daysBetween = ChronoUnit.DAYS.between(careOrderExtensionsRequest.getStartDateTime(),
+		// 	careOrderExtensionsRequest.getEndDateTime());
+		//
+		// for (int i = 0; i < daysBetween; i++) {
+		// 	// 지원자 o, packing
+		// 	// 종료 날짜(2024-04-17 10:00:00) - 시작 날짜(2024-04-12 10:00:00)
+		// 	// 시작 날짜부터 종료 날짜까지 5일 Packing 객체 생성
+		// 	LocalDateTime startDateTime = extensionOrder.getStartDateTime().plusDays(i);
+		// 	LocalDateTime endDateTime = startDateTime.plusDays(1);
+		//
+		// 	Packing build = Packing.builder()
+		// 		.careOrder(extensionOrder)
+		// 		.settle(recentSettle)
+		// 		.periodType(careOrderExtensionsRequest.getPeriodType())
+		// 		.partTime(careOrderExtensionsRequest.getPartTime())
+		// 		.amount(careOrderExtensionsRequest.getAmount())
+		// 		.startDateTime(startDateTime)
+		// 		.endDateTime(endDateTime)
+		// 		.build();
+		// 	extensionOrder.addPacking(build);
+		//
+		// 	CareOrderCalculateRequest calculateRequest = CareOrderCalculateRequest.builder()
+		// 		.amount(careOrderExtensionsRequest.getAmount())
+		// 		.periodType(careOrderExtensionsRequest.getPeriodType())
+		// 		.partTime(careOrderExtensionsRequest.getPartTime())
+		// 		.build();
+		// 	totalPrice += calculatePaymentPriceOneDay(calculateRequest, recentSettle.getGuardianFees());
+		// }
+		// log.info(String.valueOf(totalPrice));
+		//
+		// SmsPayRequest smsPayRequest = SmsPayRequest.builder()
+		// 	.mid(payMid)
+		// 	.moid("CARE" + getRandomTimeKey())
+		// 	.goodsName(" " + daysBetween + "일") //상품명
+		// 	.amt(String.valueOf(totalPrice))
+		// 	.buyerName(careOrder.getMember().getUserNm())
+		// 	.buyerTel(careOrder.getMember().getTelNo())
+		// 	.build();
+		// // 결제pg요청 프로세스
+		// ResponseEntity<String> response = payApi.requestSmsPay(smsPayRequest);
+		// Gson gson = new GsonBuilder()
+		// 	.setPrettyPrinting()
+		// 	.registerTypeAdapter(LocalDateTime.class, new GsonLocalDateTimeAdapter())
+		// 	.create();
+		//
+		// SmsPayResponse smsPayResponse = gson.fromJson(
+		// 	Objects.requireNonNull(response.getBody()),
+		// 	SmsPayResponse.class
+		// );
+		// //return을 결제 url 로 넘기기
+		// careOrder.addPayment(smsPayResponse.toEntity(totalPrice));
+		return extensionOrder.getId();
 	}
 
 	public void cancelCareOrder(Long careOrderId, CareOrderTerminateRequest careOrderTerminateRequest) {

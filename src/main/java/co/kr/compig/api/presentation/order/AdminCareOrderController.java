@@ -98,8 +98,8 @@ public class AdminCareOrderController {
 	public ResponseEntity<Response<?>> extensionsCareOrder(
 		@PathVariable(name = "orderId") Long orderId,
 		@RequestBody @Valid CareOrderExtensionsRequest careOrderExtensionsRequest) {
-		return ResponseEntity.ok().body(Response.<Map<String, String>>builder()
-			.data(Map.of("orderUrl", careOrderService.extensionsCareOrder(orderId, careOrderExtensionsRequest)))
+		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
+			.data(Map.of("orderId", careOrderService.extensionsCareOrder(orderId, careOrderExtensionsRequest)))
 			.build());
 	}
 

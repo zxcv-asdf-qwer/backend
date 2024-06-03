@@ -412,7 +412,7 @@ public class CareOrder {
 		return build;
 	}
 
-	public CareOrder extension(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+	public CareOrder extension(LocalDateTime startDateTime, LocalDateTime endDateTime, Settle settle) {
 		//1.start 연장하려는 간병인이, 보호자가 선택한 연장기간 중에, 매칭된 다른 간병공고와 겹치지 않은지 체크
 		Member matchApplyMember = this.applys
 			.stream()
@@ -436,7 +436,7 @@ public class CareOrder {
 			.startDateTime(this.startDateTime)
 			.endDateTime(this.endDateTime)
 			.realEndDateTime(this.realEndDateTime)
-			.orderStatus(OrderStatus.MATCHING_COMPLETE)
+			.orderStatus(MATCHING_COMPLETE)
 			.orderType(this.orderType)
 			.publishYn(IsYn.Y)
 			.orderRequest(this.orderRequest)
@@ -444,8 +444,12 @@ public class CareOrder {
 			.applys(this.applys.stream()
 				.filter(apply -> apply.getApplyStatus().equals(ApplyStatus.MATCHING_COMPLETE))
 				.collect(Collectors.toSet()))
+			.amount(this.amount)
+			.periodType(this.periodType)
+			.partTime(this.partTime)
 			.member(this.member)
 			.orderPatient(this.orderPatient)
+			.settle(settle)
 			.build();
 	}
 
