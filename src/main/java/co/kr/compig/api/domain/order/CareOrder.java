@@ -25,6 +25,7 @@ import co.kr.compig.api.presentation.order.request.CareOrderCalculateRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderTerminateRequest;
 import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
 import co.kr.compig.api.presentation.order.response.CareOrderPageResponse;
+import co.kr.compig.api.presentation.order.response.GuardianCareOrderDetailResponse;
 import co.kr.compig.global.code.ApplyStatus;
 import co.kr.compig.global.code.CareOrderProcessType;
 import co.kr.compig.global.code.IsYn;
@@ -271,6 +272,94 @@ public class CareOrder {
 			return build;
 		}
 
+	}
+
+	public GuardianCareOrderDetailResponse toGuardianCareOrderDetailResponse() {
+		if (this.orderStatus.equals(MATCHING_COMPLETE)) {
+			Optional<Packing> firstPacking = this.packages.stream()
+				.findFirst();
+			AtomicInteger totalPrice = new AtomicInteger();
+
+			this.packages.forEach(packing -> {
+				CareOrderCalculateRequest calculateRequest = CareOrderCalculateRequest.builder()
+					.amount(packing.getAmount())
+					.periodType(packing.getPeriodType())
+					.partTime(packing.getPartTime())
+					.build();
+				totalPrice.addAndGet(calculatePaymentPriceOneDay(calculateRequest,
+					packing.getSettle().getGuardianFees()));
+			});
+
+			GuardianCareOrderDetailResponse build = GuardianCareOrderDetailResponse.builder()
+				.orderId(this.id)
+				.memberId(this.member.getId())
+				.userNm(this.member.getUserNm())
+				.telNo(this.member.getTelNo())
+				.startDateTime(this.startDateTime)
+				.endDateTime(this.endDateTime)
+				.realEndDateTime(this.realEndDateTime)
+				.orderStatus(this.orderStatus)
+				.orderType(this.orderType)
+				.publishYn(this.publishYn)
+				.careOrderProcessType(this.careOrderProcessType)
+				.periodType(firstPacking
+					.map(Packing::getPeriodType)
+					.orElse(null))
+				.amount(firstPacking
+					.map(Packing::getAmount)
+					.orElse(null))
+				.totalPrice(totalPrice.get())
+				.orderRequest(this.orderRequest)
+				.orderPatient(this.orderPatient.toOrderPatientDetailResponse())
+				.partnerMemberResponse(this.applys.stream()
+					.filter(apply -> apply.getApplyStatus().equals(ApplyStatus.MATCHING_COMPLETE))
+					.map(Apply::getMember)
+					.findFirst()
+					.orElse(new Member())
+					.toPartnerMemberResponse())
+				.build();
+			build.setCreatedAndUpdated(this.createdAndModified);
+			return build;
+		} else {
+			Optional<Packing> firstPacking = this.packages.stream()
+				.findFirst();
+			AtomicInteger totalPrice = new AtomicInteger();
+
+			this.packages.forEach(packing -> {
+				CareOrderCalculateRequest calculateRequest = CareOrderCalculateRequest.builder()
+					.amount(packing.getAmount())
+					.periodType(packing.getPeriodType())
+					.partTime(packing.getPartTime())
+					.build();
+				totalPrice.addAndGet(calculatePaymentPriceOneDay(calculateRequest,
+					packing.getSettle().getGuardianFees()));
+			});
+
+			GuardianCareOrderDetailResponse build = GuardianCareOrderDetailResponse.builder()
+				.orderId(this.id)
+				.memberId(this.member.getId())
+				.userNm(this.member.getUserNm())
+				.telNo(this.member.getTelNo())
+				.startDateTime(this.startDateTime)
+				.endDateTime(this.endDateTime)
+				.realEndDateTime(this.realEndDateTime)
+				.orderStatus(this.orderStatus)
+				.orderType(this.orderType)
+				.publishYn(this.publishYn)
+				.careOrderProcessType(this.careOrderProcessType)
+				.periodType(firstPacking
+					.map(Packing::getPeriodType)
+					.orElse(null))
+				.amount(firstPacking
+					.map(Packing::getAmount)
+					.orElse(null))
+				.totalPrice(totalPrice.get())
+				.orderRequest(this.orderRequest)
+				.orderPatient(this.orderPatient.toOrderPatientDetailResponse())
+				.build();
+			build.setCreatedAndUpdated(this.createdAndModified);
+			return build;
+		}
 	}
 
 	public CareOrderPageResponse toCareOrderPageResponse() {

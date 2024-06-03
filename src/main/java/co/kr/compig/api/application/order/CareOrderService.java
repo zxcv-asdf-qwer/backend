@@ -51,6 +51,7 @@ import co.kr.compig.api.presentation.order.request.CareOrderTerminateRequest;
 import co.kr.compig.api.presentation.order.request.FamilyCareOrderCreateRequest;
 import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
 import co.kr.compig.api.presentation.order.response.CareOrderPageResponse;
+import co.kr.compig.api.presentation.order.response.GuardianCareOrderDetailResponse;
 import co.kr.compig.api.presentation.order.response.UserCareOrderResponse;
 import co.kr.compig.global.code.LocationType;
 import co.kr.compig.global.code.OrderStatus;
@@ -347,6 +348,12 @@ public class CareOrderService {
 	public CareOrderDetailResponse getCareOrder(Long careOrderId) {
 		CareOrder careOrder = this.getCareOrderById(careOrderId);
 		return careOrder.toCareOrderDetailResponse();
+	}
+
+	@Transactional(readOnly = true)
+	public GuardianCareOrderDetailResponse getGuardianCareOrder(Long careOrderId) {
+		CareOrder careOrder = this.getCareOrderById(careOrderId);
+		return careOrder.toGuardianCareOrderDetailResponse();
 	}
 
 	@Transactional(readOnly = true)

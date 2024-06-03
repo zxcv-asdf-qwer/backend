@@ -23,7 +23,7 @@ import co.kr.compig.api.presentation.order.request.CareOrderExtensionsRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderSearchRequest;
 import co.kr.compig.api.presentation.order.request.CareOrderTerminateRequest;
 import co.kr.compig.api.presentation.order.request.FamilyCareOrderCreateRequest;
-import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
+import co.kr.compig.api.presentation.order.response.GuardianCareOrderDetailResponse;
 import co.kr.compig.api.presentation.order.response.UserCareOrderResponse;
 import co.kr.compig.global.dto.Response;
 import co.kr.compig.global.dto.pagination.SliceResponse;
@@ -50,7 +50,7 @@ public class GuardianCareOrderController {
 		@RequestBody @Valid CareOrderCreateRequest careOrderCreateRequest
 	) {
 		return ResponseEntity.ok().body(Response.<Map<String, Long>>builder()
-			.data(Map.of("careOrderId", careOrderService.createCareOrderGuardian(careOrderCreateRequest)))
+			.data(Map.of("orderId", careOrderService.createCareOrderGuardian(careOrderCreateRequest)))
 			.build());
 	}
 
@@ -81,11 +81,11 @@ public class GuardianCareOrderController {
 
 	@Operation(summary = "상세 조회")
 	@GetMapping(path = "/{orderId}")
-	public ResponseEntity<Response<CareOrderDetailResponse>> getCareOrder(
+	public ResponseEntity<Response<GuardianCareOrderDetailResponse>> getCareOrder(
 		@PathVariable(name = "orderId") Long careOrderId
 	) {
-		return ResponseEntity.ok(Response.<CareOrderDetailResponse>builder()
-			.data(careOrderService.getCareOrder(careOrderId))
+		return ResponseEntity.ok(Response.<GuardianCareOrderDetailResponse>builder()
+			.data(careOrderService.getGuardianCareOrder(careOrderId))
 			.build());
 	}
 
