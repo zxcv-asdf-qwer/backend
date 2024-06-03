@@ -4,6 +4,7 @@ import static co.kr.compig.api.domain.member.QMember.*;
 import static co.kr.compig.api.domain.order.QCareOrder.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +17,6 @@ import com.google.common.base.CaseFormat;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Path;
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -62,26 +62,32 @@ public class CareOrderRepositoryImpl implements CareOrderRepositoryCustom {
 	public Slice<UserCareOrderResponse> findAllByCondition(CareOrderSearchRequest careOrderSearchRequest,
 		Pageable pageable) {
 		BooleanExpression predicate = createPredicate(careOrderSearchRequest);
-		JPAQuery<UserCareOrderResponse> query = createBaseQuery(predicate).select(
-			Projections.constructor(UserCareOrderResponse.class, careOrder.id, careOrder.orderStatus,
-				careOrder.orderType, careOrder.applys.size(),
-				careOrder.orderPatient.address1, careOrder.orderPatient.address2, careOrder.packages.any().periodType
-				, careOrder.packages.any().amount, careOrder.startDateTime, careOrder.endDateTime));
+		// JPAQuery<UserCareOrderResponse> query = createBaseQuery(predicate).select(
+		// 	Projections.constructor(UserCareOrderResponse.class, careOrder.id, careOrder.orderStatus,
+		// 		careOrder.orderType, careOrder.applys.size(),
+		// 		careOrder.orderPatient.address1, careOrder.orderPatient.address2, careOrder.packages.any().periodType
+		// 		, careOrder.packages.any().amount, careOrder.startDateTime, careOrder.endDateTime));
+
+		JPAQuery<CareOrder> query = createBaseQuery(predicate).select(careOrder);
 
 		applySorting(query, pageable);
 
-		List<UserCareOrderResponse> careOrders = query.where(
+		List<CareOrder> careOrders = query.where(
 				cursorCursorId(careOrderSearchRequest.getCursorId()))
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize() + 1) // 페이징 + 다음 페이지 존재 여부 확인을 위해 +1
 			.fetch();
+
+		List<UserCareOrderResponse> responses = careOrders.stream()
+			.map(CareOrder::toUserCareOrderResponse)
+			.collect(Collectors.toList());
 
 		boolean hasNext = false;
 		if (careOrders.size() > pageable.getPageSize()) {
 			careOrders.remove(pageable.getPageSize());
 			hasNext = true;
 		}
-		return new SliceImpl<>(careOrders, pageable, hasNext);
+		return new SliceImpl<>(responses, pageable, hasNext);
 	}
 
 	private BooleanExpression cursorCursorId(String cursorId) {

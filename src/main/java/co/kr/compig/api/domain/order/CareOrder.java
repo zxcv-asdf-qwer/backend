@@ -26,6 +26,7 @@ import co.kr.compig.api.presentation.order.request.CareOrderTerminateRequest;
 import co.kr.compig.api.presentation.order.response.CareOrderDetailResponse;
 import co.kr.compig.api.presentation.order.response.CareOrderPageResponse;
 import co.kr.compig.api.presentation.order.response.GuardianCareOrderDetailResponse;
+import co.kr.compig.api.presentation.order.response.UserCareOrderResponse;
 import co.kr.compig.global.code.ApplyStatus;
 import co.kr.compig.global.code.CareOrderProcessType;
 import co.kr.compig.global.code.IsYn;
@@ -438,4 +439,27 @@ public class CareOrder {
 		return this.payments != null;
 	}
 
+	public UserCareOrderResponse toUserCareOrderResponse() {
+		Optional<Packing> firstPacking = packages.stream()
+			.findFirst();
+		UserCareOrderResponse userCareOrderResponse = UserCareOrderResponse.builder()
+			.id(this.id)
+			.orderStatus(this.orderStatus)
+			.orderType(this.orderType)
+			.applyCount(this.applys.size())
+			.address1(this.orderPatient.getAddress1())
+			.address2(this.orderPatient.getAddress2())
+			.periodType(firstPacking
+				.map(Packing::getPeriodType)
+				.orElse(null))
+			.amount(firstPacking
+				.map(Packing::getAmount)
+				.orElse(null))
+			.startDateTime(this.startDateTime)
+			.endDateTime(this.endDateTime)
+			.build();
+
+		userCareOrderResponse.setCreatedAndUpdated(this.createdAndModified);
+		return userCareOrderResponse;
+	}
 }
