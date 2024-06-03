@@ -3,6 +3,7 @@ package co.kr.compig.api.domain.patient;
 import static co.kr.compig.api.domain.patient.QPatient.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -13,7 +14,6 @@ import com.google.common.base.CaseFormat;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Path;
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -31,26 +31,27 @@ public class PatientRepositoryImpl implements PatientRepositoryCustom {
 	@Override
 	public Slice<PatientResponse> findAllByCondition(PatientSearchRequest patientSearchRequest, Pageable pageable) {
 		BooleanExpression predicate = createPredicate(patientSearchRequest);
-		JPAQuery<PatientResponse> query = createBaseQuery(predicate)
-			.select(Projections.constructor(PatientResponse.class,
-				patient.id,
-				patient.name
-			));
+
+		JPAQuery<Patient> query = createBaseQuery(predicate).select(patient);
 
 		applySorting(query, pageable);
 
-		List<PatientResponse> patients = query
+		List<Patient> patients = query
 			.where(cursorCursorId(patientSearchRequest.getCursorId()))
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize() + 1)
 			.fetch();
+
+		List<PatientResponse> responses = patients.stream()
+			.map(Patient::toPatientResponse)
+			.collect(Collectors.toList());
 
 		boolean hasNext = false;
 		if (patients.size() > pageable.getPageSize()) {
 			patients.remove(pageable.getPageSize());
 			hasNext = true;
 		}
-		return new SliceImpl<>(patients, pageable, hasNext);
+		return new SliceImpl<>(responses, pageable, hasNext);
 	}
 
 	private BooleanExpression createPredicate(PatientSearchRequest request) {

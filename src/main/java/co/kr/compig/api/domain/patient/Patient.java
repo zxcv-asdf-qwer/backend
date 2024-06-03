@@ -176,10 +176,15 @@ public class Patient {
 	}
 
 	public PatientResponse toPatientResponse() {
-		return PatientResponse.builder()
+		PatientResponse patientResponse = PatientResponse.builder()
 			.id(this.id)
 			.name(this.name)
+			.birthday(this.birthDate)
+			.gender(this.gender)
 			.build();
+
+		patientResponse.setCreatedAndUpdated(this.createdAndModified);
+		return patientResponse;
 	}
 
 	public OrderPatient toOrderPatient() {
