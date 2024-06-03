@@ -51,7 +51,7 @@ public class GuardianApplyController {
 	@PutMapping(path = "/matching-complete/orders/{orderId}/memberId/{partnerId}")
 	public ResponseEntity<Response<?>> updateMatchingComplete(
 		@PathVariable(name = "orderId") Long orderId, @PathVariable(name = "partnerId") String memberId) {
-		applyService.updateMatchingComplete(orderId, memberId);
+		applyService.updateMatchingCompleteByGuardian(orderId, memberId);
 		return ResponseEntity.ok().build();
 	}
 

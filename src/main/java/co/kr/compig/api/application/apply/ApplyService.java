@@ -39,7 +39,7 @@ public class ApplyService {
 	private final MemberService memberService;
 
 	/**
-	 * 간병인 지원 시키기
+	 * 간병인 지원 시키기(관리자)
 	 */
 	public Long createApplyByAdmin(Long orderId, ApplyCreateRequest applyCreateRequest) {
 		return applyRepository.findByCareOrder_idAndMember_id(orderId, applyCreateRequest.getMemberId())
@@ -53,6 +53,9 @@ public class ApplyService {
 			});
 	}
 
+	/**
+	 * 간병인 지원 시키기(보호자)
+	 */
 	public Long createApplyByGuardian(Long orderId, ApplyCreateRequest applyCreateRequest) {
 		return applyRepository.findByCareOrder_idAndMember_id(orderId, SecurityUtil.getMemberId())
 			.map(Apply::getId)
@@ -97,7 +100,19 @@ public class ApplyService {
 				"");
 	}
 
-	public void updateMatchingComplete(Long orderId, String memberId) {
+	public void updateMatchingCompleteByAdmin(Long orderId, String memberId) {
+		CareOrder careOrder = careOrderService.getCareOrderById(orderId);
+		careOrder.createOrderPacking();
+		Apply apply = applyRepository.findByCareOrder_idAndMember_id(orderId, memberId)
+			.orElseThrow(NotExistDataException::new);
+		//TODO 간병인이 간병중인지
+		//TODO 간병인이 해야할 간병 중에 기간이 겹치는게 있는지
+		apply.setApplyStatus(ApplyStatus.MATCHING_COMPLETE);
+	}
+
+	public void updateMatchingCompleteByGuardian(Long orderId, String memberId) {
+		CareOrder careOrder = careOrderService.getCareOrderById(orderId);
+		careOrder.createOrderPacking();
 		Apply apply = applyRepository.findByCareOrder_idAndMember_id(orderId, memberId)
 			.orElseThrow(NotExistDataException::new);
 		//TODO 간병인이 간병중인지

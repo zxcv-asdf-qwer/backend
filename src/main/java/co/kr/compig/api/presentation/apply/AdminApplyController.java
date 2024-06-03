@@ -62,7 +62,7 @@ public class AdminApplyController {
 	@PutMapping(path = "/matching-complete/orders/{orderId}/memberId/{partnerId}")
 	public ResponseEntity<Response<?>> updateMatchingComplete(
 		@PathVariable(name = "orderId") Long orderId, @PathVariable(name = "partnerId") String memberId) {
-		applyService.updateMatchingComplete(orderId, memberId);
+		applyService.updateMatchingCompleteByAdmin(orderId, memberId);
 		return ResponseEntity.ok().build();
 	}
 

@@ -1,13 +1,13 @@
 package co.kr.compig.api.domain.order;
 
 import static co.kr.compig.global.code.OrderStatus.*;
+import static co.kr.compig.global.code.PeriodType.*;
 import static co.kr.compig.global.utils.CalculateUtil.*;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -217,20 +217,12 @@ public class CareOrder {
 	   ================================================================= */
 
 	public CareOrderDetailResponse toCareOrderDetailResponse() {
+		CareOrderCalculateRequest calculateRequest = CareOrderCalculateRequest.builder()
+			.amount(this.amount)
+			.periodType(this.periodType)
+			.partTime(this.partTime)
+			.build();
 		if (this.orderType.equals(OrderType.GENERAL)) {
-			Optional<Packing> firstPacking = this.packages.stream()
-				.findFirst();
-			AtomicInteger totalPrice = new AtomicInteger();
-
-			this.packages.forEach(packing -> {
-				CareOrderCalculateRequest calculateRequest = CareOrderCalculateRequest.builder()
-					.amount(packing.getAmount())
-					.periodType(packing.getPeriodType())
-					.partTime(packing.getPartTime())
-					.build();
-				totalPrice.addAndGet(calculatePaymentPriceOneDay(calculateRequest,
-					packing.getSettle().getGuardianFees()));
-			});
 			CareOrderDetailResponse build = CareOrderDetailResponse.builder()
 				.orderId(this.id)
 				.memberId(this.member.getId())
@@ -243,33 +235,15 @@ public class CareOrder {
 				.orderType(this.orderType)
 				.publishYn(this.publishYn)
 				.careOrderProcessType(this.careOrderProcessType)
-				.periodType(firstPacking
-					.map(Packing::getPeriodType)
-					.orElse(null))
-				.amount(firstPacking
-					.map(Packing::getAmount)
-					.orElse(null))
-				.totalPrice(totalPrice.get())
+				.periodType(this.periodType)
+				.amount(this.amount)
+				.totalPrice(calculatePaymentPriceOneDay(calculateRequest, this.settle.getGuardianFees()))
 				.orderRequest(this.orderRequest)
 				.orderPatient(this.orderPatient.toOrderPatientDetailResponse())
 				.build();
 			build.setCreatedAndUpdated(this.createdAndModified);
 			return build;
 		} else {
-			Optional<Facking> firstFacking = this.fackages.stream()
-				.findFirst();
-
-			AtomicInteger totalPrice = new AtomicInteger();
-
-			this.fackages.forEach(facking -> {
-				CareOrderCalculateRequest calculateRequest = CareOrderCalculateRequest.builder()
-					.amount(facking.getAmount())
-					.periodType(facking.getPeriodType())
-					.partTime(facking.getPartTime())
-					.build();
-				totalPrice.addAndGet(calculatePaymentPriceOneDay(calculateRequest,
-					facking.getSettle().getGuardianFees()));
-			});
 			CareOrderDetailResponse build = CareOrderDetailResponse.builder()
 				.orderId(this.id)
 				.memberId(this.member.getId())
@@ -282,11 +256,12 @@ public class CareOrder {
 				.orderType(this.orderType)
 				.publishYn(this.publishYn)
 				.careOrderProcessType(this.careOrderProcessType)
-				.periodType(firstFacking.map(Facking::getPeriodType).orElse(null))
-				.amount(firstFacking.map(Facking::getAmount).orElse(null))
-				.totalPrice(totalPrice.get())
+				.periodType(this.periodType)
+				.amount(this.amount)
+				.totalPrice(calculatePaymentPriceOneDay(calculateRequest, this.settle.getGuardianFees()))
 				.orderRequest(this.orderRequest)
-				.fackingDetailResponse(firstFacking.map(Facking::toFackingDetailResponse).orElse(null))
+				.fackingDetailResponse(
+					this.fackages.stream().findFirst().map(Facking::toFackingDetailResponse).orElse(null))
 				.build();
 			build.setCreatedAndUpdated(this.createdAndModified);
 			return build;
@@ -295,21 +270,12 @@ public class CareOrder {
 	}
 
 	public GuardianCareOrderDetailResponse toGuardianCareOrderDetailResponse() {
+		CareOrderCalculateRequest calculateRequest = CareOrderCalculateRequest.builder()
+			.amount(this.amount)
+			.periodType(this.periodType)
+			.partTime(this.partTime)
+			.build();
 		if (this.orderStatus.equals(MATCHING_COMPLETE)) {
-			Optional<Packing> firstPacking = this.packages.stream()
-				.findFirst();
-			AtomicInteger totalPrice = new AtomicInteger();
-
-			this.packages.forEach(packing -> {
-				CareOrderCalculateRequest calculateRequest = CareOrderCalculateRequest.builder()
-					.amount(packing.getAmount())
-					.periodType(packing.getPeriodType())
-					.partTime(packing.getPartTime())
-					.build();
-				totalPrice.addAndGet(calculatePaymentPriceOneDay(calculateRequest,
-					packing.getSettle().getGuardianFees()));
-			});
-
 			GuardianCareOrderDetailResponse build = GuardianCareOrderDetailResponse.builder()
 				.orderId(this.id)
 				.memberId(this.member.getId())
@@ -322,13 +288,9 @@ public class CareOrder {
 				.orderType(this.orderType)
 				.publishYn(this.publishYn)
 				.careOrderProcessType(this.careOrderProcessType)
-				.periodType(firstPacking
-					.map(Packing::getPeriodType)
-					.orElse(null))
-				.amount(firstPacking
-					.map(Packing::getAmount)
-					.orElse(null))
-				.totalPrice(totalPrice.get())
+				.periodType(this.periodType)
+				.amount(this.amount)
+				.totalPrice(calculatePaymentPriceOneDay(calculateRequest, this.settle.getGuardianFees()))
 				.orderRequest(this.orderRequest)
 				.orderPatient(this.orderPatient.toOrderPatientDetailResponse())
 				.partnerMemberResponse(this.applys.stream()
@@ -341,20 +303,6 @@ public class CareOrder {
 			build.setCreatedAndUpdated(this.createdAndModified);
 			return build;
 		} else {
-			Optional<Packing> firstPacking = this.packages.stream()
-				.findFirst();
-			AtomicInteger totalPrice = new AtomicInteger();
-
-			this.packages.forEach(packing -> {
-				CareOrderCalculateRequest calculateRequest = CareOrderCalculateRequest.builder()
-					.amount(packing.getAmount())
-					.periodType(packing.getPeriodType())
-					.partTime(packing.getPartTime())
-					.build();
-				totalPrice.addAndGet(calculatePaymentPriceOneDay(calculateRequest,
-					packing.getSettle().getGuardianFees()));
-			});
-
 			GuardianCareOrderDetailResponse build = GuardianCareOrderDetailResponse.builder()
 				.orderId(this.id)
 				.memberId(this.member.getId())
@@ -367,13 +315,9 @@ public class CareOrder {
 				.orderType(this.orderType)
 				.publishYn(this.publishYn)
 				.careOrderProcessType(this.careOrderProcessType)
-				.periodType(firstPacking
-					.map(Packing::getPeriodType)
-					.orElse(null))
-				.amount(firstPacking
-					.map(Packing::getAmount)
-					.orElse(null))
-				.totalPrice(totalPrice.get())
+				.periodType(this.periodType)
+				.amount(this.amount)
+				.totalPrice(calculatePaymentPriceOneDay(calculateRequest, this.settle.getGuardianFees()))
 				.orderRequest(this.orderRequest)
 				.orderPatient(this.orderPatient.toOrderPatientDetailResponse())
 				.build();
@@ -383,8 +327,6 @@ public class CareOrder {
 	}
 
 	public CareOrderPageResponse toCareOrderPageResponse() {
-		Optional<Packing> firstPacking = packages.stream()
-			.findFirst();
 		CareOrderPageResponse build = CareOrderPageResponse.builder()
 			.orderId(this.id)
 			.memberId(this.member.getId())
@@ -398,18 +340,52 @@ public class CareOrder {
 			.endDateTime(this.endDateTime)
 			.realEndDateTime(this.realEndDateTime)
 			.orderStatus(this.orderStatus)
-			.periodType(firstPacking
-				.map(Packing::getPeriodType)
-				.orElse(null))
-			.amount(firstPacking
-				.map(Packing::getAmount)
-				.orElse(null))
+			.periodType(this.periodType)
+			.amount(this.amount)
 			.applyCount(this.applys.size())
 			.memoCount(this.memos.size())
 			.memberType(this.member.getMemberType())
 			.build();
 		build.setCreatedAndUpdated(this.createdAndModified);
 		return build;
+	}
+
+	public void createOrderPacking() {
+		long daysBetween;
+		if (this.periodType.equals(PART_TIME)) { //시간제
+			// 시작 날짜(2024-05-20 22:00:00) - 종료 날짜(2024-05-22 02:00:00), 파트타임 시간: 4시간
+			// 시작 날짜부터 종료 날짜까지 2일 Packing 객체 생성
+			// 시작 날짜(2024-05-20 10:00:00) - 종료 날짜(2024-05-22 15:00:00), 파트타임 시간: 5시간
+			// 시작 날짜부터 종료 날짜까지 3일 Packing 객체 생성
+			daysBetween = ChronoUnit.DAYS.between(this.startDateTime, this.endDateTime) + 1;
+
+			for (int i = 0; i < daysBetween; i++) {
+				LocalDateTime startDateTime = this.startDateTime.plusDays(i);
+				LocalDateTime endDateTime = startDateTime.plusHours(this.partTime);
+				Packing build = Packing.builder()
+					.careOrder(this)
+					.startDateTime(startDateTime)
+					.endDateTime(endDateTime)
+					.build();
+				this.addPacking(build);
+			}
+		}
+
+		if (this.periodType.equals(PERIOD)) { //기간제
+			// 종료 날짜(2024-04-17 10:00:00) - 시작 날짜(2024-04-12 10:00:00)
+			// 시작 날짜부터 종료 날짜까지 5일 Packing 객체 생성
+			daysBetween = ChronoUnit.DAYS.between(this.startDateTime, this.endDateTime);
+			for (int i = 0; i < daysBetween; i++) {
+				LocalDateTime startDateTime = this.startDateTime.plusDays(i);
+				LocalDateTime endDateTime = startDateTime.plusDays(1);
+				Packing build = Packing.builder()
+					.careOrder(this)
+					.startDateTime(startDateTime)
+					.endDateTime(endDateTime)
+					.build();
+				this.addPacking(build);
+			}
+		}
 	}
 
 	public CareOrder extension(LocalDateTime startDateTime, LocalDateTime endDateTime, Settle settle) {
@@ -463,8 +439,6 @@ public class CareOrder {
 	}
 
 	public UserCareOrderResponse toUserCareOrderResponse() {
-		Optional<Packing> firstPacking = packages.stream()
-			.findFirst();
 		UserCareOrderResponse userCareOrderResponse = UserCareOrderResponse.builder()
 			.id(this.id)
 			.orderStatus(this.orderStatus)
@@ -472,12 +446,8 @@ public class CareOrder {
 			.applyCount(this.applys.size())
 			.address1(this.orderPatient.getAddress1())
 			.address2(this.orderPatient.getAddress2())
-			.periodType(firstPacking
-				.map(Packing::getPeriodType)
-				.orElse(null))
-			.amount(firstPacking
-				.map(Packing::getAmount)
-				.orElse(null))
+			.periodType(this.periodType)
+			.amount(this.amount)
 			.startDateTime(this.startDateTime)
 			.endDateTime(this.endDateTime)
 			.build();
