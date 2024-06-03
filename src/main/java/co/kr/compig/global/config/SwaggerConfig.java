@@ -34,7 +34,7 @@ public class SwaggerConfig {
 		servers.add(localServer);
 
 		Server devServer = new Server();
-		devServer.setUrl("https://api-dev.localhost.com");
+		devServer.setUrl("https://d2v-ap1.localhost.com");
 		servers.add(devServer);
 
 		return new OpenAPI()
