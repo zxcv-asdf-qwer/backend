@@ -33,8 +33,8 @@ public class AdminPaymentController {
 
 	private final PaymentService paymentService;
 
-	@Operation(summary = "결제 url 생성하기")
-	@PostMapping("/orderId/{orderId}")
+	@Operation(summary = "결제 하기")
+	@PostMapping("/orders/{orderId}")
 	public ResponseEntity<Response<?>> createPayment(@PathVariable(name = "orderId") Long orderId) {
 		return ResponseEntity.ok().body(Response.<Map<String, String>>builder()
 			.data(Map.of("orderUrl", paymentService.createPayment(orderId)))

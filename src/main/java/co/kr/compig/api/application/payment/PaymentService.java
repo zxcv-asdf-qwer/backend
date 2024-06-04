@@ -66,19 +66,22 @@ public class PaymentService {
 
 	public String createPayment(Long orderId) {
 		CareOrder careOrder = careOrderService.getCareOrderById(orderId);
+		careOrder.createOrderPacking();
+		//간병비 계산
 		AtomicInteger totalPrice = new AtomicInteger();
 
 		Set<Packing> packages = careOrder.getPackages();
 		packages.forEach(packing -> {
 			CareOrderCalculateRequest calculateRequest = CareOrderCalculateRequest.builder()
-				.amount(packing.getAmount())
-				.periodType(packing.getPeriodType())
-				.partTime(packing.getPartTime())
+				.amount(careOrder.getAmount())
+				.periodType(careOrder.getPeriodType())
+				.partTime(careOrder.getPartTime())
 				.build();
 			totalPrice.addAndGet(calculatePaymentPriceOneDay(calculateRequest,
-				packing.getSettle().getGuardianFees()));
+				careOrder.getSettle().getGuardianFees()));
 		});
 
+		// 결제pg요청 프로세스
 		SmsPayRequest smsPayRequest = SmsPayRequest.builder()
 			.mid(payMid)
 			.moid("CARE" + getRandomTimeKey())
@@ -87,8 +90,6 @@ public class PaymentService {
 			.buyerName(careOrder.getMember().getUserNm())
 			.buyerTel(careOrder.getMember().getTelNo())
 			.build();
-
-		// 결제pg요청 프로세스
 		ResponseEntity<String> response = payApi.requestSmsPay(smsPayRequest);
 		Gson gson = new GsonBuilder()
 			.setPrettyPrinting()

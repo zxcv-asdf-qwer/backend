@@ -10,6 +10,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.keycloak.common.util.CollectionUtil;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -351,6 +353,9 @@ public class CareOrder {
 	}
 
 	public void createOrderPacking() {
+		if (CollectionUtil.isNotEmpty(this.packages)) {
+			return;
+		}
 		long daysBetween;
 		if (this.periodType.equals(PART_TIME)) { //시간제
 			// 시작 날짜(2024-05-20 22:00:00) - 종료 날짜(2024-05-22 02:00:00), 파트타임 시간: 4시간

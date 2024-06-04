@@ -101,8 +101,6 @@ public class ApplyService {
 	}
 
 	public void updateMatchingCompleteByAdmin(Long orderId, String memberId) {
-		CareOrder careOrder = careOrderService.getCareOrderById(orderId);
-		careOrder.createOrderPacking();
 		Apply apply = applyRepository.findByCareOrder_idAndMember_id(orderId, memberId)
 			.orElseThrow(NotExistDataException::new);
 		//TODO 간병인이 간병중인지
@@ -111,8 +109,6 @@ public class ApplyService {
 	}
 
 	public void updateMatchingCompleteByGuardian(Long orderId, String memberId) {
-		CareOrder careOrder = careOrderService.getCareOrderById(orderId);
-		careOrder.createOrderPacking();
 		Apply apply = applyRepository.findByCareOrder_idAndMember_id(orderId, memberId)
 			.orElseThrow(NotExistDataException::new);
 		//TODO 간병인이 간병중인지
